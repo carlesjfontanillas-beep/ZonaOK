@@ -22,3 +22,7 @@ Projecte INDEPENDENT de qualsevol altra aplicació. Cost d'allotjament: 0 € en
 - ChatGPT pot no poder llegir les dades dinàmiques de FECAPA. En aquest cas ha de declarar que no són verificables i no presentar dades inventades.
 - Pot caldre iniciar sessió a ChatGPT i prémer «Enviar».
 - La web no necessita permisos ni claus API. No promet accés a dades ni respostes verificades.
+
+
+## Pont experimental Safari → ZonaOK
+Vegeu `GUIA_PROVA_SAFARI.md`. És una prova manual, no una consulta directa des de GitHub Pages.
