@@ -26,3 +26,10 @@ Projecte INDEPENDENT de qualsevol altra aplicació. Cost d'allotjament: 0 € en
 
 ## Pont experimental Safari → ZonaOK
 Vegeu `GUIA_PROVA_SAFARI.md`. És una prova manual, no una consulta directa des de GitHub Pages.
+
+## Temporada sencera de Magí i Ton
+- A ZonaOK, els botons **Magí · Aleví OR 3** i **Ton · Infantil OR 10** mostren els partits de tota la temporada que s'hagi importat, ordenats del més recent al més antic.
+- Les dreceres `ZonaOK-Magi-Temporada.shortcut` i `ZonaOK-Ton-Temporada.shortcut` llegeixen les taules oficials de FECAPA (lligues 4789 i 4786) des de Safari, incloent fixtures futurs, resultats disponibles i identificador de la fitxa del partit. Les classificacions existents continuen separades.
+- Cal obrir la pàgina de la lliga corresponent a FECAPA, esperar que aparegui el calendari complet i executar la drecera des de Safari. L'importació queda desada en aquell dispositiu; `Descarregar JSON` la prepara per publicar-la i compartir-la.
+- El botó `⌕ Acta` obre la fitxa oficial del partit. FECAPA obre la fitxa a la pestanya Resum i cal triar-hi «Acta del partit»: el lloc no admet un enllaç públic que obri directament aquesta pestanya.
+- La drecera mostra les files examinades, el nombre de partits, quants tenen marcador i quants disposen d'identificador d'acta. Si FECAPA canvia l'estructura de la taula, cal revisar aquests recomptes abans de confiar en la importació.
