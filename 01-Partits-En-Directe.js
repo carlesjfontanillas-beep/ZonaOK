@@ -1,6 +1,6 @@
 /* Safari → Compartir. Llegeix el DOM de FECAPA, sense fetch ni APIs. */
 completion((()=>{try{
-const APP='https://carlesjfontanillas-beep.github.io/ZonaOK/';
+const APP='https://carlesjfontanillas-beep.github.io/ZonaOK/?v=20261118-live4';
 if(!/^(www\.)?hoqueipatins\.fecapa\.cat$/.test(location.hostname))throw Error('Obre FECAPA a Safari.');
 const clean=x=>String(x||'').replace(/\s+/g,' ').trim(), text=e=>clean(e?.innerText), rows=[];
 const root=document.querySelector('#sidgad-seccion-partidos');
