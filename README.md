@@ -33,3 +33,9 @@ Vegeu `GUIA_PROVA_SAFARI.md`. És una prova manual, no una consulta directa des 
 - Cal obrir la pàgina de la lliga corresponent a FECAPA, esperar que aparegui el calendari complet i executar la drecera des de Safari. L'importació queda desada en aquell dispositiu; `Descarregar JSON` la prepara per publicar-la i compartir-la.
 - El botó `⌕ Acta` obre la fitxa oficial del partit. FECAPA obre la fitxa a la pestanya Resum i cal triar-hi «Acta del partit»: el lloc no admet un enllaç públic que obri directament aquesta pestanya.
 - La drecera mostra les files examinades, el nombre de partits, quants tenen marcador i quants disposen d'identificador d'acta. Si FECAPA canvia l'estructura de la taula, cal revisar aquests recomptes abans de confiar en la importació.
+
+
+## Agenda de temporada sencera
+- A la pàgina oficial FECAPA `/ag/`, selecciona tots els clubs i el rang complet de la temporada actual. Executa `ZonaOK Agenda` des de Safari per importar tots els partits de Barça i CP Sant Celoni; no es limita a dilluns–diumenge.
+- La importació mostra el recompte de files, els partits de cada club i les pistes detectades. Les dades es comprimeixen abans d'obrir ZonaOK i es desen en la memòria local; publica `zonaok-data.json` per compartir-les entre dispositius.
+- Els botons Barça i CP Sant Celoni mostren la temporada completa després d'aquesta importació; la portada conserva el resum de la setmana.
