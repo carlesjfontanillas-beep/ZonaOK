@@ -1,17 +1,17 @@
-/* ZonaOK · Retocs visuals 2026-11-18
+/* ZonaOK Â· Retocs visuals 2026-11-18 (V4: colors per equip i categoria visible)
    Carregar DESPRES d'app.js. No modifica les dades ni la importacio FECAPA.
 */
 (() => {
   'use strict';
   const STYLE_ID = 'zonaok-retocs-20261118';
   const css = `
-/* Colors per categoria tant a Inici com als llistats */
-.match.zok-alevi { --accent: #8d2446; --tint: #eed0da; }
+/* Els colors dels partits depenen de l'equip; el Barca te prioritat. */
+.match.zok-barca { --accent: #8d2446; --tint: #eed0da; }
 .match.zok-infantil { --accent: #245bb0; --tint: #d9e8ff; }
 .match.zok-juvenil { --accent: #bc9214; --tint: #fff0b4; }
 .match.zok-juvenil .pill { color: #172b3d; }
 
-/* Targetes dels llistats: nomes data, hora, clubs i marcador. */
+/* Targetes dels llistats: data, hora, categoria, clubs i marcador. */
 #results-list .match.zok-compact {
   border-radius: 13px;
   padding: 10px 12px;
@@ -25,12 +25,32 @@
 #results-list .match.zok-compact .match-date {
   margin: 0 0 7px;
   gap: 8px;
-  flex-direction: row-reverse;
-  justify-content: flex-end;
-  align-items: baseline;
+  flex-direction: row;
+  flex-wrap: wrap;
+  row-gap: 3px;
+  justify-content: flex-start;
+  align-items: center;
 }
-#results-list .match.zok-compact .match-date strong { font-size: 14px; letter-spacing: 0; }
-#results-list .match.zok-compact .match-date small { font-size: 12px; color: #314b63; }
+#results-list .match.zok-compact .match-date strong { order: 1; font-size: 14px; letter-spacing: 0; }
+#results-list .match.zok-compact .match-date small { order: 0; font-size: 12px; color: #314b63; }
+/* La categoria s'extreu de la pill original i es posa a la mateixa linia. */
+#results-list .match.zok-compact .match-date[data-zok-categoria]::after {
+  content: attr(data-zok-categoria);
+  order: 2;
+  margin-left: auto;
+  max-width: 48%;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--accent, #355b79);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#results-list .match.zok-juvenil.zok-compact .match-date[data-zok-categoria]::after { color: #13263a; }
 #results-list .match.zok-compact .teams {
   display: grid;
   grid-template-columns: minmax(0,1fr) 62px minmax(0,1fr);
@@ -66,6 +86,58 @@
 #results-list .match.zok-compact .score { font-size: 16px; }
 #results-list .match.zok-compact .score-note { display: none; }
 #results-list.cards { gap: 7px; }
+
+/* CLASSIFICACIONS: mateix codi de colors que els tres equips. */
+#results-list h3.zok-taula-titol {
+  margin: 17px 0 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border-left: 5px solid var(--zok-color);
+  background: var(--zok-fons-titol);
+  color: var(--zok-text-titol);
+  font-size: 16px;
+  line-height: 1.25;
+}
+#results-list .standings.zok-taula th {
+  background: var(--zok-color);
+  color: var(--zok-text-cap);
+}
+#results-list .standings.zok-taula tr:not(:first-child):not(.highlight) {
+  background: var(--zok-fons-fila, #e7edf8);
+}
+#results-list .standings.zok-taula tr.highlight {
+  background: var(--zok-fons-destacat);
+  color: #112b42;
+  font-weight: 850;
+}
+#results-list .standings.zok-taula tr.highlight td:first-child {
+  box-shadow: inset 4px 0 var(--zok-color);
+}
+#results-list .zok-standings-alevi {
+  --zok-color: #8d2446;
+  --zok-text-cap: #fff;
+  --zok-fons-fila: #f4eaf0;
+  --zok-fons-destacat: #edc4d2;
+  --zok-fons-titol: #512039;
+  --zok-text-titol: #ffdee9;
+}
+#results-list .zok-standings-infantil {
+  --zok-color: #245bb0;
+  --zok-text-cap: #fff;
+  --zok-fons-fila: #e7efff;
+  --zok-fons-destacat: #bfd7ff;
+  --zok-fons-titol: #173b6b;
+  --zok-text-titol: #d6e7ff;
+}
+#results-list .zok-standings-juvenil {
+  --zok-color: #e9be35;
+  --zok-text-cap: #13263a;
+  --zok-fons-fila: #fff9e8;
+  --zok-fons-destacat: #ffebad;
+  --zok-fons-titol: #554317;
+  --zok-text-titol: #fff0b1;
+}
+
 @media(max-width:360px) {
   #results-list .match.zok-compact { padding: 9px 8px; }
   #results-list .match.zok-compact .teams { grid-template-columns: minmax(0,1fr) 50px minmax(0,1fr); gap: 3px; }
@@ -81,31 +153,85 @@
     document.head.appendChild(style);
   }
 
-  function category(card) {
-    const title = (card.querySelector('.pill')?.textContent || '').normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '').toUpperCase();
-    if (/ALEVI/.test(title)) return 'zok-alevi';
-    if (/INFANTIL/.test(title)) return 'zok-infantil';
-    if (/JUVENIL/.test(title)) return 'zok-juvenil';
-    return '';
+  // Es mira el club dins la targeta, no nomes la categoria de competicio.
+  // Un partit del Barca es SEMPRE granat, encara que sigui juvenil.
+  function normalitzar(text) {
+    return String(text || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().trim();
   }
-  const classes = ['zok-alevi', 'zok-infantil', 'zok-juvenil'];
+  function colorEquip(card) {
+    const equips = normalitzar(Array.from(card.querySelectorAll('.teams .side strong'))
+      .map(el => el.textContent).join(' | '));
+    const categoria = normalitzar(card.querySelector('.pill')?.textContent);
+
+    // Coincidencia d'equip: Barca, FC Barcelona o FCB.
+    if (/\bBARCA\b|\bBARCELONA\b|\bFCB\b/.test(equips)) return 'zok-barca';
+
+    // Sant Celoni nomes en les dues categories favorites. La lliga pot venir
+    // com a INFANTIL OR 10 / JUVENIL OR 6 i el nom pot ometre la lletra B.
+    const esCeloni = /SANT\s*CELONI|\bCPSC\b|\bCP\s*SC\b/.test(equips);
+    if (esCeloni) {
+      if (/\bINFANTIL\b/.test(categoria) &&
+          (/\bINFANTIL\b.*\bOR\s*10\b/.test(categoria) ||
+           /\bSANT\s*CELONI\s+B\b/.test(equips) || /\bCPSC\s+B\b/.test(equips))) return 'zok-infantil';
+      if (/\bJUVENIL\b/.test(categoria) &&
+          (/\bJUVENIL\b.*\bOR\s*6\b/.test(categoria) ||
+           /\bSANT\s*CELONI\s+B\b/.test(equips) || /\bCPSC\s+B\b/.test(equips))) return 'zok-juvenil';
+    }
+    return ''; // Altres equips/casos ambigus mantenen el color neutre.
+  }
+  const classes = ['zok-barca', 'zok-infantil', 'zok-juvenil', 'zok-alevi'];
   function decorate() {
     for (const card of document.querySelectorAll('#home-cards .match, #results-list .match')) {
-      const expected = category(card);
+      const expected = colorEquip(card);
       for (const cls of classes) {
         if (cls !== expected && card.classList.contains(cls)) card.classList.remove(cls);
       }
       if (expected && !card.classList.contains(expected)) card.classList.add(expected);
       const compact = !!card.closest('#results-list');
       if (card.classList.contains('zok-compact') !== compact) card.classList.toggle('zok-compact', compact);
+
+      // Recuperem la categoria real de la targeta original, que el mode
+      // compacte amaga amb .match-top. Mai no l'inferim del club.
+      const date = card.querySelector('.match-date');
+      if (date && compact) {
+        const categoria = (card.querySelector('.pill')?.textContent || '').trim();
+        if (categoria) date.dataset.zokCategoria = categoria;
+        else date.removeAttribute('data-zok-categoria');
+      } else if (date) {
+        date.removeAttribute('data-zok-categoria');
+      }
+    }
+  }
+  // Les taules de classificacio es generen amb un h3 i una taula .standings.
+  // Identifiquem cada taula pel titol anterior, sense dependre de la seva posicio.
+  const standingsClasses = ['zok-standings-alevi', 'zok-standings-infantil', 'zok-standings-juvenil'];
+  function categoryFromTitle(text) {
+    const t = String(text || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+    if (/ALEVI/.test(t)) return 'zok-standings-alevi';
+    if (/INFANTIL/.test(t)) return 'zok-standings-infantil';
+    if (/JUVENIL/.test(t)) return 'zok-standings-juvenil';
+    return '';
+  }
+  function decorateStandings() {
+    const root = document.getElementById('results-list');
+    if (!root) return;
+    let current = '';
+    for (const el of root.children) {
+      if (el.matches('h3')) {
+        current = categoryFromTitle(el.textContent);
+        el.classList.remove('zok-taula-titol', ...standingsClasses);
+        if (current) el.classList.add('zok-taula-titol', current);
+      } else if (el.matches('table.standings')) {
+        el.classList.remove('zok-taula', ...standingsClasses);
+        if (current) el.classList.add('zok-taula', current);
+      }
     }
   }
   let scheduled = false;
   const schedule = () => {
     if (scheduled) return;
     scheduled = true;
-    requestAnimationFrame(() => { scheduled = false; decorate(); });
+    requestAnimationFrame(() => { scheduled = false; decorate(); decorateStandings(); });
   };
   // Vigilem nomes canvis en els contenidors, no els canvis de classe que fem nosaltres.
   function observe(id) {
