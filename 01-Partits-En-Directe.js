@@ -25,7 +25,8 @@ for(const el of root.querySelectorAll('.sidgad-partido-fila')){
 }
 if(!rows.length)throw Error('No hi ha partits identificables de Barça o CP Sant Celoni al llistat carregat.');
 const payload={source:'FECAPA-SAFARI',version:3,kind:'live',season:clean(season),capturedAt:new Date().toISOString(),url:location.href,rows};
+const competitions=[...new Set(rows.map(r=>r.competition))];payload.format='compact';payload.competitions=competitions;payload.rows=rows.map(r=>[r.iso,r.time,r.home,r.away,competitions.indexOf(r.competition),r.round,r.status,r.homeScore,r.awayScore,r.homeLogo.split('/').pop(),r.awayLogo.split('/').pop()]);
 const link=APP+'#fecapa='+encodeURIComponent(JSON.stringify(payload));
-if(link.length>24500)throw Error('La importació supera la mida segura. No s’han retallat partits.');
+if(link.length>7500)throw Error('La importació supera la mida segura. No s’han retallat partits.');
 return link;
 }catch(e){return 'https://carlesjfontanillas-beep.github.io/ZonaOK/?error='+encodeURIComponent(e.message)}})());

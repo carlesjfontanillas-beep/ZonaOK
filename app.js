@@ -62,6 +62,7 @@ function importHash(){
  if(!h.startsWith('fecapa='))return;
  let p;try{p=JSON.parse(decodeURIComponent(h.slice(7)))}catch(e){toast('Importació il·legible');return;}
  if(p.kind!=='live'){legacyImportHash();return;}
+ if(p.format==='compact'){try{if(!Array.isArray(p.competitions)||p.competitions.length>100)throw Error();p.rows=p.rows.map(a=>{if(!Array.isArray(a)||a.length!==11||!Number.isInteger(a[4])||typeof p.competitions[a[4]]!=='string'||![a[9],a[10]].every(x=>typeof x==='string'&&/^[a-zA-Z0-9_.-]+$/.test(x)))throw Error();const base='https://sidgad.cloud/fecapa/images/logos_clubes/';return {iso:a[0],time:a[1],home:a[2],away:a[3],competition:p.competitions[a[4]],round:a[5],status:a[6],homeScore:a[7],awayScore:a[8],homeLogo:base+a[9],awayLogo:base+a[10],homeClub:a[2]==='BAR'?'barca':a[2]==='CPSC'?'celoni':'',awayClub:a[3]==='BAR'?'barca':a[3]==='CPSC'?'celoni':''};});}catch(e){toast('Paquet compacte no vàlid');return;}}
  history.replaceState(null,'',location.pathname+location.search);
  try{
  if(p.source!=='FECAPA-SAFARI'||!Array.isArray(p.rows)||p.rows.length>300||!Number.isFinite(Date.parse(p.capturedAt)))throw Error('Paquet no vàlid');
