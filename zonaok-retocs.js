@@ -1,4 +1,4 @@
-/* ZonaOK Â· Retocs visuals 2026-11-18 (V4: colors per equip i categoria visible)
+/* ZonaOK · Retocs visuals 2026-11-18 (V6: colors, categoria i interfície compacta)
    Carregar DESPRES d'app.js. No modifica les dades ni la importacio FECAPA.
 */
 (() => {
@@ -138,6 +138,40 @@
   --zok-text-titol: #fff0b1;
 }
 
+/* V6 - Eliminem el panell inicial gran i recuperem espai útil. */
+.app{padding-top:calc(5px + env(safe-area-inset-top));padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+.mast{padding:2px 3px 5px;min-height:29px}
+.mast .brand{font-size:21px;line-height:1.1}
+.mast .strap,.mast .emblem{display:none}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:2px 2px 4px;margin:0;border:0;box-shadow:none;border-radius:0;background:transparent;overflow:visible}
+.hero::before,.hero .rink,.hero h1,.hero .overline{display:none!important}
+.hero .week{margin:0;line-height:1.25;font-size:11px;color:#ffce99;font-weight:750;flex:1;min-width:0}
+.hero-actions{display:flex;align-items:center;gap:5px;flex:0 0 auto;margin:0}
+.hero-actions button{flex:0 0 auto;min-width:35px;width:35px;height:34px;min-height:34px;padding:2px;border-radius:10px;font-size:0;line-height:1}
+#refresh-home::after{content:'↻';font-size:21px}
+#ask-home::after{content:'?';font-size:18px}
+.keyline{margin:6px 2px 8px;font-size:10px;flex-wrap:wrap}
+.section{margin-top:13px}
+.section-head{margin-bottom:9px}
+.section-head h2{font-size:18px}
+/* Barra d'accés ràpid: sis icones en UNA fila, sense peu ni títol. */
+.bottom{padding:5px 6px calc(5px + env(safe-area-inset-bottom));box-shadow:0 -6px 20px #00101fa6}
+.bottom-title,.navbtn strong,.navbtn small{display:none!important}
+.navgrid{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+.navbtn{min-width:0;min-height:43px;height:43px;border-radius:11px;padding:3px 0;gap:0}
+.navbtn span{font-size:23px;line-height:1}
+.navbtn.active{background:#305a77;border-color:#ffbc78}
+/* Botons secundaris llegibles a l'iPhone sense línies exagerades. */
+.import-card .context-actions{display:flex;flex-wrap:wrap;gap:7px;margin:9px 0}
+.import-card .context-actions>*{display:flex;align-items:center;justify-content:center;text-align:center;
+  flex:1 1 calc(50% - 5px);min-width:0;min-height:38px;padding:7px 5px;font-size:11px;
+  line-height:1.18;overflow-wrap:anywhere;text-decoration:none}
+#results-section .context-actions>*{font-size:11px;padding:9px 6px}
+/* La pista literal només apareix a Inici; el llistat es manté compacte. */
+#home-cards .match.zok-v5 .venue{margin-top:10px;padding-top:8px}
+#home-cards .match.zok-v5 .venue strong{font-size:11px}
+
 @media(max-width:360px) {
   #results-list .match.zok-compact { padding: 9px 8px; }
   #results-list .match.zok-compact .teams { grid-template-columns: minmax(0,1fr) 50px minmax(0,1fr); gap: 3px; }
@@ -164,7 +198,7 @@
     const categoria = normalitzar(card.querySelector('.pill')?.textContent);
 
     // Coincidencia d'equip: Barca, FC Barcelona o FCB.
-    if (/\bBARCA\b|\bBARCELONA\b|\bFCB\b/.test(equips)) return 'zok-barca';
+    if (/\bBARCA\b|\bBARCELONA\b|\bFCB\b|\bFCBETRANS\b|\bFCBETERANS\b/.test(equips)) return 'zok-barca';
 
     // Sant Celoni nomes en les dues categories favorites. La lliga pot venir
     // com a INFANTIL OR 10 / JUVENIL OR 6 i el nom pot ometre la lletra B.
