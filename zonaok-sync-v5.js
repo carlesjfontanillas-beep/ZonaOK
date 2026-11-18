@@ -14,7 +14,7 @@
   const validTime=s=>/^([01]\d|2[0-3]):[0-5]\d$/.test(String(s||''));
   const validScore=n=>Number.isInteger(n)&&n>=0&&n<200;
   const isBarca=s=>/^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETRANS|FCBETERANS)(?: [A-Z0-9]+)?$/.test(norm(s));
-  const isCeloni=s=>/^(?:CPSC|CP SANT CELONI|C P SANT CELONI|SANT CELONI)(?: [A-Z0-9]+)?$/.test(norm(s));
+  const isCeloni=s=>norm(s).includes('CELONI');
   const isClub=s=>isBarca(s)||isCeloni(s);
   const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(_){return {}}};
   const write=s=>{try{localStorage.setItem(KEY,JSON.stringify(s));return true}catch(_){return false}};
