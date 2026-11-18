@@ -1,6 +1,6 @@
 /* Safari → Compartir. Llegeix el DOM de FECAPA, sense fetch ni APIs. */
 completion((()=>{try{
-const APP='https://carlesjfontanillas-beep.github.io/ZonaOK/?v=20261118-live4';
+const APP='https://carlesjfontanillas-beep.github.io/ZonaOK/?v=20261118-agenda61';
 if(!/^(www\.)?hoqueipatins\.fecapa\.cat$/.test(location.hostname))throw Error('Obre FECAPA a Safari.');
 const clean=x=>String(x||'').replace(/\s+/g,' ').trim(), text=e=>clean(e?.innerText), rows=[];
 const root=document.querySelector('#sidgad-seccion-partidos');
@@ -24,8 +24,7 @@ for(const el of root.querySelectorAll('.sidgad-partido-fila')){
  rows.push({iso,time:d[3],home,away,homeLogo,awayLogo,homeClub,awayClub,competition,round:text(a?.querySelector('.sidgad-equipo-sub')),status:text(el.querySelector('.sidgad-status-tag')),homeScore:score?+score[1]:null,awayScore:score?+score[2]:null});
 }
 if(!rows.length)throw Error('No hi ha partits identificables de Barça o CP Sant Celoni al llistat carregat.');
-const payload={source:'FECAPA-SAFARI',version:3,kind:'live',season:clean(season),capturedAt:new Date().toISOString(),url:location.href,rows};
-const competitions=[...new Set(rows.map(r=>r.competition))];payload.format='compact';payload.competitions=competitions;payload.rows=rows.map(r=>[r.iso,r.time,r.home,r.away,competitions.indexOf(r.competition),r.round,r.status,r.homeScore,r.awayScore,r.homeLogo.split('/').pop(),r.awayLogo.split('/').pop()]);
+const payload={source:'FECAPA-SAFARI',v:5,kind:'resultats-v5',capturedAt:new Date().toISOString(),rows:rows.map(r=>[r.iso,r.time,r.competition,r.home,r.away,r.homeScore,r.awayScore])};
 const link=APP+'#fecapa='+encodeURIComponent(JSON.stringify(payload));
 if(link.length>7500)throw Error('La importació supera la mida segura. No s’han retallat partits.');
 return link;

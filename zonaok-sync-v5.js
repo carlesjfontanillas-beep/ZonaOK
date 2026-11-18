@@ -1,4 +1,4 @@
-/* ZonaOK V6 â€” Agenda com a font de partits, En directe nomes com a font de marcadors.
+/* ZonaOK V6 — Agenda com a font de partits, En directe nomes com a font de marcadors.
    Carregar ABANS d'app.js. Conserva V2 (classificacions) i les dades existents.
    No consulta FECAPA des del web: les dues dreceres Safari llegeixen el DOM.
 */
@@ -50,7 +50,7 @@
          (r.homeScore==null||r.awayScore==null)){
         combined.homeScore=old.homeScore;combined.awayScore=old.awayScore;
       }
-      // Conservem la pista literal fins i tot si FECAPA retorna una celÂ·la buida.
+      // Conservem la pista literal fins i tot si FECAPA retorna una cel·la buida.
       if(!text(r.venue)&&text(old.venue))combined.venue=old.venue;
       map.set(k,combined);
     }
@@ -58,7 +58,7 @@
   };
   const mergeData=(store,kind,p)=>{
     if(kind==='agenda-v5'){
-      if(!Array.isArray(p.rows)||p.rows.length>150||!validDate(p.weekStart)||!validDate(p.weekEnd))throw Error('Dades dâ€™Agenda no vÃ lides');
+      if(!Array.isArray(p.rows)||p.rows.length>150||!validDate(p.weekStart)||!validDate(p.weekEnd))throw Error('Dades d’Agenda no vàlides');
       const next=p.rows.map(cleanAgenda);
       if(!next.length||next.some(r=>!r)||new Set(next.map(rowKey)).size!==next.length)throw Error('Hi ha partits buits o duplicats');
       const stamped=next.map(r=>({...r,capturedAt:p.capturedAt}));
@@ -66,12 +66,12 @@
       const cb=p.counts?.barca ?? next.filter(r=>isBarca(r.home)||isBarca(r.away)).length;
       const cs=p.counts?.celoni ?? next.filter(r=>isCeloni(r.home)||isCeloni(r.away)).length;
       const pistes=next.filter(r=>!!r.venue).length;
-      return `Agenda: ${next.length} partits (${cb} BarÃ§a, ${cs} Sant Celoni) Â· ${pistes} pistes`;
+      return `Agenda: ${next.length} partits (${cb} Barça, ${cs} Sant Celoni) · ${pistes} pistes`;
     }
     if(kind==='resultats-v5'){
-      if(!Array.isArray(p.rows)||p.rows.length>300)throw Error('Dades dâ€™En directe no vÃ lides');
+      if(!Array.isArray(p.rows)||p.rows.length>300)throw Error('Dades d’En directe no vàlides');
       const next=p.rows.map(cleanScore);
-      if(!next.length||next.some(r=>!r))throw Error('Cap marcador vÃ lid');
+      if(!next.length||next.some(r=>!r))throw Error('Cap marcador vàlid');
       // Es guarden els marcadors, pero la pantalla nomes aplica els que encaixen
       // sense ambiguitat amb un partit importat d'Agenda.
       const stamped=next.map(r=>({...r,capturedAt:p.capturedAt}));
@@ -90,7 +90,7 @@
       if(p.source!=='FECAPA-SAFARI'||p.v!==5||!Number.isFinite(Date.parse(p.capturedAt)))throw Error('Font o data desconeguda');
       const store=read();importMessage=mergeData(store,p.kind,p);
       if(!write(store))throw Error('No es poden desar les dades localment');
-    }catch(e){importMessage='Error dâ€™importaciÃ³: '+e.message;}
+    }catch(e){importMessage='Error d’importació: '+e.message;}
   })();
 
   function sideClub(name){if(isBarca(name))return 'barca';if(isCeloni(name))return 'celoni';return '';}
@@ -118,7 +118,7 @@
     }
     candidates.sort((a,b)=>savedStamp(b).localeCompare(savedStamp(a)));
     const latest=candidates[0];
-    // En directe tÃ© prioritat sobre els marcadors d'Agenda, que es publiquen amb retard.
+    // En directe té prioritat sobre els marcadors d'Agenda, que es publiquen amb retard.
     if(latest)
       return {...row,homeScore:latest.homeScore,awayScore:latest.awayScore,scoreSource:'En directe',scoreCapturedAt:latest.capturedAt};
     return {...row,scoreSource:validScore(row.homeScore)&&validScore(row.awayScore)?'Agenda':''};
@@ -139,18 +139,18 @@
       /JUVENIL OR 6/.test(norm(r.competition))&&(isCeloni(r.home)||isCeloni(r.away))?'zok-v5-juvenil':'zok-v5-neutral';
     const c=el('article','match zok-v5 '+cls+(compact?' zok-compact':''));
     c.dataset.zokV5='1';
-    const top=el('div','match-top');top.append(el('span','pill',r.competition||'Categoria no indicada'),el('span','tag',r.scoreSource||'Agenda Â· FECAPA'));c.append(top);
+    const top=el('div','match-top');top.append(el('span','pill',r.competition||'Categoria no indicada'),el('span','tag',r.scoreSource||'Agenda · FECAPA'));c.append(top);
     const dt=el('div','match-date');dt.append(el('strong','',r.time),el('small','',nice(r.iso)));if(compact)dt.dataset.zokCategoria=r.competition||'Categoria';c.append(dt);
-    const teams=el('div','teams'),middle=el('div','middle');middle.append(el('div','score',validScore(r.homeScore)&&validScore(r.awayScore)?`${r.homeScore} : ${r.awayScore}`:'â€” : â€”'),el('small','score-note',r.scoreSource||'Pendent'));
+    const teams=el('div','teams'),middle=el('div','middle');middle.append(el('div','score',validScore(r.homeScore)&&validScore(r.awayScore)?`${r.homeScore} : ${r.awayScore}`:'— : —'),el('small','score-note',r.scoreSource||'Pendent'));
     teams.append(teamSide(r.home),middle,teamSide(r.away));c.append(teams);
     if(!compact){
-      const venue=el('div','venue');venue.append(el('strong','','ðŸ“ '+(r.venue||'Pista no indicada a Agenda')));c.append(venue);
+      const venue=el('div','venue');venue.append(el('strong','','📍 '+(r.venue||'Pista no indicada a Agenda')));c.append(venue);
     }
     return c;
   }
   const byWeek=(rows)=>{const start=monday(),end=plus(start,6);return rows.filter(r=>r.iso>=start&&r.iso<=end).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));};
   const favoriteDefs=[
-    {name:'BarÃ§a AlevÃ­',f:r=>(isBarca(r.home)||isBarca(r.away))&&norm(r.competition)==='ALEVI OR 3'},
+    {name:'Barça Aleví',f:r=>(isBarca(r.home)||isBarca(r.away))&&norm(r.competition)==='ALEVI OR 3'},
     {name:'Sant Celoni Infantil B',f:r=>(isCeloni(r.home)||isCeloni(r.away))&&norm(r.competition)==='INFANTIL OR 10'},
     {name:'Sant Celoni Juvenil B',f:r=>(isCeloni(r.home)||isCeloni(r.away))&&norm(r.competition)==='JUVENIL OR 6'}
   ];
@@ -165,7 +165,7 @@
     for(const def of favoriteDefs){
       const candidates=rows.filter(def.f),next=candidates.find(r=>r.iso>=now)||candidates[candidates.length-1];
       if(next){frag.append(card(next,false));count++}
-      else{const note=el('div','empty');note.dataset.zokV5='1';note.append(el('strong','',def.name+' Â· Sense partit importat aquesta setmana'));frag.append(note)}
+      else{const note=el('div','empty');note.dataset.zokV5='1';note.append(el('strong','',def.name+' · Sense partit importat aquesta setmana'));frag.append(note)}
     }
     root.replaceChildren(frag);if($('#home-count'))$('#home-count').textContent=count+' partits';
   }
@@ -182,12 +182,12 @@
     if(root.dataset.zokV5Sig===sig&&root.querySelector('[data-zok-v5]'))return;
     root.dataset.zokV5Sig=sig;
     const frag=document.createDocumentFragment();
-    if(!selected.length){const empty=el('div','empty','No hi ha partits verificats dâ€™aquest club durant aquesta setmana a lâ€™Agenda importada.');empty.dataset.zokV5='1';frag.append(empty);}
+    if(!selected.length){const empty=el('div','empty','No hi ha partits verificats d’aquest club durant aquesta setmana a l’Agenda importada.');empty.dataset.zokV5='1';frag.append(empty);}
     for(const r of selected)frag.append(card(r,true));
     root.replaceChildren(frag);
-    const labels={barca:'BarÃ§a Â· Setmana',celoni:'CP Sant Celoni Â· Setmana',grupalevi:'BarÃ§a AlevÃ­ OR 3 Â· Setmana',grupinfantil:'Sant Celoni Infantil OR 10 Â· Setmana'};
+    const labels={barca:'Barça · Setmana',celoni:'CP Sant Celoni · Setmana',grupalevi:'Barça Aleví OR 3 · Setmana',grupinfantil:'Sant Celoni Infantil OR 10 · Setmana'};
     if($('#results-title'))$('#results-title').textContent=labels[tab];
-    if($('#results-note'))$('#results-note').textContent=`${selected.length} partits Â· Agenda FECAPA (setmana actual). Els marcadors sâ€™actualitzen des dâ€™En directe quan coincideix el partit.`;
+    if($('#results-note'))$('#results-note').textContent=`${selected.length} partits · Agenda FECAPA (setmana actual). Els marcadors s’actualitzen des d’En directe quan coincideix el partit.`;
     if($('#open-fecapa'))$('#open-fecapa').onclick=()=>window.open(AGENDA,'_blank','noopener');
   }
   let scheduled=false;
@@ -198,8 +198,8 @@
     drawHome(week);
     drawList(activeTab(),week);
     const last=[store.agenda?.capturedAt,store.scoreUpdates?.capturedAt,store.live?.capturedAt].filter(Boolean).sort().pop();
-    if($('#data-label'))$('#data-label').textContent='Agenda + En directe Â· Safari';
-    if($('#data-age')&&last)$('#data-age').textContent='Ãšltima lectura: '+timestamp(last);
+    if($('#data-label'))$('#data-label').textContent='Agenda + En directe · Safari';
+    if($('#data-age')&&last)$('#data-age').textContent='Última lectura: '+timestamp(last);
     if($('#total-count'))$('#total-count').textContent=week.length+' partits setmana';
   }
   function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(draw)}
@@ -220,7 +220,7 @@
         store[kind]={rows:mergeRows(curr.rows||[],entry.rows),capturedAt:[curr.capturedAt,entry.capturedAt].filter(Boolean).sort().pop()};
       }
       write(store);schedule();
-    }catch(_){/* Desconnectat: es conserva la cÃ²pia local */}
+    }catch(_){/* Desconnectat: es conserva la còpia local */}
   }
   function setup(){
     for(const selector of ['#home-cards','#results-list','#import-summary']){
