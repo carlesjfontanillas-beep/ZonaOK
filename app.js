@@ -89,8 +89,10 @@ function matchOfficialLink(league,match){
   return `${BASE}?liga=${encodeURIComponent(league)}&vista=calendar&partido=${encodeURIComponent(match)}`;
 }
 function matchTeamKey(name){
-  const v=normalize(name);
-  if(v==='BAR'||v==='BARCA'||v==='FC BARCELONA')return 'BARCA';
+  let v=normalize(name);
+  // Equivalències verificades de les fonts FECAPA / En directe.
+  if(['BAR','BARCA','FC BARCELONA','F C BARCELONA','FCBETRANS','FCBETERANS'].includes(v))return 'BARCA';
+  v=v.replace(/^(?:CLUB PATI|C P|CP)\s+/,'');
   return v;
 }
 function exactActaLink(r,id){
@@ -102,41 +104,74 @@ function exactActaLink(r,id){
   const league=matchLeagueId(r,id),match=numericId(r?.id);
   return league&&match?matchOfficialLink(league,match):'';
 }
+// V17: FECAPA i l'Agenda poden tenir hores i patrocinadors diferents.
+// Mai identifiquem un partit per la seva posició dins la taula ni pel marcador.
+// Exigim SEMPRE lliga + dia + orientació local/visitant i ID únic verificat.
 function resolveActaLink(r,id){
   const direct=exactActaLink(r,id);
-  if(direct)return {url:direct,exact:true};
-  // Algunes lectures d'Agenda no inclouen l'ID. Recuperar-lo només si la
-  // coincidència de data, equips, competició i partit és inequívoca.
-  const league=matchLeagueId(r,id),possible=new Set();
-  // Els IDs verificats de les dreceres FECAPA van en una taula independent.
-  // Només s'enllacen quan data, equips i lliga coincideixen inequívocament.
-  if(league){
-    for(const other of store.actaIndex?.[league]?.rows||[]){
-      if(other.iso!==r.iso||matchTeamKey(other.home)!==matchTeamKey(r.home)||matchTeamKey(other.away)!==matchTeamKey(r.away))continue;
-      if(other.time&&r.time&&other.time!==r.time)continue;
-      const idp=numericId(other.id);if(idp)possible.add(matchOfficialLink(league,idp));
-    }
+  if(direct)return {url:direct,exact:true,method:'enllaç directe'};
+  const league=matchLeagueId(r,id),official=(store.actaIndex?.[league]?.rows||[]);
+  const stats={league,imported:official.length,sameDay:0,sameTeams:0,sameSide:0};
+  const normTeam=s=>matchTeamKey(s);
+  const same=(a,b)=>normTeam(a)===normTeam(b);
+  const club=s=>{const n=normTeam(s);if(n==='BARCA')return 'barca';if(/^SANT CELONI(?: [AB])?$/.test(n))return n;return '';};
+  const officialIds=[];
+  const explicit=[];
+  const oneSide=[];
+  for(const other of official){
+    if(String(other.iso)!==String(r.iso))continue;
+    const idp=numericId(other.id);if(!idp)continue;
+    stats.sameDay++;
+    const h=same(other.home,r.home),a=same(other.away,r.away);
+    const item={url:matchOfficialLink(league,idp),id:idp};
+    if(h&&a){stats.sameTeams++;explicit.push(item);}
+    // Fallback restringit: una sola coincidència dins de la mateixa lliga i el
+    // mateix dia, amb el club favorit a la mateixa banda. Mai si hi ha més
+    // d'un ID candidat aquell dia.
+    const sh=club(other.home),sa=club(other.away);
+    const rh=club(r.home),ra=club(r.away);
+    if((sh&&sh===rh)||(sa&&sa===ra)){stats.sameSide++;oneSide.push(item);}
+    officialIds.push(item);
   }
+  const unique=items=>[...new Map(items.map(x=>[x.id,x])).values()];
+  const precise=unique(explicit);
+  if(precise.length===1)return {...precise[0],exact:true,method:'equips i dia',stats};
+  // No desempat per hora si hi ha diversos IDs diferents; és més segur no
+  // obrir una acta que obrir l'acta errònia.
+  if(precise.length>1)return {url:calendarUrl(league),exact:false,reason:'IDs contradictoris per als mateixos equips',stats};
+  const byClub=unique(oneSide),byDay=unique(officialIds);
+  if(byClub.length===1&&byDay.length===1){
+    return {...byClub[0],exact:true,method:'únic partit del club en lliga i dia',stats};
+  }
+  // Algunes importacions antigues de lliga ja guarden la URL oficial de
+  // cada fila. Les consultem sense canviar l'ordenació ni les dades d'agenda.
+  const otherLinks=[];
   for(const group of ['4789','4786','4784']){
     if(league&&group!==league)continue;
     const sources=[allRows(group),store.seasons?.[group]?.rows||[]];
     for(const rows of sources)for(const other of rows){
-      if(other.iso!==r.iso||matchTeamKey(other.home)!==matchTeamKey(r.home)||matchTeamKey(other.away)!==matchTeamKey(r.away))continue;
-      const known=exactActaLink(other,group);
-      if(known)possible.add(known);
+      if(String(other.iso)!==String(r.iso))continue;
+      if(!same(other.home,r.home)||!same(other.away,r.away))continue;
+      const known=exactActaLink(other,group);if(known)otherLinks.push(known);
     }
   }
-  if(possible.size===1)return {url:[...possible][0],exact:true};
-  // No inventar l'ID: mostrar la lliga oficial i advertir que cal buscar-hi el partit.
-  return {url:league?calendarUrl(league):BASE,exact:false};
+  const uniqueLinks=[...new Set(otherLinks)];
+  if(uniqueLinks.length===1)return {url:uniqueLinks[0],exact:true,method:'calendari importat',stats};
+  return {url:league?calendarUrl(league):BASE,exact:false,
+    reason:stats.imported===0?'No hi ha identificadors importats per a aquesta lliga':
+      stats.sameDay===0?'Cap identificador importat correspon a aquesta data':
+      'No s’ha pogut identificar un únic partit sense ambigüitats',stats};
 }
-let actaDialog=null,actaFrame=null,actaTitle=null,actaHint=null,actaExternal=null,actaPosition=null;
+let actaDialog=null,actaFrame=null,actaTitle=null,actaHint=null,actaExternal=null,actaPosition=null,actaDiagnostic=null,actaCopy=null;
 function setupActaDialog(){
   const style=mk('style');style.textContent=`
   .zok-acta-dialog:not([open]){display:none}
   .zok-acta-dialog[open]{display:flex;flex-direction:column}
   .zok-acta-dialog{position:fixed;margin:auto;inset:0;box-sizing:border-box;width:min(98vw,1050px);max-width:98vw;height:min(93vh,940px);height:min(93dvh,940px);max-height:93vh;max-height:93dvh;padding:0;overflow:hidden;border:1px solid #34536d;border-radius:17px;background:#f3f6fa;color:#082238;box-shadow:0 20px 70px #000a}
   .zok-acta-dialog::backdrop{background:#03172bd9}
+  .zok-acta-dialog.zok-acta-unmatched{height:auto;max-height:90dvh}
+  .zok-acta-dialog.zok-acta-unmatched .zok-acta-hint{font-size:.9rem}
+  .zok-acta-diagnostic{font-size:.75rem;opacity:.8}
   .zok-acta-header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#061f38;color:#fff;padding:12px 14px;min-height:48px}
   .zok-acta-header strong{font-size:1rem;line-height:1.25}
   .zok-acta-close{flex:0 0 auto;border:1px solid #b5c9d3;border-radius:10px;background:#244860;color:#fff;font-size:1.5rem;font-weight:800;line-height:1;padding:6px 11px;cursor:pointer}
@@ -156,7 +191,15 @@ function setupActaDialog(){
   actaTitle=mk('div','zok-acta-subtitle');
   actaFrame=mk('iframe','zok-acta-iframe');actaFrame.title='Fitxa oficial de FECAPA';actaFrame.setAttribute('loading','eager');actaFrame.setAttribute('sandbox','allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
   const footer=mk('div','zok-acta-footer');actaHint=mk('p','zok-acta-hint');
-  actaExternal=mk('a','zok-acta-external','Obrir a FECAPA ↗');actaExternal.target='_blank';actaExternal.rel='noopener';footer.append(actaHint,actaExternal);
+  actaExternal=mk('a','zok-acta-external','Obrir a FECAPA ↗');actaExternal.target='_blank';actaExternal.rel='noopener';
+  actaDiagnostic=mk('span','zok-acta-diagnostic');
+  actaCopy=mk('button','zok-acta-external','Copiar diagnòstic');actaCopy.type='button';
+  actaCopy.style.border='0';actaCopy.onclick=async()=>{
+    const message=actaCopy.dataset.report||'';
+    try{await navigator.clipboard.writeText(message);toast('Diagnòstic copiat');}
+    catch(_){toast(message.slice(0,200));}
+  };
+  footer.append(actaHint,actaDiagnostic,actaCopy,actaExternal);
   actaDialog.append(header,actaTitle,actaFrame,footer);document.body.append(actaDialog);
   actaDialog.addEventListener('click',e=>{if(e.target===actaDialog)actaDialog.close();});
   actaDialog.addEventListener('close',()=>{
@@ -173,8 +216,13 @@ function openActaDialog(r,id){
   actaPosition={x:window.scrollX,y:window.scrollY};
   actaTitle.textContent=`${r.home} · ${r.homeScore} - ${r.awayScore} · ${r.away} · ${niceDate(r.iso)}`;
   actaHint.textContent=link.exact
-    ?'Si FECAPA no permet veure l’acta dins la finestra, prem «Obrir a FECAPA».'
-    :'Aquest partit encara no té cap identificador FECAPA verificat. La drecera d’actes està pendent de correcció. No cal tornar a importar la temporada ni s’ha inventat cap enllaç.';
+    ?'Fitxa identificada ('+link.method+'). Si FECAPA bloqueja la finestra, prem «Obrir a FECAPA».'
+    :'No s’ha pogut associar de manera inequívoca aquest partit amb els identificadors importats. '+(link.reason||'')+'.';
+  const st=link.stats||{league:matchLeagueId(r,id),imported:0,sameDay:0,sameTeams:0,sameSide:0};
+  actaDiagnostic.textContent=link.exact?'':('V17 · Lliga '+(st.league||'?')+' · '+st.imported+' IDs importats · '+st.sameDay+' del mateix dia · '+st.sameTeams+' amb els dos equips');
+  actaCopy.hidden=Boolean(link.exact);
+  actaCopy.dataset.report=JSON.stringify({version:'V17',match:{iso:r.iso,time:r.time,home:r.home,away:r.away,competition:r.competition},stats:st,reason:link.reason||'',officialOnDate:(store.actaIndex?.[st.league]?.rows||[]).filter(x=>x.iso===r.iso).map(x=>({iso:x.iso,time:x.time,home:x.home,away:x.away,id:x.id}))},null,2);
+  actaDialog.classList.toggle('zok-acta-unmatched',!link.exact);
   actaExternal.href=link.url;
   actaExternal.textContent=link.exact?'Obrir a FECAPA ↗':'Veure calendari ↗';
   actaFrame.hidden=!link.exact;
