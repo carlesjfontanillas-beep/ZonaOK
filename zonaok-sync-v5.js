@@ -14,7 +14,8 @@
   const validTime=s=>/^([01]\d|2[0-3]):[0-5]\d$/.test(String(s||''));
   const validScore=n=>Number.isInteger(n)&&n>=0&&n<200;
   const isBarca=s=>/^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETRANS|FCBETERANS)(?: [A-Z0-9]+)?$/.test(norm(s));
-  const isCeloni=s=>norm(s).includes('CELONI');
+  // A En directe el CP Sant Celoni sovint apareix com CPSC / CPSC B.
+  const isCeloni=s=>norm(s).includes('CELONI')||/^CPSC(?: [A-Z0-9]+)?$/.test(norm(s));
   const isClub=s=>isBarca(s)||isCeloni(s);
   const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(_){return {}}};
   const write=s=>{try{localStorage.setItem(KEY,JSON.stringify(s));return true}catch(_){return false}};
@@ -31,11 +32,51 @@
     if((scoreH!==null||scoreA!==null)&&(!validScore(scoreH)||!validScore(scoreA)))return null;
     return {iso,time,competition:text(competition),home:text(home),away:text(away),homeScore:scoreH,awayScore:scoreA,venue:text(venue)};
   };
+  // Els marcadors de FECAPA poden arribar com a nombres o text ("3", "0").
+  // Null, buit i guio NO signifiquen 0-0: son partits sense marcador verificat.
+  const goal=value=>{
+    if(value===null||value===undefined)return null;
+    const s=String(value).trim();
+    return /^\d{1,3}$/.test(s)&&validScore(Number(s))?Number(s):null;
+  };
+  const scorePair=value=>{
+    const s=String(value??'').trim();
+    const m=s.match(/^(?:(?:FINAL|ACABAT|FT)\s+)?(\d{1,3})\s*[-\u2013\u2014:]\s*(\d{1,3})(?:\s+(?:FINAL|ACABAT|FT))?$/i);
+    return m&&validScore(+m[1])&&validScore(+m[2])?[+m[1],+m[2]]:null;
+  };
+  const scoreDate=value=>{
+    const s=String(value??'').trim();
+    if(validDate(s.slice(0,10)))return s.slice(0,10);
+    const m=s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](20\d{2})$/);
+    return m?`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`:'';
+  };
+  const scoreTime=value=>{
+    const m=String(value??'').trim().match(/(?:^|\s)([01]?\d|2[0-3]):([0-5]\d)(?::\d{2})?(?=\s|$)/);
+    return m?m[1].padStart(2,'0')+':'+m[2]:'';
+  };
+  const first=(...values)=>values.find(v=>v!==null&&v!==undefined&&String(v).trim()!=='');
   const cleanScore=a=>{
-    if(!Array.isArray(a)||a.length!==7)return null;
-    const [iso,time,competition,home,away,homeScore,awayScore]=a;
-    if(!validDate(iso)||!validTime(time)||!text(home)||!text(away)||!validScore(homeScore)||!validScore(awayScore)||!isClub(home)&&!isClub(away))return null;
-    return {iso,time,competition:text(competition),home:text(home),away:text(away),homeScore,awayScore};
+    if(!a||typeof a!=='object')return null;
+    const r=Array.isArray(a)?{
+      iso:a[0],time:a[1],competition:a[2],home:a[3],away:a[4],
+      homeScore:a[5],awayScore:a[6],score:a.length===6?a[5]:undefined
+    }:a;
+    const iso=scoreDate(first(r.iso,r.date,r.data,r.fecha));
+    const time=scoreTime(first(r.time,r.hora,r.startTime));
+    const home=text(first(r.home,r.local,r.homeTeam,r.equipLocal,r.equipoLocal));
+    const away=text(first(r.away,r.visitor,r.awayTeam,r.visitant,r.visitante,r.equipVisitant));
+    const competition=text(first(r.competition,r.category,r.categoria,r.competicio));
+    let homeScore=goal(first(r.homeScore,r.scoreHome,r.goalsHome,r.golsLocal,r.resultatLocal));
+    let awayScore=goal(first(r.awayScore,r.scoreAway,r.goalsAway,r.golsVisitant,r.resultatVisitant));
+    if(homeScore===null||awayScore===null){
+      const pair=scorePair(first(r.score,r.result,r.resultat,r.resultado,r.marcador));
+      if(pair){homeScore=pair[0];awayScore=pair[1];}
+    }
+    // Rebutgem files incompletes, no partits: mai inventem un marcador.
+    if(!validDate(iso)||!validTime(time)||!home||!away||
+       !validScore(homeScore)||!validScore(awayScore)||
+       (!isClub(home)&&!isClub(away)))return null;
+    return {iso,time,competition,home,away,homeScore,awayScore};
   };
   const cleanSeasonRow=(input,league)=>{
     const r=Array.isArray(input)?{iso:input[0],time:input[1],competition:input[2],home:input[3],away:input[4],homeScore:input[5],awayScore:input[6],venue:input[7],actaId:input[8]}:input;
@@ -89,14 +130,22 @@
       return `Agenda: ${next.length} partits (${cb} Bar\u00E7a, ${cs} Sant Celoni) \u00B7 ${pistes} pistes`;
     }
     if(kind==='resultats-v5'){
-      if(!Array.isArray(p.rows)||p.rows.length>300)throw Error('Dades d\u2019En directe no v\u00E0lides');
-      const next=p.rows.map(cleanScore);
-      if(!next.length||next.some(r=>!r))throw Error('Cap marcador v\u00E0lid');
-      // Es guarden els marcadors, pero la pantalla nomes aplica els que encaixen
-      // sense ambiguitat amb un partit importat d'Agenda.
+      if(!Array.isArray(p.rows)||p.rows.length>300)throw Error('Dades d’En directe no vàlides');
+      // Les files pendents o mal formades no han de cancel·lar les valides.
+      const parsed=p.rows.map(cleanScore);
+      const valid=parsed.filter(Boolean);
+      const next=[...new Map(valid.map(r=>[rowKey(r),r])).values()];
+      const ignored=p.rows.length-valid.length;
+      if(!next.length){
+        // L'Agenda i els marcadors previs es preserven; tampoc no
+        // avancem capturedAt si no hem importat cap marcador real.
+        return `En directe: 0 marcadors vàlids (${p.rows.length} files rebudes). Cap dada anterior modificada.`;
+      }
+      // Només es guarden marcadors; no es creen partits d'Agenda.
       const stamped=next.map(r=>({...r,capturedAt:p.capturedAt}));
-      store.scoreUpdates={rows:mergeRows(store.scoreUpdates?.rows||[],stamped),capturedAt:[store.scoreUpdates?.capturedAt,p.capturedAt].filter(Boolean).sort().pop()};
-      return `${next.length} marcadors consultats a En directe`;
+      store.scoreUpdates={rows:mergeRows(store.scoreUpdates?.rows||[],stamped),
+        capturedAt:[store.scoreUpdates?.capturedAt,p.capturedAt].filter(Boolean).sort().pop()};
+      return `En directe: ${next.length} marcadors vàlids importats${ignored?` · ${ignored} files ignorades`:''}. Agenda conservada.`;
     }
     throw Error('Tipus desconegut');
   };
@@ -115,7 +164,15 @@
 
   function sideClub(name){if(isBarca(name))return 'barca';if(isCeloni(name))return 'celoni';return '';}
   const coreCat=s=>norm(s).replace(/\s+\d+$/,'').replace(/\s+(GRUP|GRUPO)\s+[A-Z0-9]+$/,'');
-  const nameKey=s=>{const n=norm(s);if(['BAR','BARCA','FC BARCELONA','F C BARCELONA'].includes(n))return 'BARCA';if(n==='CPSC'||n==='CP SANT CELONI'||n==='SANT CELONI')return 'SANT CELONI';return n;};
+  const nameKey=s=>{
+    const n=norm(s);
+    // Unifiquem abreviatures, conservant el sufix A/B quan existeix.
+    const b=n.match(/^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETRANS|FCBETERANS)(?: ([A-Z0-9]+))?$/);
+    if(b)return 'BARCA'+(b[1]?' '+b[1]:'');
+    const c=n.match(/^(?:CPSC|CP SANT CELONI|C P SANT CELONI|SANT CELONI)(?: ([A-Z0-9]+))?$/);
+    if(c)return 'SANT CELONI'+(c[1]?' '+c[1]:'');
+    return n;
+  };
   function matches(a,b){
     if(a.iso!==b.iso||a.time!==b.time)return false;
     const ah=nameKey(a.home),aa=nameKey(a.away),bh=nameKey(b.home),ba=nameKey(b.away);
