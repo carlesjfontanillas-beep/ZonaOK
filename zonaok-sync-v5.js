@@ -152,6 +152,75 @@
     else crest.append(el('span','crest-fallback',name.slice(0,1).toUpperCase()));
     side.append(crest,el('strong','',name));return side;
   }
+  // Dates i hores de FECAPA estan en hora local Europe/Madrid.
+  // El fitxer ICS usa UTC real: evita desfasaments a l'estiu i a l'hivern.
+  function madridToUTC(iso,time){
+    const [year,month,day]=iso.split('-').map(Number);
+    const [hour,minute]=time.split(':').map(Number);
+    const wanted=Date.UTC(year,month-1,day,hour,minute);
+    const fmt=new Intl.DateTimeFormat('en-GB',{
+      timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit',
+      hour:'2-digit',minute:'2-digit',hourCycle:'h23'
+    });
+    const localAsUTC=ms=>{
+      const parts=Object.fromEntries(fmt.formatToParts(new Date(ms)).filter(x=>x.type!=='literal').map(x=>[x.type,Number(x.value)]));
+      return Date.UTC(parts.year,parts.month-1,parts.day,parts.hour,parts.minute);
+    };
+    let actual=wanted-(localAsUTC(wanted)-wanted);
+    actual=wanted-(localAsUTC(actual)-actual);
+    return new Date(actual);
+  }
+  const icsUTC=d=>d.toISOString().slice(0,19).replace(/[-:]/g,'')+'Z';
+  const icsText=value=>String(value??'').replace(/\\/g,'\\\\').replace(/\r\n|\r|\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');
+  function icsFold(line){
+    // RFC 5545: continuació de línies llargues (màxim 75 octets).
+    const encoder=new TextEncoder();let result='',bytes=0;
+    for(const ch of line){
+      const count=encoder.encode(ch).length;
+      if(bytes+count>75){result+='\r\n ';bytes=1;}
+      result+=ch;bytes+=count;
+    }
+    return result;
+  }
+  function mapsURL(venue){
+    return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(venue);
+  }
+  function calendarICS(r){
+    const start=madridToUTC(r.iso,r.time);
+    const end=new Date(start.getTime()+90*60000); // Durada estimada: 1 h 30 min.
+    const title=`${r.home} - ${r.away}`;
+    const description=[
+      'Partit d’hoquei patins',
+      'Competició: '+(r.competition||'No indicada'),
+      'Hora local: '+r.iso+' '+r.time+' (Europe/Madrid)',
+      ...(r.venue?['Pista: '+r.venue,'Google Maps: '+mapsURL(r.venue)]:[]),
+      'Font: Agenda FECAPA'
+    ].join('\n');
+    let hash=2166136261;
+    for(const ch of rowKey(r))hash=Math.imul(hash^ch.charCodeAt(0),16777619)>>>0;
+    const lines=[
+      'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ZonaOK//Partits FECAPA//CA',
+      'CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',
+      'UID:zonaok-'+r.iso.replace(/-/g,'')+'-'+hash.toString(16)+'@zonaok.local',
+      'DTSTAMP:'+icsUTC(new Date()),
+      'DTSTART:'+icsUTC(start),'DTEND:'+icsUTC(end),
+      'SUMMARY:'+icsText(title),
+      'DESCRIPTION:'+icsText(description),
+      ...(r.venue?['LOCATION:'+icsText(r.venue)]:[]),
+      'URL:'+AGENDA,
+      'END:VEVENT','END:VCALENDAR'
+    ];
+    return lines.map(icsFold).join('\r\n')+'\r\n';
+  }
+  function addCalendar(r){
+    if(!validDate(r.iso)||!validTime(r.time))return;
+    const blob=new Blob([calendarICS(r)],{type:'text/calendar;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const link=el('a');link.href=url;
+    link.download='ZonaOK-'+r.iso+'-'+r.time.replace(':','')+'.ics';
+    document.body.append(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }
   function card(r,compact){
     const cls=isBarca(r.home)||isBarca(r.away)?'zok-v5-barca':
       /INFANTIL OR 10/.test(norm(r.competition))&& (isCeloni(r.home)||isCeloni(r.away))?'zok-v5-infantil':
@@ -163,9 +232,28 @@
     const teams=el('div','teams'),middle=el('div','middle');middle.append(el('div','score',validScore(r.homeScore)&&validScore(r.awayScore)?`${r.homeScore} : ${r.awayScore}`:'— : —'),el('small','score-note',validScore(r.homeScore)&&validScore(r.awayScore)?scoreLabel:'Pendent'));
     teams.append(teamSide(r.home),middle,teamSide(r.away));c.append(teams);
     if(!compact){
-      const venue=el('div','venue');venue.append(el('strong','','📍 '+(r.venue||'Pista no indicada a Agenda')));c.append(venue);
+      const venue=el('div','venue');
+      if(r.venue){
+        const map=el('a','zok-map-link');map.href=mapsURL(r.venue);
+        map.target='_blank';map.rel='noopener noreferrer';
+        map.setAttribute('aria-label','Obrir Google Maps: '+r.venue);
+        map.append(el('strong','','📍 '+r.venue+' ↗'));venue.append(map);
+      }else venue.append(el('strong','','📍 Pista no indicada a Agenda'));
+      c.append(venue);
     }
-    if(r.actaUrl){const actions=el('div','match-actions'),link=el('a','light','⌕ Acta');link.href=r.actaUrl;link.target='_blank';link.rel='noopener';link.setAttribute('aria-label','Obrir la fitxa i l’acta oficial del partit');actions.append(link);c.append(actions);}
+    const actions=el('div','match-actions');
+    if(!compact){
+      const calendar=el('button','zok-calendar-btn','📅 Afegir al calendari');
+      calendar.type='button';
+      calendar.setAttribute('aria-label','Afegir al calendari: '+r.home+' contra '+r.away);
+      calendar.addEventListener('click',()=>addCalendar(r));
+      actions.append(calendar);
+    }
+    if(r.actaUrl){
+      const link=el('a','light','⌕ Acta');link.href=r.actaUrl;link.target='_blank';link.rel='noopener';
+      link.setAttribute('aria-label','Obrir la fitxa i l’acta oficial del partit');actions.append(link);
+    }
+    if(actions.childNodes.length)c.append(actions);
     return c;
   }
   const byWeek=(rows)=>{const start=monday(),end=plus(start,6);return rows.filter(r=>r.iso>=start&&r.iso<=end).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));};
@@ -270,6 +358,12 @@
       #results-list .match.zok-v5{max-width:100%;margin:0}
       #results-list .match.zok-v5 .match-date[data-zok-categoria]::after {content:attr(data-zok-categoria)}
       .zok-v5-notice{padding:7px 10px;border-radius:9px;background:#254968;color:#fff}
+      .match.zok-v5:not(.zok-compact) .match-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+      .match.zok-v5 .zok-calendar-btn{appearance:none;-webkit-appearance:none;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 15px;border:1px solid rgba(0,0,0,.14);border-radius:13px;background:rgba(255,255,255,.88);color:var(--accent);font:inherit;font-size:14px;font-weight:800;line-height:1.25;cursor:pointer;touch-action:manipulation}
+      .match.zok-v5 .zok-calendar-btn:active{transform:translateY(1px)}
+      .match.zok-v5 .zok-calendar-btn:focus-visible,.match.zok-v5 .zok-map-link:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+      .match.zok-v5 .venue .zok-map-link{display:inline-flex;align-items:center;color:inherit;text-decoration:none;cursor:pointer;touch-action:manipulation}
+      .match.zok-v5 .venue .zok-map-link:hover{text-decoration:underline}
     `;document.head.append(style);
     schedule();setTimeout(mergePublished,450);
   }
