@@ -23,7 +23,6 @@
     </div>
     <div class="emblem" aria-hidden="true">🏒</div>
   </header>
-
   <section class="hero">
     <div class="overline">AGENDA PERSONAL</div>
     <h1>Els meus partits<br>d'aquesta setmana</h1>
@@ -40,7 +39,6 @@
       <button id="ask-home" class="secondary">Consulta ChatGPT ↗</button>
     </div>
   </section>
-
   <section class="keyline">
     <span id="data-label">Agenda + En directe · Safari</span>
     <span id="data-age">Sense dades carregades</span>
@@ -53,7 +51,6 @@
     </div>
     <div id="home-cards" class="cards"></div>
   </section>
-
   <section class="section hide" id="results-section">
     <div class="section-head">
       <div><span class="overline" id="results-eyebrow">CONSULTA</span><h2 id="results-title">Resultats</h2></div>
@@ -66,7 +63,6 @@
     <p id="results-note" class="helper"></p>
     <div id="results-list" class="cards"></div>
   </section>
-
   <section class="section">
     <div class="section-head">
       <div><span class="overline">DUES LECTURES · SAFARI</span><h2>Actualitzar dades</h2></div>
@@ -81,9 +77,9 @@
         <button id="export-shared" class="secondary">Descarregar JSON</button>
         <button id="publish-shared" class="secondary">GitHub ↗</button>
       </div>
-      <p class="helper">Per veure les lectures en altres aparells: descarrega <strong>zonaok-data.json</strong>, puja'l a l'arrel del repositori i confirma el commit. Les lectures des de Safari només es desen localment fins que publiques el JSON.</p>
+      <p class="helper">La nova drecera d'agenda copia el JSON al porta-retalls i obre ZonaOK. Prem <strong>Importar agenda</strong> (o segueix el diàleg que apareix automàticament). Si Safari bloqueja la lectura, enganxa el text. Les lectures es guarden localment fins que publiquis <strong>zonaok-data.json</strong> al GitHub.</p>
       <p><strong>Importar tota la temporada</strong></p>
-      <p class="helper">A l’Agenda de FECAPA, selecciona tots els clubs i el rang de dates complet de la temporada 2026/2027. La drecera importa els partits de tota la temporada del Barça i CP Sant Celoni. També pots importar els grups de Magí i Ton des dels seus calendaris oficials.</p>
+      <p class="helper">A l’Agenda de FECAPA, selecciona tots els clubs i el rang de dates complet de la temporada 2026/2027. La drecera importa els partits de tota la temporada del Barça i CP Sant Celoni que hi apareguin. També pots importar els grups de Magí i Ton des dels seus calendaris oficials.</p>
       <div class="context-actions">
         <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4789&amp;vista=calendar" target="_blank" rel="noopener">Resultats Aleví OR 3 ↗</a>
         <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4786&amp;vista=calendar" target="_blank" rel="noopener">Calendari Infantil OR 10 ↗</a>
@@ -96,12 +92,11 @@
       </div>
       <p><strong>Dreceres Safari</strong></p>
       <div class="context-actions">
-        <a class="secondary" href="ZonaOK-Agenda-V61.shortcut">Instal·lar Agenda · temporada ↓</a>
+        <a class="secondary" href="ZONAOK_AGENDA_SAFARI.js" download>Codi Agenda V9 · porta-retalls ↓</a>
         <a class="secondary" href="ZonaOK-Resultats.shortcut">Instal·lar En directe ↓</a>
-        <a class="secondary" href="ZONAOK_AGENDA_SAFARI.js" download>Codi Agenda ↓</a>
         <a class="secondary" href="ZONAOK_DIRECTE_RESULTATS_SAFARI.js" download>Codi En directe ↓</a>
       </div>
-      <p class="helper">A Agenda selecciona <strong>tots els clubs</strong> i el període complet de la temporada vigent; enguany, 01/07/2026–30/06/2027. A Safari, prem Compartir → la drecera corresponent. A Dreceres, configura «Executar JavaScript a la pàgina web» seguit d'«Obrir URL» amb el resultat. Les tres dreceres de classificació existents no canvien.</p>
+      <p class="helper">A Agenda selecciona <strong>tots els clubs</strong> i el període complet de la temporada vigent; enguany, 01/07/2026–30/06/2027. A Safari, prem Compartir → ZonaOK2. La drecera ha d'obtenir el camp <strong>json</strong>, copiar-lo al porta-retalls, obtenir <strong>url</strong> i obrir aquest URL. Les tres dreceres de classificació existents no canvien.</p>
       <p><strong>Dreceres de classificació existents</strong></p>
       <div class="context-actions">
         <a class="secondary" href="ZonaOK-Alevi-OR-3.shortcut">Aleví OR 3 ↓</a>
@@ -117,7 +112,6 @@
   </section>
   <footer class="footer">Font esportiva única: <a href="https://www.hoqueipatins.fecapa.cat/" target="_blank" rel="noopener">FECAPA</a>. Els marcadors es mostren quan existeixen en les dades importades. Les consultes a ChatGPT són alternatives.</footer>
 </main>
-
 <nav class="bottom" aria-label="Sis consultes">
   <div class="bottom-title">CONSULTES RÀPIDES</div>
   <div class="navgrid">
@@ -129,20 +123,18 @@
     <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>⌂</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
   </div>
 </nav>
-
 <dialog id="guide">
   <div class="modal-title">Importar dades FECAPA <button id="guide-close" class="mini">✕</button></div>
-  <p>1. Obre FECAPA Agenda (/ag/) en Safari. Selecciona TOTS els clubs i el període complet de temporada (01/07/2026–30/06/2027). Espera que es vegi la taula completa.</p>
-  <p>2. Prem Compartir → «ZonaOK Agenda»; importa tots els partits de temporada del Barça i CP Sant Celoni que es vegin a la taula.</p>
-  <p>3. Per actualitzar marcadors, obre FECAPA → En directe i prem Compartir → «ZonaOK Resultats». Només s'aplicaran marcadors als partits que ja hagis importat d'Agenda i es puguin identificar amb seguretat.</p>
-  <p>4. Les dreceres reben «Pàgines web de Safari», executen JavaScript sobre la pàgina i obren l'URL retornada. No cal API ni servidor.</p>
-  <p>5. Per compartir les dades entre aparells, descarrega zonaok-data.json i publica'l a GitHub.</p>
-  <p class="helper">Les temporades s’importen des dels calendaris oficials de FECAPA. Els botons Magí i Ton conserven els partits importats per a tota la temporada. Les classificacions mantenen les tres dreceres existents.</p>
+  <p>1. Obre FECAPA Agenda (/ag/) en Safari. Selecciona TOTS els clubs i el període complet de temporada (01/07/2026–30/06/2027). Comprova que la taula mostri tots els partits que vols importar.</p>
+  <p>2. Prem Compartir → «ZonaOK2»; la drecera copia el camp «json» al porta-retalls i obre el camp «url» a ZonaOK.</p>
+  <p>3. A ZonaOK, prem «Llegir porta-retalls» al diàleg d'importació. Si Safari demana permís, accepta'l. Si ho bloqueja, enganxa el JSON manualment.</p>
+  <p>4. Per actualitzar marcadors, obre FECAPA → En directe i prem Compartir → «ZonaOK Resultats».</p>
+  <p>5. Per compartir dades entre aparells, descarrega zonaok-data.json i publica'l a GitHub. La importació al navegador no publica automàticament el JSON.</p>
+  <p class="helper">Les temporades de Magí i Ton i les dreceres de classificació es mantenen sense canvis.</p>
 </dialog>
 <div id="toast" role="status" aria-live="polite"></div>
-
-<script src="zonaok-sync-v5.js?v=20261119-utf8-segur-v2" charset="utf-8" defer></script>
-<script src="app.js?v=20261118-fullseason" defer></script>
+<script src="zonaok-sync-v5.js?v=20261119-calendari-inline" defer></script>
+<script src="app.js?v=20261119-clipboard-v9" defer></script>
 <script src="zonaok-retocs.js?v=20261118-season" defer></script>
 </body>
 </html>
