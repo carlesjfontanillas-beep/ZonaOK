@@ -2,16 +2,17 @@
 <html lang="ca">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#061d33">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="ZonaOK">
-  <meta name="description" content="Agenda i consultes FECAPA amb lectura des de Safari. Projecte independent i gratuït.">
+  <meta name="description" content="Agenda i consultes FECAPA amb lectura des de Safari. Projecte independent i gratu&#xEF;t.">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <title>ZonaOK · El teu hoquei</title>
+  <title>ZonaOK &#xB7; El teu hoquei</title>
   <link rel="stylesheet" href="style.css?v=20261118-season">
 </head>
 <body>
@@ -19,9 +20,9 @@
   <header class="mast">
     <div>
       <div class="brand">ZONA<span>OK</span></div>
-      <div class="strap">ELS TEUS PARTITS · EL TEU HOQUEI</div>
+      <div class="strap">ELS TEUS PARTITS &#xB7; EL TEU HOQUEI</div>
     </div>
-    <div class="emblem" aria-hidden="true">🏒</div>
+    <div class="emblem" aria-hidden="true">&#x1F3D2;</div>
   </header>
   <section class="hero">
     <div class="overline">AGENDA PERSONAL</div>
@@ -35,18 +36,18 @@
       <circle cx="170" cy="33" r="3" fill="#ffc080"/>
     </svg>
     <div class="hero-actions">
-      <button id="refresh-home" class="primary">↻ Veure els meus partits</button>
-      <button id="ask-home" class="secondary">Consulta ChatGPT ↗</button>
+      <button id="refresh-home" class="primary">&#x21BB; Veure els meus partits</button>
+      <button id="ask-home" class="secondary">Consulta ChatGPT &#x2197;</button>
     </div>
   </section>
   <section class="keyline">
-    <span id="data-label">Agenda + En directe · Safari</span>
+    <span id="data-label">Agenda + En directe &#xB7; Safari</span>
     <span id="data-age">Sense dades carregades</span>
   </section>
 
   <section class="section">
     <div class="section-head">
-      <div><span class="overline">DILLUNS → DIUMENGE</span><h2>Barça · Sant Celoni</h2></div>
+      <div><span class="overline">DILLUNS &#x2192; DIUMENGE</span><h2>Bar&#xE7;a &#xB7; Sant Celoni</h2></div>
       <span class="section-tag" id="home-count">0 partits</span>
     </div>
     <div id="home-cards" class="cards"></div>
@@ -54,54 +55,54 @@
   <section class="section hide" id="results-section">
     <div class="section-head">
       <div><span class="overline" id="results-eyebrow">CONSULTA</span><h2 id="results-title">Resultats</h2></div>
-      <button id="close-results" class="mini">Inici ✕</button>
+      <button id="close-results" class="mini">Inici &#x2715;</button>
     </div>
     <div class="context-actions">
-      <button id="open-fecapa" class="secondary">FECAPA ↗</button>
-      <button id="ask-section" class="secondary">ChatGPT ↗</button>
+      <button id="open-fecapa" class="secondary">FECAPA &#x2197;</button>
+      <button id="ask-section" class="secondary">ChatGPT &#x2197;</button>
     </div>
     <p id="results-note" class="helper"></p>
     <div id="results-list" class="cards"></div>
   </section>
   <section class="section">
     <div class="section-head">
-      <div><span class="overline">DUES LECTURES · SAFARI</span><h2>Actualitzar dades</h2></div>
+      <div><span class="overline">DUES LECTURES &#xB7; SAFARI</span><h2>Actualitzar dades</h2></div>
       <span class="section-tag" id="total-count">0 partits</span>
     </div>
     <div class="import-card">
-      <p><strong>1. Agenda i resultats:</strong> una sola drecera llegeix la taula amb <strong>tots els clubs</strong> de FECAPA, filtra els partits del <strong>Barça i CP Sant Celoni</strong> de tota la temporada i els conserva. <strong>2. En directe:</strong> una altra drecera actualitza només els marcadors dels partits ja importats. La classificació manté les tres dreceres pròpies.</p>
+      <p><strong>1. Agenda i resultats:</strong> una sola drecera llegeix la taula amb <strong>tots els clubs</strong> de FECAPA, filtra els partits del <strong>Bar&#xE7;a i CP Sant Celoni</strong> de tota la temporada i els conserva. <strong>2. En directe:</strong> una altra drecera actualitza nom&#xE9;s els marcadors dels partits ja importats. La classificaci&#xF3; mant&#xE9; les tres dreceres pr&#xF2;pies.</p>
       <div class="context-actions">
-        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/ag/" target="_blank" rel="noopener">Agenda ↗</a>
-        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/" target="_blank" rel="noopener">En directe ↗</a>
+        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/ag/" target="_blank" rel="noopener">Agenda &#x2197;</a>
+        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/" target="_blank" rel="noopener">En directe &#x2197;</a>
         <button id="reload-shared" class="secondary">Llegir JSON</button>
         <button id="export-shared" class="secondary">Descarregar JSON</button>
-        <button id="publish-shared" class="secondary">GitHub ↗</button>
+        <button id="publish-shared" class="secondary">GitHub &#x2197;</button>
       </div>
-      <p class="helper">La nova drecera d'agenda copia el JSON al porta-retalls i obre ZonaOK. Prem <strong>Importar agenda</strong> (o segueix el diàleg que apareix automàticament). Si Safari bloqueja la lectura, enganxa el text. Les lectures es guarden localment fins que publiquis <strong>zonaok-data.json</strong> al GitHub.</p>
+      <p class="helper">La nova drecera d'agenda copia el JSON al porta-retalls i obre ZonaOK. Prem <strong>Importar agenda</strong> (o segueix el di&#xE0;leg que apareix autom&#xE0;ticament). Si Safari bloqueja la lectura, enganxa el text. Les lectures es guarden localment fins que publiquis <strong>zonaok-data.json</strong> al GitHub.</p>
       <p><strong>Importar tota la temporada</strong></p>
-      <p class="helper">A l’Agenda de FECAPA, selecciona tots els clubs i el rang de dates complet de la temporada 2026/2027. La drecera importa els partits de tota la temporada del Barça i CP Sant Celoni que hi apareguin. També pots importar els grups de Magí i Ton des dels seus calendaris oficials.</p>
+      <p class="helper">A l&#x2019;Agenda de FECAPA, selecciona tots els clubs i el rang de dates complet de la temporada 2026/2027. La drecera importa els partits de tota la temporada del Bar&#xE7;a i CP Sant Celoni que hi apareguin. Tamb&#xE9; pots importar els grups de Mag&#xED; i Ton des dels seus calendaris oficials.</p>
       <div class="context-actions">
-        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4789&amp;vista=calendar" target="_blank" rel="noopener">Resultats Aleví OR 3 ↗</a>
-        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4786&amp;vista=calendar" target="_blank" rel="noopener">Calendari Infantil OR 10 ↗</a>
+        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4789&amp;vista=calendar" target="_blank" rel="noopener">Resultats Alev&#xED; OR 3 &#x2197;</a>
+        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4786&amp;vista=calendar" target="_blank" rel="noopener">Calendari Infantil OR 10 &#x2197;</a>
       </div>
       <div class="context-actions">
-        <a class="secondary" href="ZonaOK-Magi-Temporada.shortcut">Importar temporada Magí ↓</a>
-        <a class="secondary" href="ZonaOK-Ton-Temporada.shortcut">Importar temporada Ton ↓</a>
-        <a class="secondary" href="ZonaOK-Importar-Temporada-Magi.js" download>Codi Magí ↓</a>
-        <a class="secondary" href="ZonaOK-Importar-Temporada-Ton.js" download>Codi Ton ↓</a>
+        <a class="secondary" href="ZonaOK-Magi-Temporada.shortcut">Importar temporada Mag&#xED; &#x2193;</a>
+        <a class="secondary" href="ZonaOK-Ton-Temporada.shortcut">Importar temporada Ton &#x2193;</a>
+        <a class="secondary" href="ZonaOK-Importar-Temporada-Magi.js" download>Codi Mag&#xED; &#x2193;</a>
+        <a class="secondary" href="ZonaOK-Importar-Temporada-Ton.js" download>Codi Ton &#x2193;</a>
       </div>
       <p><strong>Dreceres Safari</strong></p>
       <div class="context-actions">
-        <a class="secondary" href="ZONAOK_AGENDA_SAFARI.js" download>Codi Agenda V9 · porta-retalls ↓</a>
-        <a class="secondary" href="ZonaOK-Resultats.shortcut">Instal·lar En directe ↓</a>
-        <a class="secondary" href="ZONAOK_DIRECTE_RESULTATS_SAFARI.js" download>Codi En directe ↓</a>
+        <a class="secondary" href="ZONAOK_AGENDA_SAFARI.js" download>Codi Agenda V9 &#xB7; porta-retalls &#x2193;</a>
+        <a class="secondary" href="ZonaOK-Resultats.shortcut">Instal&#xB7;lar En directe &#x2193;</a>
+        <a class="secondary" href="ZONAOK_DIRECTE_RESULTATS_SAFARI.js" download>Codi En directe &#x2193;</a>
       </div>
-      <p class="helper">A Agenda selecciona <strong>tots els clubs</strong> i el període complet de la temporada vigent; enguany, 01/07/2026–30/06/2027. A Safari, prem Compartir → ZonaOK2. La drecera ha d'obtenir el camp <strong>json</strong>, copiar-lo al porta-retalls, obtenir <strong>url</strong> i obrir aquest URL. Les tres dreceres de classificació existents no canvien.</p>
-      <p><strong>Dreceres de classificació existents</strong></p>
+      <p class="helper">A Agenda selecciona <strong>tots els clubs</strong> i el per&#xED;ode complet de la temporada vigent; enguany, 01/07/2026&#x2013;30/06/2027. A Safari, prem Compartir &#x2192; ZonaOK2. La drecera ha d'obtenir el camp <strong>json</strong>, copiar-lo al porta-retalls, obtenir <strong>url</strong> i obrir aquest URL. Les tres dreceres de classificaci&#xF3; existents no canvien.</p>
+      <p><strong>Dreceres de classificaci&#xF3; existents</strong></p>
       <div class="context-actions">
-        <a class="secondary" href="ZonaOK-Alevi-OR-3.shortcut">Aleví OR 3 ↓</a>
-        <a class="secondary" href="ZonaOK-Infantil-OR-10.shortcut">Infantil OR 10 ↓</a>
-        <a class="secondary" href="ZonaOK-Juvenil-OR-6.shortcut">Juvenil OR 6 ↓</a>
+        <a class="secondary" href="ZonaOK-Alevi-OR-3.shortcut">Alev&#xED; OR 3 &#x2193;</a>
+        <a class="secondary" href="ZonaOK-Infantil-OR-10.shortcut">Infantil OR 10 &#x2193;</a>
+        <a class="secondary" href="ZonaOK-Juvenil-OR-6.shortcut">Juvenil OR 6 &#x2193;</a>
       </div>
       <div id="import-summary" class="import-summary"></div>
       <div class="context-actions">
@@ -110,31 +111,31 @@
       </div>
     </div>
   </section>
-  <footer class="footer">Font esportiva única: <a href="https://www.hoqueipatins.fecapa.cat/" target="_blank" rel="noopener">FECAPA</a>. Els marcadors es mostren quan existeixen en les dades importades. Les consultes a ChatGPT són alternatives.</footer>
+  <footer class="footer">Font esportiva &#xFA;nica: <a href="https://www.hoqueipatins.fecapa.cat/" target="_blank" rel="noopener">FECAPA</a>. Els marcadors es mostren quan existeixen en les dades importades. Les consultes a ChatGPT s&#xF3;n alternatives.</footer>
 </main>
 <nav class="bottom" aria-label="Sis consultes">
-  <div class="bottom-title">CONSULTES RÀPIDES</div>
+  <div class="bottom-title">CONSULTES R&#xC0;PIDES</div>
   <div class="navgrid">
     <button data-tab="celoni" class="navbtn" aria-label="CP Sant Celoni" title="CP Sant Celoni"><span class="club-icon club-icon-celoni"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/281.png" alt="" loading="eager" decoding="async"></span><strong>CP Sant Celoni</strong><small>Temporada</small></button>
-    <button data-tab="barca" class="navbtn" aria-label="Barça" title="Barça"><span class="club-icon club-icon-barca"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/234.png" alt="" loading="eager" decoding="async"></span><strong>Barça</strong><small>Temporada</small></button>
-    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>▥</span><strong>Classificacions</strong><small>3 grups</small></button>
-    <button data-tab="grupalevi" class="navbtn" aria-label="Aleví OR 3 · Temporada de Magí" title="Aleví OR 3 · Magí"><span class="nav-name">Magí</span><strong>Aleví OR 3</strong><small>Temporada</small></button>
-    <button data-tab="grupinfantil" class="navbtn" aria-label="Infantil OR 10 · Temporada de Ton" title="Infantil OR 10 · Ton"><span class="nav-name">Ton</span><strong>Infantil OR 10</strong><small>Temporada</small></button>
-    <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>⌂</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
+    <button data-tab="barca" class="navbtn" aria-label="Bar&#xE7;a" title="Bar&#xE7;a"><span class="club-icon club-icon-barca"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/234.png" alt="" loading="eager" decoding="async"></span><strong>Bar&#xE7;a</strong><small>Temporada</small></button>
+    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>&#x25A5;</span><strong>Classificacions</strong><small>3 grups</small></button>
+    <button data-tab="grupalevi" class="navbtn" aria-label="Alev&#xED; OR 3 &#xB7; Temporada de Mag&#xED;" title="Alev&#xED; OR 3 &#xB7; Mag&#xED;"><span class="nav-name">Mag&#xED;</span><strong>Alev&#xED; OR 3</strong><small>Temporada</small></button>
+    <button data-tab="grupinfantil" class="navbtn" aria-label="Infantil OR 10 &#xB7; Temporada de Ton" title="Infantil OR 10 &#xB7; Ton"><span class="nav-name">Ton</span><strong>Infantil OR 10</strong><small>Temporada</small></button>
+    <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>&#x2302;</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
   </div>
 </nav>
 <dialog id="guide">
-  <div class="modal-title">Importar dades FECAPA <button id="guide-close" class="mini">✕</button></div>
-  <p>1. Obre FECAPA Agenda (/ag/) en Safari. Selecciona TOTS els clubs i el període complet de temporada (01/07/2026–30/06/2027). Comprova que la taula mostri tots els partits que vols importar.</p>
-  <p>2. Prem Compartir → «ZonaOK2»; la drecera copia el camp «json» al porta-retalls i obre el camp «url» a ZonaOK.</p>
-  <p>3. A ZonaOK, prem «Llegir porta-retalls» al diàleg d'importació. Si Safari demana permís, accepta'l. Si ho bloqueja, enganxa el JSON manualment.</p>
-  <p>4. Per actualitzar marcadors, obre FECAPA → En directe i prem Compartir → «ZonaOK Resultats».</p>
-  <p>5. Per compartir dades entre aparells, descarrega zonaok-data.json i publica'l a GitHub. La importació al navegador no publica automàticament el JSON.</p>
-  <p class="helper">Les temporades de Magí i Ton i les dreceres de classificació es mantenen sense canvis.</p>
+  <div class="modal-title">Importar dades FECAPA <button id="guide-close" class="mini">&#x2715;</button></div>
+  <p>1. Obre FECAPA Agenda (/ag/) en Safari. Selecciona TOTS els clubs i el per&#xED;ode complet de temporada (01/07/2026&#x2013;30/06/2027). Comprova que la taula mostri tots els partits que vols importar.</p>
+  <p>2. Prem Compartir &#x2192; &#xAB;ZonaOK2&#xBB;; la drecera copia el camp &#xAB;json&#xBB; al porta-retalls i obre el camp &#xAB;url&#xBB; a ZonaOK.</p>
+  <p>3. A ZonaOK, prem &#xAB;Llegir porta-retalls&#xBB; al di&#xE0;leg d'importaci&#xF3;. Si Safari demana perm&#xED;s, accepta'l. Si ho bloqueja, enganxa el JSON manualment.</p>
+  <p>4. Per actualitzar marcadors, obre FECAPA &#x2192; En directe i prem Compartir &#x2192; &#xAB;ZonaOK Resultats&#xBB;.</p>
+  <p>5. Per compartir dades entre aparells, descarrega zonaok-data.json i publica'l a GitHub. La importaci&#xF3; al navegador no publica autom&#xE0;ticament el JSON.</p>
+  <p class="helper">Les temporades de Mag&#xED; i Ton i les dreceres de classificaci&#xF3; es mantenen sense canvis.</p>
 </dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="zonaok-sync-v5.js?v=20261119-calendari-inline" defer></script>
-<script src="app.js?v=20261119-clipboard-v9" defer></script>
+<script src="app.js?v=20261119-clipboard-v91-encoding" defer></script>
 <script src="zonaok-retocs.js?v=20261118-season" defer></script>
 </body>
 </html>
