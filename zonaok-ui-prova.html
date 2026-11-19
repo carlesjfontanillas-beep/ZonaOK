@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#061d33">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ZonaOK">
+  <meta name="description" content="Agenda i consultes FECAPA amb lectura des de Safari. Projecte independent i gratu&#xEF;t.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <title>ZonaOK &#xB7; El teu hoquei</title>
+  <link rel="stylesheet" href="style.css?v=20261118-season">
+  <style>
+    /* ZonaOK: navegació setmanal, sense modificar style.css. */
+    .zok-week-nav{display:flex;align-items:center;gap:8px;max-width:100%;margin:8px 0 5px}
+    .zok-week-nav .week{margin:0;flex:1;min-width:0;text-align:center;font-size:clamp(12px,3.4vw,15px);font-weight:700}
+    .zok-week-nav button{flex-shrink:0;appearance:none;border:1px solid #668da9;background:#123e60;color:#eef6ff;border-radius:10px;min-width:32px;height:34px;padding:0 7px;font-weight:700;cursor:pointer}
+    .zok-week-nav button:disabled{opacity:.45;cursor:default}
+    .zok-week-nav .zok-week-today{font-size:11px;padding:0 8px}
+    .zok-week-help{font-size:11px;opacity:.78;margin:4px 0 0}
+    .zok-results-week{font-size:13px;font-weight:700;margin:7px 0 11px;color:inherit}
+    #season-toggle[hidden],#results-week[hidden]{display:none!important}
+    @media(max-width:390px){.zok-week-nav{gap:5px}.zok-week-nav button{padding:0 6px;min-width:30px}}
+
+    /* V15: la barra de setmanes té prioritat; evita dates en vertical a l'iPhone. */
+    .hero{flex-wrap:nowrap!important;min-width:0}
+    .hero .zok-week-nav{flex:1 1 auto;min-width:0;width:100%;max-width:none;margin:0;gap:5px}
+    .hero .zok-week-nav .week{flex:1 1 auto;min-width:65px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;word-break:normal;font-size:12px!important;line-height:1.2}
+    .hero .zok-week-help{display:none!important}
+    .hero .hero-actions{flex:0 0 auto;gap:4px}
+    @media(max-width:390px){.hero .zok-week-nav button{min-width:28px;height:32px;padding:0 5px}.hero .zok-week-nav .week{font-size:11px!important}}
+  </style>
+<style id="zonaok-ui4-test">
+/* ZonaOK UI4: NOMÉS presentació. No canvia dades, actuacions ni dreceres. */
+body.zok-ui-home .zok-ui-import-section,
+body.zok-ui-home #results-section {display:none!important}
+body.zok-ui-detail .zok-ui-home-section,
+body.zok-ui-detail .zok-ui-import-section,
+body.zok-ui-detail .hero,
+body.zok-ui-detail .keyline {display:none!important}
+body.zok-ui-import .zok-ui-home-section,
+body.zok-ui-import #results-section,
+body.zok-ui-import .keyline {display:none!important}
+body.zok-ui-import .import-card > p.helper,
+body.zok-ui-import .import-card > p:first-child {display:none!important}
+body.zok-ui-detail #results-section,
+body.zok-ui-import .zok-ui-import-section {display:block!important}
+body.zok-ui-detail #results-note {display:none!important}
+/* Dates i resultats lleugerament més llegibles al mòbil. */
+#home-cards .match-date strong,
+#results-list .match-date strong {font-size:clamp(15px,4vw,17px)!important}
+#home-cards .match-date small,
+#results-list .match-date small {font-size:clamp(12px,3.5vw,14px)!important}
+#home-cards .score,
+#results-list .score {font-size:clamp(18px,5vw,21px)!important;line-height:1.15}
+/* No deixar cap targeta d'Inici més ampla que la pantalla. */
+.zok-ui-home-section, #home-cards {width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+#home-cards {display:grid;grid-template-columns:minmax(0,1fr)!important;gap:9px}
+#home-cards > *, #home-cards .match {min-width:0;max-width:100%;width:100%;box-sizing:border-box}
+#home-cards .match {padding:10px 11px}
+#home-cards .teams {display:grid;grid-template-columns:minmax(0,1fr) minmax(54px,65px) minmax(0,1fr);gap:4px;min-width:0}
+#home-cards .side, #home-cards .middle {min-width:0;max-width:100%}
+#home-cards .side strong {overflow-wrap:anywhere;word-break:normal}
+#home-cards .match-actions {display:flex;flex-wrap:wrap;gap:5px}
+#home-cards .match-actions > * {min-width:0}
+@media (max-width:390px) {
+ #home-cards .match {padding:9px 8px}
+ #home-cards .teams {grid-template-columns:minmax(0,1fr) 57px minmax(0,1fr);gap:3px}
+ #home-cards .crest {width:30px;height:30px;max-width:30px}
+ #home-cards .crest img {width:28px;height:28px}
+ #home-cards .side strong {font-size:11px}
+ #home-cards .score {font-size:18px!important}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="mast">
+    <div>
+      <div class="brand">ZONA<span>OK</span></div>
+      <div class="strap">ELS TEUS PARTITS &#xB7; EL TEU HOQUEI</div>
+    </div>
+    <div class="emblem" aria-hidden="true">&#x1F3D2;</div>
+  </header>
+  <section class="hero">
+    <div class="overline">AGENDA PERSONAL</div>
+    <h1>Els meus partits<br>de la setmana</h1>
+    <div class="zok-week-nav" aria-label="Canviar setmana">
+      <button id="week-prev" type="button" aria-label="Setmana anterior" title="Setmana anterior">&#x2039;</button>
+      <p id="week" class="week" aria-live="polite"></p>
+      <button id="week-today" class="zok-week-today" type="button" aria-label="Tornar a la setmana actual">Avui</button>
+      <button id="week-next" type="button" aria-label="Setmana següent" title="Setmana següent">&#x203A;</button>
+    </div>
+    <p class="zok-week-help">Llisca a l'esquerra: setmana següent &#xB7; a la dreta: setmana anterior</p>
+    <svg class="rink" viewBox="0 0 340 66" fill="none" aria-hidden="true">
+      <rect x="1" y="1" width="338" height="64" rx="28" stroke="#b8daf0" stroke-opacity=".5"/>
+      <path d="M170 1V65M58 2V64M282 2V64" stroke="#b8daf0" stroke-opacity=".36" stroke-dasharray="4 4"/>
+      <circle cx="170" cy="33" r="19" stroke="#b8daf0" stroke-opacity=".5"/>
+      <path d="M16 17Q50 33 16 49M324 17Q290 33 324 49" stroke="#b8daf0" stroke-opacity=".5"/>
+      <circle cx="170" cy="33" r="3" fill="#ffc080"/>
+    </svg>
+    <div class="hero-actions">
+      <button id="refresh-home" class="primary">&#x21BB; Veure els meus partits</button>
+      <button id="ask-home" class="secondary">Consulta ChatGPT &#x2197;</button>
+    </div>
+  </section>
+  <section class="keyline">
+    <span id="data-label">Agenda + En directe &#xB7; Safari</span>
+    <span id="data-age">Sense dades carregades</span>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div><span class="overline">DILLUNS &#x2192; DIUMENGE</span><h2>Bar&#xE7;a &#xB7; Sant Celoni</h2></div>
+      <span class="section-tag" id="home-count">0 partits</span>
+    </div>
+    <div id="home-cards" class="cards"></div>
+  </section>
+  <section class="section hide" id="results-section">
+    <div class="section-head">
+      <div><span class="overline" id="results-eyebrow">CONSULTA</span><h2 id="results-title">Resultats</h2></div>
+      <button id="close-results" class="mini">Inici &#x2715;</button>
+    </div>
+    <div class="context-actions">
+      <button id="open-fecapa" class="secondary">FECAPA &#x2197;</button>
+      <button id="ask-section" class="secondary">ChatGPT &#x2197;</button>
+      <button id="season-toggle" type="button" class="secondary">Tota la temporada</button>
+    </div>
+    <p id="results-week" class="zok-results-week"></p>
+    <p id="results-note" class="helper"></p>
+    <div id="results-list" class="cards"></div>
+  </section>
+  <section class="section">
+    <div class="section-head">
+      <div><span class="overline">ACTUALITZACI&#xD3; &#xB7; FECAPA</span><h2>Actualitzar dades</h2></div>
+      <span class="section-tag" id="total-count">0 partits</span>
+    </div>
+    <div class="import-card">
+      <div class="context-actions">
+        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/ag/" target="_blank" rel="noopener">Agenda FECAPA ↗</a>
+        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/" target="_blank" rel="noopener">En directe ↗</a>
+        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4789&amp;vista=calendar" target="_blank" rel="noopener">Magí · Aleví OR 3 ↗</a>
+        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4786&amp;vista=calendar" target="_blank" rel="noopener">Ton · Infantil OR 10 ↗</a>
+        <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4784&amp;vista=calendar" target="_blank" rel="noopener">Juvenil OR 6 ↗</a>
+        <button id="reload-shared" class="secondary">Llegir JSON GitHub</button>
+        <button id="export-shared" class="secondary">Descarregar dades JSON</button>
+        <button id="export-actes-json" class="secondary">Descarregar actes JSON</button>
+        <button id="publish-shared" class="secondary">Publicar a GitHub ↗</button>
+      </div>
+      <p class="helper">Actes: descarrega <strong>zonaok-actes.json</strong> al Safari on has importat els IDs i puja'l a GitHub. Les fitxes publicades es carregaran a ZonaOK.</p>
+      <div class="context-actions">
+        <a class="secondary" href="ZonaOK-Alevi-OR-3.shortcut">Classificació Aleví ↗</a>
+        <a class="secondary" href="ZonaOK-Infantil-OR-10.shortcut">Classificació Infantil ↗</a>
+        <a class="secondary" href="ZonaOK-Juvenil-OR-6.shortcut">Classificació Juvenil ↗</a>
+      </div>
+      <div id="import-summary" class="import-summary"></div>
+      <div class="context-actions" style="display:none!important" hidden>
+        <button id="guide-button" class="secondary">Com importar?</button>
+        <button id="clear-button" class="secondary">Esborrar lectures</button>
+      </div>
+    </div>
+  </section>
+  <footer class="footer">Font esportiva &#xFA;nica: <a href="https://www.hoqueipatins.fecapa.cat/" target="_blank" rel="noopener">FECAPA</a>. Els marcadors es mostren quan existeixen en les dades importades. Les consultes a ChatGPT s&#xF3;n alternatives.</footer>
+</main>
+<nav class="bottom" aria-label="Sis consultes">
+  <div class="bottom-title">CONSULTES R&#xC0;PIDES</div>
+  <div class="navgrid">
+    <button data-tab="celoni" class="navbtn" aria-label="CP Sant Celoni" title="CP Sant Celoni"><span class="club-icon club-icon-celoni"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/281.png" alt="" loading="eager" decoding="async"></span><strong>CP Sant Celoni</strong><small>Setmana</small></button>
+    <button data-tab="barca" class="navbtn" aria-label="Bar&#xE7;a" title="Bar&#xE7;a"><span class="club-icon club-icon-barca"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/234.png" alt="" loading="eager" decoding="async"></span><strong>Bar&#xE7;a</strong><small>Setmana</small></button>
+    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>&#x25A5;</span><strong>Classificacions</strong><small>3 grups</small></button>
+    <button data-tab="grupalevi" class="navbtn" aria-label="Alev&#xED; OR 3 &#xB7; Temporada de Mag&#xED;" title="Alev&#xED; OR 3 &#xB7; Mag&#xED;"><span class="nav-name">Mag&#xED;</span><strong>Bar&#xE7;a Alev&#xED; OR 3</strong><small>Setmana</small></button>
+    <button data-tab="grupinfantil" class="navbtn" aria-label="Infantil OR 10 &#xB7; Temporada de Ton" title="Infantil OR 10 &#xB7; Ton"><span class="nav-name">Ton</span><strong>Sant Celoni B Infantil OR 10</strong><small>Setmana</small></button>
+    <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>&#x2302;</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
+  </div>
+</nav>
+<dialog id="guide">
+  <div class="modal-title">Importar dades FECAPA <button id="guide-close" class="mini">&#x2715;</button></div>
+  <p>1. Obre FECAPA Agenda (/ag/) en Safari. Selecciona TOTS els clubs i el per&#xED;ode complet de temporada (01/07/2026&#x2013;30/06/2027). Comprova que la taula mostri tots els partits que vols importar.</p>
+  <p>2. Prem Compartir &#x2192; ZonaOK2. La drecera mostra un bot&#xF3; a la p&#xE0;gina de FECAPA per descarregar el fitxer JSON.</p>
+  <p>3. Torna a ZonaOK, prem Importar agenda JSON i despr&#xE9;s Seleccionar fitxer JSON. Tria el fitxer descarregat a Safari.</p>
+  <p>4. Per actualitzar marcadors, obre FECAPA &#x2192; En directe i prem Compartir &#x2192; &#xAB;ZonaOK Resultats&#xBB;.</p>
+  <p>5. Per compartir dades entre aparells, descarrega zonaok-data.json i publica'l a GitHub. La importaci&#xF3; al navegador no publica autom&#xE0;ticament el JSON.</p>
+  <p class="helper">Les temporades de Mag&#xED; i Ton i les dreceres de classificaci&#xF3; es mantenen sense canvis.</p>
+</dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="zonaok-sync-v5.js?v=20261119-v19-scope-independent" defer></script>
+<script src="app.js?v=20261119-v19-scope-independent" defer></script>
+<script src="zonaok-retocs.js?v=20261119-restauracio-v15" defer></script>
+<script>
+/* ZonaOK UI4: vista de prova no destructiva. */
+(function () {
+ 'use strict';
+ function setup() {
+   const home = document.getElementById('home-cards')?.closest('section');
+   const imp = document.querySelector('.import-card')?.closest('section');
+   const results = document.getElementById('results-section');
+   const yellow = document.getElementById('refresh-home');
+   if (!home || !imp || !results || !yellow) return;
+   home.classList.add('zok-ui-home-section');
+   imp.classList.add('zok-ui-import-section');
+   const classes=['zok-ui-home','zok-ui-detail','zok-ui-import'];
+   const mode=(state)=>{
+     document.body.classList.remove(...classes);
+     document.body.classList.add('zok-ui-'+state);
+     window.requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'instant'}));
+   };
+   mode('home');
+   // El botó groc obre/tanca les eines d'actualització.
+   yellow.setAttribute('aria-label','Obrir o tancar les eines d’actualització');
+   yellow.setAttribute('title','Actualitzar dades');
+   yellow.onclick=()=>mode(document.body.classList.contains('zok-ui-import')?'home':'import');
+   // Mantenim els controladors originals de l'app (renderització, estat,
+   // dates i seleccions) i només canviem quina pantalla es veu.
+   for (const button of document.querySelectorAll('.navbtn[data-tab]')) {
+     button.addEventListener('click',()=>{
+       mode(button.dataset.tab==='home'?'home':'detail');
+       // Cancel·la el desplaçament suau que feia l'antiga navegació.
+       window.setTimeout(()=>window.scrollTo({top:0,behavior:'instant'}),80);
+     });
+   }
+   document.getElementById('close-results')?.addEventListener('click',()=>mode('home'));
+   // Si l'app obre automàticament una importació, no tanquem el diàleg.
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});
+ else setup();
+})();
+</script>
+</body>
+</html>
