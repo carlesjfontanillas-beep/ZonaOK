@@ -1,4 +1,4 @@
-/* ZonaOK V15 · V10.5 restaurada, actes afegides \u2014 Agenda com a font de partits, En directe nomes com a font de marcadors.
+/* ZonaOK V15 Â· V10.5 restaurada, actes afegides \u2014 Agenda com a font de partits, En directe nomes com a font de marcadors.
    Carregar ABANS d'app.js. Conserva V2 (classificacions) i les dades existents.
    No consulta FECAPA des del web: les dues dreceres Safari llegeixen el DOM.
 */
@@ -232,10 +232,10 @@
     const top=el('div','match-top'),scoreLabel=validScore(r.homeScore)&&validScore(r.awayScore)?(r.scoreSource==='En directe'?'En directe':'Resultat \u00B7 FECAPA'):'Agenda \u00B7 FECAPA';top.append(el('span','pill',r.competition||'Categoria no indicada'),el('span','tag',scoreLabel));c.append(top);
     const dt=el('div','match-date');dt.append(el('strong','',r.time),el('small','',nice(r.iso)));if(compact)dt.dataset.zokCategoria=r.competition||'Categoria';c.append(dt);
     const teams=el('div','teams'),middle=el('div','middle');middle.append(el('div','score',validScore(r.homeScore)&&validScore(r.awayScore)?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'),el('small','score-note',validScore(r.homeScore)&&validScore(r.awayScore)?scoreLabel:'Pendent'));
-    // V15: les actes són només una interacció addicional; NO substituïm
+    // V15: les actes sÃ³n nomÃ©s una interacciÃ³ addicional; NO substituÃ¯m
     // el filtratge de temporada V10.5 ni els resultats de les targetes.
     if(validScore(r.homeScore)&&validScore(r.awayScore)){
-      const acta=el('button','zok-acta-chip','⌕ Acta');acta.type='button';
+      const acta=el('button','zok-acta-chip','âŒ• Acta');acta.type='button';
       acta.setAttribute('aria-label','Obrir acta de '+r.home+' contra '+r.away);
       acta.addEventListener('click',ev=>{ev.stopPropagation();window.ZonaOKActes?.open(r,inferLeague(r));});
       middle.append(acta);
@@ -292,8 +292,7 @@
     root.replaceChildren(frag);if($('#home-count'))$('#home-count').textContent=count+' partits';
   }
   function activeTab(){const button=$('.navbtn.active');return button?.dataset.tab||($('#results-section')?.classList.contains('hide')?'home':'');}
-  // V10.5: les consultes de club i de Magi/Ton sempre son de TEMPORADA.
-  // La pantalla Inici es l'unic lloc on apliquem el filtre setmanal.
+  // V18: escuts BarÃ§a/Celoni = setmana. MagÃ­/Ton = temporada (V10.5).
   function drawList(tab,rows,store){
     const root=$('#results-list');
     if(!root||$('#results-section')?.classList.contains('hide'))return;
@@ -353,31 +352,37 @@
         homeScore:validScore(newer.homeScore)?newer.homeScore:older.homeScore,
         awayScore:validScore(newer.awayScore)?newer.awayScore:older.awayScore});
     }
-    const selected=[...byFixture.values()].sort((a,b)=>
-      (b.iso+' '+b.time).localeCompare(a.iso+' '+a.time));
+    const isWeeklyClub=tab==='barca'||tab==='celoni';
+    const start=selectedMonday(),end=plus(start,6);
+    const selected=[...byFixture.values()]
+      .filter(r=>!isWeeklyClub||(r.iso>=start&&r.iso<=end))
+      .sort((a,b)=>isWeeklyClub
+        ?(a.iso+' '+a.time).localeCompare(b.iso+' '+b.time)
+        :(b.iso+' '+b.time).localeCompare(a.iso+' '+a.time));
 
     const labels={
-      barca:'Bar\u00e7a \u00b7 Temporada',
-      celoni:'CP Sant Celoni \u00b7 Temporada',
+      barca:'Bar\u00e7a \u00b7 Setmana',
+      celoni:'CP Sant Celoni \u00b7 Setmana',
       grupalevi:'Mag\u00ed \u00b7 Bar\u00e7a Alev\u00ed OR 3 \u00b7 Temporada',
       grupinfantil:'Ton \u00b7 CP Sant Celoni B Infantil OR 10 \u00b7 Temporada'
     };
     // Actualitzar sempre els titols, fins si les targetes ja estan pintades.
     if($('#results-title'))$('#results-title').textContent=labels[tab];
-    if($('#results-note'))$('#results-note').textContent=
-      selected.length+' partits \u00b7 Temporada '+seasonName+
-      ' \u00b7 Agenda FECAPA. M\u00e9s recents primer.';
+    if($('#results-note'))$('#results-note').textContent=isWeeklyClub
+      ?selected.length+' partits del club \u00b7 '+nice(start)+' \u2014 '+nice(end)
+      :selected.length+' partits \u00b7 Temporada '+seasonName+' \u00b7 M\u00e9s recents primer.';
     if($('#open-fecapa'))$('#open-fecapa').onclick=()=>window.open(
       seasonId?ROOT+'?liga='+seasonId+'&vista=calendar':AGENDA,'_blank','noopener');
 
-    const sig=tab+'|'+JSON.stringify(selected.map(r=>
+    const sig=tab+'|'+(isWeeklyClub?start:'temporada')+'|'+JSON.stringify(selected.map(r=>
       [rowKey(r),r.homeScore,r.awayScore,r.venue,r.actaUrl]));
     if(root.dataset.zokV5Sig===sig&&root.querySelector('[data-zok-v5]'))return;
     root.dataset.zokV5Sig=sig;
     const frag=document.createDocumentFragment();
     if(!selected.length){
       const empty=el('div','empty',
-        'No hi ha partits d\u2019aquest equip i competici\u00f3 dins de l\u2019agenda de la temporada '+seasonName+'.');
+        isWeeklyClub?'Cap partit importat d\u2019aquest club en aquesta setmana.':
+          'No hi ha partits d\u2019aquest equip i competici\u00f3 dins de la temporada '+seasonName+'.');
       empty.dataset.zokV5='1';frag.append(empty);
     }
     for(const r of selected)frag.append(card(r,true));
