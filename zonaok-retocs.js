@@ -85,6 +85,12 @@
 #results-list .match.zok-compact .middle { min-width: 0; gap: 0; }
 #results-list .match.zok-compact .score { font-size: 16px; }
 #results-list .match.zok-compact .score-note { display: none; }
+/* Les actes són una acció pròpia, no formen part de .match-actions, que s'amaga. */
+.match .zok-acta-chip{display:inline-flex!important;align-items:center;justify-content:center;align-self:center;white-space:nowrap;margin:3px auto 0!important;padding:3px 6px!important;border:0!important;border-radius:6px!important;background:#8d2446!important;color:#fff!important;font-size:10px!important;font-weight:800!important;line-height:1.2!important;min-height:20px!important;cursor:pointer!important}
+.match.zok-v5-infantil .zok-acta-chip,.match.zok-infantil .zok-acta-chip{background:#245bb0!important}
+.match.zok-v5-juvenil .zok-acta-chip,.match.zok-juvenil .zok-acta-chip{background:#866514!important}
+#results-list .match.zok-compact.zok-acta-available{cursor:pointer;}
+#results-list .match.zok-compact .zok-acta-chip{display:inline-flex!important;position:static!important;opacity:1!important;visibility:visible!important}
 #results-list.cards { gap: 7px; }
 
 /* CLASSIFICACIONS: mateix codi de colors que els tres equips. */
