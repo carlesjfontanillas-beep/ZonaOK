@@ -12,7 +12,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(store));return true}
 function toast(msg){const e=$$('#toast');e.textContent=msg;e.classList.add('visible');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('visible'),5200)}
 function localDate(d=new Date()){const x=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);return `${x.find(p=>p.type==='year').value}-${x.find(p=>p.type==='month').value}-${x.find(p=>p.type==='day').value}`;}
 function mondayISO(){const today=localDate(), d=new Date(`${today}T12:00:00Z`);d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7));return d.toISOString().slice(0,10)}
-// NavegaciÃ³ global de setmana. Es conserva entre pestanyes i dins la mateixa sessiÃ³ Safari.
+// Navegació global de setmana. Es conserva entre pestanyes i dins la mateixa sessió Safari.
 function restoreMonday(){
   try{
     const iso=sessionStorage.getItem(WEEK_KEY);
@@ -48,7 +48,7 @@ function installWeekGestures(){
     const target=event.target;
     if(target?.closest?.(excluded))return;
     const t=event.touches[0];
-    // Els extrems de Safari estan reservats als gestos de navegaciÃ³ del navegador.
+    // Els extrems de Safari estan reservats als gestos de navegació del navegador.
     if(t.clientX<22||t.clientX>window.innerWidth-22)return;
     touch={x:t.clientX,y:t.clientY,at:Date.now()};
   },{passive:true});
@@ -58,9 +58,9 @@ function installWeekGestures(){
     const t=event.changedTouches[0],dx=t.clientX-touch.x,dy=t.clientY-touch.y;
     const elapsed=Date.now()-touch.at;
     touch=null;
-    // No confondre el desplaÃ§ament vertical o un toc amb un canvi de setmana.
+    // No confondre el desplaçament vertical o un toc amb un canvi de setmana.
     if(elapsed>1000||Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.4)return;
-    // ConvenciÃ³ concreta de ZonaOK: esquerra = setmana passada, dreta = segÃ¼ent.
+    // Convenció concreta de ZonaOK: esquerra = setmana passada, dreta = següent.
     changeWeek(dx<0?-1:1);
   },{passive:true});
 }
@@ -68,8 +68,8 @@ function installWeekGestures(){
 function plusDays(s,n){const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
 function niceDate(iso){if(!/^\d{4}-\d{2}-\d{2}$/.test(iso||''))return 'Data no confirmada';return new Intl.DateTimeFormat('ca-ES',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(iso+'T12:00:00Z'));}
 function calendarUrl(id,view='calendar'){return `${BASE}?liga=${id}&vista=${view}`}
-// FITXES FECAPA â€” obrir sobre ZonaOK sense perdre la pantalla ni la setmana.
-// L'ID de partit nomÃ©s es considera fiable quan ve de la importaciÃ³ oficial.
+// FITXES FECAPA — obrir sobre ZonaOK sense perdre la pantalla ni la setmana.
+// L'ID de partit només es considera fiable quan ve de la importació oficial.
 function scorePresent(r){return r.homeScore!==null&&r.homeScore!==undefined&&r.awayScore!==null&&r.awayScore!==undefined;}
 function numericId(value){const v=String(value??'').trim();return /^\d{3,10}$/.test(v)?v:'';}
 function officialFecapaURL(raw){
@@ -105,8 +105,8 @@ function exactActaLink(r,id){
 function resolveActaLink(r,id){
   const direct=exactActaLink(r,id);
   if(direct)return {url:direct,exact:true};
-  // Algunes lectures d'Agenda no inclouen l'ID. Recuperar-lo nomÃ©s si la
-  // coincidÃ¨ncia de data, equips, competiciÃ³ i partit Ã©s inequÃ­voca.
+  // Algunes lectures d'Agenda no inclouen l'ID. Recuperar-lo només si la
+  // coincidència de data, equips, competició i partit és inequívoca.
   const league=matchLeagueId(r,id),possible=new Set();
   for(const group of ['4789','4786','4784']){
     if(league&&group!==league)continue;
@@ -139,15 +139,19 @@ function setupActaDialog(){
   .match.zok-acta-available{cursor:pointer}
   .match.zok-acta-available:focus-visible{outline:3px solid #ffc66e;outline-offset:3px}
   .match.zok-acta-available .zok-acta-action{background:#8f224c;color:#fff;border:0;border-radius:8px;cursor:pointer;font-weight:700}
+  .zok-acta-quick{display:none;cursor:pointer;position:relative;z-index:2;border:0;border-radius:6px;padding:3px 5px;font:800 10px/1.1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#8f224c;color:#fff;white-space:nowrap;min-width:48px;min-height:19px}
+  #results-list .match.zok-acta-available .zok-acta-quick{display:inline-flex!important;align-items:center;justify-content:center;margin:2px auto 0;box-shadow:0 1px 3px #0003}
+  #results-list .match.zok-compact.zok-acta-available .middle{gap:1px}
+  #results-list .match.zok-acta-available:focus-within{outline:2px solid #c96c88;outline-offset:1px}
   @media(max-width:600px){.zok-acta-dialog{width:96vw;max-width:96vw;height:94dvh;max-height:94dvh;border:1px solid #34536d;border-radius:15px}.zok-acta-footer{padding-bottom:max(10px,env(safe-area-inset-bottom))}}
   `;document.head.append(style);
   actaDialog=mk('dialog','zok-acta-dialog');actaDialog.setAttribute('aria-label','Fitxa oficial del partit a FECAPA');
-  const header=mk('div','zok-acta-header');header.append(mk('strong','','FITXA DEL PARTIT Â· FECAPA'));
-  const close=mk('button','zok-acta-close','Ã—');close.type='button';close.setAttribute('aria-label','Tancar la fitxa i tornar a ZonaOK');close.onclick=()=>actaDialog.close();header.append(close);
+  const header=mk('div','zok-acta-header');header.append(mk('strong','','FITXA DEL PARTIT · FECAPA'));
+  const close=mk('button','zok-acta-close','×');close.type='button';close.setAttribute('aria-label','Tancar la fitxa i tornar a ZonaOK');close.onclick=()=>actaDialog.close();header.append(close);
   actaTitle=mk('div','zok-acta-subtitle');
   actaFrame=mk('iframe','zok-acta-iframe');actaFrame.title='Fitxa oficial de FECAPA';actaFrame.setAttribute('loading','eager');actaFrame.setAttribute('sandbox','allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
   const footer=mk('div','zok-acta-footer');actaHint=mk('p','zok-acta-hint');
-  actaExternal=mk('a','zok-acta-external','Obrir a FECAPA â†—');actaExternal.target='_blank';actaExternal.rel='noopener';footer.append(actaHint,actaExternal);
+  actaExternal=mk('a','zok-acta-external','Obrir a FECAPA ↗');actaExternal.target='_blank';actaExternal.rel='noopener';footer.append(actaHint,actaExternal);
   actaDialog.append(header,actaTitle,actaFrame,footer);document.body.append(actaDialog);
   actaDialog.addEventListener('click',e=>{if(e.target===actaDialog)actaDialog.close();});
   actaDialog.addEventListener('close',()=>{
@@ -160,10 +164,10 @@ function openActaDialog(r,id){
   if(!actaDialog)setupActaDialog();
   const link=resolveActaLink(r,id);
   actaPosition={x:window.scrollX,y:window.scrollY};
-  actaTitle.textContent=`${r.home} Â· ${r.homeScore} - ${r.awayScore} Â· ${r.away} Â· ${niceDate(r.iso)}`;
+  actaTitle.textContent=`${r.home} · ${r.homeScore} - ${r.awayScore} · ${r.away} · ${niceDate(r.iso)}`;
   actaHint.textContent=link.exact
-    ?'Si no es veu lâ€™acta, FECAPA pot impedir mostrar-la dins de ZonaOK. Utilitza Â«Obrir a FECAPAÂ».'
-    :'Les dades importades no contenen un ID de partit verificable. Sâ€™obre FECAPA per localitzar-ne lâ€™acta.';
+    ?'Si no es veu l’acta, FECAPA pot impedir mostrar-la dins de ZonaOK. Utilitza «Obrir a FECAPA».'
+    :'Les dades importades no contenen un ID de partit verificable. S’obre FECAPA per localitzar-ne l’acta.';
   actaExternal.href=link.url;
   actaDialog.showModal();
   actaFrame.src=link.url;
@@ -201,7 +205,7 @@ function createCard(r,id){const c=mk('article','match '+(LEAGUES[id]?.color||'gr
 const top=mk('div','match-top'),pill=mk('span','pill',r.competition||LEAGUES[id]?.name||'FECAPA'),tag=mk('span','tag',dateStatus(r));top.append(pill,tag);c.append(top);
 const dt=mk('div','match-date');dt.append(mk('strong','',r.time||'Hora pendent'),mk('small','',niceDate(r.iso)));c.append(dt);
 const teams=mk('div','teams');const side=(name,logo)=>{name=name==='BAR'?'BAR\u00C7A':name==='CPSC'?'CP SANT CELONI':name;const d=mk('div','side'),crest=mk('div','crest');if(safeImage(logo)){const img=mk('img');img.src=safeImage(logo);img.alt='Escut de '+name;img.loading='lazy';img.onerror=()=>{crest.replaceChildren(mk('span','crest-fallback','\u{1F3D2}'))};crest.append(img)}else crest.append(mk('span','crest-fallback',name?name.trim().charAt(0).toUpperCase():'\u{1F3D2}'));d.append(crest,mk('strong','',name||'Equip no identificat'));return d};
-const mid=mk('div','middle');mid.append(mk('div','score',r.homeScore!==null&&r.awayScore!==null?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'));mid.append(mk('small','score-note',r.homeScore!==null?'Resultat':'Pendent'));teams.append(side(r.home,r.homeLogo),mid,side(r.away,r.awayLogo));c.append(teams);
+const mid=mk('div','middle');mid.append(mk('div','score',scorePresent(r)?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'));if(scorePresent(r)){const quick=mk('button','zok-acta-quick','\u2315 Acta');quick.type='button';quick.setAttribute('aria-label','Obrir la fitxa de FECAPA de '+r.home+' contra '+r.away);quick.onclick=e=>{e.stopPropagation();openActaDialog(r,id)};mid.append(quick);}mid.append(mk('small','score-note',scorePresent(r)?'Resultat':'Pendent'));teams.append(side(r.home,r.homeLogo),mid,side(r.away,r.awayLogo));c.append(teams);
 const loc=mk('div','venue');loc.append(mk('strong','','\u{1F4CD} '+(r.venue||'Pista pendent de verificar a FECAPA')));if(!r.venue)loc.append(mk('div','', 'No s\u2019ha llegit cap pista per a aquest partit'));c.append(loc);
 const buttons=mk('div','match-actions');const cal=mk('button','','\u25A6 Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);const maps=mk('a','light',r.venue?'\u2197 Google Maps':'\u2197 Cercar pista');maps.href=r.venue?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue):BASE+'ag/';maps.target='_blank';maps.rel='noopener';const source=mk('a','light','FECAPA \u2197');source.href=exactActaLink(r,id)||(id==='live'?BASE:calendarUrl(id));source.target='_blank';source.rel='noopener';buttons.append(cal,maps,source);if(scorePresent(r)){const acta=mk('button','zok-acta-action','\u2315 Acta');acta.type='button';acta.onclick=()=>openActaDialog(r,id);acta.setAttribute('aria-label','Obrir l\u2019acta del partit sense sortir de ZonaOK');buttons.append(acta)}c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));if(scorePresent(r)){c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Obrir fitxa del partit '+r.home+' - '+r.away);c.addEventListener('click',e=>{if(e.target.closest?.('button,a,input,select,textarea'))return;openActaDialog(r,id)});c.addEventListener('keydown',e=>{if(e.target!==c||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();openActaDialog(r,id)})}return c}
 function missing(id){const out=mk('div','empty');out.append(mk('strong','',LEAGUES[id].short+' \u00B7 Dades pendents'));out.append(mk('div','', 'Sense partit identificat d\u2019aquest equip aquesta setmana. En directe no sempre distingeix el grup ni la lletra A/B. Consulta la llista del club o el calendari oficial.'));const a=mk('a','','Obrir calendari FECAPA \u2197');a.href=calendarUrl(id);a.target='_blank';a.rel='noopener';out.append(a);return out}
