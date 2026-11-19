@@ -25,7 +25,9 @@ function agendaRows(){return allRows('agenda')}
 function clubRows(){const rows=new Map(agendaRows().map(r=>[[r.iso,r.time,normalize(r.home),normalize(r.away)].join('|'),r]));for(const r of liveRows()){const k=[r.iso,r.time,normalize(r.home),normalize(r.away)].join('|'),old=rows.get(k);rows.set(k,old?{...old,...r,venue:r.venue||old.venue}:r)}return [...rows.values()]}
 
 function render(){weekText();renderSources();renderHome();if(section!=='home')renderSection(section)}
-function renderSources(){const list=$$('#import-summary');list.replaceChildren();let total=liveRows().length+(store.agenda?.rows?.length||0),latest=[store.live?.capturedAt,store.agenda?.capturedAt].filter(Boolean).sort().pop()||'';if(store.agenda){const r=mk('div','source-row');r.append(mk('strong','','Agenda \u00B7 Temporada '+(store.agenda.season||'')),mk('small','',agendaRows().length+' partits \u00B7 Bar\u00E7a '+(store.agenda.counts?.barca??'\u2014')+' \u00B7 Sant Celoni '+(store.agenda.counts?.celoni??'\u2014')+' \u00B7 '+formatTimestamp(store.agenda.capturedAt)));list.append(r);}if(store.live){const r=mk('div','source-row');r.append(mk('strong','','En directe \u00B7 Bar\u00E7a i Sant Celoni'),mk('small','',liveRows().length+' partits \u00B7 '+formatTimestamp(store.live.capturedAt)));list.append(r);}for(const id of ['4789','4786','4784']){const item=store[id],season=store.seasons?.[id];const count=allRows(id).length+(season?.rows?.length||0);total+=count;const r=mk('div','source-row');const a=mk('div');a.append(mk('strong','',LEAGUES[id].name));a.append(mk('small','',season?.capturedAt?'Temporada '+(season.season||'')+': '+formatTimestamp(season.capturedAt):(item?.standingsAt?'Classificaci\u00F3: '+formatTimestamp(item.standingsAt):(item?.capturedAt?'Calendari: '+formatTimestamp(item.capturedAt):'Encara no importat'))));r.append(a,mk('span','',count+' partits \u00B7 '+(item?.standings?.length||0)+' equips'));list.append(r);for(const stamp of [season?.capturedAt,item?.capturedAt,item?.standingsAt])if(stamp&&(!latest||stamp>latest))latest=stamp;}let legacy=0;try{const old=JSON.parse(localStorage.getItem(OLD)||'{}');for(const id of ['4789','4786','4784'])legacy+=(old[id]?.rows||[]).length}catch(_){}if(legacy){const msg=mk('div','source-row');const label=mk('div');label.append(mk('strong','','Importaci\u00F3 antiga conservada'));label.append(mk('small','','Hi ha '+legacy+' files de la prova anterior. No s\u2019eliminen, per\u00F2 cal repetir la drecera nova per mostrar els partits separats.'));msg.append(label);list.append(msg);}$$('#total-count').textContent=total+' files';$$('#data-age').textContent=latest?'\u00DAltima importaci\u00F3: '+formatTimestamp(latest):'Sense dades noves importades'}
+function renderSources(){const list=$$('#import-summary');list.replaceChildren();let total=liveRows().length+(store.agenda?.rows?.length||0),latest=[store.live?.capturedAt,store.agenda?.capturedAt].filter(Boolean).sort().pop()||'';if(store.agenda){const r=mk('div','source-row');r.append(mk('strong','','Agenda \u00B7 Temporada '+(store.agenda.season||'')),mk('small','',agendaRows().length+' partits \u00B7 Bar\u00E7a '+(store.agenda.counts?.barca??'\u2014')+' \u00B7 Sant Celoni '+(store.agenda.counts?.celoni??'\u2014')+' \u00B7 '+formatTimestamp(store.agenda.capturedAt)));list.append(r);}if(store.live){const r=mk('div','source-row');r.append(mk('strong','','En directe \u00B7 Bar\u00E7a i Sant Celoni'),mk('small','',liveRows().length+' partits \u00B7 '+formatTimestamp(store.live.capturedAt)));list.append(r);}for(const id of ['4789','4786','4784']){const item=store[id],season=store.seasons?.[id];const count=allRows(id).length+(season?.rows?.length||0);total+=count;const r=mk('div','source-row');const a=mk('div');a.append(mk('strong','',LEAGUES[id].name));a.append(mk('small','',season?.capturedAt?'Temporada '+(season.season||'')+': '+formatTimestamp(season.capturedAt):(item?.standingsAt?'Classificaci\u00F3: '+formatTimestamp(item.standingsAt):(item?.capturedAt?'Calendari: '+formatTimestamp(item.capturedAt):'Encara no importat'))));const vista=id==='4789'?partitsTemporadaJugador('grupalevi').rows.length:id==='4786'?partitsTemporadaJugador('grupinfantil').rows.length:null;
+const resumPartits=vista===null?count+' partits':vista+' partits (agenda + lliga)';
+r.append(a,mk('span','',resumPartits+' \u00B7 '+(item?.standings?.length||0)+' equips'));list.append(r);for(const stamp of [season?.capturedAt,item?.capturedAt,item?.standingsAt])if(stamp&&(!latest||stamp>latest))latest=stamp;}let legacy=0;try{const old=JSON.parse(localStorage.getItem(OLD)||'{}');for(const id of ['4789','4786','4784'])legacy+=(old[id]?.rows||[]).length}catch(_){}if(legacy){const msg=mk('div','source-row');const label=mk('div');label.append(mk('strong','','Importaci\u00F3 antiga conservada'));label.append(mk('small','','Hi ha '+legacy+' files de la prova anterior. No s\u2019eliminen, per\u00F2 cal repetir la drecera nova per mostrar els partits separats.'));msg.append(label);list.append(msg);}$$('#total-count').textContent=total+' files';$$('#data-age').textContent=latest?'\u00DAltima importaci\u00F3: '+formatTimestamp(latest):'Sense dades noves importades'}
 function formatTimestamp(iso){try{return new Intl.DateTimeFormat('ca-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'}).format(new Date(iso))}catch(_){return 'Data desconeguda'}}
 function safeImage(src){try{const u=new URL(src);return u.protocol==='https:'&&(/(^|\.)hoqueipatins\.fecapa\.cat$/i.test(u.hostname)||(u.hostname==='sidgad.cloud'&&u.pathname.startsWith('/fecapa/images/logos_clubes/')))?u.href:''}catch(_){return ''}}
 function dateStatus(r){const now=localDate();if(r.status)return r.status+' \u00B7 lectura Safari';if(r.homeScore!==null&&r.awayScore!==null)return 'Marcador FECAPA';return r.iso>now?'Programat':'Sense resultat confirmat'}
@@ -42,40 +44,76 @@ function renderHome(){const box=$$('#home-cards');box.replaceChildren();const st
  else for(const id of ['4789','4784','4786']){const matches=allRows(id).filter(r=>r.iso>=start&&r.iso<=end&&matchFav(r,id)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));if(matches.length){for(const r of matches){box.append(createCard(r,id));n++;}}else box.append(missing(id));}$$('#home-count').textContent=n+' partits';}
 function emptyResults(message,ids=[]){const v=mk('div','empty');v.append(mk('div','',message));for(const id of ids){const a=mk('a','','Obrir '+LEAGUES[id].name+' \u2197');a.href=calendarUrl(id);a.target='_blank';a.rel='noopener';v.append(mk('div','', ' '));v.append(a)}$$('#results-list').append(v)}
 const SECTIONS={celoni:{name:'CP Sant Celoni \u00B7 Setmana',source:BASE,ids:['4786','4784'],msg:'Partits del CP Sant Celoni presents al llistat En directe. La llista pot ser parcial; FECAPA no hi distingeix sempre A/B ni el grup.'},barca:{name:'Bar\u00E7a \u00B7 Setmana',source:BASE,ids:['4789'],msg:'Partits del Bar\u00E7a presents al llistat En directe. Mostrem la categoria publicada i l\u2019hora de la lectura; la llista pot ser parcial.'},classificacions:{name:'Classificacions \u00B7 3 grups',source:calendarUrl('4789','clasificaciones'),ids:['4789','4786','4784'],msg:'Les classificacions nom\u00E9s apareixen despr\u00E9s d\u2019importar les taules oficials de FECAPA des de Safari.'},grupalevi:{name:'Alev\u00ED OR 3 \u00B7 Temporada',source:calendarUrl('4789'),ids:['4789'],msg:'Tots els partits de la temporada del Bar\u00E7a a Alev\u00ED OR 3, amb els marcadors publicats per FECAPA.'},grupinfantil:{name:'Infantil OR 10 \u00B7 Temporada',source:calendarUrl('4786'),ids:['4786'],msg:'Tots els partits de la temporada del Sant Celoni B a Infantil OR 10, amb els marcadors publicats per FECAPA.'}};
-/* Magi i Ton: nomes els seus equips i grups, des de totes les lectures acumulades.
-   No utilitzem "En directe" sense ID de grup: pot barrejar A/B o grups.
-   No es limita a la setmana. Les llistes poden ser parcials si la font nomes n'ha mostrat una part. */
+/* MAGI i TON - mostrar partits reals de l'AGENDA importada, no dependre
+   d'una segona importacio per lliga. La lectura de tota la temporada existeix
+   a store.agenda.rows; les entrades store[4789/4786].rows poden estar buides.
+   Les etiquetes FECAPA poden tenir accents, sigles o text addicional. */
 function temporadaActual(){
-  const avui=localDate(),any=Number(avui.slice(0,4))-(Number(avui.slice(5,7))<7?1:0);
+  const avui=localDate();
+  const any=Number(avui.slice(0,4))-(Number(avui.slice(5,7))<7?1:0);
   return {inici:any+'-07-01',fi:(any+1)+'-06-30',nom:any+'/'+(any+1)};
 }
+function competicioJugador(r,key){
+  const n=normalize(r?.competition||'');
+  const patr=key==='grupalevi'?/(?:^|\s)ALEVI\s+OR\s+0?3(?:\s|$)/:/(?:^|\s)INFANTIL\s+OR\s+0?10(?:\s|$)/;
+  return patr.test(n);
+}
+function equipJugador(nom,key){
+  const n=normalize(nom);
+  if(key==='grupalevi')return clubOf(nom)==='barca';
+  // La categoria Infantil OR 10 ha de ser el SANT CELONI B, no l'A.
+  return /^(?:(?:CP|C P|CLUB PATI)\s+)?SANT CELONI\s+B$/.test(n);
+}
 function partitsTemporadaJugador(key){
-  const magi=key==='grupalevi',id=magi?'4789':'4786',grup=LEAGUES[id].name;
+  const id=key==='grupalevi'?'4789':'4786',grup=LEAGUES[id].name;
   const periode=temporadaActual();
-  const esEquip=nom=>magi?clubOf(nom)==='barca':/^(?:CP )?SANT CELONI B$/.test(normalize(nom));
-  const valid=r=>r&&r.iso>=periode.inici&&r.iso<=periode.fi&&(esEquip(r.home)||esEquip(r.away));
-  const origen=[
-    {rows:allRows(id),at:store[id]?.capturedAt||''},
-    {rows:store.seasons?.[id]?.rows||[],at:store.seasons?.[id]?.capturedAt||''},
-    {rows:agendaRows().filter(r=>normalize(r.competition)===normalize(grup)),at:store.agenda?.capturedAt||''}
+  const valid=(r,fiable)=>r&&r.iso>=periode.inici&&r.iso<=periode.fi&&
+    (equipJugador(r.home,key)||equipJugador(r.away,key))&&
+    (fiable?(!r.competition||competicioJugador(r,key)):competicioJugador(r,key));
+  // En els calendaris de lliga l'identificador 4789/4786 es fiable.
+  // A l'agenda general es OBLIGATORI comprovar el nom de la competicio.
+  const fonts=[
+    {rows:allRows(id),at:store[id]?.capturedAt||'',fiable:true},
+    {rows:store.seasons?.[id]?.rows||[],at:store.seasons?.[id]?.capturedAt||'',fiable:true},
+    {rows:agendaRows(),at:store.agenda?.capturedAt||'',fiable:false}
   ].sort((a,b)=>String(a.at).localeCompare(String(b.at)));
-  let result=[];
-  for(const font of origen){
-    const nous=font.rows.map(r=>{
-      const p=parseRow({...r,competition:grup});
-      if(p)p.capturedAt=String(r.capturedAt||font.at||'');
-      return p;
-    }).filter(valid);
-    if(nous.length)result=mergeAgendaRows(result,nous);
+  const resultat=new Map();
+  let nAgendaGrup=0, nAgendaEquip=0, nAgendaAmbdos=0;
+  for(const r of agendaRows()){
+    if(!r||r.iso<periode.inici||r.iso>periode.fi)continue;
+    const cg=competicioJugador(r,key),ce=equipJugador(r.home,key)||equipJugador(r.away,key);
+    if(cg)nAgendaGrup++;
+    if(ce)nAgendaEquip++;
+    if(cg&&ce)nAgendaAmbdos++;
   }
-  return {rows:result.sort((a,b)=>(b.iso+' '+b.time).localeCompare(a.iso+' '+a.time)),periode};
+  for(const font of fonts){
+    for(const r of font.rows){
+      if(!r)continue;
+      const p=parseRow(r);
+      if(!valid(p,font.fiable))continue;
+      // Nomes etiquetar el grup conegut un cop validat el partit.
+      p.competition=grup;
+      p.capturedAt=String(r.capturedAt||font.at||'');
+      const k=p.id?'id:'+p.id:([p.iso,normalize(p.home),normalize(p.away),normalize(p.competition)].join('|'));
+      const old=resultat.get(k);
+      if(!old||p.capturedAt>=old.capturedAt)resultat.set(k,{...old,...p,
+        homeScore:p.homeScore===null&&old?old.homeScore:p.homeScore,
+        awayScore:p.awayScore===null&&old?old.awayScore:p.awayScore,
+        venue:p.venue||(old?.venue||'')});
+    }
+  }
+  return {rows:[...resultat.values()].sort((a,b)=>(b.iso+' '+b.time).localeCompare(a.iso+' '+a.time)),
+    periode,diagnostic:{agenda:agendaRows().length,grup:nAgendaGrup,equip:nAgendaEquip,ambdos:nAgendaAmbdos}};
 }
 function mostrarTemporadaJugador(key,box){
   const magi=key==='grupalevi',id=magi?'4789':'4786';
-  const {rows,periode}=partitsTemporadaJugador(key);
+  const {rows,periode,diagnostic}=partitsTemporadaJugador(key);
   $$('#results-title').textContent=magi?'Mag\u00ED \u00B7 Bar\u00E7a Alev\u00ED OR 3':'Ton \u00B7 CP Sant Celoni B Infantil OR 10';
-  $$('#results-note').textContent=periode.nom+' \u00B7 '+rows.length+' partits importats. Ordre: m\u00E9s recents primer. S\u2019hi mostren els partits disponibles, no necess\u00E0riament tota la temporada si encara falten dades de FECAPA.';
-  if(!rows.length){emptyResults('Encara no tenim partits d\u2019aquest equip i grup importats per a la temporada '+periode.nom+'. Importa el calendari complet de FECAPA; no es poden deduir els partits absents.',[id]);return;}
+  $$('#results-note').textContent=periode.nom+' \u00B7 '+rows.length+' partits d\u2019aquest equip i grup. Ordre: m\u00E9s recents primer.';
+  if(!rows.length){
+    emptyResults('L\u2019agenda general te '+diagnostic.agenda+' partits. D\u2019aquests, '+diagnostic.grup+' son de la competicio, '+diagnostic.equip+' identifiquen aquest equip i '+diagnostic.ambdos+' coincideixen en totes dues condicions. Si aquest darrer recompte es zero, cal revisar el nom d\u2019equip o competicio que FECAPA ha importat; els 0 partits dels calendaris individuals no vol dir que la importacio general hagi fallat.',[id]);
+    return;
+  }
   for(const r of rows)box.append(createCard(r,id));
 }
 function renderSection(key){const section=SECTIONS[key];if(!section)return;$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const start=mondayISO(),end=plusDays(start,6);if(key==='classificacions'){let any=false;const statLabels={PTS:'Pts',PJ:'PJ',PG:'PG',PE:'PE',PP:'PP',GF:'GF',GC:'GC',DIF:'DIF',SAN:'SAN'};for(const id of section.ids){const rows=store[id]?.standings||[];box.append(mk('h3','',LEAGUES[id].name));if(store[id]?.standingsAt)box.append(mk('small','helper','Lectura: '+formatTimestamp(store[id].standingsAt)));if(!rows.length){emptyResults('Classificaci\u00F3 pendent de lectura des de Safari.',[id]);continue;}any=true;const statKeys=[...new Set(rows.flatMap(r=>Object.keys(r.stats||{})))];const columns=[['pos','Pos.'],['team','Equip'],...statKeys.map(k=>['stats.'+k,statLabels[k]||k]),...(statKeys.length?[]:[['played','PJ'],['gf','GF'],['ga','GC'],['difference','DIF'],['points','Pts']])];for(const [k] of [...columns])if(k.startsWith('stats.')){const raw=k.slice(6);if(rows.every(r=>r.stats?.[raw]===null||r.stats?.[raw]===undefined||r.stats?.[raw]===''))columns.splice(columns.findIndex(c=>c[0]===k),1)}const table=mk('table','standings'),head=mk('tr');for(const [,label] of columns)head.append(mk('th','',label));table.append(head);for(const r of rows){const tr=mk('tr',/BAR\u00C7A|CP SANT CELONI B/i.test(r.team||'')?'highlight':'');for(const [k] of columns){const value=k.startsWith('stats.')?r.stats?.[k.slice(6)]:r[k];tr.append(mk('td','',value??'\u2014'))}table.append(tr)}const wrap=mk('div','standings-wrap');wrap.append(table);box.append(wrap)}if(!any)toast('Importa les classificacions des de Safari.');return;}
