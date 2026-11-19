@@ -108,6 +108,15 @@ function resolveActaLink(r,id){
   // Algunes lectures d'Agenda no inclouen l'ID. Recuperar-lo només si la
   // coincidència de data, equips, competició i partit és inequívoca.
   const league=matchLeagueId(r,id),possible=new Set();
+  // Els IDs verificats de les dreceres FECAPA van en una taula independent.
+  // Només s'enllacen quan data, equips i lliga coincideixen inequívocament.
+  if(league){
+    for(const other of store.actaIndex?.[league]?.rows||[]){
+      if(other.iso!==r.iso||matchTeamKey(other.home)!==matchTeamKey(r.home)||matchTeamKey(other.away)!==matchTeamKey(r.away))continue;
+      if(other.time&&r.time&&other.time!==r.time)continue;
+      const idp=numericId(other.id);if(idp)possible.add(matchOfficialLink(league,idp));
+    }
+  }
   for(const group of ['4789','4786','4784']){
     if(league&&group!==league)continue;
     const sources=[allRows(group),store.seasons?.[group]?.rows||[]];
@@ -139,10 +148,6 @@ function setupActaDialog(){
   .match.zok-acta-available{cursor:pointer}
   .match.zok-acta-available:focus-visible{outline:3px solid #ffc66e;outline-offset:3px}
   .match.zok-acta-available .zok-acta-action{background:#8f224c;color:#fff;border:0;border-radius:8px;cursor:pointer;font-weight:700}
-  .zok-acta-quick{display:none;cursor:pointer;position:relative;z-index:2;border:0;border-radius:6px;padding:3px 5px;font:800 10px/1.1 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#8f224c;color:#fff;white-space:nowrap;min-width:48px;min-height:19px}
-  #results-list .match.zok-acta-available .zok-acta-quick{display:inline-flex!important;align-items:center;justify-content:center;margin:2px auto 0;box-shadow:0 1px 3px #0003}
-  #results-list .match.zok-compact.zok-acta-available .middle{gap:1px}
-  #results-list .match.zok-acta-available:focus-within{outline:2px solid #c96c88;outline-offset:1px}
   @media(max-width:600px){.zok-acta-dialog{width:96vw;max-width:96vw;height:94dvh;max-height:94dvh;border:1px solid #34536d;border-radius:15px}.zok-acta-footer{padding-bottom:max(10px,env(safe-area-inset-bottom))}}
   `;document.head.append(style);
   actaDialog=mk('dialog','zok-acta-dialog');actaDialog.setAttribute('aria-label','Fitxa oficial del partit a FECAPA');
@@ -161,17 +166,25 @@ function setupActaDialog(){
 }
 function openActaDialog(r,id){
   if(!scorePresent(r))return;
+  // La importacio de JSON i el mòdul de sincronització poden escriure al mateix magatzem.
+  store=load();
   if(!actaDialog)setupActaDialog();
   const link=resolveActaLink(r,id);
   actaPosition={x:window.scrollX,y:window.scrollY};
   actaTitle.textContent=`${r.home} · ${r.homeScore} - ${r.awayScore} · ${r.away} · ${niceDate(r.iso)}`;
   actaHint.textContent=link.exact
-    ?'Si no es veu l’acta, FECAPA pot impedir mostrar-la dins de ZonaOK. Utilitza «Obrir a FECAPA».'
-    :'Les dades importades no contenen un ID de partit verificable. S’obre FECAPA per localitzar-ne l’acta.';
+    ?'Si FECAPA no permet veure l’acta dins la finestra, prem «Obrir a FECAPA».'
+    :'Encara no s’ha importat un ID de FECAPA per a aquest partit. Executa la nova drecera «ZonaOK Actes» des del calendari oficial de la lliga. No s’ha inventat cap enllaç.';
   actaExternal.href=link.url;
+  actaExternal.textContent=link.exact?'Obrir a FECAPA ↗':'Veure calendari ↗';
+  actaFrame.hidden=!link.exact;
+  actaFrame.style.display=link.exact?'':'none';
   actaDialog.showModal();
-  actaFrame.src=link.url;
+  if(link.exact)actaFrame.src=link.url;
+  else actaFrame.removeAttribute('src');
 }
+// API mínima perquè zonaok-sync-v5.js obri exactament la mateixa finestra.
+window.ZonaOKActes={open:openActaDialog,resolve:resolveActaLink};
 
 function weekText(){
   const {start,end}=chosenWeek();
@@ -197,7 +210,7 @@ function clubRows(){const rows=new Map(agendaRows().map(r=>[[r.iso,r.time,normal
 function render(){weekText();renderSources();renderHome();if(section!=='home')renderSection(section)}
 function renderSources(){const list=$$('#import-summary');list.replaceChildren();let total=liveRows().length+(store.agenda?.rows?.length||0),latest=[store.live?.capturedAt,store.agenda?.capturedAt].filter(Boolean).sort().pop()||'';if(store.agenda){const r=mk('div','source-row');r.append(mk('strong','','Agenda \u00B7 Temporada '+(store.agenda.season||'')),mk('small','',agendaRows().length+' partits \u00B7 Bar\u00E7a '+(store.agenda.counts?.barca??'\u2014')+' \u00B7 Sant Celoni '+(store.agenda.counts?.celoni??'\u2014')+' \u00B7 '+formatTimestamp(store.agenda.capturedAt)));list.append(r);}if(store.live){const r=mk('div','source-row');r.append(mk('strong','','En directe \u00B7 Bar\u00E7a i Sant Celoni'),mk('small','',liveRows().length+' partits \u00B7 '+formatTimestamp(store.live.capturedAt)));list.append(r);}for(const id of ['4789','4786','4784']){const item=store[id],season=store.seasons?.[id];const count=allRows(id).length+(season?.rows?.length||0);total+=count;const r=mk('div','source-row');const a=mk('div');a.append(mk('strong','',LEAGUES[id].name));a.append(mk('small','',season?.capturedAt?'Temporada '+(season.season||'')+': '+formatTimestamp(season.capturedAt):(item?.standingsAt?'Classificaci\u00F3: '+formatTimestamp(item.standingsAt):(item?.capturedAt?'Calendari: '+formatTimestamp(item.capturedAt):'Encara no importat'))));const vista=id==='4789'?partitsTemporadaJugador('grupalevi').rows.length:id==='4786'?partitsTemporadaJugador('grupinfantil').rows.length:null;
 const resumPartits=vista===null?count+' partits':vista+' partits (agenda + lliga)';
-r.append(a,mk('span','',resumPartits+' \u00B7 '+(item?.standings?.length||0)+' equips'));list.append(r);for(const stamp of [season?.capturedAt,item?.capturedAt,item?.standingsAt])if(stamp&&(!latest||stamp>latest))latest=stamp;}let legacy=0;try{const old=JSON.parse(localStorage.getItem(OLD)||'{}');for(const id of ['4789','4786','4784'])legacy+=(old[id]?.rows||[]).length}catch(_){}if(legacy){const msg=mk('div','source-row');const label=mk('div');label.append(mk('strong','','Importaci\u00F3 antiga conservada'));label.append(mk('small','','Hi ha '+legacy+' files de la prova anterior. No s\u2019eliminen, per\u00F2 cal repetir la drecera nova per mostrar els partits separats.'));msg.append(label);list.append(msg);}$$('#total-count').textContent=total+' files';$$('#data-age').textContent=latest?'\u00DAltima importaci\u00F3: '+formatTimestamp(latest):'Sense dades noves importades'}
+r.append(a,mk('span','',resumPartits+' \u00B7 '+(item?.standings?.length||0)+' equips'));list.append(r);for(const stamp of [season?.capturedAt,item?.capturedAt,item?.standingsAt])if(stamp&&(!latest||stamp>latest))latest=stamp;}if(store.actaIndex){const labels=Object.entries({4789:'Magí',4786:'Ton',4784:'Juvenil'}).map(([id,name])=>{const n=store.actaIndex[id]?.rows?.length||0;return n?name+' '+n+' IDs':''}).filter(Boolean);if(labels.length){const info=mk('div','source-row');info.append(mk('strong','','Actes oficials FECAPA'),mk('small','',labels.join(' · ')+' · Identificadors importats'));list.append(info);}}let legacy=0;try{const old=JSON.parse(localStorage.getItem(OLD)||'{}');for(const id of ['4789','4786','4784'])legacy+=(old[id]?.rows||[]).length}catch(_){}if(legacy){const msg=mk('div','source-row');const label=mk('div');label.append(mk('strong','','Importaci\u00F3 antiga conservada'));label.append(mk('small','','Hi ha '+legacy+' files de la prova anterior. No s\u2019eliminen, per\u00F2 cal repetir la drecera nova per mostrar els partits separats.'));msg.append(label);list.append(msg);}$$('#total-count').textContent=total+' files';$$('#data-age').textContent=latest?'\u00DAltima importaci\u00F3: '+formatTimestamp(latest):'Sense dades noves importades'}
 function formatTimestamp(iso){try{return new Intl.DateTimeFormat('ca-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'}).format(new Date(iso))}catch(_){return 'Data desconeguda'}}
 function safeImage(src){try{const u=new URL(src);return u.protocol==='https:'&&(/(^|\.)hoqueipatins\.fecapa\.cat$/i.test(u.hostname)||(u.hostname==='sidgad.cloud'&&u.pathname.startsWith('/fecapa/images/logos_clubes/')))?u.href:''}catch(_){return ''}}
 function dateStatus(r){const now=localDate();if(r.status)return r.status+' \u00B7 lectura Safari';if(r.homeScore!==null&&r.awayScore!==null)return 'Marcador FECAPA';return r.iso>now?'Programat':'Sense resultat confirmat'}
@@ -205,7 +218,7 @@ function createCard(r,id){const c=mk('article','match '+(LEAGUES[id]?.color||'gr
 const top=mk('div','match-top'),pill=mk('span','pill',r.competition||LEAGUES[id]?.name||'FECAPA'),tag=mk('span','tag',dateStatus(r));top.append(pill,tag);c.append(top);
 const dt=mk('div','match-date');dt.append(mk('strong','',r.time||'Hora pendent'),mk('small','',niceDate(r.iso)));c.append(dt);
 const teams=mk('div','teams');const side=(name,logo)=>{name=name==='BAR'?'BAR\u00C7A':name==='CPSC'?'CP SANT CELONI':name;const d=mk('div','side'),crest=mk('div','crest');if(safeImage(logo)){const img=mk('img');img.src=safeImage(logo);img.alt='Escut de '+name;img.loading='lazy';img.onerror=()=>{crest.replaceChildren(mk('span','crest-fallback','\u{1F3D2}'))};crest.append(img)}else crest.append(mk('span','crest-fallback',name?name.trim().charAt(0).toUpperCase():'\u{1F3D2}'));d.append(crest,mk('strong','',name||'Equip no identificat'));return d};
-const mid=mk('div','middle');mid.append(mk('div','score',scorePresent(r)?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'));if(scorePresent(r)){const quick=mk('button','zok-acta-quick','\u2315 Acta');quick.type='button';quick.setAttribute('aria-label','Obrir la fitxa de FECAPA de '+r.home+' contra '+r.away);quick.onclick=e=>{e.stopPropagation();openActaDialog(r,id)};mid.append(quick);}mid.append(mk('small','score-note',scorePresent(r)?'Resultat':'Pendent'));teams.append(side(r.home,r.homeLogo),mid,side(r.away,r.awayLogo));c.append(teams);
+const mid=mk('div','middle');mid.append(mk('div','score',r.homeScore!==null&&r.awayScore!==null?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'));mid.append(mk('small','score-note',r.homeScore!==null?'Resultat':'Pendent'));if(scorePresent(r)){const actaMini=mk('button','zok-acta-chip','⌕ Acta');actaMini.type='button';actaMini.onclick=e=>{e.stopPropagation();openActaDialog(r,id)};mid.append(actaMini);}teams.append(side(r.home,r.homeLogo),mid,side(r.away,r.awayLogo));c.append(teams);
 const loc=mk('div','venue');loc.append(mk('strong','','\u{1F4CD} '+(r.venue||'Pista pendent de verificar a FECAPA')));if(!r.venue)loc.append(mk('div','', 'No s\u2019ha llegit cap pista per a aquest partit'));c.append(loc);
 const buttons=mk('div','match-actions');const cal=mk('button','','\u25A6 Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);const maps=mk('a','light',r.venue?'\u2197 Google Maps':'\u2197 Cercar pista');maps.href=r.venue?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue):BASE+'ag/';maps.target='_blank';maps.rel='noopener';const source=mk('a','light','FECAPA \u2197');source.href=exactActaLink(r,id)||(id==='live'?BASE:calendarUrl(id));source.target='_blank';source.rel='noopener';buttons.append(cal,maps,source);if(scorePresent(r)){const acta=mk('button','zok-acta-action','\u2315 Acta');acta.type='button';acta.onclick=()=>openActaDialog(r,id);acta.setAttribute('aria-label','Obrir l\u2019acta del partit sense sortir de ZonaOK');buttons.append(acta)}c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));if(scorePresent(r)){c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Obrir fitxa del partit '+r.home+' - '+r.away);c.addEventListener('click',e=>{if(e.target.closest?.('button,a,input,select,textarea'))return;openActaDialog(r,id)});c.addEventListener('keydown',e=>{if(e.target!==c||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();openActaDialog(r,id)})}return c}
 function missing(id){const out=mk('div','empty');out.append(mk('strong','',LEAGUES[id].short+' \u00B7 Dades pendents'));out.append(mk('div','', 'Sense partit identificat d\u2019aquest equip aquesta setmana. En directe no sempre distingeix el grup ni la lletra A/B. Consulta la llista del club o el calendari oficial.'));const a=mk('a','','Obrir calendari FECAPA \u2197');a.href=calendarUrl(id);a.target='_blank';a.rel='noopener';out.append(a);return out}
@@ -329,7 +342,29 @@ function prompts(key){
   }[key]||'');
 }
 function ask(key){const q=prompts(key);navigator.clipboard?.writeText(q).catch(()=>{});window.open('https://chatgpt.com/?q='+encodeURIComponent(q),'_blank','noopener');toast('S\u2019obre ChatGPT. Si no apareix la pregunta, ja s\u2019ha intentat copiar per enganxar-la.');}
-function legacyImportHash(payloadOverride){const h=location.hash.slice(1);if(!payloadOverride&&!h.startsWith('fecapa='))return;try{history.replaceState(null,'',location.pathname+location.search);const payload=payloadOverride||JSON.parse(decodeURIComponent(h.slice(7)));if(!payload||payload.source!=='FECAPA-SAFARI')throw Error('Font no acceptada');const rows=Array.isArray(payload.rows)?payload.rows:[];if(payload.kind==='agenda-season'){if(rows.length>1500)throw Error('Massa partits');const parsed=rows.map(a=>Array.isArray(a)?({iso:a[0],time:a[1],competition:a[2],home:a[3],away:a[4],homeScore:a[5],awayScore:a[6],venue:a[7],id:a[8]||'',actaUrl:a[9]||'',league:a[10]||''}):a).map(parseRow).filter(Boolean);if(!parsed.length||parsed.length!==rows.length)throw Error('La temporada cont\u00E9 files incompletes');const prior=agendaRows();for(const r of parsed){r.homeClub=clubOf(r.home);r.awayClub=clubOf(r.away);r.capturedAt=String(payload.capturedAt||'');}const merged=mergeAgendaRows(prior,parsed);store.agenda={season:String(payload.season||''),capturedAt:String(payload.capturedAt||''),sourceURL:String(payload.url||''),counts:{...(payload.counts||{}),barca:merged.filter(r=>r.homeClub==='barca'||r.awayClub==='barca').length,celoni:merged.filter(r=>r.homeClub==='celoni'||r.awayClub==='celoni').length},rows:merged};if(!save())throw Error('No es pot desar al navegador');toast('Importats '+parsed.length+' partits \u00B7 total conservat: '+merged.length);render();return true;}if(payload.kind==='season-v1'){const id=String(payload.league);if(!Object.hasOwn(LEAGUES,id)||rows.length>1000)throw Error('Lliga o nombre de partits no v\u00E0lid');const parsed=rows.map(a=>Array.isArray(a)?({iso:a[0],time:a[1],competition:a[2],home:a[3],away:a[4],homeScore:a[5],awayScore:a[6],venue:a[7],id:a[8]||'',actaUrl:a[9]||'',league:id}):a).map(parseRow).filter(Boolean);if(!parsed.length||parsed.length!==rows.length)throw Error('Temporada incompleta o il\u00B7legible');store.seasons=store.seasons||{};store.seasons[id]={season:String(payload.season||''),capturedAt:String(payload.capturedAt||''),sourceURL:String(payload.url||''),rows:parsed};if(save())toast(LEAGUES[id].name+': '+parsed.length+' partits de temporada');render();return;}if(!Object.hasOwn(LEAGUES,String(payload.league)))throw Error('Lliga no acceptada');const id=String(payload.league);if(rows.length>100)throw Error('Massa files');if(payload.kind==='standings'){const st=rows.map(r=>({pos:String(r.pos||'').slice(0,10),team:String(r.team||'').slice(0,100),played:String(r.played??'').slice(0,10),points:String(r.points??'').slice(0,10),gf:stat(r.gf),ga:stat(r.ga),difference:stat(r.difference,true),stats:Object.fromEntries(Object.entries(r.stats||{}).filter(([k])=>/^[A-Z0-9_ -]{1,30}$/.test(k)).map(([k,v])=>[k,stat(v,true)]))})).filter(r=>r.team);if(!st.length)throw Error('Classificaci\u00F3 buida');store[id]={...(store[id]||{}),standings:st,standingsAt:String(payload.capturedAt||'')};if(save())toast('Classificaci\u00F3 '+LEAGUES[id].name+' importada ('+st.length+' equips)');}else{const parsed=rows.map(parseRow).filter(Boolean).filter(r=>r.iso&&r.home&&r.away);if(!parsed.length)throw Error('No hi ha partits estructurats v\u00E0lids. Comprova el calendari.');const prior=store[id]||{};const byKey=new Map((prior.rows||[]).map(r=>[r.iso+' '+r.time+' '+r.home+' '+r.away,r]));for(const r of parsed)byKey.set(r.iso+' '+r.time+' '+r.home+' '+r.away,r);store[id]={...prior,rows:[...byKey.values()].sort((a,b)=>(a.iso+' '+a.time).localeCompare(b.iso+' '+b.time)),capturedAt:String(payload.capturedAt||''),sourceURL:String(payload.url||'')};if(save())toast(LEAGUES[id].name+': '+parsed.length+' files importades');}render();}catch(err){toast('Importaci\u00F3 no v\u00E0lida: '+err.message);return false;}}
+function legacyImportHash(payloadOverride){const h=location.hash.slice(1);if(!payloadOverride&&!h.startsWith('fecapa='))return;try{history.replaceState(null,'',location.pathname+location.search);const payload=payloadOverride||JSON.parse(decodeURIComponent(h.slice(7)));if(!payload||payload.source!=='FECAPA-SAFARI')throw Error('Font no acceptada');const rows=Array.isArray(payload.rows)?payload.rows:[];
+  if(payload.kind==='match-ids-v1'){
+    const league=numericId(payload.league);
+    if(!league||!Object.hasOwn(LEAGUES,league))throw Error('Lliga no reconeguda per ZonaOK');
+    if(!rows.length||rows.length>250)throw Error('Cap ID d’acta o massa files');
+    const incoming=[];
+    for(const a of rows){
+      if(!Array.isArray(a)||a.length<5)throw Error('Fila d’identificador incompleta');
+      const [iso,time,home,away,idp]=a;
+      if(!/^20\d{2}-\d{2}-\d{2}$/.test(String(iso))||!/^\d{2}:\d{2}$/.test(String(time))||!String(home).trim()||!String(away).trim()||!numericId(idp))throw Error('Data, equips o ID de partit incorrectes');
+      incoming.push({iso:String(iso),time:String(time),home:String(home).slice(0,120),away:String(away).slice(0,120),id:String(idp),league});
+    }
+    store.actaIndex=store.actaIndex||{};
+    const old=store.actaIndex[league]?.rows||[];
+    const indexKey=r=>[r.iso,r.time,matchTeamKey(r.home),matchTeamKey(r.away)].join('|');
+    const merged=new Map(old.map(r=>[indexKey(r),r]));
+    for(const r of incoming){const key=indexKey(r),prev=merged.get(key);if(prev&&prev.id!==r.id&&incoming.filter(x=>indexKey(x)===key).length>1)throw Error('Dos IDs diferents per al mateix partit');merged.set(key,r);}
+    store.actaIndex[league]={rows:[...merged.values()],capturedAt:String(payload.capturedAt||new Date().toISOString()),sourceURL:String(payload.url||'')};
+    if(!save())throw Error('No s’han pogut guardar els IDs');
+    toast('ACTES IMPORTADES · Lliga '+league+' · '+incoming.length+' identificadors · '+merged.size+' totals');
+    render();return true;
+  }
+  if(payload.kind==='agenda-season'){if(rows.length>1500)throw Error('Massa partits');const parsed=rows.map(a=>Array.isArray(a)?({iso:a[0],time:a[1],competition:a[2],home:a[3],away:a[4],homeScore:a[5],awayScore:a[6],venue:a[7],id:a[8]||'',actaUrl:a[9]||'',league:a[10]||''}):a).map(parseRow).filter(Boolean);if(!parsed.length||parsed.length!==rows.length)throw Error('La temporada cont\u00E9 files incompletes');const prior=agendaRows();for(const r of parsed){r.homeClub=clubOf(r.home);r.awayClub=clubOf(r.away);r.capturedAt=String(payload.capturedAt||'');}const merged=mergeAgendaRows(prior,parsed);store.agenda={season:String(payload.season||''),capturedAt:String(payload.capturedAt||''),sourceURL:String(payload.url||''),counts:{...(payload.counts||{}),barca:merged.filter(r=>r.homeClub==='barca'||r.awayClub==='barca').length,celoni:merged.filter(r=>r.homeClub==='celoni'||r.awayClub==='celoni').length},rows:merged};if(!save())throw Error('No es pot desar al navegador');toast('Importats '+parsed.length+' partits \u00B7 total conservat: '+merged.length);render();return true;}if(payload.kind==='season-v1'){const id=String(payload.league);if(!Object.hasOwn(LEAGUES,id)||rows.length>1000)throw Error('Lliga o nombre de partits no v\u00E0lid');const parsed=rows.map(a=>Array.isArray(a)?({iso:a[0],time:a[1],competition:a[2],home:a[3],away:a[4],homeScore:a[5],awayScore:a[6],venue:a[7],id:a[8]||'',actaUrl:a[9]||'',league:id}):a).map(parseRow).filter(Boolean);if(!parsed.length||parsed.length!==rows.length)throw Error('Temporada incompleta o il\u00B7legible');store.seasons=store.seasons||{};store.seasons[id]={season:String(payload.season||''),capturedAt:String(payload.capturedAt||''),sourceURL:String(payload.url||''),rows:parsed};if(save())toast(LEAGUES[id].name+': '+parsed.length+' partits de temporada');render();return;}if(!Object.hasOwn(LEAGUES,String(payload.league)))throw Error('Lliga no acceptada');const id=String(payload.league);if(rows.length>100)throw Error('Massa files');if(payload.kind==='standings'){const st=rows.map(r=>({pos:String(r.pos||'').slice(0,10),team:String(r.team||'').slice(0,100),played:String(r.played??'').slice(0,10),points:String(r.points??'').slice(0,10),gf:stat(r.gf),ga:stat(r.ga),difference:stat(r.difference,true),stats:Object.fromEntries(Object.entries(r.stats||{}).filter(([k])=>/^[A-Z0-9_ -]{1,30}$/.test(k)).map(([k,v])=>[k,stat(v,true)]))})).filter(r=>r.team);if(!st.length)throw Error('Classificaci\u00F3 buida');store[id]={...(store[id]||{}),standings:st,standingsAt:String(payload.capturedAt||'')};if(save())toast('Classificaci\u00F3 '+LEAGUES[id].name+' importada ('+st.length+' equips)');}else{const parsed=rows.map(parseRow).filter(Boolean).filter(r=>r.iso&&r.home&&r.away);if(!parsed.length)throw Error('No hi ha partits estructurats v\u00E0lids. Comprova el calendari.');const prior=store[id]||{};const byKey=new Map((prior.rows||[]).map(r=>[r.iso+' '+r.time+' '+r.home+' '+r.away,r]));for(const r of parsed)byKey.set(r.iso+' '+r.time+' '+r.home+' '+r.away,r);store[id]={...prior,rows:[...byKey.values()].sort((a,b)=>(a.iso+' '+a.time).localeCompare(b.iso+' '+b.time)),capturedAt:String(payload.capturedAt||''),sourceURL:String(payload.url||'')};if(save())toast(LEAGUES[id].name+': '+parsed.length+' files importades');}render();}catch(err){toast('Importaci\u00F3 no v\u00E0lida: '+err.message);return false;}}
 function stat(v,signed=false){return (signed?/^[+-]?\d+$/:/^\d+$/).test(String(v??''))?String(v).slice(0,8):null}
 function parseRow(r){if(!r||typeof r!=='object')return null;const iso=String(r.iso||'').slice(0,10),time=String(r.time||'').slice(0,5),home=String(r.home||'').trim().slice(0,120),away=String(r.away||'').trim().slice(0,120);if(!/^\d{4}-\d{2}-\d{2}$/.test(iso)||!/^\d\d:\d\d$/.test(time)||!home||!away)return null;const score=v=>v===null||v===undefined||v===''?null:(Number.isInteger(+v)&&+v>=0&&+v<200?+v:null);return{iso,time,home,away,competition:String(r.competition||'').slice(0,120),homeScore:score(r.homeScore),awayScore:score(r.awayScore),venue:String(r.venue||'').slice(0,180),homeLogo:safeImage(r.homeLogo),awayLogo:safeImage(r.awayLogo),actaUrl:String(r.actaUrl||'').startsWith('https://www.hoqueipatins.fecapa.cat/')?String(r.actaUrl).slice(0,300):'',id:String(r.id||'').slice(0,60),league:numericId(r.league||r.leagueId||r.liga||r.competitionId),capturedAt:String(r.capturedAt||'').slice(0,40)}}
 function validateLive(r){
@@ -382,7 +417,7 @@ function mergeAgendaRows(previous,incoming){
 let clipboardDialog=null, clipboardTextarea=null, clipboardNote=null;
 function showClipboardDialog(){
   if(!clipboardDialog)return;
-  clipboardNote.textContent='Selecciona el fitxer JSON de FECAPA. Despr\u00E9s de llegir-lo, aquesta finestra mostrar\u00E0 el recompte importat, o b\u00E9 l\u2019error concret.';
+  clipboardNote.textContent='Selecciona el fitxer JSON d’Agenda o d’Actes de FECAPA. Despr\u00E9s de llegir-lo, aquesta finestra mostrar\u00E0 el recompte importat, o b\u00E9 l\u2019error concret.';
   clipboardNote.style.color='#eef6ff';
   clipboardNote.style.fontWeight='400';
   clipboardDialog.showModal();
@@ -390,15 +425,15 @@ function showClipboardDialog(){
 function importClipboardText(raw){
   let payload;
   try{payload=JSON.parse(String(raw||'').trim())}catch(_){throw Error('El porta-retalls no cont\u00E9 un JSON v\u00E0lid');}
-  if(!payload||payload.source!=='FECAPA-SAFARI'||payload.kind!=='agenda-season'||!Array.isArray(payload.rows))throw Error('Cal copiar el JSON de la drecera Agenda FECAPA');
+  if(!payload||payload.source!=='FECAPA-SAFARI'||!['agenda-season','match-ids-v1'].includes(payload.kind)||!Array.isArray(payload.rows))throw Error('Cal un JSON d’Agenda o de la nova drecera ZonaOK Actes');
   if(!payload.rows.length)throw Error('La importaci\u00F3 no cont\u00E9 partits');
   if(payload.rows.length>1500)throw Error('La importaci\u00F3 supera el l\u00EDmit actual de 1.500 partits');
   if(!legacyImportHash(payload))throw Error('Les dades no s\u2019han pogut desar');
   // No tancar autom\u00E0ticament: iPhone necessita una confirmaci\u00F3 visible.
   const n=payload.rows.length;
-  const total=agendaRows().length;
+  const total=payload.kind==='match-ids-v1'?(store.actaIndex?.[payload.league]?.rows||[]).length:agendaRows().length;
   const instant=store.agenda?.capturedAt ? formatTimestamp(store.agenda.capturedAt) : 'desconeguda';
-  clipboardNote.textContent='IMPORTACI\u00D3 CORRECTA! Fitxer llegit: '+n+' partits. Total acumulat: '+total+' partits. Lectura: '+instant+'. Ja pots pr\u00E9mer Tancar.';
+  clipboardNote.textContent='IMPORTACI\u00D3 CORRECTA! '+n+(payload.kind==='match-ids-v1'?' IDs d\u2019acta':' partits')+'. Total acumulat: '+total+'. Lectura: '+instant+'. Ja pots pr\u00E9mer Tancar.';
   clipboardNote.style.color='#bbf7d0';
   clipboardNote.style.fontWeight='700';
   clipboardDialog?.querySelector('.zonaok-cancel')?.focus();
@@ -425,7 +460,7 @@ function setupClipboardImport(){
   .zonaok-paste-dialog button.zonaok-cancel{background:#254b67;color:white}
   `;document.head.append(style);
   clipboardDialog=mk('dialog','zonaok-paste-dialog');
-  clipboardDialog.append(mk('h2','','Importar agenda FECAPA'));
+  clipboardDialog.append(mk('h2','','Importar agenda / actes FECAPA'));
   clipboardNote=mk('p','','');clipboardDialog.append(clipboardNote);
   const read=mk('button','','\u{1F4CB} Llegir porta-retalls');read.type='button';read.onclick=readClipboardAgenda;clipboardDialog.append(read);
   // Importaci\u00F3 estable des d\u2019un arxiu. Sense porta-retalls, GZIP ni URL llarga.
@@ -448,7 +483,7 @@ function setupClipboardImport(){
   const cancel=mk('button','zonaok-cancel','Tancar');cancel.type='button';cancel.onclick=()=>clipboardDialog.close();clipboardDialog.append(cancel);
   document.body.append(clipboardDialog);
   const reference=$$('#export-shared');
-  if(reference?.parentNode){const b=mk('button',reference.className,'\u{1F4C1} Importar agenda JSON');b.type='button';b.id='import-clipboard';b.onclick=showClipboardDialog;reference.parentNode.insertBefore(b,reference);}
+  if(reference?.parentNode){const b=mk('button',reference.className,'\u{1F4C1} Importar agenda / actes JSON');b.type='button';b.id='import-clipboard';b.onclick=showClipboardDialog;reference.parentNode.insertBefore(b,reference);}
 }
 
 function importHash(){
@@ -474,7 +509,8 @@ async function loadShared(){try{const response=await fetch('zonaok-data.json?t='
  if(id==='agenda'){if(!Array.isArray(item.rows)||item.rows.length>1500)continue;const rows=item.rows.map(parseRow).filter(Boolean).map(r=>({...r,homeClub:clubOf(r.home),awayClub:clubOf(r.away)}));if(rows.length!==item.rows.length)continue;const currentRows=agendaRows();const merged=mergeAgendaRows(rows,currentRows);store.agenda={...item,rows:merged,capturedAt:[item.capturedAt,current.capturedAt].filter(Boolean).sort().pop()};}else if(id==='live'){if(!Array.isArray(item.rows)||item.rows.length>1000)continue;const rows=item.rows.map(validateLive);if(rows.some(r=>!r))continue;const merged=new Map(rows.map(r=>[liveKey(r),r]));for(const r of current.rows||[]){const old=merged.get(liveKey(r));if(!old||String(r.capturedAt||current.capturedAt)>String(old.capturedAt||item.capturedAt))merged.set(liveKey(r),r)}store[id]={...item,rows:[...merged.values()],capturedAt:[item.capturedAt,current.capturedAt].filter(Boolean).sort().pop()};}
  else {const next={...current};if(Array.isArray(item.rows)&&String(item.capturedAt||'')>String(current.capturedAt||'')){next.rows=item.rows.map(parseRow).filter(Boolean);next.capturedAt=item.capturedAt;}
  if(Array.isArray(item.standings)&&item.standings.length<=30&&String(item.standingsAt||'')>String(current.standingsAt||'')){next.standings=item.standings.map(r=>({pos:String(r.pos||'').slice(0,10),team:String(r.team||'').slice(0,120),played:String(r.played??'').slice(0,10),points:String(r.points??'').slice(0,10),gf:stat(r.gf),ga:stat(r.ga),difference:stat(r.difference,true),stats:Object.fromEntries(Object.entries(r.stats||{}).filter(([k])=>/^[A-Z0-9_ -]{1,30}$/.test(k)).map(([k,v])=>[k,stat(v,true)]))}));next.standingsAt=item.standingsAt;}store[id]=next;}}
- const seasons=p.data.seasons;if(seasons&&typeof seasons==='object'){store.seasons=store.seasons||{};for(const id of ['4789','4786','4784']){const item=seasons[id];if(!item||!Array.isArray(item.rows)||item.rows.length>1000)continue;const current=store.seasons[id];if(!current||String(item.capturedAt||'')>String(current.capturedAt||'')){const rows=item.rows.map(parseRow).filter(Boolean);if(rows.length===item.rows.length)store.seasons[id]={...item,rows};}}}save();render();}catch(_){/* Offline: keep the last local snapshot. */}}
+ const actaData=p.data.actaIndex;if(actaData&&typeof actaData==='object'){store.actaIndex=store.actaIndex||{};for(const id of Object.keys(LEAGUES)){const item=actaData[id];if(!item||!Array.isArray(item.rows)||item.rows.length>300)continue;const prior=store.actaIndex[id]?.rows||[];const key=r=>[r.iso,r.time,matchTeamKey(r.home),matchTeamKey(r.away)].join('|');const merged=new Map(item.rows.filter(r=>numericId(r.id)).map(r=>[key(r),r]));for(const r of prior)if(numericId(r.id))merged.set(key(r),r);store.actaIndex[id]={rows:[...merged.values()],capturedAt:[item.capturedAt,store.actaIndex[id]?.capturedAt].filter(Boolean).sort().pop()};}}
+  const seasons=p.data.seasons;if(seasons&&typeof seasons==='object'){store.seasons=store.seasons||{};for(const id of ['4789','4786','4784']){const item=seasons[id];if(!item||!Array.isArray(item.rows)||item.rows.length>1000)continue;const current=store.seasons[id];if(!current||String(item.capturedAt||'')>String(current.capturedAt||'')){const rows=item.rows.map(parseRow).filter(Boolean);if(rows.length===item.rows.length)store.seasons[id]={...item,rows};}}}save();render();}catch(_){/* Offline: keep the last local snapshot. */}}
 $$('#export-shared').onclick=downloadShared;
 $$('#publish-shared').onclick=()=>window.open('https://github.com/carlesjfontanillas-beep/ZonaOK/upload/main','_blank','noopener');
 $$('#reload-shared').onclick=()=>loadShared();
@@ -485,5 +521,6 @@ $$('#week-today').onclick=resetWeek;
 $$('#season-toggle').onclick=()=>{if(section==='home'||section==='classificacions')return;showSeason=!showSeason;renderSection(section);};
 installWeekGestures();
 setupActaDialog();
-setupClipboardImport();render();importHash();loadShared();
+setupClipboardImport();
+const btnActes=$$('#import-actes-json');if(btnActes)btnActes.onclick=showClipboardDialog;render();importHash();loadShared();
 })();
