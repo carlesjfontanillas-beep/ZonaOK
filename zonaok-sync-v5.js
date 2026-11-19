@@ -1,4 +1,4 @@
-/* ZonaOK V15 Â· V10.5 restaurada, actes afegides \u2014 Agenda com a font de partits, En directe nomes com a font de marcadors.
+/* ZonaOK V15 · V10.5 restaurada, actes afegides \u2014 Agenda com a font de partits, En directe nomes com a font de marcadors.
    Carregar ABANS d'app.js. Conserva V2 (classificacions) i les dades existents.
    No consulta FECAPA des del web: les dues dreceres Safari llegeixen el DOM.
 */
@@ -232,10 +232,10 @@
     const top=el('div','match-top'),scoreLabel=validScore(r.homeScore)&&validScore(r.awayScore)?(r.scoreSource==='En directe'?'En directe':'Resultat \u00B7 FECAPA'):'Agenda \u00B7 FECAPA';top.append(el('span','pill',r.competition||'Categoria no indicada'),el('span','tag',scoreLabel));c.append(top);
     const dt=el('div','match-date');dt.append(el('strong','',r.time),el('small','',nice(r.iso)));if(compact)dt.dataset.zokCategoria=r.competition||'Categoria';c.append(dt);
     const teams=el('div','teams'),middle=el('div','middle');middle.append(el('div','score',validScore(r.homeScore)&&validScore(r.awayScore)?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'),el('small','score-note',validScore(r.homeScore)&&validScore(r.awayScore)?scoreLabel:'Pendent'));
-    // V15: les actes sÃ³n nomÃ©s una interacciÃ³ addicional; NO substituÃ¯m
+    // V15: les actes són només una interacció addicional; NO substituïm
     // el filtratge de temporada V10.5 ni els resultats de les targetes.
     if(validScore(r.homeScore)&&validScore(r.awayScore)){
-      const acta=el('button','zok-acta-chip','âŒ• Acta');acta.type='button';
+      const acta=el('button','zok-acta-chip','⌕ Acta');acta.type='button';
       acta.setAttribute('aria-label','Obrir acta de '+r.home+' contra '+r.away);
       acta.addEventListener('click',ev=>{ev.stopPropagation();window.ZonaOKActes?.open(r,inferLeague(r));});
       middle.append(acta);
@@ -292,7 +292,7 @@
     root.replaceChildren(frag);if($('#home-count'))$('#home-count').textContent=count+' partits';
   }
   function activeTab(){const button=$('.navbtn.active');return button?.dataset.tab||($('#results-section')?.classList.contains('hide')?'home':'');}
-  // V18: escuts BarÃ§a/Celoni = setmana. MagÃ­/Ton = temporada (V10.5).
+  // V18: escuts Barça/Celoni = setmana. Magí/Ton = temporada (V10.5).
   function drawList(tab,rows,store){
     const root=$('#results-list');
     if(!root||$('#results-section')?.classList.contains('hide'))return;
@@ -352,10 +352,13 @@
         homeScore:validScore(newer.homeScore)?newer.homeScore:older.homeScore,
         awayScore:validScore(newer.awayScore)?newer.awayScore:older.awayScore});
     }
-    const isWeeklyClub=tab==='barca'||tab==='celoni';
+    // Separació estricta de filtres: clubs = setmana; Magí/Ton = temporada.
+    const modeByTab={barca:'WEEK',celoni:'WEEK',grupalevi:'SEASON',grupinfantil:'SEASON'};
+    const mode=modeByTab[tab];
+    const isWeeklyClub=mode==='WEEK';
     const start=selectedMonday(),end=plus(start,6);
     const selected=[...byFixture.values()]
-      .filter(r=>!isWeeklyClub||(r.iso>=start&&r.iso<=end))
+      .filter(r=>mode==='SEASON'||(r.iso>=start&&r.iso<=end))
       .sort((a,b)=>isWeeklyClub
         ?(a.iso+' '+a.time).localeCompare(b.iso+' '+b.time)
         :(b.iso+' '+b.time).localeCompare(a.iso+' '+a.time));
