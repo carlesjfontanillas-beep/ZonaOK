@@ -4,17 +4,82 @@
 const BASE='https://www.hoqueipatins.fecapa.cat/';
 const LEAGUES={4789:{name:'Alev\u00ED OR 3',short:'Bar\u00E7a Alev\u00ED',team:/^(BAR\u00C7A|BARCA|FC BARCELONA)$/i,color:'pink'},4786:{name:'Infantil OR 10',short:'Sant Celoni Infantil B',team:/^CP SANT CELONI B$/i,color:'blue'},4784:{name:'Juvenil OR 6',short:'Sant Celoni Juvenil B',team:/^CP SANT CELONI B$/i,color:'green'}};
 const KEY='ZONAOK_FECAPA_SAFARI_V2',OLD='ZONAOK_FECAPA_SAFARI_V1';
+const WEEK_KEY='ZONAOK_SETMANA_ACTIVA_V2';
 const $$=s=>document.querySelector(s), mk=(tag,cls,content)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(content!==undefined)e.textContent=content;return e;};
-let store=load(), section='home';
+let store=load(), section='home', selectedMonday=restoreMonday(), showSeason=false;
 function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(_){return {}}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store));return true}catch(e){toast('No es poden desar dades en aquest navegador.');return false}}
 function toast(msg){const e=$$('#toast');e.textContent=msg;e.classList.add('visible');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('visible'),5200)}
 function localDate(d=new Date()){const x=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);return `${x.find(p=>p.type==='year').value}-${x.find(p=>p.type==='month').value}-${x.find(p=>p.type==='day').value}`;}
 function mondayISO(){const today=localDate(), d=new Date(`${today}T12:00:00Z`);d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7));return d.toISOString().slice(0,10)}
+// Navegació global de setmana. Es conserva entre pestanyes i dins la mateixa sessió Safari.
+function restoreMonday(){
+  try{
+    const iso=sessionStorage.getItem(WEEK_KEY);
+    if(/^\d{4}-\d{2}-\d{2}$/.test(iso||'')){
+      const d=new Date(iso+'T12:00:00Z');
+      if(!Number.isNaN(d.valueOf())&&d.getUTCDay()===1&&d.toISOString().slice(0,10)===iso)return iso;
+    }
+  }catch(_){}
+  return mondayISO();
+}
+function chosenWeek(){return {start:selectedMonday,end:plusDays(selectedMonday,6)};}
+function changeWeek(weeks){
+  if(!Number.isInteger(weeks)||!weeks)return;
+  selectedMonday=plusDays(selectedMonday,7*weeks);
+  showSeason=false; // Un gest o una fletxa sempre mostra una setmana concreta.
+  try{sessionStorage.setItem(WEEK_KEY,selectedMonday);}catch(_){}
+  render();
+}
+function resetWeek(){
+  selectedMonday=mondayISO();
+  showSeason=false;
+  try{sessionStorage.setItem(WEEK_KEY,selectedMonday);}catch(_){}
+  render();
+}
+function installWeekGestures(){
+  const root=document.querySelector('main.app');
+  if(!root)return;
+  let touch=null;
+  const excluded='a,button,input,select,textarea,summary,[role="button"],[contenteditable],.standings-wrap,.zok-week-nav';
+  root.addEventListener('touchstart',event=>{
+    touch=null;
+    if(event.touches.length!==1||document.querySelector('dialog[open]'))return;
+    const target=event.target;
+    if(target?.closest?.(excluded))return;
+    const t=event.touches[0];
+    // Els extrems de Safari estan reservats als gestos de navegació del navegador.
+    if(t.clientX<22||t.clientX>window.innerWidth-22)return;
+    touch={x:t.clientX,y:t.clientY,at:Date.now()};
+  },{passive:true});
+  root.addEventListener('touchcancel',()=>{touch=null;},{passive:true});
+  root.addEventListener('touchend',event=>{
+    if(!touch||event.changedTouches.length!==1)return;
+    const t=event.changedTouches[0],dx=t.clientX-touch.x,dy=t.clientY-touch.y;
+    const elapsed=Date.now()-touch.at;
+    touch=null;
+    // No confondre el desplaçament vertical o un toc amb un canvi de setmana.
+    if(elapsed>1000||Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.4)return;
+    // Convenció concreta de ZonaOK: esquerra = setmana passada, dreta = següent.
+    changeWeek(dx<0?-1:1);
+  },{passive:true});
+}
+
 function plusDays(s,n){const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
 function niceDate(iso){if(!/^\d{4}-\d{2}-\d{2}$/.test(iso||''))return 'Data no confirmada';return new Intl.DateTimeFormat('ca-ES',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'}).format(new Date(iso+'T12:00:00Z'));}
 function calendarUrl(id,view='calendar'){return `${BASE}?liga=${id}&vista=${view}`}
-function weekText(){const s=mondayISO(),e=plusDays(s,6);$$('#week').textContent=niceDate(s)+' \u2014 '+niceDate(e)}
+function weekText(){
+  const {start,end}=chosenWeek();
+  const label=niceDate(start)+' \u2014 '+niceDate(end);
+  $$('#week').textContent=label;
+  const resultLabel=$$('#results-week');
+  if(resultLabel){
+    resultLabel.hidden=section==='classificacions';
+    resultLabel.textContent=showSeason?'Vista: tota la temporada. Llisca o prem una fletxa per tornar a les setmanes.':'Setmana: '+label;
+  }
+  const today=$$('#week-today');if(today)today.disabled=start===mondayISO()&&!showSeason;
+}
+
 function sameTeam(a,b){return normalize(a)===normalize(b)}
 function normalize(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z0-9]/gi,' ').replace(/\s+/g,' ').trim().toUpperCase()}
 function clubOf(name){const n=normalize(name);if(/\b(BARCA|FC BARCELONA|FCBETERANS|FCBETRANS)\b/.test(n))return 'barca';if(/\b(?:CP )?SANT CELONI(?: [AB])?\b/.test(n))return 'celoni';return ''}
@@ -39,7 +104,7 @@ const mid=mk('div','middle');mid.append(mk('div','score',r.homeScore!==null&&r.a
 const loc=mk('div','venue');loc.append(mk('strong','','\u{1F4CD} '+(r.venue||'Pista pendent de verificar a FECAPA')));if(!r.venue)loc.append(mk('div','', 'No s\u2019ha llegit cap pista per a aquest partit'));c.append(loc);
 const buttons=mk('div','match-actions');const cal=mk('button','','\u25A6 Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);const maps=mk('a','light',r.venue?'\u2197 Google Maps':'\u2197 Cercar pista');maps.href=r.venue?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue):BASE+'ag/';maps.target='_blank';maps.rel='noopener';const source=mk('a','light','FECAPA \u2197');source.href=id==='live'?BASE:calendarUrl(id);source.target='_blank';source.rel='noopener';buttons.append(cal,maps,source);if(r.actaUrl){const acta=mk('a','light','\u2315 Acta');acta.href=safeImage(r.actaUrl)?r.actaUrl:BASE;acta.target='_blank';acta.rel='noopener';acta.setAttribute('aria-label','Obrir la fitxa oficial i l\u2019acta del partit');buttons.append(acta)}c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));return c}
 function missing(id){const out=mk('div','empty');out.append(mk('strong','',LEAGUES[id].short+' \u00B7 Dades pendents'));out.append(mk('div','', 'Sense partit identificat d\u2019aquest equip aquesta setmana. En directe no sempre distingeix el grup ni la lletra A/B. Consulta la llista del club o el calendari oficial.'));const a=mk('a','','Obrir calendari FECAPA \u2197');a.href=calendarUrl(id);a.target='_blank';a.rel='noopener';out.append(a);return out}
-function renderHome(){const box=$$('#home-cards');box.replaceChildren();const start=mondayISO(),end=plusDays(start,6);let n=0;
+function renderHome(){const box=$$('#home-cards');box.replaceChildren();const {start,end}=chosenWeek();let n=0;
  if(store.live||store.agenda){const rows=clubRows().filter(r=>r.iso>=start&&r.iso<=end&&(r.homeClub==='barca'||r.awayClub==='barca'||r.homeClub==='celoni'||r.awayClub==='celoni')&&(store.agenda||(/ALEVI OR/.test(normalize(r.competition))&&(r.homeClub==='barca'||r.awayClub==='barca'))||(/^(INFANTIL|JUVENIL) OR/.test(normalize(r.competition))&&(r.homeClub==='celoni'||r.awayClub==='celoni')))).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));for(const r of rows){const card=createCard(r,'live');if(r.homeClub==='celoni'||r.awayClub==='celoni')card.append(mk('p','helper','FECAPA no identifica A/B ni el grup en aquest llistat.'));box.append(card);n++;}if(!n)box.append(mk('div','empty','No hi ha partits identificables dels teus equips aquesta setmana al llistat importat. La font pot mostrar encara la setmana anterior. Consulta els botons de club; no es pot concloure que no hi hagi partits.'));}
  else for(const id of ['4789','4784','4786']){const matches=allRows(id).filter(r=>r.iso>=start&&r.iso<=end&&matchFav(r,id)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));if(matches.length){for(const r of matches){box.append(createCard(r,id));n++;}}else box.append(missing(id));}$$('#home-count').textContent=n+' partits';}
 function emptyResults(message,ids=[]){const v=mk('div','empty');v.append(mk('div','',message));for(const id of ids){const a=mk('a','','Obrir '+LEAGUES[id].name+' \u2197');a.href=calendarUrl(id);a.target='_blank';a.rel='noopener';v.append(mk('div','', ' '));v.append(a)}$$('#results-list').append(v)}
@@ -107,24 +172,57 @@ function partitsTemporadaJugador(key){
 }
 function mostrarTemporadaJugador(key,box){
   const magi=key==='grupalevi',id=magi?'4789':'4786';
-  const {rows,periode,diagnostic}=partitsTemporadaJugador(key);
-  $$('#results-title').textContent=magi?'Mag\u00ED \u00B7 Bar\u00E7a Alev\u00ED OR 3':'Ton \u00B7 CP Sant Celoni B Infantil OR 10';
-  $$('#results-note').textContent=periode.nom+' \u00B7 '+rows.length+' partits d\u2019aquest equip i grup. Ordre: m\u00E9s recents primer.';
+  const {rows:seasonRows,periode,diagnostic}=partitsTemporadaJugador(key);
+  const {start,end}=chosenWeek();
+  const rows=showSeason?seasonRows:seasonRows.filter(r=>r.iso>=start&&r.iso<=end);
+  $$('#results-title').textContent=(magi?'Mag\u00ED \u00B7 Bar\u00E7a Alev\u00ED OR 3':'Ton \u00B7 CP Sant Celoni B Infantil OR 10')+(showSeason?' \u00B7 Temporada':' \u00B7 Setmana');
+  $$('#results-note').textContent=showSeason
+    ?periode.nom+' \u00B7 '+seasonRows.length+' partits d\u2019aquest equip i grup. Ordre: m\u00E9s recents primer.'
+    :rows.length+' partits de la setmana seleccionada \u00B7 '+seasonRows.length+' importats a la temporada.';
   if(!rows.length){
-    emptyResults('L\u2019agenda general te '+diagnostic.agenda+' partits. D\u2019aquests, '+diagnostic.grup+' son de la competicio, '+diagnostic.equip+' identifiquen aquest equip i '+diagnostic.ambdos+' coincideixen en totes dues condicions. Si aquest darrer recompte es zero, cal revisar el nom d\u2019equip o competicio que FECAPA ha importat; els 0 partits dels calendaris individuals no vol dir que la importacio general hagi fallat.',[id]);
+    if(seasonRows.length){
+      emptyResults('No hi ha partits importats per a aquesta setmana. La temporada conserva '+seasonRows.length+' partits. Pots consultar-los amb \u00ABTota la temporada\u00BB; les dades importades poden ser incompletes.',[id]);
+    }else{
+      emptyResults('L\u2019agenda general t\u00E9 '+diagnostic.agenda+' partits. D\u2019aquests, '+diagnostic.grup+' s\u00F3n de la competici\u00F3, '+diagnostic.equip+' identifiquen aquest equip i '+diagnostic.ambdos+' coincideixen en totes dues condicions. Revisa els noms d\u2019equip o competici\u00F3 importats.',[id]);
+    }
     return;
   }
   for(const r of rows)box.append(createCard(r,id));
 }
-function renderSection(key){const section=SECTIONS[key];if(!section)return;$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const start=mondayISO(),end=plusDays(start,6);if(key==='classificacions'){let any=false;const statLabels={PTS:'Pts',PJ:'PJ',PG:'PG',PE:'PE',PP:'PP',GF:'GF',GC:'GC',DIF:'DIF',SAN:'SAN'};for(const id of section.ids){const rows=store[id]?.standings||[];box.append(mk('h3','',LEAGUES[id].name));if(store[id]?.standingsAt)box.append(mk('small','helper','Lectura: '+formatTimestamp(store[id].standingsAt)));if(!rows.length){emptyResults('Classificaci\u00F3 pendent de lectura des de Safari.',[id]);continue;}any=true;const statKeys=[...new Set(rows.flatMap(r=>Object.keys(r.stats||{})))];const columns=[['pos','Pos.'],['team','Equip'],...statKeys.map(k=>['stats.'+k,statLabels[k]||k]),...(statKeys.length?[]:[['played','PJ'],['gf','GF'],['ga','GC'],['difference','DIF'],['points','Pts']])];for(const [k] of [...columns])if(k.startsWith('stats.')){const raw=k.slice(6);if(rows.every(r=>r.stats?.[raw]===null||r.stats?.[raw]===undefined||r.stats?.[raw]===''))columns.splice(columns.findIndex(c=>c[0]===k),1)}const table=mk('table','standings'),head=mk('tr');for(const [,label] of columns)head.append(mk('th','',label));table.append(head);for(const r of rows){const tr=mk('tr',/BAR\u00C7A|CP SANT CELONI B/i.test(r.team||'')?'highlight':'');for(const [k] of columns){const value=k.startsWith('stats.')?r.stats?.[k.slice(6)]:r[k];tr.append(mk('td','',value??'\u2014'))}table.append(tr)}const wrap=mk('div','standings-wrap');wrap.append(table);box.append(wrap)}if(!any)toast('Importa les classificacions des de Safari.');return;}
+function renderSection(key){const section=SECTIONS[key];if(!section)return;weekText();const seasonToggle=$$('#season-toggle');if(seasonToggle){seasonToggle.hidden=key==='classificacions';seasonToggle.textContent=showSeason?'Veure setmana':'Tota la temporada';}$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const {start,end}=chosenWeek();if(key==='classificacions'){let any=false;const statLabels={PTS:'Pts',PJ:'PJ',PG:'PG',PE:'PE',PP:'PP',GF:'GF',GC:'GC',DIF:'DIF',SAN:'SAN'};for(const id of section.ids){const rows=store[id]?.standings||[];box.append(mk('h3','',LEAGUES[id].name));if(store[id]?.standingsAt)box.append(mk('small','helper','Lectura: '+formatTimestamp(store[id].standingsAt)));if(!rows.length){emptyResults('Classificaci\u00F3 pendent de lectura des de Safari.',[id]);continue;}any=true;const statKeys=[...new Set(rows.flatMap(r=>Object.keys(r.stats||{})))];const columns=[['pos','Pos.'],['team','Equip'],...statKeys.map(k=>['stats.'+k,statLabels[k]||k]),...(statKeys.length?[]:[['played','PJ'],['gf','GF'],['ga','GC'],['difference','DIF'],['points','Pts']])];for(const [k] of [...columns])if(k.startsWith('stats.')){const raw=k.slice(6);if(rows.every(r=>r.stats?.[raw]===null||r.stats?.[raw]===undefined||r.stats?.[raw]===''))columns.splice(columns.findIndex(c=>c[0]===k),1)}const table=mk('table','standings'),head=mk('tr');for(const [,label] of columns)head.append(mk('th','',label));table.append(head);for(const r of rows){const tr=mk('tr',/BAR\u00C7A|CP SANT CELONI B/i.test(r.team||'')?'highlight':'');for(const [k] of columns){const value=k.startsWith('stats.')?r.stats?.[k.slice(6)]:r[k];tr.append(mk('td','',value??'\u2014'))}table.append(tr)}const wrap=mk('div','standings-wrap');wrap.append(table);box.append(wrap)}if(!any)toast('Importa les classificacions des de Safari.');return;}
 if(key==='grupalevi'||key==='grupinfantil'){mostrarTemporadaJugador(key,box);return;}
-if(key==='celoni'||key==='barca'){const club=key==='celoni'?'celoni':'barca',full=!!store.agenda?.season,source=clubRows();const rows=source.filter(r=>(full||r.iso>=start&&r.iso<=end)&&(r.homeClub===club||r.awayClub===club)).sort((a,b)=>full?(b.iso+b.time).localeCompare(a.iso+a.time):(a.iso+a.time).localeCompare(b.iso+b.time));if(full){$$('#results-title').textContent=(key==='celoni'?'CP Sant Celoni':'Bar\u00E7a')+' \u00B7 Temporada '+(store.agenda.season||'');$$('#results-note').textContent='Tots els partits importats de la temporada, amb els resultats disponibles a FECAPA.';}for(const r of rows)box.append(createCard(r,'live'));if(!rows.length)emptyResults(full?'No hi ha partits d\u2019aquest club a la importaci\u00F3 de temporada.':'Cap partit importat per a aquesta setmana. Aix\u00F2 no confirma que no hi hagi partits.');return;}
+if(key==='celoni'||key==='barca'){
+  const club=key==='celoni'?'celoni':'barca',source=clubRows();
+  const rows=source.filter(r=>(showSeason||(r.iso>=start&&r.iso<=end))&&(r.homeClub===club||r.awayClub===club))
+    .sort((a,b)=>showSeason?(b.iso+b.time).localeCompare(a.iso+a.time):(a.iso+a.time).localeCompare(b.iso+b.time));
+  const clubName=key==='celoni'?'CP Sant Celoni':'Bar\u00E7a';
+  $$('#results-title').textContent=clubName+(showSeason?' \u00B7 Temporada '+(store.agenda?.season||temporadaActual().nom):' \u00B7 Setmana');
+  $$('#results-note').textContent=showSeason
+    ?'Tots els partits importats de la temporada, amb els resultats disponibles a FECAPA.'
+    :rows.length+' partits importats per a la setmana seleccionada.';
+  for(const r of rows)box.append(createCard(r,'live'));
+  if(!rows.length)emptyResults(showSeason?'No hi ha partits d\u2019aquest club a les dades importades.':'Cap partit importat per a aquesta setmana. Aix\u00F2 no confirma que no hi hagi partits.');
+  return;
+}
 emptyResults('No hi ha partits disponibles per a aquesta secci\u00F3.',section.ids);}
 
-function selectSection(key){if(key==='home'){section='home';$$('#results-section').classList.add('hide');$$('#home-cards').scrollIntoView({behavior:'smooth',block:'start'});}else{section=key;$$('#results-section').classList.remove('hide');renderSection(key);$$('#results-section').scrollIntoView({behavior:'smooth',block:'start'});}document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.tab===key));}
+function selectSection(key){showSeason=false;if(key==='home'){section='home';$$('#results-section').classList.add('hide');$$('#home-cards').scrollIntoView({behavior:'smooth',block:'start'});}else{section=key;$$('#results-section').classList.remove('hide');renderSection(key);$$('#results-section').scrollIntoView({behavior:'smooth',block:'start'});}document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.tab===key));}
 function escapeICS(v){return String(v||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
 function exportICS(r){if(!r.iso||!r.time)return toast('No hi ha data i hora confirmades');const local=(r.iso.replace(/-/g,'')+'T'+r.time.replace(':','')+'00');const h=+r.time.slice(0,2);const end=(h+2)%24;const next=end<h?plusDays(r.iso,1).replace(/-/g,''):r.iso.replace(/-/g,'');const finish=next+'T'+String(end).padStart(2,'0')+r.time.slice(3,5)+'00';const event=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ZonaOK//FECAPA//CA','BEGIN:VEVENT','UID:zonaok-'+(r.id||Date.now())+'@zonaok.local','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z'),'DTSTART;TZID=Europe/Madrid:'+local,'DTEND;TZID=Europe/Madrid:'+finish,'SUMMARY:'+escapeICS(r.home+' - '+r.away),'LOCATION:'+escapeICS(r.venue||''),'DESCRIPTION:'+escapeICS('Consulta la font FECAPA. Durada provisional de 2 hores.'),'END:VEVENT','END:VCALENDAR'].join('\r\n');const url=URL.createObjectURL(new Blob([event],{type:'text/calendar;charset=utf-8'}));const a=mk('a');a.href=url;a.download='ZonaOK-partit.ics';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
-function prompts(key){const pref='Respon en catal\u00E0. Consulta ARA \u00FAnicament la web oficial https://www.hoqueipatins.fecapa.cat/ i https://www.hoqueipatins.fecapa.cat/ag/ per a pistes i resultats. No utilitzis altres fonts. No inventis partits, hores, pistes, escuts, marcadors ni classificacions. Si la lectura din\u00E0mica no \u00E9s possible, indica clarament que no est\u00E0 verificat. Mostra targetes compactes iPhone amb horaris Europe/Madrid, marcadors, escuts verificats, Google Maps i afegir al calendari quan es conegui la informaci\u00F3. ';return pref+({home:'Consulta els partits de la setmana actual de Bar\u00E7a Alev\u00ED OR 3 lliga 4789, CP Sant Celoni B Infantil OR 10 lliga 4786 i CP Sant Celoni B Juvenil OR 6 lliga 4784.',celoni:'Busca tots els partits de la setmana de TOTS els equips del CP Sant Celoni en totes les competicions oficials, incloent resultats.',barca:'Busca tots els partits de la setmana de TOTS els equips del FC Barcelona hoquei patins en totes les competicions oficials, incloent resultats.',classificacions:'Consulta les taules completes de classificaci\u00F3 de les lligues 4789, 4786 i 4784, destacant Bar\u00E7a Alev\u00ED i CP Sant Celoni B Infantil i Juvenil.',grupalevi:'Consulta tots els partits i resultats de la lliga 4789 Alev\u00ED OR 3, ordena m\u00E9s recent a dalt.',grupinfantil:'Consulta tots els partits i resultats de la lliga 4786 Infantil OR 10, ordena m\u00E9s recent a dalt.'}[key]||'')}
+function prompts(key){
+  const pref='Respon en catal\u00E0. Consulta ARA \u00FAnicament la web oficial https://www.hoqueipatins.fecapa.cat/ i https://www.hoqueipatins.fecapa.cat/ag/ per a pistes i resultats. No utilitzis altres fonts. No inventis partits, hores, pistes, escuts, marcadors ni classificacions. Si la lectura din\u00E0mica no \u00E9s possible, indica clarament que no est\u00E0 verificat. Mostra targetes compactes iPhone amb horaris Europe/Madrid, marcadors, escuts verificats, Google Maps i afegir al calendari quan es conegui la informaci\u00F3. ';
+  const {start,end}=chosenWeek();
+  const periode='Del '+start+' al '+end+' (hora Europe/Madrid). ';
+  const atemporada=showSeason?'Durant tota la temporada 2026/27. ':periode;
+  return pref+({
+    home:periode+'Consulta els partits de Bar\u00E7a Alev\u00ED OR 3 lliga 4789, CP Sant Celoni B Infantil OR 10 lliga 4786 i CP Sant Celoni B Juvenil OR 6 lliga 4784.',
+    celoni:atemporada+'Busca tots els partits de TOTS els equips del CP Sant Celoni en totes les competicions oficials, incloent-hi resultats.',
+    barca:atemporada+'Busca tots els partits de TOTS els equips del FC Barcelona hoquei patins en totes les competicions oficials, incloent-hi resultats.',
+    classificacions:'Consulta les taules completes de classificaci\u00F3 de les lligues 4789, 4786 i 4784, destacant Bar\u00E7a Alev\u00ED i CP Sant Celoni B Infantil i Juvenil.',
+    grupalevi:atemporada+'Consulta els partits i resultats del Bar\u00E7a de la lliga 4789 Alev\u00ED OR 3, ordena m\u00E9s recent a dalt.',
+    grupinfantil:atemporada+'Consulta els partits i resultats del CP Sant Celoni B de la lliga 4786 Infantil OR 10, ordena m\u00E9s recent a dalt.'
+  }[key]||'');
+}
 function ask(key){const q=prompts(key);navigator.clipboard?.writeText(q).catch(()=>{});window.open('https://chatgpt.com/?q='+encodeURIComponent(q),'_blank','noopener');toast('S\u2019obre ChatGPT. Si no apareix la pregunta, ja s\u2019ha intentat copiar per enganxar-la.');}
 function legacyImportHash(payloadOverride){const h=location.hash.slice(1);if(!payloadOverride&&!h.startsWith('fecapa='))return;try{history.replaceState(null,'',location.pathname+location.search);const payload=payloadOverride||JSON.parse(decodeURIComponent(h.slice(7)));if(!payload||payload.source!=='FECAPA-SAFARI')throw Error('Font no acceptada');const rows=Array.isArray(payload.rows)?payload.rows:[];if(payload.kind==='agenda-season'){if(rows.length>1500)throw Error('Massa partits');const parsed=rows.map(a=>Array.isArray(a)?({iso:a[0],time:a[1],competition:a[2],home:a[3],away:a[4],homeScore:a[5],awayScore:a[6],venue:a[7]}):a).map(parseRow).filter(Boolean);if(!parsed.length||parsed.length!==rows.length)throw Error('La temporada cont\u00E9 files incompletes');const prior=agendaRows();for(const r of parsed){r.homeClub=clubOf(r.home);r.awayClub=clubOf(r.away);r.capturedAt=String(payload.capturedAt||'');}const merged=mergeAgendaRows(prior,parsed);store.agenda={season:String(payload.season||''),capturedAt:String(payload.capturedAt||''),sourceURL:String(payload.url||''),counts:{...(payload.counts||{}),barca:merged.filter(r=>r.homeClub==='barca'||r.awayClub==='barca').length,celoni:merged.filter(r=>r.homeClub==='celoni'||r.awayClub==='celoni').length},rows:merged};if(!save())throw Error('No es pot desar al navegador');toast('Importats '+parsed.length+' partits \u00B7 total conservat: '+merged.length);render();return true;}if(payload.kind==='season-v1'){const id=String(payload.league);if(!Object.hasOwn(LEAGUES,id)||rows.length>1000)throw Error('Lliga o nombre de partits no v\u00E0lid');const parsed=rows.map(a=>Array.isArray(a)?({iso:a[0],time:a[1],competition:a[2],home:a[3],away:a[4],homeScore:a[5],awayScore:a[6],venue:a[7],id:a[8]||''}):a).map(parseRow).filter(Boolean);if(!parsed.length||parsed.length!==rows.length)throw Error('Temporada incompleta o il\u00B7legible');store.seasons=store.seasons||{};store.seasons[id]={season:String(payload.season||''),capturedAt:String(payload.capturedAt||''),sourceURL:String(payload.url||''),rows:parsed};if(save())toast(LEAGUES[id].name+': '+parsed.length+' partits de temporada');render();return;}if(!Object.hasOwn(LEAGUES,String(payload.league)))throw Error('Lliga no acceptada');const id=String(payload.league);if(rows.length>100)throw Error('Massa files');if(payload.kind==='standings'){const st=rows.map(r=>({pos:String(r.pos||'').slice(0,10),team:String(r.team||'').slice(0,100),played:String(r.played??'').slice(0,10),points:String(r.points??'').slice(0,10),gf:stat(r.gf),ga:stat(r.ga),difference:stat(r.difference,true),stats:Object.fromEntries(Object.entries(r.stats||{}).filter(([k])=>/^[A-Z0-9_ -]{1,30}$/.test(k)).map(([k,v])=>[k,stat(v,true)]))})).filter(r=>r.team);if(!st.length)throw Error('Classificaci\u00F3 buida');store[id]={...(store[id]||{}),standings:st,standingsAt:String(payload.capturedAt||'')};if(save())toast('Classificaci\u00F3 '+LEAGUES[id].name+' importada ('+st.length+' equips)');}else{const parsed=rows.map(parseRow).filter(Boolean).filter(r=>r.iso&&r.home&&r.away);if(!parsed.length)throw Error('No hi ha partits estructurats v\u00E0lids. Comprova el calendari.');const prior=store[id]||{};const byKey=new Map((prior.rows||[]).map(r=>[r.iso+' '+r.time+' '+r.home+' '+r.away,r]));for(const r of parsed)byKey.set(r.iso+' '+r.time+' '+r.home+' '+r.away,r);store[id]={...prior,rows:[...byKey.values()].sort((a,b)=>(a.iso+' '+a.time).localeCompare(b.iso+' '+b.time)),capturedAt:String(payload.capturedAt||''),sourceURL:String(payload.url||'')};if(save())toast(LEAGUES[id].name+': '+parsed.length+' files importades');}render();}catch(err){toast('Importaci\u00F3 no v\u00E0lida: '+err.message);return false;}}
 function stat(v,signed=false){return (signed?/^[+-]?\d+$/:/^\d+$/).test(String(v??''))?String(v).slice(0,8):null}
@@ -276,5 +374,10 @@ $$('#export-shared').onclick=downloadShared;
 $$('#publish-shared').onclick=()=>window.open('https://github.com/carlesjfontanillas-beep/ZonaOK/upload/main','_blank','noopener');
 $$('#reload-shared').onclick=()=>loadShared();
 $$('#guide-button').onclick=()=>$$('#guide').showModal();$$('#guide-close').onclick=()=>$$('#guide').close();$$('#clear-button').onclick=()=>{if(confirm('Esborrar totes les dades importades de Safari a ZonaOK?')){localStorage.removeItem(KEY);localStorage.removeItem(OLD);store={};render();toast('Dades esborrades.')}};$$('#ask-home').onclick=()=>ask('home');$$('#refresh-home').onclick=()=>selectSection('home');$$('#close-results').onclick=()=>selectSection('home');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>selectSection(b.dataset.tab));
+$$('#week-prev').onclick=()=>changeWeek(-1);
+$$('#week-next').onclick=()=>changeWeek(1);
+$$('#week-today').onclick=resetWeek;
+$$('#season-toggle').onclick=()=>{if(section==='home'||section==='classificacions')return;showSeason=!showSeason;renderSection(section);};
+installWeekGestures();
 setupClipboardImport();render();importHash();loadShared();
 })();
