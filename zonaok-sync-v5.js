@@ -306,7 +306,20 @@
     if(!list.length)return; // No suprimir les pantalles antigues fins tenir Agenda.
     const week=byWeek(list).map(r=>resolved(r,store));
     drawHome(week);
-    drawList(activeTab(),week);
+    const tab = activeTab();
+
+const temporada = [
+  'barca',
+  'celoni',
+  'grupalevi',
+  'grupinfantil'
+].includes(tab);
+
+const files = temporada
+  ? list.map(r => resolved(r, store))
+  : week;
+
+drawList(tab, files);
     const last=[store.agenda?.capturedAt,store.scoreUpdates?.capturedAt,store.live?.capturedAt].filter(Boolean).sort().pop();
     if($('#data-label'))$('#data-label').textContent='Agenda + En directe \u00B7 Safari';
     if($('#data-age')&&last)$('#data-age').textContent='\u00DAltima lectura: '+timestamp(last);
