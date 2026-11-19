@@ -1,0 +1,41 @@
+name: ZonaOK - importar actes FECAPA
+on:
+  workflow_dispatch:
+    inputs:
+      payload:
+        description: 'JSON base64 generat per la drecera Apple'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zonaok-import-actes-main
+  cancel-in-progress: false
+
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Clonar repositori
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - name: Validar i fusionar actes (mai substituir altres dades)
+        env:
+          ZONAOK_PAYLOAD_B64: ${{ inputs.payload }}
+        run: python3 scripts/zonaok_merge_actes.py
+      - name: Publicar JSON d'actes si ha canviat
+        run: |
+          if git diff --quiet -- zonaok-actes.json && [ -z "$(git ls-files --others --exclude-standard -- zonaok-actes.json)" ]; then
+            echo "Sense modificacions; les actes ja eren al repositori."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- zonaok-actes.json
+          git commit -m 'ZonaOK: actualitzar índex actes FECAPA'
+          git push origin HEAD:main
