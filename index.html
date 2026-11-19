@@ -25,6 +25,14 @@
     .zok-results-week{font-size:13px;font-weight:700;margin:7px 0 11px;color:inherit}
     #season-toggle[hidden],#results-week[hidden]{display:none!important}
     @media(max-width:390px){.zok-week-nav{gap:5px}.zok-week-nav button{padding:0 6px;min-width:30px}}
+
+    /* V15: la barra de setmanes té prioritat; evita dates en vertical a l'iPhone. */
+    .hero{flex-wrap:nowrap!important;min-width:0}
+    .hero .zok-week-nav{flex:1 1 auto;min-width:0;width:100%;max-width:none;margin:0;gap:5px}
+    .hero .zok-week-nav .week{flex:1 1 auto;min-width:65px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;word-break:normal;font-size:12px!important;line-height:1.2}
+    .hero .zok-week-help{display:none!important}
+    .hero .hero-actions{flex:0 0 auto;gap:4px}
+    @media(max-width:390px){.hero .zok-week-nav button{min-width:28px;height:32px;padding:0 5px}.hero .zok-week-nav .week{font-size:11px!important}}
   </style>
 </head>
 <body>
@@ -111,13 +119,7 @@
         <a class="secondary" href="ZonaOK-Importar-Temporada-Magi.js" download>Codi Mag&#xED; &#x2193;</a>
         <a class="secondary" href="ZonaOK-Importar-Temporada-Ton.js" download>Codi Ton &#x2193;</a>
       </div>
-      <p><strong>Actes FECAPA (NOU)</strong></p>
-      <p class="helper">Per obrir les actes, executa la drecera «ZonaOK Actes» al calendari oficial de cada lliga. Aquest lector guarda els identificadors reals dels partits, no esborra resultats ni substitueix les importacions actuals. Si FECAPA no publica cap ID al calendari, mostrarà un error i no inventarà enllaços.</p>
-      <div class="context-actions">
-        <a class="secondary" href="ZONAOK_ACTES_FECAPA_SAFARI.js" download>Descarregar codi drecera Actes ↓</a>
-        <button id="import-actes-json" class="secondary" type="button">Importar JSON actes</button>
-      </div>
-      <p class="helper">Calendaris: <a href="https://www.hoqueipatins.fecapa.cat/?liga=4789&amp;vista=calendar" target="_blank" rel="noopener">Magí 4789</a> · <a href="https://www.hoqueipatins.fecapa.cat/?liga=4786&amp;vista=calendar" target="_blank" rel="noopener">Ton 4786</a> · <a href="https://www.hoqueipatins.fecapa.cat/?liga=4784&amp;vista=calendar" target="_blank" rel="noopener">Juvenil 4784</a>.</p>
+      <p class="helper"><strong>Actes FECAPA:</strong> el botó de visualització funciona amb identificadors verificats. La drecera «ZH Acta» està temporalment pendent de correcció: no cal tornar-la a executar.</p>
       <p><strong>Dreceres Safari</strong></p>
       <div class="context-actions">
         <a class="secondary" href="ZONAOK_AGENDA_SAFARI.js" download>Codi Agenda V9 &#xB7; porta-retalls &#x2193;</a>
@@ -161,8 +163,8 @@
   <p class="helper">Les temporades de Mag&#xED; i Ton i les dreceres de classificaci&#xF3; es mantenen sense canvis.</p>
 </dialog>
 <div id="toast" role="status" aria-live="polite"></div>
-<script src="zonaok-sync-v5.js?v=20261119-actes-v14-integrat" defer></script>
-<script src="app.js?v=20261119-actes-v14-integrat" defer></script>
-<script src="zonaok-retocs.js?v=20261119-actes-v14-integrat" defer></script>
+<script src="zonaok-sync-v5.js?v=20261119-restauracio-v15" defer></script>
+<script src="app.js?v=20261119-restauracio-v15" defer></script>
+<script src="zonaok-retocs.js?v=20261119-restauracio-v15" defer></script>
 </body>
 </html>
