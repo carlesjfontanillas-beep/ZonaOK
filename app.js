@@ -25,7 +25,7 @@ function agendaRows(){return allRows('agenda')}
 function clubRows(){const rows=new Map(agendaRows().map(r=>[[r.iso,r.time,normalize(r.home),normalize(r.away)].join('|'),r]));for(const r of liveRows()){const k=[r.iso,r.time,normalize(r.home),normalize(r.away)].join('|'),old=rows.get(k);rows.set(k,old?{...old,...r,venue:r.venue||old.venue}:r)}return [...rows.values()]}
 
 function render(){weekText();renderSources();renderHome();if(section!=='home')renderSection(section)}
-function renderSources(){const list=$$('#import-summary');list.replaceChildren();let total=liveRows().length+(store.agenda?.rows?.length||0),latest=store.live?.capturedAt||store.agenda?.capturedAt||'';if(store.agenda){const r=mk('div','source-row');r.append(mk('strong','','Agenda \u00B7 Temporada '+(store.agenda.season||'')),mk('small','',agendaRows().length+' partits \u00B7 Bar\u00E7a '+(store.agenda.counts?.barca??'\u2014')+' \u00B7 Sant Celoni '+(store.agenda.counts?.celoni??'\u2014')+' \u00B7 '+formatTimestamp(store.agenda.capturedAt)));list.append(r);}if(store.live){const r=mk('div','source-row');r.append(mk('strong','','En directe \u00B7 Bar\u00E7a i Sant Celoni'),mk('small','',liveRows().length+' partits \u00B7 '+formatTimestamp(store.live.capturedAt)));list.append(r);}for(const id of ['4789','4786','4784']){const item=store[id],season=store.seasons?.[id];const count=allRows(id).length+(season?.rows?.length||0);total+=count;const r=mk('div','source-row');const a=mk('div');a.append(mk('strong','',LEAGUES[id].name));a.append(mk('small','',season?.capturedAt?'Temporada '+(season.season||'')+': '+formatTimestamp(season.capturedAt):(item?.standingsAt?'Classificaci\u00F3: '+formatTimestamp(item.standingsAt):(item?.capturedAt?'Calendari: '+formatTimestamp(item.capturedAt):'Encara no importat'))));r.append(a,mk('span','',count+' partits \u00B7 '+(item?.standings?.length||0)+' equips'));list.append(r);for(const stamp of [season?.capturedAt,item?.capturedAt,item?.standingsAt])if(stamp&&(!latest||stamp>latest))latest=stamp;}let legacy=0;try{const old=JSON.parse(localStorage.getItem(OLD)||'{}');for(const id of ['4789','4786','4784'])legacy+=(old[id]?.rows||[]).length}catch(_){}if(legacy){const msg=mk('div','source-row');const label=mk('div');label.append(mk('strong','','Importaci\u00F3 antiga conservada'));label.append(mk('small','','Hi ha '+legacy+' files de la prova anterior. No s\u2019eliminen, per\u00F2 cal repetir la drecera nova per mostrar els partits separats.'));msg.append(label);list.append(msg);}$$('#total-count').textContent=total+' files';$$('#data-age').textContent=latest?'\u00DAltima importaci\u00F3: '+formatTimestamp(latest):'Sense dades noves importades'}
+function renderSources(){const list=$$('#import-summary');list.replaceChildren();let total=liveRows().length+(store.agenda?.rows?.length||0),latest=[store.live?.capturedAt,store.agenda?.capturedAt].filter(Boolean).sort().pop()||'';if(store.agenda){const r=mk('div','source-row');r.append(mk('strong','','Agenda \u00B7 Temporada '+(store.agenda.season||'')),mk('small','',agendaRows().length+' partits \u00B7 Bar\u00E7a '+(store.agenda.counts?.barca??'\u2014')+' \u00B7 Sant Celoni '+(store.agenda.counts?.celoni??'\u2014')+' \u00B7 '+formatTimestamp(store.agenda.capturedAt)));list.append(r);}if(store.live){const r=mk('div','source-row');r.append(mk('strong','','En directe \u00B7 Bar\u00E7a i Sant Celoni'),mk('small','',liveRows().length+' partits \u00B7 '+formatTimestamp(store.live.capturedAt)));list.append(r);}for(const id of ['4789','4786','4784']){const item=store[id],season=store.seasons?.[id];const count=allRows(id).length+(season?.rows?.length||0);total+=count;const r=mk('div','source-row');const a=mk('div');a.append(mk('strong','',LEAGUES[id].name));a.append(mk('small','',season?.capturedAt?'Temporada '+(season.season||'')+': '+formatTimestamp(season.capturedAt):(item?.standingsAt?'Classificaci\u00F3: '+formatTimestamp(item.standingsAt):(item?.capturedAt?'Calendari: '+formatTimestamp(item.capturedAt):'Encara no importat'))));r.append(a,mk('span','',count+' partits \u00B7 '+(item?.standings?.length||0)+' equips'));list.append(r);for(const stamp of [season?.capturedAt,item?.capturedAt,item?.standingsAt])if(stamp&&(!latest||stamp>latest))latest=stamp;}let legacy=0;try{const old=JSON.parse(localStorage.getItem(OLD)||'{}');for(const id of ['4789','4786','4784'])legacy+=(old[id]?.rows||[]).length}catch(_){}if(legacy){const msg=mk('div','source-row');const label=mk('div');label.append(mk('strong','','Importaci\u00F3 antiga conservada'));label.append(mk('small','','Hi ha '+legacy+' files de la prova anterior. No s\u2019eliminen, per\u00F2 cal repetir la drecera nova per mostrar els partits separats.'));msg.append(label);list.append(msg);}$$('#total-count').textContent=total+' files';$$('#data-age').textContent=latest?'\u00DAltima importaci\u00F3: '+formatTimestamp(latest):'Sense dades noves importades'}
 function formatTimestamp(iso){try{return new Intl.DateTimeFormat('ca-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'}).format(new Date(iso))}catch(_){return 'Data desconeguda'}}
 function safeImage(src){try{const u=new URL(src);return u.protocol==='https:'&&(/(^|\.)hoqueipatins\.fecapa\.cat$/i.test(u.hostname)||(u.hostname==='sidgad.cloud'&&u.pathname.startsWith('/fecapa/images/logos_clubes/')))?u.href:''}catch(_){return ''}}
 function dateStatus(r){const now=localDate();if(r.status)return r.status+' \u00B7 lectura Safari';if(r.homeScore!==null&&r.awayScore!==null)return 'Marcador FECAPA';return r.iso>now?'Programat':'Sense resultat confirmat'}
@@ -42,10 +42,47 @@ function renderHome(){const box=$$('#home-cards');box.replaceChildren();const st
  else for(const id of ['4789','4784','4786']){const matches=allRows(id).filter(r=>r.iso>=start&&r.iso<=end&&matchFav(r,id)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));if(matches.length){for(const r of matches){box.append(createCard(r,id));n++;}}else box.append(missing(id));}$$('#home-count').textContent=n+' partits';}
 function emptyResults(message,ids=[]){const v=mk('div','empty');v.append(mk('div','',message));for(const id of ids){const a=mk('a','','Obrir '+LEAGUES[id].name+' \u2197');a.href=calendarUrl(id);a.target='_blank';a.rel='noopener';v.append(mk('div','', ' '));v.append(a)}$$('#results-list').append(v)}
 const SECTIONS={celoni:{name:'CP Sant Celoni \u00B7 Setmana',source:BASE,ids:['4786','4784'],msg:'Partits del CP Sant Celoni presents al llistat En directe. La llista pot ser parcial; FECAPA no hi distingeix sempre A/B ni el grup.'},barca:{name:'Bar\u00E7a \u00B7 Setmana',source:BASE,ids:['4789'],msg:'Partits del Bar\u00E7a presents al llistat En directe. Mostrem la categoria publicada i l\u2019hora de la lectura; la llista pot ser parcial.'},classificacions:{name:'Classificacions \u00B7 3 grups',source:calendarUrl('4789','clasificaciones'),ids:['4789','4786','4784'],msg:'Les classificacions nom\u00E9s apareixen despr\u00E9s d\u2019importar les taules oficials de FECAPA des de Safari.'},grupalevi:{name:'Alev\u00ED OR 3 \u00B7 Temporada',source:calendarUrl('4789'),ids:['4789'],msg:'Tots els partits de la temporada del Bar\u00E7a a Alev\u00ED OR 3, amb els marcadors publicats per FECAPA.'},grupinfantil:{name:'Infantil OR 10 \u00B7 Temporada',source:calendarUrl('4786'),ids:['4786'],msg:'Tots els partits de la temporada del Sant Celoni B a Infantil OR 10, amb els marcadors publicats per FECAPA.'}};
+/* Magi i Ton: nomes els seus equips i grups, des de totes les lectures acumulades.
+   No utilitzem "En directe" sense ID de grup: pot barrejar A/B o grups.
+   No es limita a la setmana. Les llistes poden ser parcials si la font nomes n'ha mostrat una part. */
+function temporadaActual(){
+  const avui=localDate(),any=Number(avui.slice(0,4))-(Number(avui.slice(5,7))<7?1:0);
+  return {inici:any+'-07-01',fi:(any+1)+'-06-30',nom:any+'/'+(any+1)};
+}
+function partitsTemporadaJugador(key){
+  const magi=key==='grupalevi',id=magi?'4789':'4786',grup=LEAGUES[id].name;
+  const periode=temporadaActual();
+  const esEquip=nom=>magi?clubOf(nom)==='barca':/^(?:CP )?SANT CELONI B$/.test(normalize(nom));
+  const valid=r=>r&&r.iso>=periode.inici&&r.iso<=periode.fi&&(esEquip(r.home)||esEquip(r.away));
+  const origen=[
+    {rows:allRows(id),at:store[id]?.capturedAt||''},
+    {rows:store.seasons?.[id]?.rows||[],at:store.seasons?.[id]?.capturedAt||''},
+    {rows:agendaRows().filter(r=>normalize(r.competition)===normalize(grup)),at:store.agenda?.capturedAt||''}
+  ].sort((a,b)=>String(a.at).localeCompare(String(b.at)));
+  let result=[];
+  for(const font of origen){
+    const nous=font.rows.map(r=>{
+      const p=parseRow({...r,competition:grup});
+      if(p)p.capturedAt=String(r.capturedAt||font.at||'');
+      return p;
+    }).filter(valid);
+    if(nous.length)result=mergeAgendaRows(result,nous);
+  }
+  return {rows:result.sort((a,b)=>(b.iso+' '+b.time).localeCompare(a.iso+' '+a.time)),periode};
+}
+function mostrarTemporadaJugador(key,box){
+  const magi=key==='grupalevi',id=magi?'4789':'4786';
+  const {rows,periode}=partitsTemporadaJugador(key);
+  $$('#results-title').textContent=magi?'Mag\u00ED \u00B7 Bar\u00E7a Alev\u00ED OR 3':'Ton \u00B7 CP Sant Celoni B Infantil OR 10';
+  $$('#results-note').textContent=periode.nom+' \u00B7 '+rows.length+' partits importats. Ordre: m\u00E9s recents primer. S\u2019hi mostren els partits disponibles, no necess\u00E0riament tota la temporada si encara falten dades de FECAPA.';
+  if(!rows.length){emptyResults('Encara no tenim partits d\u2019aquest equip i grup importats per a la temporada '+periode.nom+'. Importa el calendari complet de FECAPA; no es poden deduir els partits absents.',[id]);return;}
+  for(const r of rows)box.append(createCard(r,id));
+}
 function renderSection(key){const section=SECTIONS[key];if(!section)return;$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const start=mondayISO(),end=plusDays(start,6);if(key==='classificacions'){let any=false;const statLabels={PTS:'Pts',PJ:'PJ',PG:'PG',PE:'PE',PP:'PP',GF:'GF',GC:'GC',DIF:'DIF',SAN:'SAN'};for(const id of section.ids){const rows=store[id]?.standings||[];box.append(mk('h3','',LEAGUES[id].name));if(store[id]?.standingsAt)box.append(mk('small','helper','Lectura: '+formatTimestamp(store[id].standingsAt)));if(!rows.length){emptyResults('Classificaci\u00F3 pendent de lectura des de Safari.',[id]);continue;}any=true;const statKeys=[...new Set(rows.flatMap(r=>Object.keys(r.stats||{})))];const columns=[['pos','Pos.'],['team','Equip'],...statKeys.map(k=>['stats.'+k,statLabels[k]||k]),...(statKeys.length?[]:[['played','PJ'],['gf','GF'],['ga','GC'],['difference','DIF'],['points','Pts']])];for(const [k] of [...columns])if(k.startsWith('stats.')){const raw=k.slice(6);if(rows.every(r=>r.stats?.[raw]===null||r.stats?.[raw]===undefined||r.stats?.[raw]===''))columns.splice(columns.findIndex(c=>c[0]===k),1)}const table=mk('table','standings'),head=mk('tr');for(const [,label] of columns)head.append(mk('th','',label));table.append(head);for(const r of rows){const tr=mk('tr',/BAR\u00C7A|CP SANT CELONI B/i.test(r.team||'')?'highlight':'');for(const [k] of columns){const value=k.startsWith('stats.')?r.stats?.[k.slice(6)]:r[k];tr.append(mk('td','',value??'\u2014'))}table.append(tr)}const wrap=mk('div','standings-wrap');wrap.append(table);box.append(wrap)}if(!any)toast('Importa les classificacions des de Safari.');return;}
-if(key==='grupalevi'||key==='grupinfantil'){const alevi=key==='grupalevi',seasonLeague=alevi?'4789':'4786';if(store.live&&!store.seasons?.[seasonLeague]?.rows){const club=alevi?'barca':'celoni',category=alevi?'ALEVI OR':'INFANTIL OR';$$('#results-title').textContent=alevi?'Bar\u00E7a Alev\u00ED \u00B7 En directe':'Sant Celoni Infantil \u00B7 En directe';$$('#results-note').textContent='Partits del club presents al llistat importat, m\u00E9s recents primer. La font no distingeix sempre grup ni equip A/B; el bot\u00F3 FECAPA obre el grup complet oficial.';const rows=liveRows().filter(r=>normalize(r.competition)===category&&(r.homeClub===club||r.awayClub===club)).sort((a,b)=>(b.iso+b.time).localeCompare(a.iso+a.time));for(const r of rows)box.append(createCard(r,'live'));if(!rows.length)emptyResults('No hi ha lectures d\u2019aquesta categoria. Aix\u00F2 no confirma que no hi hagi partits.');return;}}
+if(key==='grupalevi'||key==='grupinfantil'){mostrarTemporadaJugador(key,box);return;}
 if(key==='celoni'||key==='barca'){const club=key==='celoni'?'celoni':'barca',full=!!store.agenda?.season,source=clubRows();const rows=source.filter(r=>(full||r.iso>=start&&r.iso<=end)&&(r.homeClub===club||r.awayClub===club)).sort((a,b)=>full?(b.iso+b.time).localeCompare(a.iso+a.time):(a.iso+a.time).localeCompare(b.iso+b.time));if(full){$$('#results-title').textContent=(key==='celoni'?'CP Sant Celoni':'Bar\u00E7a')+' \u00B7 Temporada '+(store.agenda.season||'');$$('#results-note').textContent='Tots els partits importats de la temporada, amb els resultats disponibles a FECAPA.';}for(const r of rows)box.append(createCard(r,'live'));if(!rows.length)emptyResults(full?'No hi ha partits d\u2019aquest club a la importaci\u00F3 de temporada.':'Cap partit importat per a aquesta setmana. Aix\u00F2 no confirma que no hi hagi partits.');return;}
-let count=0;for(const id of section.ids){const imported=key==='grupalevi'||key==='grupinfantil'?store.seasons?.[id]?.rows: null;const rows=(imported||allRows(id)).filter(r=>key==='grupalevi'||key==='grupinfantil'?true:(r.iso>=start&&r.iso<=end&&(key==='celoni'?/SANT CELONI/i.test(r.home+' '+r.away):/BAR\u00C7A|BARCA|FC BARCELONA/i.test(r.home+' '+r.away)))).sort((a,b)=>key.startsWith('grup')?(b.iso+' '+b.time).localeCompare(a.iso+' '+a.time):(a.iso+' '+a.time).localeCompare(b.iso+' '+b.time));for(const r of rows){box.append(createCard(r,id));count++}}if(!count)emptyResults('Encara no hi ha importada la temporada completa. Obre Calendari i resultats de FECAPA i executa la drecera de '+(key==='grupalevi'?'Mag\u00ED':'Ton')+'.',section.ids)}
+emptyResults('No hi ha partits disponibles per a aquesta secci\u00F3.',section.ids);}
+
 function selectSection(key){if(key==='home'){section='home';$$('#results-section').classList.add('hide');$$('#home-cards').scrollIntoView({behavior:'smooth',block:'start'});}else{section=key;$$('#results-section').classList.remove('hide');renderSection(key);$$('#results-section').scrollIntoView({behavior:'smooth',block:'start'});}document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.tab===key));}
 function escapeICS(v){return String(v||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
 function exportICS(r){if(!r.iso||!r.time)return toast('No hi ha data i hora confirmades');const local=(r.iso.replace(/-/g,'')+'T'+r.time.replace(':','')+'00');const h=+r.time.slice(0,2);const end=(h+2)%24;const next=end<h?plusDays(r.iso,1).replace(/-/g,''):r.iso.replace(/-/g,'');const finish=next+'T'+String(end).padStart(2,'0')+r.time.slice(3,5)+'00';const event=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ZonaOK//FECAPA//CA','BEGIN:VEVENT','UID:zonaok-'+(r.id||Date.now())+'@zonaok.local','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z'),'DTSTART;TZID=Europe/Madrid:'+local,'DTEND;TZID=Europe/Madrid:'+finish,'SUMMARY:'+escapeICS(r.home+' - '+r.away),'LOCATION:'+escapeICS(r.venue||''),'DESCRIPTION:'+escapeICS('Consulta la font FECAPA. Durada provisional de 2 hores.'),'END:VEVENT','END:VCALENDAR'].join('\r\n');const url=URL.createObjectURL(new Blob([event],{type:'text/calendar;charset=utf-8'}));const a=mk('a');a.href=url;a.download='ZonaOK-partit.ics';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
@@ -104,7 +141,9 @@ function mergeAgendaRows(previous,incoming){
 let clipboardDialog=null, clipboardTextarea=null, clipboardNote=null;
 function showClipboardDialog(){
   if(!clipboardDialog)return;
-  clipboardNote.textContent='Importa el fitxer JSON descarregat des de FECAPA amb el bot\u00F3 \u00ABSeleccionar fitxer JSON\u00BB. El porta-retalls antic es mant\u00E9 com a alternativa.';
+  clipboardNote.textContent='Selecciona el fitxer JSON de FECAPA. Despr\u00E9s de llegir-lo, aquesta finestra mostrar\u00E0 el recompte importat, o b\u00E9 l\u2019error concret.';
+  clipboardNote.style.color='#eef6ff';
+  clipboardNote.style.fontWeight='400';
   clipboardDialog.showModal();
 }
 function importClipboardText(raw){
@@ -114,7 +153,14 @@ function importClipboardText(raw){
   if(!payload.rows.length)throw Error('La importaci\u00F3 no cont\u00E9 partits');
   if(payload.rows.length>1500)throw Error('La importaci\u00F3 supera el l\u00EDmit actual de 1.500 partits');
   if(!legacyImportHash(payload))throw Error('Les dades no s\u2019han pogut desar');
-  clipboardDialog?.close();
+  // No tancar autom\u00E0ticament: iPhone necessita una confirmaci\u00F3 visible.
+  const n=payload.rows.length;
+  const total=agendaRows().length;
+  const instant=store.agenda?.capturedAt ? formatTimestamp(store.agenda.capturedAt) : 'desconeguda';
+  clipboardNote.textContent='IMPORTACI\u00D3 CORRECTA! Fitxer llegit: '+n+' partits. Total acumulat: '+total+' partits. Lectura: '+instant+'. Ja pots pr\u00E9mer Tancar.';
+  clipboardNote.style.color='#bbf7d0';
+  clipboardNote.style.fontWeight='700';
+  clipboardDialog?.querySelector('.zonaok-cancel')?.focus();
 }
 async function readClipboardAgenda(){
   try{
@@ -153,7 +199,7 @@ function setupClipboardImport(){
       if(file.size>3000000)throw Error('Fitxer de m\u00E9s de 3 MB: comprova que sigui l\u2019agenda');
       const raw=await file.text();
       importClipboardText(raw);
-    }catch(e){clipboardNote.textContent='No s\u2019ha importat: '+e.message;}
+    }catch(e){clipboardNote.textContent='ERROR: no s\u2019ha importat '+file.name+'. Motiu: '+e.message;clipboardNote.style.color='#ffc5b8';clipboardNote.style.fontWeight='700';}
     finally{input.value='';}
   };
   clipboardTextarea=mk('textarea');clipboardTextarea.placeholder='Alternativa: enganxa aqu\u00ED el JSON complet';clipboardTextarea.setAttribute('aria-label','JSON de l\u2019agenda FECAPA');clipboardDialog.append(clipboardTextarea);
