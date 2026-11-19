@@ -14,6 +14,18 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <title>ZonaOK &#xB7; El teu hoquei</title>
   <link rel="stylesheet" href="style.css?v=20261118-season">
+  <style>
+    /* ZonaOK: navegació setmanal, sense modificar style.css. */
+    .zok-week-nav{display:flex;align-items:center;gap:8px;max-width:100%;margin:8px 0 5px}
+    .zok-week-nav .week{margin:0;flex:1;min-width:0;text-align:center;font-size:clamp(12px,3.4vw,15px);font-weight:700}
+    .zok-week-nav button{flex-shrink:0;appearance:none;border:1px solid #668da9;background:#123e60;color:#eef6ff;border-radius:10px;min-width:32px;height:34px;padding:0 7px;font-weight:700;cursor:pointer}
+    .zok-week-nav button:disabled{opacity:.45;cursor:default}
+    .zok-week-nav .zok-week-today{font-size:11px;padding:0 8px}
+    .zok-week-help{font-size:11px;opacity:.78;margin:4px 0 0}
+    .zok-results-week{font-size:13px;font-weight:700;margin:7px 0 11px;color:inherit}
+    #season-toggle[hidden],#results-week[hidden]{display:none!important}
+    @media(max-width:390px){.zok-week-nav{gap:5px}.zok-week-nav button{padding:0 6px;min-width:30px}}
+  </style>
 </head>
 <body>
 <main class="app">
@@ -26,8 +38,14 @@
   </header>
   <section class="hero">
     <div class="overline">AGENDA PERSONAL</div>
-    <h1>Els meus partits<br>d'aquesta setmana</h1>
-    <p id="week" class="week"></p>
+    <h1>Els meus partits<br>de la setmana</h1>
+    <div class="zok-week-nav" aria-label="Canviar setmana">
+      <button id="week-prev" type="button" aria-label="Setmana anterior" title="Setmana anterior">&#x2039;</button>
+      <p id="week" class="week" aria-live="polite"></p>
+      <button id="week-today" class="zok-week-today" type="button" aria-label="Tornar a la setmana actual">Avui</button>
+      <button id="week-next" type="button" aria-label="Setmana següent" title="Setmana següent">&#x203A;</button>
+    </div>
+    <p class="zok-week-help">Llisca cap a l'esquerra: setmana anterior &#xB7; cap a la dreta: setmana següent</p>
     <svg class="rink" viewBox="0 0 340 66" fill="none" aria-hidden="true">
       <rect x="1" y="1" width="338" height="64" rx="28" stroke="#b8daf0" stroke-opacity=".5"/>
       <path d="M170 1V65M58 2V64M282 2V64" stroke="#b8daf0" stroke-opacity=".36" stroke-dasharray="4 4"/>
@@ -60,7 +78,9 @@
     <div class="context-actions">
       <button id="open-fecapa" class="secondary">FECAPA &#x2197;</button>
       <button id="ask-section" class="secondary">ChatGPT &#x2197;</button>
+      <button id="season-toggle" type="button" class="secondary">Tota la temporada</button>
     </div>
+    <p id="results-week" class="zok-results-week"></p>
     <p id="results-note" class="helper"></p>
     <div id="results-list" class="cards"></div>
   </section>
@@ -116,11 +136,11 @@
 <nav class="bottom" aria-label="Sis consultes">
   <div class="bottom-title">CONSULTES R&#xC0;PIDES</div>
   <div class="navgrid">
-    <button data-tab="celoni" class="navbtn" aria-label="CP Sant Celoni" title="CP Sant Celoni"><span class="club-icon club-icon-celoni"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/281.png" alt="" loading="eager" decoding="async"></span><strong>CP Sant Celoni</strong><small>Temporada</small></button>
-    <button data-tab="barca" class="navbtn" aria-label="Bar&#xE7;a" title="Bar&#xE7;a"><span class="club-icon club-icon-barca"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/234.png" alt="" loading="eager" decoding="async"></span><strong>Bar&#xE7;a</strong><small>Temporada</small></button>
+    <button data-tab="celoni" class="navbtn" aria-label="CP Sant Celoni" title="CP Sant Celoni"><span class="club-icon club-icon-celoni"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/281.png" alt="" loading="eager" decoding="async"></span><strong>CP Sant Celoni</strong><small>Setmana</small></button>
+    <button data-tab="barca" class="navbtn" aria-label="Bar&#xE7;a" title="Bar&#xE7;a"><span class="club-icon club-icon-barca"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/234.png" alt="" loading="eager" decoding="async"></span><strong>Bar&#xE7;a</strong><small>Setmana</small></button>
     <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>&#x25A5;</span><strong>Classificacions</strong><small>3 grups</small></button>
-    <button data-tab="grupalevi" class="navbtn" aria-label="Alev&#xED; OR 3 &#xB7; Temporada de Mag&#xED;" title="Alev&#xED; OR 3 &#xB7; Mag&#xED;"><span class="nav-name">Mag&#xED;</span><strong>Bar&#xE7;a Alev&#xED; OR 3</strong><small>Temporada</small></button>
-    <button data-tab="grupinfantil" class="navbtn" aria-label="Infantil OR 10 &#xB7; Temporada de Ton" title="Infantil OR 10 &#xB7; Ton"><span class="nav-name">Ton</span><strong>Sant Celoni B Infantil OR 10</strong><small>Temporada</small></button>
+    <button data-tab="grupalevi" class="navbtn" aria-label="Alev&#xED; OR 3 &#xB7; Temporada de Mag&#xED;" title="Alev&#xED; OR 3 &#xB7; Mag&#xED;"><span class="nav-name">Mag&#xED;</span><strong>Bar&#xE7;a Alev&#xED; OR 3</strong><small>Setmana</small></button>
+    <button data-tab="grupinfantil" class="navbtn" aria-label="Infantil OR 10 &#xB7; Temporada de Ton" title="Infantil OR 10 &#xB7; Ton"><span class="nav-name">Ton</span><strong>Sant Celoni B Infantil OR 10</strong><small>Setmana</small></button>
     <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>&#x2302;</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
   </div>
 </nav>
@@ -134,8 +154,8 @@
   <p class="helper">Les temporades de Mag&#xED; i Ton i les dreceres de classificaci&#xF3; es mantenen sense canvis.</p>
 </dialog>
 <div id="toast" role="status" aria-live="polite"></div>
-<script src="zonaok-sync-v5.js?v=20261119-temporada-v105" defer></script>
-<script src="app.js?v=20261119-magi-ton-agenda-v10_3" defer></script>
+<script src="zonaok-sync-v5.js?v=20261119-v104-temporada" defer></script>
+<script src="app.js?v=20261119-setmanes-v11-codi-recent" defer></script>
 <script src="zonaok-retocs.js?v=20261118-season" defer></script>
 </body>
 </html>
