@@ -34,7 +34,17 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             python3 scripts/zonaok_v27_import.py
-            git add -- zonaok-data.json zonaok-classificacio-4789.json zonaok-classificacio-4786.json zonaok-classificacio-4784.json
+            # La primera importació no ha creat encara les altres classificacions.
+            # Afegim exclusivament els fitxers de dades que existeixen.
+            for file in \
+              zonaok-data.json \
+              zonaok-classificacio-4789.json \
+              zonaok-classificacio-4786.json \
+              zonaok-classificacio-4784.json; do
+              if [ -f "$file" ]; then
+                git add -- "$file"
+              fi
+            done
             if git diff --cached --quiet; then
               echo 'Cap canvi de dades: informació antiga o repetida.'
               exit 0
