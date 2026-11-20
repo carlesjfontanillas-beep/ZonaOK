@@ -1,0 +1,51 @@
+name: ZonaOK V27 - Classificacions i marcadors (Agenda intacta)
+on:
+  workflow_dispatch:
+    inputs:
+      payload:
+        description: 'Base64 de la drecera Safari, classificació o resultats (màx. 62000 caràcters)'
+        required: true
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: zonaok-v27-classificacions-resultats
+  cancel-in-progress: false
+jobs:
+  fusionar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+          fetch-depth: 0
+      - name: Aplicar sobre la versió més recent amb reintents de conflicte
+        env:
+          ZONAOK_PAYLOAD_B64: ${{ inputs.payload }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 scripts/zonaok_v27_import.py
+            git add -- zonaok-data.json zonaok-classificacio-4789.json zonaok-classificacio-4786.json zonaok-classificacio-4784.json
+            if git diff --cached --quiet; then
+              echo 'Cap canvi de dades: informació antiga o repetida.'
+              exit 0
+            fi
+            git commit -m 'ZonaOK V27: actualitzar una classificació o marcadors'
+            if git push origin HEAD:main; then
+              echo 'Publicat correctament a main.'
+              exit 0
+            fi
+            echo "Un altre workflow ha actualitzat main; recarrego i torno a fusionar ($attempt)."
+            sleep 2
+          done
+          echo 'Error: no es pot publicar per conflictes consecutius.' >&2
+          exit 1
