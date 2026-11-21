@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ZonaOK V29.3: marcador FECAPA -> files JA EXISTENTS a data.agenda.rows.
+"""ZonaOK V29.4: marcador FECAPA -> files JA EXISTENTS a data.agenda.rows.
 
 Llegeix captures `imports/directe/v29/directe-*.json`. Només modifica
 `homeScore`, `awayScore`, `scoreCapturedAt`, `scoreSource` de partits amb
@@ -162,7 +162,13 @@ def team_compatible(full, short):
     return False
 
 
-def comparable(old, new):
+def comparable(old, new, require_comp=True):
+    """Primer fem l'emparellament estricte; després, sense categoria.
+
+    La categoria de la portada pot ser incorrecta (l'ordre del DOM pot
+    barrejar seccions). El mode flexible CONTINUA exigint la mateixa data,
+    hora, equip local i equip visitant. Mai accepta dues coincidències.
+    """
     if not isinstance(old, dict):
         return False
     old_id = str(old.get('id') or '').strip()
@@ -171,14 +177,61 @@ def comparable(old, new):
         return old_id == new_id
     if str(old.get('iso') or '') != new['iso']:
         return False
-    # L'hora es obligatoria en la vista principal. No relacionem partits
-    # nomes per nom de club, cosa que confundria diversos equips.
     if str(old.get('time') or '') != new['time']:
         return False
-    if not comp_compatible(old.get('competition'),new['competition']):
+    if not (team_compatible(old.get('home'), new['home'])
+            and team_compatible(old.get('away'), new['away'])):
         return False
-    return (team_compatible(old.get('home'),new['home'])
-            and team_compatible(old.get('away'),new['away']))
+    if require_comp and not comp_compatible(old.get('competition'), new['competition']):
+        return False
+    return True
+
+
+def select_unique(output, incoming):
+    """Retorna índex únic i mètode, o cap índex si és ambigu/inexistent."""
+    strict = [i for i, old in enumerate(output)
+              if comparable(old, incoming, require_comp=True)]
+    if len(strict) == 1:
+        return strict[0], 'categoria_confirmada', len(strict)
+    if len(strict) > 1:
+        return None, 'ambigu_amb_categoria', len(strict)
+
+    # Només abandonem la categoria si el partit continua sent únic amb
+    # les QUATRE condicions següents: data, hora, local i visitant.
+    relaxed = [i for i, old in enumerate(output)
+               if comparable(old, incoming, require_comp=False)]
+    if len(relaxed) == 1:
+        return relaxed[0], 'categoria_no_fiable_pero_partit_unic', len(relaxed)
+    return None, ('ambigu_sense_categoria' if relaxed else 'sense_partit'), len(relaxed)
+
+
+def unmatched_detail(output, r, reason, num):
+    """Dades de diagnòstic, sense modificar mai l'Agenda."""
+    same_day = [x for x in output if isinstance(x, dict)
+                and str(x.get('iso') or '') == r['iso']]
+    same_day_hour = [x for x in same_day
+                     if str(x.get('time') or '') == r['time']]
+    same_teams_day = [x for x in same_day
+                      if team_compatible(x.get('home'), r['home'])
+                      and team_compatible(x.get('away'), r['away'])]
+    return {
+        'dia': r['iso'], 'hora': r['time'],
+        'local': r['home'], 'visitant': r['away'],
+        'competicio_portada': r['competition'],
+        'motiu': reason, 'coincidencies': num,
+        'partits_agenda_dia': len(same_day),
+        'partits_agenda_dia_hora': len(same_day_hour),
+        'candidats_equips_mateix_dia': [
+            {'hora':x.get('time'), 'competicio':x.get('competition'),
+             'local':x.get('home'), 'visitant':x.get('away')}
+            for x in same_teams_day[:4]
+        ],
+        'candidats_dia_hora': [
+            {'competicio':x.get('competition'), 'local':x.get('home'),
+             'visitant':x.get('away')}
+            for x in same_day_hour[:4]
+        ]
+    }
 
 
 def merge(existing, captured, incoming):
@@ -192,16 +245,17 @@ def merge(existing, captured, incoming):
     doc=copy.deepcopy(existing)
     output=doc['data']['agenda']['rows']
     count_before=len(output)
-    applied=matched=unchanged=outdated=0
+    applied=matched=unchanged=outdated=match_sense_categoria=0
     unmatched=[]
     for r in incoming:
-        indices=[i for i,old in enumerate(output) if comparable(old,r)]
-        if len(indices)!=1:
-            unmatched.append({'dia':r['iso'],'local':r['home'],'visitant':r['away'],
-                              'competició':r['competition'],'coincidències':len(indices)})
+        index, mode, num = select_unique(output, r)
+        if index is None:
+            unmatched.append(unmatched_detail(output, r, mode, num))
             continue
-        old=output[indices[0]]
+        old=output[index]
         matched+=1
+        if mode == 'categoria_no_fiable_pero_partit_unic':
+            match_sense_categoria+=1
         old_stamp=utc(old.get('scoreCapturedAt'))
         if not old_stamp and goal(old.get('homeScore')) is not None and goal(old.get('awayScore')) is not None:
             old_stamp=utc(old.get('capturedAt'))
@@ -214,10 +268,11 @@ def merge(existing, captured, incoming):
         old['homeScore']=r['homeScore']
         old['awayScore']=r['awayScore']
         old['scoreCapturedAt']=captured.isoformat(timespec='seconds')
-        old['scoreSource']='FECAPA En directe V29.2'
+        old['scoreSource']='FECAPA En directe V29.4'
         applied+=1
     if not matched:
-        raise ValueError('Cap resultat coincideix unívocament amb la nova Agenda. No publiquem res; revisa la pàgina FECAPA.')
+        raise ValueError('Cap resultat coincideix de forma unica amb l Agenda. ' +
+                         'Primers casos: ' + json.dumps(unmatched[:4], ensure_ascii=False))
     if len(output)!=count_before:
         raise AssertionError('En directe ha alterat el recompte de partits')
     if applied:
@@ -234,6 +289,7 @@ def merge(existing, captured, incoming):
             'source':'FECAPA principal · En directe',
             'received':len(incoming),
             'matched':matched,
+            'matchedWithoutCategory':match_sense_categoria,
             'changed':applied,
             'unchanged':unchanged,
             'outdated':outdated,
@@ -255,7 +311,7 @@ def merge(existing, captured, incoming):
             if key not in ('homeScore','awayScore','scoreCapturedAt','scoreSource') and old[key]!=new.get(key):
                 raise AssertionError('S’ha alterat informació protegida del partit: '+key)
     return doc, {'marcadors_canviats':applied,'partits_coincidents':matched,
-                 'ja_iguals':unchanged,'descartats_per_antiguitat':outdated,
+                 'ja_iguals':unchanged,'coincidents_sense_categoria':match_sense_categoria,'descartats_per_antiguitat':outdated,
                  'sense_match_o_ambigus':len(unmatched),
                  'mostres_no_corresponents':unmatched[:15],
                  'total_agenda':count_before,'total_importat':len(incoming)}
@@ -310,6 +366,8 @@ def run(root):
     print('CAPTURA V29 SELECCIONADA:', path.relative_to(root), 'bytes=', path.stat().st_size, flush=True)
     packet=load_json_checked(path, 'Captura En directe')
     captured,rows=read_packet(packet)
+    print('FILES REBUDES:', len(rows), 'MOSTRES:',
+          json.dumps(rows[:6], ensure_ascii=False), flush=True)
     dest=root/TARGET
     if not dest.exists():
         raise ValueError('Falta zonaok-data.json, no es crearà un fitxer buit')
@@ -327,4 +385,4 @@ if __name__=='__main__':
     try:
         run(Path(os.environ.get('GITHUB_WORKSPACE') or '.').resolve())
     except (ValueError,KeyError,TypeError,UnicodeError,json.JSONDecodeError,AssertionError) as exc:
-        sys.exit('ERROR EN DIRECTE V29.3: cap dada modificada. '+str(exc))
+        sys.exit('ERROR EN DIRECTE V29.4: cap dada modificada. '+str(exc))
