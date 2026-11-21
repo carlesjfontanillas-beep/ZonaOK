@@ -35,9 +35,15 @@ def norm(value):
 
 def team(value):
     s=norm(value)
+    # Distingim explicitament els equips A i B: CPSCA != CPSCB.
+    # També acceptem abreviatures CPSC, CPSCA, CPSCB i altres sufixos curts.
+    code=re.fullmatch(r'CPSC([A-Z0-9]{0,2})',s.replace(' ',''))
+    if code:
+        suffix=code.group(1)
+        return 'SANT CELONI' + (' '+suffix if suffix else '')
     for rx, replacement in [
         (r'^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETRANS|FCBETERANS)(?: (.*))?$', 'BARCA'),
-        (r'^(?:CPSC|CP SANT CELONI|C P SANT CELONI|SANT CELONI)(?: (.*))?$', 'SANT CELONI')
+        (r'^(?:CP SANT CELONI|C P SANT CELONI|SANT CELONI)(?: (.*))?$', 'SANT CELONI')
     ]:
         m=re.fullmatch(rx,s)
         if m: return replacement + (' '+m.group(1) if m.group(1) else '')
