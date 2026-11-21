@@ -288,11 +288,11 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
         <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4786&amp;vista=calendar" target="_blank" rel="noopener">Ton · Infantil OR 10 ↗</a>
         <a class="secondary" href="https://www.hoqueipatins.fecapa.cat/?liga=4784&amp;vista=calendar" target="_blank" rel="noopener">Juvenil OR 6 ↗</a>
         <button id="reload-shared" class="secondary">Llegir JSON GitHub</button>
-        <button id="export-shared" class="secondary">Descarregar dades JSON</button>
-        <button id="export-actes-json" class="secondary">Descarregar actes JSON</button>
-        <button id="publish-shared" class="secondary">Publicar a GitHub ↗</button>
+        <button id="export-shared" class="secondary">Descarregar còpia JSON</button>
+        <button id="export-actes-json" class="secondary">Actes a GitHub</button>
+        <button id="publish-shared" class="secondary">GitHub ↗</button>
       </div>
-      <p class="helper">Actes: descarrega <strong>zonaok-actes.json</strong> al Safari on has importat els IDs i puja'l a GitHub. Les fitxes publicades es carregaran a ZonaOK.</p>
+      <p class="helper">Les dades esportives es consulten sempre als JSON publicats a GitHub.</p>
       <div class="context-actions">
         <a class="secondary" href="ZonaOK-Alevi-OR-3.shortcut">Classificació Aleví ↗</a>
         <a class="secondary" href="ZonaOK-Infantil-OR-10.shortcut">Classificació Infantil ↗</a>
@@ -301,7 +301,7 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
       <div id="import-summary" class="import-summary"></div>
       <div class="context-actions" style="display:none!important" hidden>
         <button id="guide-button" class="secondary">Com importar?</button>
-        <button id="clear-button" class="secondary">Esborrar lectures</button>
+        <button id="clear-button" class="secondary">Recarregar JSON</button>
       </div>
     </div>
   </section>
@@ -328,10 +328,19 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
   <p class="helper">Les temporades de Mag&#xED; i Ton i les dreceres de classificaci&#xF3; es mantenen sense canvis.</p>
 </dialog>
 <div id="toast" role="status" aria-live="polite"></div>
+<script id="zonaok-retirar-dades-antigues">
+/* Una sola neteja sense llegir contingut local ni afectar altres apps al domini. */
+try {
+  for(let i=localStorage.length-1;i>=0;i--){
+    const k=localStorage.key(i);
+    if(k&&/^(?:ZONAOK_|ZOK_)/.test(k))localStorage.removeItem(k);
+  }
+  sessionStorage.removeItem('ZONAOK_SETMANA_ACTIVA_V2');
+}catch(_){ /* Navegadors amb l'emmagatzematge bloquejat */ }
+</script>
 <script id="zonaok-safe-store-v23">
-/* ZonaOK V23 · Persistència conservadora per a Safari / Dreceres / GitHub JSON.
-   Cada importació és acumulativa: cap instantània antiga ha de substituir una de més nova.
-   NO elimina localStorage, ni interpreta dades absents com a ordres d'esborrat. */
+/* ZonaOK V27.6 · Estat exclusivament en memòria de la pestanya.
+   Les dades persistents provenen dels JSON publicats a GitHub. */
 (function(global){
   'use strict';
   const KEY='ZONAOK_FECAPA_SAFARI_V2';
@@ -345,7 +354,19 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
   const last=(a,b)=>newer(a,b)?b:a||b||'';
   const has=x=>x!==null&&x!==undefined&&x!=='';
   const score=x=>(x!==null&&x!==undefined&&x!==''&&Number.isInteger(Number(x))&&Number(x)>=0&&Number(x)<200);
-  function read(){try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');return obj(s)?s:{}}catch(_){return {}}}
+  let memory = {};
+  const clone = x => JSON.parse(JSON.stringify(x));
+  function read(){ return clone(memory); }
+  function replace(snapshot){
+    if(!obj(snapshot))throw new Error('JSON de GitHub no vàlid');
+    memory=clone(snapshot);
+    return read();
+  }
+  function setSection(name,value){
+    if(!['4789','4786','4784'].includes(String(name)) || !obj(value))throw Error('Secció no permesa');
+    memory[String(name)]=clone(value);
+    return read();
+  }
   // Mateixa data, competició i equips. Un ID oficial coincident també identifica el partit.
   // La clau per parella no exigeix hora igual: permet corregir canvis d'hora sense duplicar.
   function key(r,kind){
@@ -451,11 +472,10 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
     return result;
   }
   function commit(candidate){
-    const merged=mergeState(read(),candidate);
-    localStorage.setItem(KEY,JSON.stringify(merged));
-    return merged;
+    memory=mergeState(read(),candidate);
+    return read();
   }
-  global.ZonaOKSafeStorage=Object.freeze({read,mergeState,mergeRows,commit});
+  global.ZonaOKSafeStorage=Object.freeze({read,replace,setSection,mergeState,mergeRows,commit});
 })(window);
 </script>
 <script data-zonaok-locked="V19" data-source="zonaok-sync-v5.js" data-fix="RESULTATS-V22">
@@ -478,7 +498,7 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
   // A En directe el CP Sant Celoni sovint apareix com CPSC / CPSC B.
   const isCeloni=s=>norm(s).includes('CELONI')||/^CPSC(?: [A-Z0-9]+)?$/.test(norm(s));
   const isClub=s=>isBarca(s)||isCeloni(s);
-  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(_){return {}}};
+  const read=()=>window.ZonaOKSafeStorage.read();
   const write=s=>{try{Object.assign(s,window.ZonaOKSafeStorage.commit(s));return true}catch(_){return false}};
   const rowKey=r=>[r.iso,r.time,norm(r.competition),norm(r.home),norm(r.away)].join('|');
   const plus=(date,amount)=>{const d=new Date(date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+amount);return d.toISOString().slice(0,10)};
@@ -611,17 +631,7 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
     throw Error('Tipus desconegut');
   };
   let importMessage='';
-  (function importNewHash(){
-    const hash=location.hash||'';if(!hash.startsWith('#fecapa='))return;
-    let p;try{p=JSON.parse(decodeURIComponent(hash.slice(8)))}catch(_){return;}
-    if(p?.kind!=='agenda-v5'&&p?.kind!=='resultats-v5'&&p?.kind!=='season-v1')return; // els paquets antics els gestiona app.js
-    history.replaceState(null,'',location.pathname+location.search);
-    try{
-      if(p.source!=='FECAPA-SAFARI'||p.v!==5||!Number.isFinite(Date.parse(p.capturedAt)))throw Error('Font o data desconeguda');
-      const store=read();importMessage=mergeData(store,p.kind,p);
-      if(!write(store))throw Error('No es poden desar les dades localment');
-    }catch(e){importMessage='Error d\u2019importaci\u00F3: '+e.message;}
-  })();
+  /* V27.6: cap importació des del hash; les dreceres publiquen a GitHub. */
 
   function sideClub(name){if(isBarca(name))return 'barca';if(isCeloni(name))return 'celoni';return '';}
   const coreCat=s=>norm(s).replace(/\s+\d+$/,'').replace(/\s+(GRUP|GRUPO)\s+[A-Z0-9]+$/,'');
@@ -787,7 +797,7 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
     if(actions.childNodes.length)c.append(actions);
     return c;
   }
-  const selectedMonday=()=>{try{const iso=sessionStorage.getItem('ZONAOK_SETMANA_ACTIVA_V2');if(validDate(iso)&&new Date(iso+'T12:00:00Z').getUTCDay()===1)return iso;}catch(_){}return monday();};
+  const selectedMonday=()=>typeof window.ZonaOKCurrentWeek==='function'?window.ZonaOKCurrentWeek():monday();
   const byWeek=(rows)=>{const start=selectedMonday(),end=plus(start,6);return rows.filter(r=>r.iso>=start&&r.iso<=end).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));};
   const favoriteDefs=[
     {name:'Bar\u00E7a Alev\u00ED',f:r=>(isBarca(r.home)||isBarca(r.away))&&norm(r.competition)==='ALEVI OR 3'},
@@ -933,48 +943,14 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
     const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
     const a=el('a');a.href=url;a.download='zonaok-data.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
   }
-  async function mergePublished(){
-    try{
-      const res=await fetch('zonaok-data.json?t='+Date.now(),{cache:'no-store'});if(!res.ok)return;
-      const p=await res.json();if(p.version!==3||!p.data||typeof p.data!=='object')return;
-      const store=read();
-      for(const kind of ['agenda','scoreUpdates']){
-        const entry=p.data[kind];if(!entry||!Array.isArray(entry.rows)||entry.rows.length>2000)continue;
-        const curr=store[kind]||{};
-        store[kind]={...entry,...curr,
-          rows:mergeRows(curr.rows||[],entry.rows),
-          capturedAt:[curr.capturedAt,entry.capturedAt].filter(Boolean).sort().pop(),
-          season:curr.season||entry.season||'',
-          counts:curr.counts||entry.counts||{}};
-      }
-      for(const id of ['4789','4786']){
-        const entry=p.data.seasons?.[id];
-        if(entry&&Array.isArray(entry.rows)&&entry.rows.length<=100&&
-           String(entry.capturedAt||'')>String(store.seasons?.[id]?.capturedAt||'')){
-          store.seasons={...(store.seasons||{}),[id]:{
-            ...entry,rows:entry.rows.map(r=>cleanSeasonRow(r,id)).filter(Boolean)}};
-        }
-      }
-      // Incorporar IDs oficials sense modificar ni substituir agenda ni temporades.
-      const incoming=p.data.actaIndex||{};store.actaIndex=store.actaIndex||{};
-      for(const league of ['4789','4786','4784']){
-        if(!Array.isArray(incoming[league]?.rows))continue;
-        const current=store.actaIndex[league]?.rows||[];
-        const key=r=>[r.iso,r.time,norm(r.home),norm(r.away)].join('|');
-        const ids=new Map(incoming[league].rows.filter(r=>/^\d{4,}$/.test(String(r.id||''))).map(r=>[key(r),r]));
-        for(const r of current)ids.set(key(r),r);
-        store.actaIndex[league]={...incoming[league],...store.actaIndex[league],rows:[...ids.values()]};
-      }
-      write(store);schedule();
-    }catch(_){/* Desconnectat: es conserva la c\u00F2pia local */}
-  }
+  /* La càrrega remota centralitzada és ZonaOKRefreshSources, definida més avall. */
   function setup(){
     for(const selector of ['#home-cards','#results-list','#import-summary']){
       const e=$(selector);if(e)new MutationObserver(schedule).observe(e,{childList:true,subtree:true});
     }
     const exportButton=$('#export-shared');if(exportButton)exportButton.addEventListener('click',saveJson,true);
     const reload=$('#reload-shared');if(reload)reload.addEventListener('click',e=>{
-      e.preventDefault();e.stopImmediatePropagation();mergePublished().then(()=>{draw();location.reload()});
+      e.preventDefault();e.stopImmediatePropagation();window.ZonaOKRefreshSources?.().then(()=>draw());
     },true);
     if(importMessage){
       setTimeout(()=>{
@@ -1005,7 +981,7 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
       .match.zok-v5 .venue .zok-map-link:hover{text-decoration:underline}
       @media(max-width:380px){.match.zok-v5 .zok-calendar-btn{font-size:11px;padding:8px 9px}.match.zok-v5:not(.zok-compact) .venue{gap:7px}}
     `;document.head.append(style);
-    schedule();setTimeout(mergePublished,450);
+    schedule();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});else setup();
 })();
@@ -1020,38 +996,28 @@ const KEY='ZONAOK_FECAPA_SAFARI_V2',OLD='ZONAOK_FECAPA_SAFARI_V1';
 const WEEK_KEY='ZONAOK_SETMANA_ACTIVA_V2';
 const $$=s=>document.querySelector(s), mk=(tag,cls,content)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(content!==undefined)e.textContent=content;return e;};
 let store=load(), section='home', selectedMonday=restoreMonday(), showSeason=false;
+window.ZonaOKCurrentWeek=()=>selectedMonday;
 // V19: Inici i clubs tenen filtre SETMANAL; Magí i Ton sempre TEMPORADA.
 // La setmana seleccionada no pot modificar el filtre de les dues temporades.
 function isSeasonMenu(key){return key==='grupalevi'||key==='grupinfantil';}
 function isWeekMenu(key){return key==='home'||key==='barca'||key==='celoni';}
-function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(_){return {}}}
-function save(){try{store=window.ZonaOKSafeStorage.commit(store);return true}catch(e){toast('No es poden desar dades en aquest navegador.');return false}}
+function load(){return window.ZonaOKSafeStorage.read();}
+function save(){store=window.ZonaOKSafeStorage.commit(store);return true}
 function toast(msg){const e=$$('#toast');e.textContent=msg;e.classList.add('visible');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('visible'),5200)}
 function localDate(d=new Date()){const x=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);return `${x.find(p=>p.type==='year').value}-${x.find(p=>p.type==='month').value}-${x.find(p=>p.type==='day').value}`;}
 function mondayISO(){const today=localDate(), d=new Date(`${today}T12:00:00Z`);d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7));return d.toISOString().slice(0,10)}
 // Navegació global de setmana. Es conserva entre pestanyes i dins la mateixa sessió Safari.
-function restoreMonday(){
-  try{
-    const iso=sessionStorage.getItem(WEEK_KEY);
-    if(/^\d{4}-\d{2}-\d{2}$/.test(iso||'')){
-      const d=new Date(iso+'T12:00:00Z');
-      if(!Number.isNaN(d.valueOf())&&d.getUTCDay()===1&&d.toISOString().slice(0,10)===iso)return iso;
-    }
-  }catch(_){}
-  return mondayISO();
-}
+function restoreMonday(){return mondayISO()}
 function chosenWeek(){return {start:selectedMonday,end:plusDays(selectedMonday,6)};}
 function changeWeek(weeks){
   if(!Number.isInteger(weeks)||!weeks)return;
   selectedMonday=plusDays(selectedMonday,7*weeks);
   showSeason=isSeasonMenu(section); // Filtre de temporada independent de selectedMonday.
-  try{sessionStorage.setItem(WEEK_KEY,selectedMonday);}catch(_){}
   render();
 }
 function resetWeek(){
   selectedMonday=mondayISO();
   showSeason=isSeasonMenu(section);
-  try{sessionStorage.setItem(WEEK_KEY,selectedMonday);}catch(_){}
   render();
 }
 function installWeekGestures(){
@@ -1254,7 +1220,7 @@ function clubRows(){const rows=new Map(agendaRows().map(r=>[[r.iso,r.time,normal
 function render(){weekText();renderSources();renderHome();if(section!=='home')renderSection(section)}
 function renderSources(){const list=$$('#import-summary');list.replaceChildren();let total=liveRows().length+(store.agenda?.rows?.length||0),latest=[store.live?.capturedAt,store.agenda?.capturedAt].filter(Boolean).sort().pop()||'';if(store.agenda){const r=mk('div','source-row');r.append(mk('strong','','Agenda \u00B7 Temporada '+(store.agenda.season||'')),mk('small','',agendaRows().length+' partits \u00B7 Bar\u00E7a '+(store.agenda.counts?.barca??'\u2014')+' \u00B7 Sant Celoni '+(store.agenda.counts?.celoni??'\u2014')+' \u00B7 '+formatTimestamp(store.agenda.capturedAt)));list.append(r);}if(store.live){const r=mk('div','source-row');r.append(mk('strong','','En directe \u00B7 Bar\u00E7a i Sant Celoni'),mk('small','',liveRows().length+' partits \u00B7 '+formatTimestamp(store.live.capturedAt)));list.append(r);}for(const id of ['4789','4786','4784']){const item=store[id],season=store.seasons?.[id];const count=allRows(id).length+(season?.rows?.length||0);total+=count;const r=mk('div','source-row');const a=mk('div');a.append(mk('strong','',LEAGUES[id].name));a.append(mk('small','',season?.capturedAt?'Temporada '+(season.season||'')+': '+formatTimestamp(season.capturedAt):(item?.standingsAt?'Classificaci\u00F3: '+formatTimestamp(item.standingsAt):(item?.capturedAt?'Calendari: '+formatTimestamp(item.capturedAt):'Encara no importat'))));const vista=id==='4789'?partitsTemporadaJugador('grupalevi').rows.length:id==='4786'?partitsTemporadaJugador('grupinfantil').rows.length:null;
 const resumPartits=vista===null?count+' partits':vista+' partits (agenda + lliga)';
-r.append(a,mk('span','',resumPartits+' \u00B7 '+(item?.standings?.length||0)+' equips'));list.append(r);for(const stamp of [season?.capturedAt,item?.capturedAt,item?.standingsAt])if(stamp&&(!latest||stamp>latest))latest=stamp;}if(store.actaIndex){const labels=Object.entries({4789:'Magí',4786:'Ton',4784:'Juvenil'}).map(([id,name])=>{const n=store.actaIndex[id]?.rows?.length||0;return n?name+' '+n+' IDs':''}).filter(Boolean);if(labels.length){const info=mk('div','source-row');info.append(mk('strong','','Actes oficials FECAPA'),mk('small','',labels.join(' · ')+' · Identificadors importats'));list.append(info);}}let legacy=0;try{const old=JSON.parse(localStorage.getItem(OLD)||'{}');for(const id of ['4789','4786','4784'])legacy+=(old[id]?.rows||[]).length}catch(_){}if(legacy){const msg=mk('div','source-row');const label=mk('div');label.append(mk('strong','','Importaci\u00F3 antiga conservada'));label.append(mk('small','','Hi ha '+legacy+' files de la prova anterior. No s\u2019eliminen, per\u00F2 cal repetir la drecera nova per mostrar els partits separats.'));msg.append(label);list.append(msg);}$$('#total-count').textContent=total+' files';$$('#data-age').textContent=latest?'\u00DAltima importaci\u00F3: '+formatTimestamp(latest):'Sense dades noves importades'}
+r.append(a,mk('span','',resumPartits+' \u00B7 '+(item?.standings?.length||0)+' equips'));list.append(r);for(const stamp of [season?.capturedAt,item?.capturedAt,item?.standingsAt])if(stamp&&(!latest||stamp>latest))latest=stamp;}if(store.actaIndex){const labels=Object.entries({4789:'Magí',4786:'Ton',4784:'Juvenil'}).map(([id,name])=>{const n=store.actaIndex[id]?.rows?.length||0;return n?name+' '+n+' IDs':''}).filter(Boolean);if(labels.length){const info=mk('div','source-row');info.append(mk('strong','','Actes oficials FECAPA'),mk('small','',labels.join(' · ')+' · Identificadors importats'));list.append(info);}}$$('#total-count').textContent=total+' files';$$('#data-age').textContent=latest?'\u00DAltima importaci\u00F3: '+formatTimestamp(latest):'Sense dades noves importades'}
 function formatTimestamp(iso){try{return new Intl.DateTimeFormat('ca-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'}).format(new Date(iso))}catch(_){return 'Data desconeguda'}}
 function safeImage(src){try{const u=new URL(src);return u.protocol==='https:'&&(/(^|\.)hoqueipatins\.fecapa\.cat$/i.test(u.hostname)||(u.hostname==='sidgad.cloud'&&u.pathname.startsWith('/fecapa/images/logos_clubes/')))?u.href:''}catch(_){return ''}}
 function dateStatus(r){const now=localDate();if(r.status)return r.status+' \u00B7 lectura Safari';if(r.homeScore!==null&&r.awayScore!==null)return 'Marcador FECAPA';return r.iso>now?'Programat':'Sense resultat confirmat'}
@@ -1659,33 +1625,54 @@ async function loadActesJSON(){
 }
 
 function downloadShared(){const packet={version:3,publishedAt:new Date().toISOString(),data:load()};const a=mk('a');const url=URL.createObjectURL(new Blob([JSON.stringify(packet,null,2)],{type:'application/json'}));a.href=url;a.download='zonaok-data.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('Fitxer preparat. Puja zonaok-data.json a l\u2019arrel del repositori i confirma el commit.');}
-async function loadShared(){try{const response=await fetch('zonaok-data.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)return;const p=await response.json();if(p.version!==3||!p.data||typeof p.data!=='object')return false;
- store=load();for(const id of ['live','agenda','4789','4786','4784']){const item=p.data[id];if(!item)continue;const current=store[id]||{};
- if(id==='agenda'){if(!Array.isArray(item.rows)||item.rows.length>1500)continue;const rows=item.rows.map(parseRow).filter(Boolean).map(r=>({...r,homeClub:clubOf(r.home),awayClub:clubOf(r.away)}));if(rows.length!==item.rows.length)continue;const currentRows=agendaRows();const merged=mergeAgendaRows(rows,currentRows);store.agenda={...item,rows:merged,capturedAt:[item.capturedAt,current.capturedAt].filter(Boolean).sort().pop()};}else if(id==='live'){if(!Array.isArray(item.rows)||item.rows.length>1000)continue;const rows=item.rows.map(validateLive);if(rows.some(r=>!r))continue;const merged=new Map(rows.map(r=>[liveKey(r),r]));for(const r of current.rows||[]){const old=merged.get(liveKey(r));if(!old||String(r.capturedAt||current.capturedAt)>String(old.capturedAt||item.capturedAt))merged.set(liveKey(r),r)}store[id]={...item,rows:[...merged.values()],capturedAt:[item.capturedAt,current.capturedAt].filter(Boolean).sort().pop()};}
- else {const next={...current};if(Array.isArray(item.rows)&&String(item.capturedAt||'')>String(current.capturedAt||'')){next.rows=item.rows.map(parseRow).filter(Boolean);next.capturedAt=item.capturedAt;}
- if(Array.isArray(item.standings)&&item.standings.length<=30&&String(item.standingsAt||'')>String(current.standingsAt||'')){next.standings=item.standings.map(r=>({pos:String(r.pos||'').slice(0,10),team:String(r.team||'').slice(0,120),played:String(r.played??'').slice(0,10),points:String(r.points??'').slice(0,10),gf:stat(r.gf),ga:stat(r.ga),difference:stat(r.difference,true),stats:Object.fromEntries(Object.entries(r.stats||{}).filter(([k])=>/^[A-Z0-9_ -]{1,30}$/.test(k)).map(([k,v])=>[k,stat(v,true)]))}));next.standingsAt=item.standingsAt;}store[id]=next;}}
- const actaData=p.data.actaIndex;if(actaData&&typeof actaData==='object'){store.actaIndex=store.actaIndex||{};for(const id of Object.keys(LEAGUES)){const item=actaData[id];if(!item||!Array.isArray(item.rows)||item.rows.length>300)continue;const prior=store.actaIndex[id]?.rows||[];const key=r=>[r.iso,r.time,matchTeamKey(r.home),matchTeamKey(r.away)].join('|');const merged=new Map(item.rows.filter(r=>numericId(r.id)).map(r=>[key(r),r]));for(const r of prior)if(numericId(r.id))merged.set(key(r),r);store.actaIndex[id]={rows:[...merged.values()],capturedAt:[item.capturedAt,store.actaIndex[id]?.capturedAt].filter(Boolean).sort().pop()};}}
-  const seasons=p.data.seasons;if(seasons&&typeof seasons==='object'){store.seasons=store.seasons||{};for(const id of ['4789','4786','4784']){const item=seasons[id];if(!item||!Array.isArray(item.rows)||item.rows.length>1000)continue;const current=store.seasons[id];if(!current||String(item.capturedAt||'')>String(current.capturedAt||'')){const rows=item.rows.map(parseRow).filter(Boolean);if(rows.length===item.rows.length)store.seasons[id]={...item,rows};}}}save();render();return true;}catch(_){/* Offline: keep the last local snapshot. */return false;}}
+async function loadShared(){
+ try {
+  const response=await fetch('zonaok-data.json?t='+Date.now(),{cache:'no-store'});
+  if(!response.ok)throw Error('No s’ha pogut carregar Agenda ('+response.status+')');
+  const p=await response.json();
+  if(p.version!==3||!p.data||typeof p.data!=='object'||Array.isArray(p.data))throw Error('Format Agenda incorrecte');
+  const incoming=p.data;
+  if(!Array.isArray(incoming.agenda?.rows)||incoming.agenda.rows.length>2000)throw Error('Agenda incompleta');
+  const rows=incoming.agenda.rows.map(parseRow);
+  if(rows.some(r=>!r))throw Error('Partits d’Agenda incorrectes');
+  const snapshot={...incoming,agenda:{...incoming.agenda,
+    rows:rows.map(r=>({...r,homeClub:clubOf(r.home),awayClub:clubOf(r.away)}))}};
+  if(Array.isArray(incoming.live?.rows)){
+    const live=incoming.live.rows.map(validateLive);
+    snapshot.live={...incoming.live,rows:live.filter(Boolean)};
+  }
+  store=window.ZonaOKSafeStorage.replace(snapshot);
+  render();
+  return true;
+ }catch(error){console.warn('ZonaOK: error carregant Agenda de GitHub',error);return false;}
+}
 $$('#export-shared').onclick=downloadShared;
 $$('#publish-shared').onclick=()=>window.open('https://github.com/carlesjfontanillas-beep/ZonaOK/upload/main','_blank','noopener');
-$$('#reload-shared').onclick=()=>{loadShared();loadActesJSON();};
-$$('#guide-button').onclick=()=>$$('#guide').showModal();$$('#guide-close').onclick=()=>$$('#guide').close();$$('#clear-button').onclick=()=>{if(confirm('Esborrar totes les dades importades de Safari a ZonaOK?')){localStorage.removeItem(KEY);localStorage.removeItem(OLD);store={};render();toast('Dades esborrades.')}};$$('#ask-home').onclick=()=>ask('home');$$('#refresh-home').onclick=()=>selectSection('home');$$('#close-results').onclick=()=>selectSection('home');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>selectSection(b.dataset.tab));
+$$('#reload-shared').onclick=()=>window.ZonaOKRefreshSources?.();
+$$('#guide-button').onclick=()=>$$('#guide').showModal();$$('#guide-close').onclick=()=>$$('#guide').close();$$('#clear-button').onclick=()=>window.ZonaOKRefreshSources?.();$$('#ask-home').onclick=()=>ask('home');$$('#refresh-home').onclick=()=>selectSection('home');$$('#close-results').onclick=()=>selectSection('home');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>selectSection(b.dataset.tab));
 $$('#week-prev').onclick=()=>changeWeek(-1);
 $$('#week-next').onclick=()=>changeWeek(1);
 $$('#week-today').onclick=resetWeek;
 $$('#season-toggle').onclick=()=>{if(section!=='home')return;};
 installWeekGestures();
 setupActaDialog();
-setupClipboardImport();
-const btnActes=$$('#import-actes-json');if(btnActes)btnActes.onclick=showClipboardDialog;
-const exportActes=$$('#export-actes-json');if(exportActes)exportActes.onclick=exportActesJSON;
+/* Sense importació local: el circuit d'Agenda publica directament a GitHub. */
+const btnActes=$$('#import-actes-json');if(btnActes)btnActes.hidden=true;
+const exportActes=$$('#export-actes-json');if(exportActes)exportActes.hidden=true;
 window.ZonaOKRender=()=>{store=load();render();};
+let pendingRefresh=null;
 window.ZonaOKRefreshSources=async function(){
-   const [a,b]=await Promise.allSettled([loadShared(),loadActesJSON()]);
-   store=load();render();
-   return Boolean((a.status==='fulfilled'&&a.value)||(b.status==='fulfilled'&&b.value));
+   if(pendingRefresh)return pendingRefresh;
+   pendingRefresh=(async()=>{
+     // Ordre estricte: Agenda es carrega abans d'Actes, sense cap escriptura concurrent.
+     const agenda=await loadShared();
+     const actes=await loadActesJSON();
+     store=load();render();
+     return Boolean(agenda||actes);
+   })();
+   try{return await pendingRefresh}finally{pendingRefresh=null}
  };
- render();importHash();loadShared();loadActesJSON();
+ render();setTimeout(()=>window.ZonaOKRefreshSources?.(),0);
 })();
 </script>
 <script src="zonaok-retocs.js?v=20261119-restauracio-v15" defer></script>
@@ -1767,14 +1754,13 @@ window.ZonaOKRefreshSources=async function(){
             data.standings.some(x=>!has(x)||!String(x.team||'').trim()))continue;
          const at=String(data.standingsAt||data.capturedAt||'');
          if(!stamp(at))continue;
-         const local=window.ZonaOKSafeStorage?.read?.()||{};
+         const local=window.ZonaOKSafeStorage.read();
          const old=local[id]||{};
-         if(Array.isArray(old.standings)&&old.standings.length&&stamp(old.standingsAt)>=stamp(at))continue;
-         // Cal conservar rows/capturedAt del calendari antic si n'hi ha.
-         window.ZonaOKSafeStorage?.commit?.({[id]:{
+         // El JSON de classificació independent és la font prioritària.
+         window.ZonaOKSafeStorage.setSection(id,{
            ...old,standings:data.standings,standingsAt:at,
            capturedAt:stamp(at)>stamp(old.capturedAt)?at:String(old.capturedAt||'')
-         }});
+         });
          changed++;
        }catch(error){console.warn('ZonaOK: no es pot llegir '+file,error);}
      }
@@ -1790,15 +1776,14 @@ window.ZonaOKRefreshSources=async function(){
    const newer=await loadStandings();
    return Boolean(old||newer);
  };
- // 1a càrrega: s'afegeix a la càrrega existent, no s'hi substitueix res.
- loadStandings();
+ // La primera càrrega es fa després de l'Agenda, via ZonaOKRefreshSources.
  window.ZonaOKReloadClassificacions=loadStandings;
 })();
 
 </script>
 <script id="zonaok-pull-refresh-v23">
-/* Safari iPhone · estirar avall per buidar cache HTTP de la web i recuperar JSON.
-   El registre local de Dreceres MAI s'elimina. El gest horitzontal de setmanes continua intacte. */
+/* Safari iPhone · estirar avall per reconsultar els JSON de GitHub.
+   Sense emmagatzematge local persistent; gest horitzontal de setmanes intacte. */
 (function(){
  'use strict';
  const status=document.createElement('div');
@@ -1815,7 +1800,7 @@ window.ZonaOKRefreshSources=async function(){
    if(refreshing)return;refreshing=true;
    display('Actualitzant dades…',true);
    try{
-     // Només cache de recursos de la web. MAI localStorage ni dades importades.
+     // Netejar només les entrades de cache HTTP de ZonaOK, mai altres projectes.
      if('caches' in window){
        // Un domini GitHub Pages pot contenir altres projectes: esborrem
        // només entrades del directori /ZonaOK/, no caches d'altres apps.
@@ -1828,8 +1813,8 @@ window.ZonaOKRefreshSources=async function(){
        }
      }
      const updated=typeof window.ZonaOKRefreshSources==='function'&&await window.ZonaOKRefreshSources();
-     display(updated?'JSON consultats · Dades conservades':'Sense JSON nou · Dades locals conservades');
-   }catch(_){display('No s’ha pogut completar la recàrrega · Dades conservades');}
+     display(updated?'JSON de GitHub actualitzats':'No s’han pogut carregar els JSON · Sense canvis');
+   }catch(_){display('Error de connexió · Es manté la vista actual');}
    finally{refreshing=false;}
  }
  const ignore='input,textarea,select,[contenteditable="true"],dialog[open]';
