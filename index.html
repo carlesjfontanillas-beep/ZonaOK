@@ -205,6 +205,18 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
 }
 
 </style>
+<style id="zonaok-v275-noms-classificacions">
+/* Noms complets legibles, especialment a l'iPhone; taules amb desplaçament horitzontal. */
+#results-list .standings-wrap {max-width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+#results-list table.standings td.zok-standing-team-name {
+  min-width:180px; max-width:260px; white-space:normal; overflow-wrap:normal;
+  word-break:normal; font-weight:600; text-align:left; line-height:1.25;
+}
+#results-list table.standings tr.highlight td.zok-standing-team-name {font-weight:800;}
+@media (max-width:440px) {
+  #results-list table.standings td.zok-standing-team-name {min-width:165px; max-width:205px; font-size:12px;}
+}
+</style>
 </head>
 <body>
 <main class="app">
@@ -1337,7 +1349,56 @@ function mostrarTemporadaJugador(key,box){
   }
   for(const r of rows)box.append(createCard(r,id));
 }
-function renderSection(key){const section=SECTIONS[key];if(!section)return;weekText();const seasonToggle=$$('#season-toggle');if(seasonToggle){seasonToggle.hidden=['classificacions','barca','celoni','grupalevi','grupinfantil'].includes(key);seasonToggle.textContent=showSeason?'Veure setmana':'Tota la temporada';}$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const {start,end}=chosenWeek();if(key==='classificacions'){let any=false;const statLabels={PTS:'Pts',PJ:'PJ',PG:'PG',PE:'PE',PP:'PP',GF:'GF',GC:'GC',DIF:'DIF',SAN:'SAN'};for(const id of section.ids){const rows=store[id]?.standings||[];box.append(mk('h3','',LEAGUES[id].name));if(store[id]?.standingsAt)box.append(mk('small','helper','Lectura: '+formatTimestamp(store[id].standingsAt)));if(!rows.length){emptyResults('Classificaci\u00F3 pendent de lectura des de Safari.',[id]);continue;}any=true;const statKeys=[...new Set(rows.flatMap(r=>Object.keys(r.stats||{})))];const columns=[['pos','Pos.'],['team','Equip'],...statKeys.map(k=>['stats.'+k,statLabels[k]||k]),...(statKeys.length?[]:[['played','PJ'],['gf','GF'],['ga','GC'],['difference','DIF'],['points','Pts']])];for(const [k] of [...columns])if(k.startsWith('stats.')){const raw=k.slice(6);if(rows.every(r=>r.stats?.[raw]===null||r.stats?.[raw]===undefined||r.stats?.[raw]===''))columns.splice(columns.findIndex(c=>c[0]===k),1)}const table=mk('table','standings'),head=mk('tr');for(const [,label] of columns)head.append(mk('th','',label));table.append(head);for(const r of rows){const tr=mk('tr',/BAR\u00C7A|CP SANT CELONI B/i.test(r.team||'')?'highlight':'');for(const [k] of columns){const value=k.startsWith('stats.')?r.stats?.[k.slice(6)]:r[k];tr.append(mk('td','',value??'\u2014'))}table.append(tr)}const wrap=mk('div','standings-wrap');wrap.append(table);box.append(wrap)}if(!any)toast('Importa les classificacions des de Safari.');return;}
+/* ZonaOK V27.5 — noms complets d'equip a les classificacions.
+   Només presentació: conserva els codis originals dins dels JSON i la memòria local.
+   Els codis tenen significat DINS de cada lliga; no es canvien a l'Agenda.
+*/
+const ZONAOK_STANDINGS_DISPLAY_NAMES = Object.freeze({
+  '4789': Object.freeze({
+    'HSCA':'VICIO PHC SANT CUGAT A',
+    'BAR':'BARÇA',
+    'CPCA':'CLUB PATI CALAFELL A',
+    'OIAA':'CE NOIA FREIXENET A',
+    'CPVE':'CLUB PATÍ VOLTREGÀ E',
+    'CPCC':'CLUB PATI CALAFELL C',
+    'PSRB':'JOIERIA MONER SANT RAMON B',
+    'EHBA':'UEH BARBERÀ A'
+  }),
+  '4786': Object.freeze({
+    'CPSC':'CP SANT CELONI B',
+    'LEAA':'PONS LLEIDA A',
+    'BIRA':'ROTOTANK BIGUES I RIELLS A',
+    'CLAA':'HOQUEI CLARET A',
+    'PCAA':'CP CONGRÉS A',
+    'CCAA':'HOQUEI CLUB CASTELLAR A A',
+    'MHCA':'MOLLET HC A'
+  }),
+  '4784': Object.freeze({
+    'IHCA':'IGUALADA HC A',
+    'HVSA':'CLUB HOQUEI VILA-SECA A',
+    'GEGA':'GEIEG A',
+    'VICB':'AUTO VIGATANA PATÍ VIC B',
+    'AHC':'AHC ANDORRA',
+    'JUV':'CAPELLADES',
+    'CPSC':'CP SANT CELONI B'
+  })
+});
+function zonaokStandingCode(value){
+  return String(value==null?'':value).normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .toUpperCase().replace(/[^A-Z0-9]/g,'');
+}
+function zonaokStandingDisplayName(league,value){
+  const raw=String(value==null?'':value).trim();
+  return ZONAOK_STANDINGS_DISPLAY_NAMES[String(league)]?.[zonaokStandingCode(raw)]||raw;
+}
+function zonaokStandingIsFavorite(league,value){
+  const key=zonaokStandingCode(value);
+  return String(league)==='4789'
+    ? ['BAR','BARCA','FCBARCELONA'].includes(key)
+    : ['CPSC','CPSANTCELONIB'].includes(key);
+}
+function renderSection(key){const section=SECTIONS[key];if(!section)return;weekText();const seasonToggle=$$('#season-toggle');if(seasonToggle){seasonToggle.hidden=['classificacions','barca','celoni','grupalevi','grupinfantil'].includes(key);seasonToggle.textContent=showSeason?'Veure setmana':'Tota la temporada';}$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const {start,end}=chosenWeek();if(key==='classificacions'){let any=false;const statLabels={PTS:'Pts',PJ:'PJ',PG:'PG',PE:'PE',PP:'PP',GF:'GF',GC:'GC',DIF:'DIF',SAN:'SAN'};for(const id of section.ids){const rows=store[id]?.standings||[];box.append(mk('h3','',LEAGUES[id].name));if(store[id]?.standingsAt)box.append(mk('small','helper','Lectura: '+formatTimestamp(store[id].standingsAt)));if(!rows.length){emptyResults('Classificaci\u00F3 pendent de lectura des de Safari.',[id]);continue;}any=true;const statKeys=[...new Set(rows.flatMap(r=>Object.keys(r.stats||{})))];const columns=[['pos','Pos.'],['team','Equip'],...statKeys.map(k=>['stats.'+k,statLabels[k]||k]),...(statKeys.length?[]:[['played','PJ'],['gf','GF'],['ga','GC'],['difference','DIF'],['points','Pts']])];for(const [k] of [...columns])if(k.startsWith('stats.')){const raw=k.slice(6);if(rows.every(r=>r.stats?.[raw]===null||r.stats?.[raw]===undefined||r.stats?.[raw]===''))columns.splice(columns.findIndex(c=>c[0]===k),1)}const table=mk('table','standings'),head=mk('tr');for(const [,label] of columns)head.append(mk('th','',label));table.append(head);for(const r of rows){const tr=mk('tr',zonaokStandingIsFavorite(id,r.team)?'highlight':'');for(const [k] of columns){const value=k==='team'?zonaokStandingDisplayName(id,r.team):(k.startsWith('stats.')?r.stats?.[k.slice(6)]:r[k]);const td=mk('td','',value??'\u2014');if(k==='team'){td.classList.add('zok-standing-team-name');if(String(value)!==String(r.team||''))td.title='Codi FECAPA: '+r.team;}tr.append(td)}table.append(tr)}const wrap=mk('div','standings-wrap');wrap.append(table);box.append(wrap)}if(!any)toast('Importa les classificacions des de Safari.');return;}
 if(key==='grupalevi'||key==='grupinfantil'){mostrarTemporadaJugador(key,box);return;}
 if(key==='celoni'||key==='barca'){
   const club=key==='celoni'?'celoni':'barca',source=clubRows();
