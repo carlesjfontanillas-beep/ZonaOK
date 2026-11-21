@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "publishedAt": "2026-11-21T12:56:44Z",
+  "publishedAt": "2026-11-21T17:00:30Z",
   "data": {
     "agenda": {
       "capturedAt": "2026-11-21T09:51:21.447Z",
@@ -2028,12 +2028,14 @@
           "competition": "ALEVÍ OR 5",
           "home": "CP SANT CELONI A",
           "away": "CP MASQUEFA A",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 7,
+          "awayScore": 3,
           "venue": "MUNICIPAL D ESPORTS SANT CELONI",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "celoni",
-          "awayClub": ""
+          "awayClub": "",
+          "scoreCapturedAt": "2026-11-21T17:00:23+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-21",
@@ -2041,12 +2043,14 @@
           "competition": "JUVENIL OR 6",
           "home": "AHC ANDORRA",
           "away": "CP SANT CELONI B",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 15,
+          "awayScore": 0,
           "venue": "ANDORRA HC",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "",
-          "awayClub": "celoni"
+          "awayClub": "celoni",
+          "scoreCapturedAt": "2026-11-21T17:00:23+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-21",
@@ -4788,17 +4792,17 @@
         "partits": 367,
         "importats": 367
       },
-      "scoresAt": "2026-11-21T11:13:37+00:00",
+      "scoresAt": "2026-11-21T17:00:23+00:00",
       "directeImport": {
-        "capturedAt": "2026-11-21T12:56:34Z",
+        "capturedAt": "2026-11-21T17:00:23Z",
         "source": "FECAPA principal · En directe",
-        "received": 5,
-        "matched": 2,
-        "matchedWithoutCategory": 2,
-        "changed": 0,
+        "received": 8,
+        "matched": 4,
+        "matchedWithoutCategory": 4,
+        "changed": 2,
         "unchanged": 2,
         "outdated": 0,
-        "unmatched": 3,
+        "unmatched": 4,
         "totalAgenda": 367
       }
     },
