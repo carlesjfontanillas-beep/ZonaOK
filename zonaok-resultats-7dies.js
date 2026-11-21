@@ -1,6 +1,6 @@
 /*
- * ZonaOK — Resultats dels darrers 7 dies · V3 (21/11/2026)
- * Instal·lació: <script defer src="zonaok-resultats-7dies.js?v=20261121-r3"></script>
+ * ZonaOK — Resultats dels darrers 7 dies · V4 compacta (21/11/2026)
+ * Instal·lació: <script defer src="zonaok-resultats-7dies.js?v=20261121-r4"></script>
  * al final de <body> d'index.html, després dels scripts existents.
  *
  * Font principal: zonaok-data.json / data.agenda.rows. Els scoreUpdates i live
@@ -149,35 +149,28 @@
     const club = clubOf(row.home) || clubOf(row.away);
     const card = make('article', 'match ' + (club === 'barca' ? 'pink' : club === 'celoni' ? 'blue' : 'gray'));
     card.classList.add('zok-recent-card');
+
+    // Una sola capçalera: categoria + hora + data + accés a l'acta.
     const top = make('div', 'match-top');
-    top.append(make('span', 'pill', row.competition || 'Categoria no informada'),
-      make('span', 'tag', row.scoreSource === 'En directe' ? 'Marcador En directe' : 'Marcador Agenda'));
-    const date = make('div', 'match-date');
-    date.append(make('strong', '', row.time), make('small', '', prettyDate(row.iso)));
-    const teams = make('div', 'teams');
-    const center = make('div', 'middle');
-    center.append(make('strong', 'score', `${Number(row.homeScore)} : ${Number(row.awayScore)}`));
-    teams.append(buildTeam(row.home), center, buildTeam(row.away));
-    card.append(top, date, teams);
-    // Pista i accés a l'acta comparteixen la mateixa línia compacta.
-    const bottom = make('div', 'zok-recent-bottom');
-    if (row.venue) {
-      const venue = make('div', 'venue');
-      venue.append(make('strong', '', '📍 ' + row.venue));
-      venue.title = row.venue;
-      bottom.append(venue);
-    }
-    const actions = make('div', 'match-actions');
-    const acta = make('button', 'zok-recent-acta', '⌕ Acta');
+    const category = make('span', 'pill', row.competition || 'Categoria no informada');
+    category.title = row.competition || 'Categoria no informada';
+    const time = make('strong', 'zok-recent-time', row.time);
+    const date = make('small', 'zok-recent-day', prettyDate(row.iso));
+    const acta = make('button', 'zok-recent-acta', 'Acta');
     acta.type = 'button';
     acta.setAttribute('aria-label', 'Veure la fitxa i l’acta del partit');
     acta.onclick = () => {
       if (typeof window.ZonaOKActes?.open === 'function') window.ZonaOKActes.open(row, 'live');
       else alert('La funció d’actes de ZonaOK no està disponible en aquesta versió.');
     };
-    actions.append(acta);
-    bottom.append(actions);
-    card.append(bottom);
+    top.append(category, time, date, acta);
+
+    // Segona (i última) línia: equips i marcador.
+    const teams = make('div', 'teams');
+    const center = make('div', 'middle');
+    center.append(make('strong', 'score', `${Number(row.homeScore)} : ${Number(row.awayScore)}`));
+    teams.append(buildTeam(row.home), center, buildTeam(row.away));
+    card.append(top, teams);
     return card;
   }
 
@@ -278,39 +271,38 @@
       #${ID} .zok-recent-filters label{display:grid;gap:6px;font-size:12px;font-weight:850;color:#b9dbec}
       #${ID} .zok-recent-filters select{width:100%;min-width:0;padding:12px 8px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fff;font:inherit;font-size:12px}
       #${ID} .zok-recent-period{font-size:12px;color:#b3cee1;margin:7px 0 14px}
-      /* V3 · Només les targetes del menú Resultats. Disseny compacte tipus Magí/Ton. */
-      #${ID} .cards{display:grid;grid-template-columns:minmax(0,1fr);gap:7px}
-      #${ID} .zok-recent-card{width:100%;min-width:0;max-width:100%;box-sizing:border-box;padding:8px 10px;border-radius:16px;display:flex;flex-direction:column;gap:0}
+      /* V4 · Dues línies i sense franja inferior: només menú Resultats. */
+      #${ID} .cards{display:grid;grid-template-columns:minmax(0,1fr);gap:5px}
+      #${ID} .zok-recent-card{width:100%;min-width:0;max-width:100%;min-height:0;height:auto;box-sizing:border-box;padding:5px 8px;border-radius:12px;display:flex;flex-direction:column;gap:3px}
       #${ID} .zok-recent-card::before{pointer-events:none}
-      #${ID} .zok-recent-card .match-top{gap:5px;min-height:19px;margin:0 0 2px;flex-wrap:nowrap}
-      #${ID} .zok-recent-card .pill{padding:4px 7px;font-size:9px;line-height:1.1;max-width:63%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      #${ID} .zok-recent-card .tag{font-size:9px;line-height:1.1;max-width:42%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
-      #${ID} .zok-recent-card .match-date{margin:2px 0;padding:0;gap:8px;flex-wrap:nowrap;align-items:baseline}
-      #${ID} .zok-recent-card .match-date strong{font-size:16px;line-height:1.15;white-space:nowrap}
-      #${ID} .zok-recent-card .match-date small{font-size:11px;line-height:1.15;white-space:nowrap}
-      #${ID} .zok-recent-card .teams{display:grid;grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr);align-items:center;gap:5px;min-width:0;min-height:44px;margin:3px 0 4px;padding:0}
-      #${ID} .zok-recent-card .side{width:auto;min-width:0;max-width:100%;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:5px;text-align:left}
+      #${ID} .zok-recent-card .match-top{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;column-gap:6px;min-width:0;min-height:0;margin:0;padding:0;flex-wrap:nowrap}
+      #${ID} .zok-recent-card .pill{display:block;min-width:0;max-width:100%;padding:3px 6px;font-size:9px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      #${ID} .zok-recent-card .zok-recent-time{font-size:12px;line-height:1.1;white-space:nowrap;color:#17324a}
+      #${ID} .zok-recent-card .zok-recent-day{font-size:10px;line-height:1.1;white-space:nowrap;color:#526d85}
+      #${ID} .zok-recent-card .zok-recent-acta{display:inline-flex;align-items:center;justify-content:center;min-width:0;min-height:24px;width:auto;height:24px;max-width:none;margin:0;padding:3px 8px;flex:0 0 auto;font-size:10px;line-height:1;border-radius:7px;background:#163e5d;color:#fff;white-space:nowrap}
+      #${ID} .zok-recent-card .teams{display:grid;grid-template-columns:minmax(0,1fr) 52px minmax(0,1fr);align-items:center;gap:4px;min-width:0;min-height:32px;height:auto;margin:0;padding:0}
+      #${ID} .zok-recent-card .side{width:auto;min-width:0;max-width:100%;display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:4px;text-align:left}
       #${ID} .zok-recent-card .side:last-child{flex-direction:row-reverse;text-align:right}
-      #${ID} .zok-recent-card .side strong{flex:1 1 auto;min-width:0;max-width:100%;font-size:11px;line-height:1.15;overflow-wrap:break-word;word-break:normal;text-align:left}
+      #${ID} .zok-recent-card .side strong{flex:1 1 auto;min-width:0;max-width:100%;font-size:10px;line-height:1.12;overflow-wrap:break-word;word-break:normal;text-align:left}
       #${ID} .zok-recent-card .side:last-child strong{text-align:right}
-      #${ID} .zok-recent-card .crest{flex:0 0 30px;width:30px;height:30px;min-width:30px;max-width:30px;border-radius:9px}
-      #${ID} .zok-recent-card .crest img{width:27px;height:27px;object-fit:contain}
-      #${ID} .zok-recent-card .middle{min-width:0;max-width:58px;width:58px;align-self:center;justify-items:center;gap:0}
-      #${ID} .zok-recent-card .score{font-size:20px;line-height:1.1;white-space:nowrap}
-      #${ID} .zok-recent-card .zok-recent-bottom{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;min-height:30px;margin-top:3px;padding-top:5px;border-top:1px solid #19324a29}
-      #${ID} .zok-recent-card .venue{flex:1 1 auto;min-width:0;max-width:100%;margin:0;padding:0;border:0;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      #${ID} .zok-recent-card .venue strong{font-size:10px;line-height:1.2;color:#243d52}
-      #${ID} .zok-recent-card .match-actions{flex:0 0 auto;justify-content:flex-end;margin:0;gap:0}
-      #${ID} .zok-recent-card .zok-recent-acta{max-width:90px;min-height:30px;padding:6px 9px;flex:0 0 auto;font-size:10px;line-height:1.1;border-radius:9px;background:#163e5d;color:#fff}
+      #${ID} .zok-recent-card .crest{flex:0 0 26px;width:26px;height:26px;min-width:26px;max-width:26px;border-radius:7px}
+      #${ID} .zok-recent-card .crest img{width:23px;height:23px;object-fit:contain}
+      #${ID} .zok-recent-card .middle{min-width:0;max-width:52px;width:52px;align-self:center;justify-items:center;gap:0}
+      #${ID} .zok-recent-card .score{font-size:19px;line-height:1.1;white-space:nowrap}
       #${ID} .zok-recent-stamp{font-size:11px;color:#b6d2e5;margin-top:14px;line-height:1.45}
       @media(max-width:370px){
-        #${ID} .zok-recent-card{padding:7px 8px}
-        #${ID} .zok-recent-card .teams{grid-template-columns:minmax(0,1fr) 50px minmax(0,1fr);gap:3px}
-        #${ID} .zok-recent-card .crest{flex-basis:26px;min-width:26px;max-width:26px;width:26px;height:26px}
-        #${ID} .zok-recent-card .crest img{width:24px;height:24px}
-        #${ID} .zok-recent-card .side strong{font-size:10px}
-        #${ID} .zok-recent-card .middle{width:50px;max-width:50px}
-        #${ID} .zok-recent-card .score{font-size:18px}
+        #${ID} .zok-recent-card{padding:4px 6px}
+        #${ID} .zok-recent-card .match-top{column-gap:4px}
+        #${ID} .zok-recent-card .pill{padding:3px 4px;font-size:8px}
+        #${ID} .zok-recent-card .zok-recent-time{font-size:11px}
+        #${ID} .zok-recent-card .zok-recent-day{font-size:9px}
+        #${ID} .zok-recent-card .zok-recent-acta{padding:3px 6px;font-size:9px}
+        #${ID} .zok-recent-card .teams{grid-template-columns:minmax(0,1fr) 44px minmax(0,1fr);gap:3px}
+        #${ID} .zok-recent-card .crest{flex-basis:24px;min-width:24px;max-width:24px;width:24px;height:24px}
+        #${ID} .zok-recent-card .crest img{width:21px;height:21px}
+        #${ID} .zok-recent-card .side strong{font-size:9px}
+        #${ID} .zok-recent-card .middle{width:44px;max-width:44px}
+        #${ID} .zok-recent-card .score{font-size:17px}
       }
     `;
     document.head.append(stylesheet);
