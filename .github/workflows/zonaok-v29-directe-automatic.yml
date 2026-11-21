@@ -1,0 +1,48 @@
+name: ZonaOK V29 - En directe (nomes marcadors, Agenda intacta)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'imports/directe/v29/*.json'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: zonaok-v29-directe
+  cancel-in-progress: false
+jobs:
+  actualitzar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Recuperar el repositori
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Aplicar nomes marcadors sobre la darrera Agenda de main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 scripts/zonaok_import_directe_v29.py
+            git add -- zonaok-data.json
+            if git diff --cached --quiet; then
+              echo 'Sense canvis de marcadors. Agenda i altres dades intactes.'
+              exit 0
+            fi
+            git commit -m 'ZonaOK V29: actualitzar nomes marcadors En directe'
+            if git push origin HEAD:main; then
+              echo 'MARCAdORS PUBLICATS. Agenda, classificacions i actes conservats.'
+              exit 0
+            fi
+            echo "Main ha canviat; torno a llegir i fusionar ($attempt/5)."
+            sleep 2
+          done
+          echo 'No es poden publicar els marcadors per conflictes repetits.' >&2
+          exit 1
