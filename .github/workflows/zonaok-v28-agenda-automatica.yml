@@ -1,0 +1,48 @@
+name: ZonaOK V28 - Agenda automatica (conserva classificacions i actes)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'imports/agenda/v28/*.json'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: zonaok-v28-agenda
+  cancel-in-progress: false
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Recuperar repositori
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Fusionar sobre main i publicar amb reintents
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 scripts/zonaok_import_agenda_v28.py
+            git add -- zonaok-data.json
+            if git diff --cached --quiet; then
+              echo 'Agenda ja publicada o captura anterior. Cap canvi.'
+              exit 0
+            fi
+            git commit -m 'ZonaOK: importar Agenda FECAPA automàticament (V28)'
+            if git push origin HEAD:main; then
+              echo 'AGENDA PUBLICADA a zonaok-data.json'
+              exit 0
+            fi
+            echo "Main ha canviat durant la importació; torno a llegir l'última versió ($attempt/5)."
+            sleep 2
+          done
+          echo 'No s’ha pogut publicar per conflictes repetits.' >&2
+          exit 1
