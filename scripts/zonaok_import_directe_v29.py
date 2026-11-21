@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ZonaOK V29: marcador FECAPA -> files JA EXISTENTS a data.agenda.rows.
+"""ZonaOK V29.2: marcador FECAPA -> files JA EXISTENTS a data.agenda.rows.
 
 Llegeix captures `imports/directe/v29/directe-*.json`. Només modifica
 `homeScore`, `awayScore`, `scoreCapturedAt`, `scoreSource` de partits amb
@@ -16,6 +16,7 @@ from pathlib import Path
 import re
 import sys
 import unicodedata
+from urllib.parse import urlparse, parse_qs
 
 INBOX = Path('imports/directe/v29')
 TARGET = Path('zonaok-data.json')
@@ -101,6 +102,11 @@ def parse_result(raw):
 def read_packet(packet):
     if not isinstance(packet, dict) or packet.get('source')!='FECAPA-SAFARI' or packet.get('kind')!='resultats-v29':
         raise ValueError('El fitxer no és una captura oficial resultats-v29')
+    # A partir de V29.2 En directe NO es pot importar des de /ag/.
+    origin=urlparse(str(packet.get('url') or ''))
+    if (origin.scheme!='https' or origin.hostname not in ('www.hoqueipatins.fecapa.cat','hoqueipatins.fecapa.cat')
+            or origin.path not in ('','/') or 'liga' in parse_qs(origin.query)):
+        raise ValueError('En directe ha de venir de la portada FECAPA, no de /ag/')
     captured=utc(packet.get('capturedAt'))
     if not captured:
         raise ValueError('Data de captura UTC invàlida')
@@ -117,23 +123,62 @@ def read_packet(packet):
     return captured,list(seen.values())
 
 
-def comparable(old, new):
-    """Match fort per ID, o per dia + competició + noms complets/àlies inequívocs.
+def comp_compatible(old, new):
+    """Categoria general FECAPA vs subgrup d'Agenda, sense igualar categories distintes."""
+    a, b = norm(old), norm(new)
+    if not b:
+        return False
+    if a == b:
+        return True
+    # La portada dona ALEVÍ OR, l'Agenda dona ALEVÍ OR 4.
+    # Igualtat només quan l'única diferència és el número final de grup.
+    if re.fullmatch(re.escape(b) + r' [0-9]{1,2}', a):
+        return True
+    return False
 
-    No fem matching si falta competició, excepte quan ambdós IDs oficials
-    existeixen. Una sigla CPSC sense A/B mai coincideix amb CPSCA o CPSCB.
-    """
+
+def team_compatible(full, short):
+    """Una abreviació no determina per si sola l'equip A/B: exigeix match únic."""
+    if team(full) == team(short):
+        return True
+    c = norm(short).replace(' ', '')
+    target = norm(full)
+    words = target.split()
+    acronym = ''.join(w[0] for w in words if w)
+    if c == acronym and len(c) >= 3:
+        return True
+    # FECAPA mostra CPSC tant per als equips A com B. Mai es decideix
+    # A o B aqui: es resol amb dia, hora, competició i contrincant.
+    if c == 'CPSC' and re.fullmatch(r'(?:CP|CLUB PATI|C P) SANT CELONI(?: [AB])?', target):
+        return True
+    if c == 'BAR' and target in ('BARCA','FC BARCELONA'):
+        return True
+    if c in ('FCBV','FCBETRANS','FCBETERANS') and target in ('FCBETRANS','FCBETERANS'):
+        return True
+    # Aliases documentats en la competicio Aleví, que nomes s'acceptaran
+    # si la cerca completa dona EXACTAMENT una coincidencia.
+    if c == 'HSCA' and target == 'VICIO PHC SANT CUGAT A':
+        return True
+    return False
+
+
+def comparable(old, new):
     if not isinstance(old, dict):
         return False
-    old_id=str(old.get('id') or '').strip()
-    new_id=new['id']
+    old_id = str(old.get('id') or '').strip()
+    new_id = new['id']
     if old_id and new_id:
-        return old_id==new_id
-    if str(old.get('iso') or '')!=new['iso']:
+        return old_id == new_id
+    if str(old.get('iso') or '') != new['iso']:
         return False
-    if not new['competition'] or norm(old.get('competition'))!=norm(new['competition']):
+    # L'hora es obligatoria en la vista principal. No relacionem partits
+    # nomes per nom de club, cosa que confundria diversos equips.
+    if str(old.get('time') or '') != new['time']:
         return False
-    return team(old.get('home'))==team(new['home']) and team(old.get('away'))==team(new['away'])
+    if not comp_compatible(old.get('competition'),new['competition']):
+        return False
+    return (team_compatible(old.get('home'),new['home'])
+            and team_compatible(old.get('away'),new['away']))
 
 
 def merge(existing, captured, incoming):
@@ -169,7 +214,7 @@ def merge(existing, captured, incoming):
         old['homeScore']=r['homeScore']
         old['awayScore']=r['awayScore']
         old['scoreCapturedAt']=captured.isoformat(timespec='seconds')
-        old['scoreSource']='FECAPA En directe V29'
+        old['scoreSource']='FECAPA En directe V29.2'
         applied+=1
     if not matched:
         raise ValueError('Cap resultat coincideix unívocament amb la nova Agenda. No publiquem res; revisa la pàgina FECAPA.')
@@ -178,7 +223,26 @@ def merge(existing, captured, incoming):
     if applied:
         doc['data']['agenda']['scoresAt']=captured.isoformat(timespec='seconds')
         doc['publishedAt']=datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
-    # No es canvia mai data.agenda.capturedAt ni cap altra secció del document.
+    # Darrera importacio En directe, sempre visible a l'app, encara que
+    # tots els marcadors ja siguin iguals. No modifica la data d'Agenda.
+    # No es sobreescriu amb una captura cronologicament anterior.
+    old_summary=ag.get('directeImport') if isinstance(ag.get('directeImport'), dict) else {}
+    old_processed=utc(old_summary.get('capturedAt')) if old_summary else None
+    if not old_processed or captured >= old_processed:
+        doc['data']['agenda']['directeImport']={
+            'capturedAt':captured.isoformat(timespec='seconds').replace('+00:00','Z'),
+            'source':'FECAPA principal · En directe',
+            'received':len(incoming),
+            'matched':matched,
+            'changed':applied,
+            'unchanged':unchanged,
+            'outdated':outdated,
+            'unmatched':len(unmatched),
+            'totalAgenda':count_before
+        }
+        if doc['data']['agenda']['directeImport']!=old_summary and not applied:
+            doc['publishedAt']=datetime.now(timezone.utc).isoformat(timespec='seconds').replace('+00:00','Z')
+    # No es canvia mai data.agenda.capturedAt ni cap altra seccio del document.
     if doc['data']['agenda'].get('capturedAt')!=ag.get('capturedAt'):
         raise AssertionError('La data general d’Agenda s’ha alterat')
     if doc['data']['agenda'].get('sourceCapturedAt')!=ag.get('sourceCapturedAt'):
