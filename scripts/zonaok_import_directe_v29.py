@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ZonaOK V29.4: marcador FECAPA -> files JA EXISTENTS a data.agenda.rows.
+"""ZonaOK V29.5: marcador FECAPA -> files JA EXISTENTS a data.agenda.rows.
 
 Llegeix captures `imports/directe/v29/directe-*.json`. Només modifica
 `homeScore`, `awayScore`, `scoreCapturedAt`, `scoreSource` de partits amb
@@ -116,7 +116,7 @@ def read_packet(packet):
     rows=[parse_result(raw) for raw in incoming]
     seen={}
     for r in rows:
-        key=(r['iso'],norm(r['competition']),team(r['home']),team(r['away']))
+        key=(r['iso'],r['time'],norm(r['competition']),norm(r['home']),norm(r['away']))
         if key in seen and (seen[key]['homeScore'],seen[key]['awayScore'])!=(r['homeScore'],r['awayScore']):
             raise ValueError('Dos marcadors contradictoris per al mateix partit: '+str(key))
         seen[key]=r
@@ -137,29 +137,75 @@ def comp_compatible(old, new):
     return False
 
 
+def alias_forms(full):
+    """Formes abreujades de FECAPA. Sempre es validen amb dia/hora/rol/rival.
+
+    Les abreviatures no s'utilitzen mai com a prova suficient per si soles.
+    """
+    name = norm(full)
+    t = name.split()
+    forms = {name.replace(' ', '')}
+    # Inicials del nom complet, i sense termes genèrics de club.
+    if len(t) >= 2:
+        forms.add(''.join(w[0] for w in t))
+    stripped = [w for w in t if w not in {
+        'CLUB','PATI','PATINS','CLUBS','HOQUEI','HOCKEY','HC','CH','CP','CHP','FUTBOL'}]
+    if stripped and len(stripped) >= 2:
+        forms.add(''.join(w[0] for w in stripped))
+    # FECAPA abreuja sovint CH OLOT com CHO, CP VOLTREGA A com CPVA.
+    # Amb noms complets (CLUB PATI VOLTREGA A) creem CPVA.
+    if len(t) >= 2 and t[0] in ('CH','CP','HC','CHP'):
+        forms.add(t[0] + ''.join(w[0] for w in t[1:]))
+    if len(t) >= 3 and t[:2] == ['CLUB', 'PATI']:
+        forms.add('CP' + ''.join(w[0] for w in t[2:]))
+    # SAF/SAFB: abreviació registrada per al CHP Sant Feliu (B).
+    # El sufix B es conserva, mai s'iguala SAFB amb SAF.
+    if len(t) >= 3 and 'SANT' in t and 'FELIU' in t:
+        ix=t.index('SANT')
+        if ix+1 < len(t) and t[ix+1] == 'FELIU':
+            suffix=t[-1] if t[-1] in ('A','B','C','D') else ''
+            forms.add('SAF'+suffix)
+    # AH C Andorra: la sigla pròpia AHC és la primera paraula.
+    if t and len(t[0]) >= 3:
+        forms.add(t[0])
+    return forms
+
+
 def team_compatible(full, short):
-    """Una abreviació no determina per si sola l'equip A/B: exigeix match únic."""
-    if team(full) == team(short):
+    """CPSC/CPSCA/CPSCB = CLUB, NO equip concret; desambigua per partit.
+
+    Prioritza equivalències literais i abreviatures derivables; NO compara
+    només el club favorit quan el rival és desconegut.
+    """
+    a=team(full)
+    b=team(short)
+    if a == b:
         return True
-    c = norm(short).replace(' ', '')
-    target = norm(full)
-    words = target.split()
-    acronym = ''.join(w[0] for w in words if w)
-    if c == acronym and len(c) >= 3:
+    c=norm(short).replace(' ', '')
+    target=norm(full)
+    # Variant de sigles CPSC indiferent de l'equip A/B, perquè a FECAPA
+    # CPSC pot identificar tots dos. La distinció ve de la data, hora,
+    # categoria, rival i lloc (local/visitant).
+    if c in ('CPSC','CPSCA','CPSCB') and re.fullmatch(
+        r'(?:CP|CLUB PATI|C P)? ?SANT CELONI(?: [A-D])?',target):
         return True
-    # FECAPA mostra CPSC tant per als equips A com B. Mai es decideix
-    # A o B aqui: es resol amb dia, hora, competició i contrincant.
-    if c == 'CPSC' and re.fullmatch(r'(?:CP|CLUB PATI|C P) SANT CELONI(?: [AB])?', target):
-        return True
-    if c == 'BAR' and target in ('BARCA','FC BARCELONA'):
+    if c in ('BAR','BARCA','FCB') and target in ('BARCA','FC BARCELONA','F C BARCELONA'):
         return True
     if c in ('FCBV','FCBETRANS','FCBETERANS') and target in ('FCBETRANS','FCBETERANS'):
         return True
-    # Aliases documentats en la competicio Aleví, que nomes s'acceptaran
-    # si la cerca completa dona EXACTAMENT una coincidencia.
-    if c == 'HSCA' and target == 'VICIO PHC SANT CUGAT A':
+    if c in alias_forms(full):
         return True
-    return False
+    # Aliases coneguts i verificats amb dates/hores de la temporada.
+    # No inventem variants de rival que no es poden acreditar.
+    specific = {
+        'CPVA': ('CLUB PATI VOLTREGA A', 'CP VOLTREGA A'),
+        'CPVB': ('CLUB PATI VOLTREGA B', 'CP VOLTREGA B'),
+        'AHC': ('AHC ANDORRA',),
+        'CHO': ('CH OLOT',),
+        'SAF': ('CHP SANT FELIU',),
+        'SAFB': ('CHP SANT FELIU B',),
+    }
+    return target in specific.get(c, ())
 
 
 def comparable(old, new, require_comp=True):
@@ -234,6 +280,30 @@ def unmatched_detail(output, r, reason, num):
     }
 
 
+def accepted_matches(output, incoming):
+    """Deduplica les correspondències per ID/partit i frena conflictes.
+
+    Si dos resultats FECAPA diferents intenten escriure al mateix partit,
+    només s'accepten si els marcadors són idèntics. Si son diferents,
+    parem TOTA la importació abans de modificar el JSON.
+    """
+    claims={}
+    diagnostics=[]
+    for r in incoming:
+        index,mode,num=select_unique(output,r)
+        diagnostics.append((r,index,mode,num))
+        if index is None:
+            continue
+        if index in claims:
+            p=claims[index]
+            if (p['homeScore'],p['awayScore']) != (r['homeScore'],r['awayScore']):
+                raise ValueError('Dues captures incompatibles reclamen el mateix partit Agenda: '
+                                 +str(r['iso'])+' '+str(r['time'])+' '+r['home']+' vs '+r['away'])
+        else:
+            claims[index]=r
+    return diagnostics
+
+
 def merge(existing, captured, incoming):
     if not isinstance(existing,dict) or existing.get('version')!=3 or not isinstance(existing.get('data'),dict):
         raise ValueError('zonaok-data.json no té el format compatible version=3/data')
@@ -247,8 +317,7 @@ def merge(existing, captured, incoming):
     count_before=len(output)
     applied=matched=unchanged=outdated=match_sense_categoria=0
     unmatched=[]
-    for r in incoming:
-        index, mode, num = select_unique(output, r)
+    for r, index, mode, num in accepted_matches(output, incoming):
         if index is None:
             unmatched.append(unmatched_detail(output, r, mode, num))
             continue
@@ -268,7 +337,7 @@ def merge(existing, captured, incoming):
         old['homeScore']=r['homeScore']
         old['awayScore']=r['awayScore']
         old['scoreCapturedAt']=captured.isoformat(timespec='seconds')
-        old['scoreSource']='FECAPA En directe V29.4'
+        old['scoreSource']='FECAPA En directe V29.5'
         applied+=1
     if not matched:
         raise ValueError('Cap resultat coincideix de forma unica amb l Agenda. ' +
@@ -385,4 +454,4 @@ if __name__=='__main__':
     try:
         run(Path(os.environ.get('GITHUB_WORKSPACE') or '.').resolve())
     except (ValueError,KeyError,TypeError,UnicodeError,json.JSONDecodeError,AssertionError) as exc:
-        sys.exit('ERROR EN DIRECTE V29.4: cap dada modificada. '+str(exc))
+        sys.exit('ERROR EN DIRECTE V29.5: cap dada modificada. '+str(exc))
