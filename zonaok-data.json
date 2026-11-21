@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "publishedAt": "2026-11-21T17:01:35Z",
+  "publishedAt": "2026-11-21T17:19:18Z",
   "data": {
     "agenda": {
       "capturedAt": "2026-11-21T09:51:21.447Z",
@@ -2058,12 +2058,14 @@
           "competition": "1ª CATALANA GRUP A",
           "home": "HOQUEI CLUB CASTELLAR",
           "away": "CP SANT CELONI",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 0,
+          "awayScore": 4,
           "venue": "PAVELLÓ DANI PEDROSA",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "",
-          "awayClub": "celoni"
+          "awayClub": "celoni",
+          "scoreCapturedAt": "2026-11-21T17:19:11+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-21",
@@ -4792,14 +4794,14 @@
         "partits": 367,
         "importats": 367
       },
-      "scoresAt": "2026-11-21T17:00:23+00:00",
+      "scoresAt": "2026-11-21T17:19:11+00:00",
       "directeImport": {
-        "capturedAt": "2026-11-21T17:01:28Z",
+        "capturedAt": "2026-11-21T17:19:11Z",
         "source": "FECAPA principal · En directe",
-        "received": 8,
-        "matched": 4,
-        "matchedWithoutCategory": 4,
-        "changed": 0,
+        "received": 9,
+        "matched": 5,
+        "matchedWithoutCategory": 5,
+        "changed": 1,
         "unchanged": 4,
         "outdated": 0,
         "unmatched": 4,
