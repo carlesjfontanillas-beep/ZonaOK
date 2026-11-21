@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ZonaOK V29.2: marcador FECAPA -> files JA EXISTENTS a data.agenda.rows.
+"""ZonaOK V29.3: marcador FECAPA -> files JA EXISTENTS a data.agenda.rows.
 
 Llegeix captures `imports/directe/v29/directe-*.json`. Només modifica
 `homeScore`, `awayScore`, `scoreCapturedAt`, `scoreSource` de partits amb
@@ -261,6 +261,44 @@ def merge(existing, captured, incoming):
                  'total_agenda':count_before,'total_importat':len(incoming)}
 
 
+def load_json_checked(path, description):
+    """Diagnostica el fitxer exacte que no es pot descodificar.
+
+    Quan la drecera envia un ERROR: com a Base64, GitHub desa
+    un fitxer de text en comptes de JSON; no s'ha de tocar l'Agenda.
+    """
+    content = path.read_text(encoding='utf-8')
+    if not content.strip():
+        raise ValueError(
+            f'{description}: fitxer buit ({path}). '
+            'La drecera no ha retornat cap JSON. Revisa Resultado de JavaScript.'
+        )
+    if content.lstrip().startswith('ERROR:'):
+        detail = content.strip().replace('\r', ' ').replace('\n', ' ')[:250]
+        raise ValueError(
+            f'{description}: la drecera ha publicat un ERROR en lloc del JSON. '
+            f'Fitxer: {path}. Detall: {detail}. '
+            'Afegeix la condicio Si Resultado de JavaScript comença per ERROR: '
+            '→ Mostrar resultado → Detener este atajo.'
+        )
+    try:
+        result = json.loads(content)
+    except json.JSONDecodeError as exc:
+        preview = content[:160].replace('\r', ' ').replace('\n', ' ')
+        raise ValueError(
+            f'{description}: JSON invàlid al fitxer {path} '
+            f'(línia {exc.lineno}, columna {exc.colno}: {exc.msg}). '
+            f'Inici del contingut: {preview!r}. '
+            'Cap dada modificada.'
+        ) from exc
+    if not isinstance(result, dict):
+        raise ValueError(
+            f'{description}: el fitxer {path} ha de contenir un objecte JSON, '
+            f'no {type(result).__name__}. Cap dada modificada.'
+        )
+    return result
+
+
 def run(root):
     source=root/INBOX
     names=sorted(source.glob('directe-*.json'))
@@ -269,12 +307,13 @@ def run(root):
     path=names[-1]  # El timestamp del nom és YYYYMMDD-HHMMSS
     if path.stat().st_size>MAX_BYTES:
         raise ValueError('Paquet de resultats massa gran')
-    packet=json.loads(path.read_text(encoding='utf-8'))
+    print('CAPTURA V29 SELECCIONADA:', path.relative_to(root), 'bytes=', path.stat().st_size, flush=True)
+    packet=load_json_checked(path, 'Captura En directe')
     captured,rows=read_packet(packet)
     dest=root/TARGET
     if not dest.exists():
         raise ValueError('Falta zonaok-data.json, no es crearà un fitxer buit')
-    before=json.loads(dest.read_text(encoding='utf-8'))
+    before=load_json_checked(dest, 'JSON compartit de ZonaOK')
     doc,stats=merge(before,captured,rows)
     if doc!=before:
         dest.write_text(json.dumps(doc,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
@@ -288,4 +327,4 @@ if __name__=='__main__':
     try:
         run(Path(os.environ.get('GITHUB_WORKSPACE') or '.').resolve())
     except (ValueError,KeyError,TypeError,UnicodeError,json.JSONDecodeError,AssertionError) as exc:
-        sys.exit('ERROR EN DIRECTE V29: cap dada publicada. '+str(exc))
+        sys.exit('ERROR EN DIRECTE V29.3: cap dada modificada. '+str(exc))
