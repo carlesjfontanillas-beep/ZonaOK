@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "publishedAt": "2026-11-21T09:51:28Z",
+  "publishedAt": "2026-11-21T11:26:59Z",
   "data": {
     "agenda": {
       "capturedAt": "2026-11-21T09:51:21.447Z",
@@ -2000,12 +2000,14 @@
           "competition": "ALEVÍ OR 4",
           "home": "CLUB PATÍ VOLTREGÀ A",
           "away": "CP SANT CELONI B",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 0,
+          "awayScore": 1,
           "venue": "MASIES DE VOLTREGA",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "",
-          "awayClub": "celoni"
+          "awayClub": "celoni",
+          "scoreCapturedAt": "2026-11-21T11:13:37+00:00",
+          "scoreSource": "FECAPA En directe V29.4"
         },
         {
           "iso": "2026-11-21",
@@ -4785,6 +4787,19 @@
         "celoni": 256,
         "partits": 367,
         "importats": 367
+      },
+      "scoresAt": "2026-11-21T11:13:37+00:00",
+      "directeImport": {
+        "capturedAt": "2026-11-21T11:13:37Z",
+        "source": "FECAPA principal · En directe",
+        "received": 4,
+        "matched": 2,
+        "matchedWithoutCategory": 2,
+        "changed": 1,
+        "unchanged": 1,
+        "outdated": 0,
+        "unmatched": 2,
+        "totalAgenda": 367
       }
     },
     "4789": {
