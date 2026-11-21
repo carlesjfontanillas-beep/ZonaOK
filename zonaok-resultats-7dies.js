@@ -1,6 +1,6 @@
 /*
- * ZonaOK — Resultats dels darrers 7 dies · V1 (21/11/2026)
- * Instal·lació: <script defer src="zonaok-resultats-7dies.js?v=20261121-r1"></script>
+ * ZonaOK — Resultats dels darrers 7 dies · V2 (21/11/2026)
+ * Instal·lació: <script defer src="zonaok-resultats-7dies.js?v=20261121-r2"></script>
  * al final de <body> d'index.html, després dels scripts existents.
  *
  * Font principal: zonaok-data.json / data.agenda.rows. Els scoreUpdates i live
@@ -237,12 +237,36 @@
     if (!grid || !main || document.getElementById(ID)) return;
     const stylesheet = make('style');
     stylesheet.textContent = `
-      /* Set botons en dues files sense ocultar la barra a l'iPhone. */
-      .bottom .navgrid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
-      .bottom .navbtn{min-height:66px;padding:7px 2px;min-width:0}
-      .bottom .navbtn strong{font-size:9px;line-height:1.13;overflow-wrap:anywhere;text-align:center}
-      .bottom .navbtn small{font-size:8px}
-      @media(max-width:370px){.bottom .navbtn strong{font-size:8px}.bottom .navgrid{gap:5px}}
+      /* V2 · SET botons compactes en UNA fila, també a l'iPhone. */
+      .bottom{padding:6px 5px calc(env(safe-area-inset-bottom) + 6px)}
+      .bottom .bottom-title{display:none}
+      .bottom .navgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;align-items:stretch}
+      .bottom .navbtn{min-width:0;width:100%;min-height:57px;height:57px;padding:5px 1px;gap:3px;border-radius:10px}
+      .bottom .navbtn > span{font-size:19px;line-height:1;display:grid;place-items:center;max-width:100%;min-width:0;min-height:24px}
+      .bottom .navbtn > .club-icon{width:28px;height:28px;padding:1px;border-radius:8px;overflow:hidden}
+      .bottom .navbtn > .club-icon img{display:block;width:26px;height:26px;max-width:100%;max-height:100%;object-fit:contain}
+      .bottom .navbtn strong{width:100%;min-width:0;font-size:9px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:clip;text-align:center}
+      .bottom .navbtn small{display:none}
+      /* Etiquetes curtes només a la barra: mantenim els noms accessibles originals. */
+      .bottom .navbtn[data-tab="celoni"] strong,
+      .bottom .navbtn[data-tab="classificacions"] strong,
+      .bottom .navbtn[data-tab="home"] strong{font-size:0}
+      .bottom .navbtn[data-tab="celoni"] strong::after{content:"Celoni";font-size:9px}
+      .bottom .navbtn[data-tab="classificacions"] strong::after{content:"Class.";font-size:9px}
+      .bottom .navbtn[data-tab="home"] strong::after{content:"Inici";font-size:9px}
+      .bottom .navbtn[data-tab="grupalevi"] strong,
+      .bottom .navbtn[data-tab="grupinfantil"] strong{display:none}
+      .bottom .navbtn > .nav-name{font-size:13px;font-weight:850;color:#ffc17c}
+      @media(max-width:370px){
+        .bottom{padding-left:3px;padding-right:3px}
+        .bottom .navgrid{gap:2px}
+        .bottom .navbtn{height:54px;min-height:54px;padding:4px 0}
+        .bottom .navbtn strong,
+        .bottom .navbtn[data-tab="celoni"] strong::after,
+        .bottom .navbtn[data-tab="classificacions"] strong::after,
+        .bottom .navbtn[data-tab="home"] strong::after{font-size:8px}
+        #zok-nav-resultats-7dies strong{font-size:8px}
+      }
       #${ID}{display:none!important}
       body.zok-recent-mode main.app > :not(.mast):not(#${ID}){display:none!important}
       body.zok-recent-mode #${ID}{display:block!important}
