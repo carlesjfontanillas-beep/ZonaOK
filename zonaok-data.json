@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "publishedAt": "2026-11-22T19:03:04Z",
+  "publishedAt": "2026-11-22T21:34:21Z",
   "data": {
     "agenda": {
       "capturedAt": "2026-11-21T09:51:21.447Z",
@@ -2776,12 +2776,14 @@
           "competition": "2ª CATALANA GRUP D",
           "home": "CP SANT CELONI",
           "away": "UEH BARBERÀ",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 4,
+          "awayScore": 2,
           "venue": "MUNICIPAL D ESPORTS SANT CELONI",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "celoni",
-          "awayClub": ""
+          "awayClub": "",
+          "scoreCapturedAt": "2026-11-22T21:34:13+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-27",
@@ -5328,14 +5330,14 @@
         "partits": 367,
         "importats": 367
       },
-      "scoresAt": "2026-11-22T18:55:59+00:00",
+      "scoresAt": "2026-11-22T21:34:13+00:00",
       "directeImport": {
-        "capturedAt": "2026-11-22T18:55:59Z",
+        "capturedAt": "2026-11-22T21:34:13Z",
         "source": "FECAPA principal · En directe",
-        "received": 19,
-        "matched": 19,
+        "received": 20,
+        "matched": 20,
         "matchedWithoutCategory": 0,
-        "changed": 0,
+        "changed": 1,
         "unchanged": 19,
         "outdated": 0,
         "unmatched": 0,
