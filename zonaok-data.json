@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "publishedAt": "2026-11-22T18:53:35Z",
+  "publishedAt": "2026-11-22T18:56:07Z",
   "data": {
     "agenda": {
       "capturedAt": "2026-11-21T09:51:21.447Z",
@@ -2208,12 +2208,14 @@
           "competition": "JÚNIOR OR 2",
           "home": "BARÇA",
           "away": "VICIO PHC SANT CUGAT A",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 7,
+          "awayScore": 2,
           "venue": "CAMPUS DE MUNDET UB",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "barca",
-          "awayClub": ""
+          "awayClub": "",
+          "scoreCapturedAt": "2026-11-22T18:55:59+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-22",
@@ -2234,12 +2236,14 @@
           "competition": "FEM 13 OR",
           "home": "HOQUEI CLARET",
           "away": "SANT CELONI",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 0,
+          "awayScore": 23,
           "venue": "ESCOLA CLARET",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "",
-          "awayClub": "celoni"
+          "awayClub": "celoni",
+          "scoreCapturedAt": "2026-11-22T18:55:59+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-22",
@@ -2247,12 +2251,14 @@
           "competition": "1ª CATALANA FEMENINA GRUP B",
           "home": "CLUB PATI CUBELLES",
           "away": "CP SANT CELONI",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 1,
+          "awayScore": 3,
           "venue": "POLIESPORTIU MUNICIPAL CUBELLES",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "",
-          "awayClub": "celoni"
+          "awayClub": "celoni",
+          "scoreCapturedAt": "2026-11-22T18:55:59+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-22",
@@ -4812,15 +4818,15 @@
         "partits": 367,
         "importats": 367
       },
-      "scoresAt": "2026-11-22T11:52:27+00:00",
+      "scoresAt": "2026-11-22T18:55:59+00:00",
       "directeImport": {
-        "capturedAt": "2026-11-22T11:52:27Z",
+        "capturedAt": "2026-11-22T18:55:59Z",
         "source": "FECAPA principal · En directe",
-        "received": 16,
-        "matched": 16,
+        "received": 19,
+        "matched": 19,
         "matchedWithoutCategory": 0,
-        "changed": 7,
-        "unchanged": 9,
+        "changed": 3,
+        "unchanged": 16,
         "outdated": 0,
         "unmatched": 0,
         "totalAgenda": 367
