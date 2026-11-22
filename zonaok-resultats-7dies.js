@@ -1,6 +1,6 @@
 /*
- * ZonaOK — Resultats dels darrers 7 dies · V5 · TOTS ELS CLUBS + TARGETES COMPACTES (21/11/2026)
- * Instal·lació: <script defer src="zonaok-resultats-7dies.js?v=20261121-tots-r5"></script>
+ * ZonaOK — Resultats dels darrers 7 dies · V7 · TOTS ELS CLUBS + TARGETES COMPACTES + ACTES TOTAL (21/11/2026)
+ * Instal·lació: <script defer src="zonaok-resultats-7dies.js?v=20261122-actes-total-r7"></script>
  * al final de <body> d'index.html, després dels scripts existents.
  *
  * Font principal: zonaok-data.json / data.agenda.rows. Els scoreUpdates i live
@@ -162,6 +162,37 @@
     return remote || memory;
   }
 
+  // Enllaços d'acta independents de l'Agenda. No modifiquen marcadors ni filtres.
+  async function enrichActes(rows) {
+    let data;
+    try {
+      const response = await fetch(`zonaok-tots-actes.json?t=${Date.now()}`, {cache:'no-store'});
+      if (!response.ok) return rows;
+      data = await response.json();
+    } catch (_) { return rows; }
+    if (data?.schema !== 'zonaok-actes-total-v1' || data?.kind !== 'actes-total' || !Array.isArray(data.rows)) return rows;
+    const linked = new Map();
+    const ambiguous = new Set();
+    for (const f of data.rows) {
+      if (!f || typeof f.key !== 'string' || !/^\d{3,10}$/.test(String(f.leagueId || '')) ||
+          !/^\d{4,10}$/.test(String(f.matchId || ''))) continue;
+      try {
+        const u = new URL(String(f.actaUrl || ''));
+        if (u.protocol !== 'https:' || !['www.hoqueipatins.fecapa.cat','hoqueipatins.fecapa.cat'].includes(u.hostname) ||
+            u.searchParams.get('liga') !== String(f.leagueId) || u.searchParams.get('partido') !== String(f.matchId)) continue;
+      } catch (_) { continue; }
+      if (linked.has(f.key) && linked.get(f.key).matchId !== String(f.matchId)) ambiguous.add(f.key);
+      else linked.set(f.key, f);
+    }
+    return rows.map(row => {
+      const k = key(row), f = linked.get(k);
+      if (!f || ambiguous.has(k) || (row.matchId && String(row.matchId) !== String(f.matchId)) ||
+          (row.actaUrl && row.actaUrl !== f.actaUrl)) return row;
+      return {...row, matchId: String(f.matchId), id: row.id || String(f.matchId),
+        leagueId: row.leagueId || String(f.leagueId), actaUrl: f.actaUrl};
+    });
+  }
+
   function buildTeam(name, importedLogo) {
     const team = make('div', 'side');
     const crest = make('div', 'crest');
@@ -196,6 +227,18 @@
     acta.type = 'button';
     acta.setAttribute('aria-label', 'Veure la fitxa i l’acta del partit');
     acta.onclick = () => {
+      // Quan l'Agenda porta liga + partido oficials, obrir la fitxa directament.
+      // Aleshores l'usuari pot consultar l'acta si FECAPA ja l'ha publicada.
+      try {
+        const url = new URL(String(row.actaUrl || ''), location.href);
+        if (url.protocol === 'https:' &&
+            ['hoqueipatins.fecapa.cat', 'www.hoqueipatins.fecapa.cat'].includes(url.hostname) &&
+            /^\d{3,10}$/.test(url.searchParams.get('liga') || '') &&
+            /^\d{4,10}$/.test(url.searchParams.get('partido') || '')) {
+          window.open(url.href, '_blank', 'noopener');
+          return;
+        }
+      } catch (_) { /* Sense URL oficial verificada: usar la funció existent. */ }
       if (typeof window.ZonaOKActes?.open === 'function') {
         // Preservem els identificadors del nou JSON, necessaris per localitzar l'acta.
         window.ZonaOKActes.open({
@@ -274,6 +317,7 @@
     try {
       const data = await loadData();
       matches = data.__all ? rowsInLastSevenDays(data.rows) : combinedAgenda(data);
+      matches = await enrichActes(matches);
       updateClubOptions();
       updateCategoryOptions();
       renderCards();
