@@ -3,6 +3,19 @@
   "kind": "directe",
   "season": "2026/2027",
   "source": "FECAPA-SAFARI",
-  "capturedAt": "",
-  "rows": []
+  "capturedAt": "2026-11-22T21:55:13Z",
+  "sourceUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar",
+  "counts": {"examined": 2, "invalid": 0, "exported": 2},
+  "rows": [
+    {
+      "iso": "2026-11-22", "time": "16:00", "competition": "INFANTIL OR 10",
+      "home": "ROTOTANK BIGUES I RIELLS A", "away": "CP CONGRÉS A",
+      "homeScore": 5, "awayScore": 2, "matchId": "152393", "leagueId": "4786", "status": "FINAL"
+    },
+    {
+      "iso": "2026-11-22", "time": "17:30", "competition": "INFANTIL OR 10",
+      "home": "PONS LLEIDA A", "away": "HOQUEI CLARET A",
+      "homeScore": 6, "awayScore": 4, "matchId": "152395", "leagueId": "4786", "status": "FINAL"
+    }
+  ]
 }
