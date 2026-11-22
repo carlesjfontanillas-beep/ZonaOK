@@ -10,7 +10,6 @@ on:
       - '.github/workflows/zonaok-tots-clubs.yml'
   workflow_dispatch:
   schedule:
-    # Renova cada dia la finestra mòbil de 7 dies (04:17 UTC)
     - cron: '17 4 * * *'
 
 permissions:
@@ -23,27 +22,41 @@ concurrency:
 jobs:
   consolidar:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - name: Descarregar el repositori
+      - name: Recuperar el repositori
         uses: actions/checkout@v4
         with:
+          ref: main
+          fetch-depth: 0
           persist-credentials: true
       - name: Instal·lar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Proves de no regressió
-        run: python -m unittest discover -s tests -p 'test_merge_tots.py' -v
-      - name: Aplicar les noves captures
-        run: python scripts/zonaok_merge_tots.py
-      - name: Publicar només els dos JSON nous
+      - name: Provar, fusionar i publicar sense perdre altres commits
+        shell: bash
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
-          if git diff --cached --quiet; then
-            echo "Cap canvi per publicar"
-          else
-            git commit -m "ZonaOK Tots: actualitzar agenda i resultats"
-            git push origin HEAD:main
-          fi
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 -m unittest discover -s tests -p 'test_merge_tots.py' -v
+            python3 scripts/zonaok_merge_tots.py
+            git add -- zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
+            if git diff --cached --quiet; then
+              echo 'Agenda i resultats ja actualitzats: cap canvi.'
+              exit 0
+            fi
+            git commit -m 'ZonaOK Tots: actualitzar agenda i resultats'
+            if git push origin HEAD:main; then
+              echo 'Publicats els dos JSON de tots els clubs.'
+              exit 0
+            fi
+            echo "Main ha canviat. Repeteixo la fusió ($attempt/5)."
+            sleep 2
+          done
+          echo 'Error: conflictes repetits a main' >&2
+          exit 1
