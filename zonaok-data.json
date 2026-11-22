@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "publishedAt": "2026-11-22T09:56:50Z",
+  "publishedAt": "2026-11-22T18:53:35Z",
   "data": {
     "agenda": {
       "capturedAt": "2026-11-21T09:51:21.447Z",
@@ -2015,12 +2015,14 @@
           "competition": "FEM 15 OR",
           "home": "INNOAESTHETICS HC SANT JUST",
           "away": "SANT CELONI",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 2,
+          "awayScore": 1,
           "venue": "PAVELLO SANT JUST",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "",
-          "awayClub": "celoni"
+          "awayClub": "celoni",
+          "scoreCapturedAt": "2026-11-22T11:52:27+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-21",
@@ -2086,12 +2088,14 @@
           "competition": "INFANTIL OR 10",
           "home": "CP SANT CELONI B",
           "away": "MOLLET HC A",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 12,
+          "awayScore": 0,
           "venue": "MUNICIPAL D ESPORTS SANT CELONI",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "celoni",
-          "awayClub": ""
+          "awayClub": "",
+          "scoreCapturedAt": "2026-11-22T11:52:27+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-21",
@@ -2114,12 +2118,14 @@
           "competition": "INFANTIL OR 5",
           "home": "FARNERS A",
           "away": "CP SANT CELONI A",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 3,
+          "awayScore": 1,
           "venue": "POLIESPORTIU MUNICIPAL LA NORIA",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "",
-          "awayClub": "celoni"
+          "awayClub": "celoni",
+          "scoreCapturedAt": "2026-11-22T11:52:27+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-21",
@@ -2142,12 +2148,14 @@
           "competition": "NACIONAL CATALANA MASCULINA",
           "home": "CLUB HOQUEI CADÍ",
           "away": "BARÇA",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 5,
+          "awayScore": 4,
           "venue": "PISTA 1 LA SEU D URGELL",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "",
-          "awayClub": "barca"
+          "awayClub": "barca",
+          "scoreCapturedAt": "2026-11-22T11:52:27+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-22",
@@ -2155,12 +2163,14 @@
           "competition": "FEM 13 OR",
           "home": "SANT CELONI",
           "away": "GENERALI HC PALAU A",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 7,
+          "awayScore": 0,
           "venue": "MUNICIPAL D ESPORTS SANT CELONI",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "celoni",
-          "awayClub": ""
+          "awayClub": "",
+          "scoreCapturedAt": "2026-11-22T11:52:27+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-22",
@@ -2168,12 +2178,14 @@
           "competition": "INFANTIL OR 1",
           "home": "BARÇA",
           "away": "IGUALADA HC B",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 6,
+          "awayScore": 1,
           "venue": "CAMPUS DE MUNDET UB",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "barca",
-          "awayClub": ""
+          "awayClub": "",
+          "scoreCapturedAt": "2026-11-22T11:52:27+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-22",
@@ -2181,12 +2193,14 @@
           "competition": "JÚNIOR OR 1",
           "home": "CP SANT CELONI A",
           "away": "CHP SANT FELIU",
-          "homeScore": null,
-          "awayScore": null,
+          "homeScore": 5,
+          "awayScore": 0,
           "venue": "MUNICIPAL D ESPORTS SANT CELONI",
           "capturedAt": "2026-11-21T09:51:21.447Z",
           "homeClub": "celoni",
-          "awayClub": ""
+          "awayClub": "",
+          "scoreCapturedAt": "2026-11-22T11:52:27+00:00",
+          "scoreSource": "FECAPA En directe V29.5"
         },
         {
           "iso": "2026-11-22",
@@ -4798,17 +4812,17 @@
         "partits": 367,
         "importats": 367
       },
-      "scoresAt": "2026-11-21T20:05:57+00:00",
+      "scoresAt": "2026-11-22T11:52:27+00:00",
       "directeImport": {
-        "capturedAt": "2026-11-22T09:56:43Z",
+        "capturedAt": "2026-11-22T11:52:27Z",
         "source": "FECAPA principal · En directe",
-        "received": 13,
-        "matched": 7,
-        "matchedWithoutCategory": 1,
-        "changed": 0,
-        "unchanged": 7,
+        "received": 16,
+        "matched": 16,
+        "matchedWithoutCategory": 0,
+        "changed": 7,
+        "unchanged": 9,
         "outdated": 0,
-        "unmatched": 6,
+        "unmatched": 0,
         "totalAgenda": 367
       }
     },
