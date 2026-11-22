@@ -114,7 +114,7 @@
     const lower = madridTimeKey(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
     return prepared.filter(r => {
       const dt = rowDateKey(r);
-      return dt >= lower && dt <= upper && validResult(r) &&
+      return dt >= lower && dt <= upper &&
         !/EN JOC|EN DIRECTE|PLAYING|LIVE|IN PROGRESS/i.test(String(r.status || ''));
     }).sort((a, b) => rowDateKey(b).localeCompare(rowDateKey(a)) ||
       norm(a.competition).localeCompare(norm(b.competition), 'ca'));
@@ -124,7 +124,7 @@
     const upper = madridTimeKey(new Date());
     const lower = madridTimeKey(new Date(Date.now() - 7 * 86400000));
     return rows.filter(r => r && /^20\d\d-\d\d-\d\d$/.test(String(r.iso)) &&
-      /^\d{2}:\d{2}$/.test(String(r.time)) && r.home && r.away && validResult(r) &&
+      /^\d{2}:\d{2}$/.test(String(r.time)) && r.home && r.away &&
       rowDateKey(r) >= lower && rowDateKey(r) <= upper &&
       !/EN JOC|EN DIRECTE|LIVE|IN PROGRESS|PLAYING|DESCANS|PRIMERA PART|SEGONA PART/i.test(String(r.status || '')))
       .sort((a,b) => rowDateKey(b).localeCompare(rowDateKey(a)) ||
@@ -254,7 +254,8 @@
     // Segona línia: escuts (inclosos els clubs nous), equips i marcador.
     const teams = make('div', 'teams');
     const center = make('div', 'middle');
-    center.append(make('strong', 'score', `${Number(row.homeScore)} : ${Number(row.awayScore)}`));
+    const score = validResult(row) ? `${Number(row.homeScore)} : ${Number(row.awayScore)}` : '– : –';
+    center.append(make('strong', 'score', score));
     teams.append(buildTeam(row.home, row.homeLogo), center, buildTeam(row.away, row.awayLogo));
     card.append(top, teams);
     return card;
@@ -294,8 +295,8 @@
     content.replaceChildren();
     if (!selected.length) {
       content.append(make('div', 'empty', matches.length ?
-        'No hi ha resultats d’aquest club i categoria en els darrers 7 dies.' :
-        'No hi ha partits amb marcadors importats en els darrers 7 dies. Això no confirma que no s’hagin disputat partits.'));
+        'No hi ha partits d’aquest club i categoria en els darrers 7 dies.' :
+        'No hi ha partits a l’Agenda dels darrers 7 dies.'));
     } else for (const row of selected) content.append(buildCard(row));
     if (publishedAt) {
       try {
@@ -421,7 +422,7 @@
     panel.hidden = true;
     const header = make('div', 'section-head');
     const left = make('div');
-    left.append(make('span', 'overline', 'AGENDA · MARCADORS'), make('h2', '', 'Últims resultats'));
+    left.append(make('span', 'overline', 'AGENDA · MARCADORS'), make('h2', '', 'Partits recents'));
     counter = make('span', 'section-tag', '0 partits');
     header.append(left, counter);
     const filterRow = make('div', 'zok-recent-filters');
@@ -440,7 +441,7 @@
     content = make('div', 'cards');
     status = make('p', 'zok-recent-stamp', 'Font: Agenda i En directe');
     panel.append(header, filterRow,
-      make('p', 'zok-recent-period', 'Darrers 7 dies · Partits amb marcador · Més recents primer'),
+      make('p', 'zok-recent-period', 'Darrers 7 dies · Tots els partits · Més recents primer'),
       content, status);
     const footer = main.querySelector('.footer');
     main.insertBefore(panel, footer || null);
