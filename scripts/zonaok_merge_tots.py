@@ -335,7 +335,8 @@ def seven_days(agenda, season, now):
         event = datetime.fromisoformat(row['iso'] + 'T' + row['time']).replace(tzinfo=TZ)
         if not (from_time <= event <= now):
             continue
-        if row['homeScore'] is None or row['awayScore'] is None or is_live(row.get('status')):
+        # Incloem també els partits pendents; En directe continua sent una vista separada.
+        if is_live(row.get('status')):
             continue
         window.append(row)
     window.sort(key=lambda r: (r['iso'], r['time']), reverse=True)
