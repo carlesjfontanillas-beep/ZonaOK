@@ -114,6 +114,59 @@ def team_key(r):
     return r['iso'], r['time'], alias(r['home']), alias(r['away'])
 
 
+class AgendaIndex:
+    """Indexa partits un sol cop: cerca per ID, clau exacta o equips+hora.
+
+    Reprodueix la prioritat i els vetos originals de search_target, però
+    evita fer 12.000 * 12.000 recorreguts durant la importació completa.
+    """
+    def __init__(self, agenda):
+        self.agenda = agenda
+        self.ids = defaultdict(set)
+        self.strict = defaultdict(set)
+        self.teams = defaultdict(set)
+        for i, row in enumerate(agenda):
+            self.add(i, row)
+
+    def add(self, i, row):
+        if row['matchId']:
+            self.ids[row['matchId']].add(i)
+        self.strict[strict_key(row)].add(i)
+        self.teams[team_key(row)].add(i)
+
+    def remove(self, i, row):
+        if row['matchId']:
+            self.ids[row['matchId']].discard(i)
+        self.strict[strict_key(row)].discard(i)
+        self.teams[team_key(row)].discard(i)
+
+    def find(self, source_row, *, allow_alias):
+        ident = source_row['matchId']
+        if ident:
+            by_id = self.ids.get(ident, ())
+            if len(by_id) == 1:
+                return next(iter(by_id))
+            if len(by_id) > 1:
+                return None
+
+        def id_ok(i):
+            other = self.agenda[i]['matchId']
+            return not (ident and other and ident != other)
+
+        strict = [i for i in self.strict.get(strict_key(source_row), ()) if id_ok(i)]
+        if len(strict) == 1:
+            return strict[0]
+        if strict or not allow_alias:
+            return None
+
+        comp = norm(source_row['competition'])
+        candidates = [i for i in self.teams.get(team_key(source_row), ())
+                      if id_ok(i) and
+                      (not comp or not norm(self.agenda[i]['competition']) or
+                       norm(self.agenda[i]['competition']) == comp)]
+        return candidates[0] if len(candidates) == 1 else None
+
+
 def load(path):
     return json.loads(path.read_text(encoding='utf-8')) if path.is_file() else None
 
@@ -186,8 +239,9 @@ def merge_agenda(existing, incoming):
         return existing, {'added': 0, 'updated': 0}
     rows, captured = incoming
     added = updated = 0
+    index = AgendaIndex(existing)
     for r in rows:
-        found = search_target(existing, r, allow_alias=False)
+        found = index.find(r, allow_alias=False)
         if found is None:
             item = dict(r)
             item['agendaUpdatedAt'] = captured
@@ -195,6 +249,7 @@ def merge_agenda(existing, incoming):
                 item['scoreUpdatedAt'] = captured
                 item['scoreSource'] = 'Agenda'
             existing.append(item)
+            index.add(len(existing)-1, item)
             added += 1
             continue
         previous = existing[found]
@@ -213,7 +268,9 @@ def merge_agenda(existing, incoming):
             item['scoreUpdatedAt'] = captured
             item['scoreSource'] = 'Agenda'
         item['agendaUpdatedAt'] = captured
+        index.remove(found, previous)
         existing[found] = item
+        index.add(found, item)
         updated += 1
     return existing, {'added': added, 'updated': updated}
 
@@ -226,9 +283,10 @@ def merge_directe(agenda, incoming):
     rows, captured = incoming
     # Unicitat també a la captura: dues files amb mateix ID/parella no són segures.
     matched = defaultdict(list)
+    index = AgendaIndex(agenda)
     for r in rows:
         stats['read'] += 1
-        i = search_target(agenda, r, allow_alias=True)
+        i = index.find(r, allow_alias=True)
         if i is None:
             stats['unmatchedOrAmbiguous'] += 1
         else:
