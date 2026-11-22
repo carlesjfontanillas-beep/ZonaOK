@@ -17,7 +17,7 @@ concurrency:
 jobs:
   actualitzar:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 5
     steps:
       - name: Recuperar el repositori
         uses: actions/checkout@v4
@@ -25,7 +25,7 @@ jobs:
           ref: main
           fetch-depth: 0
           persist-credentials: true
-      - name: Aplicar nomes marcadors sobre la darrera Agenda de main
+      - name: Comprovar correspondencies i publicar nomes marcadors
         shell: bash
         run: |
           set -euo pipefail
@@ -35,19 +35,21 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             python3 -m unittest discover -s tests -p 'test_v29_aliases.py' -v
+            # IMPORTANT: cal executar el conciliador amb les regles BAR/CPSC
+            # (no l'script V29.5 original amb rival obligatori).
             python3 scripts/zonaok_import_directe_v29_compat.py
             git add -- zonaok-data.json
             if git diff --cached --quiet; then
-              echo 'Sense canvis de marcadors. Agenda i altres dades intactes.'
+              echo 'Sense marcadors nous. Agenda i altres dades intactes.'
               exit 0
             fi
-            git commit -m 'ZonaOK V29.8: club data i hora sense comprovar rival'
+            git commit -m 'ZonaOK V29.9: associar resultats per club, data i hora'
             if git push origin HEAD:main; then
-              echo 'MARCADORS PUBLICATS. Agenda, classificacions i actes conservats.'
+              echo 'Marcadors publicats: Agenda, actes i classificacions intactes.'
               exit 0
             fi
-            echo "Main ha canviat; torno a llegir i fusionar ($attempt/5)."
+            echo "main ha canviat; reintento $attempt/5"
             sleep 2
           done
-          echo 'No es poden publicar els marcadors per conflictes repetits.' >&2
+          echo 'ERROR: no es poden publicar els marcadors.' >&2
           exit 1
