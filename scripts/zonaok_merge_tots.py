@@ -181,7 +181,9 @@ def capture(kind, current_season):
     raw = packet.get('rows')
     if not isinstance(raw, list) or len(raw) > MAX_ROWS:
         raise ValueError(f'Captura {kind}: nombre de files incorrecte')
-    if not raw:  # marcadors buits que venen dins del ZIP: no alteren res
+    if not raw:
+        if kind == 'directe':
+            raise ValueError("Captura En directe buida: s’ha pujat la plantilla, no el JSON generat per la drecera Safari.")
         return None
     if packet.get('season') != current_season:
         raise ValueError(f'Captura {kind}: temporada {packet.get("season")} ≠ {current_season}')
