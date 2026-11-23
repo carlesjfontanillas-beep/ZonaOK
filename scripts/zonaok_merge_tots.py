@@ -10,7 +10,7 @@ Entrades (captures manuals de Safari pujades a GitHub):
 Publicacions:
   zonaok-tots-agenda.json
   zonaok-tots-resultats-7dies.json
-No modifica el JSON antic de Barça/Sant Celoni, les actes ni altres menús.
+També manté zonaok-data.json al dia amb els partits de Barça i Sant Celoni.
 """
 from __future__ import annotations
 
@@ -174,6 +174,21 @@ def load(path):
 def capture(kind, current_season):
     path = ROOT / 'imports' / f'tots-{kind}-import.json'
     packet = load(path)
+    # The Safari shortcut stores each En directe capture under its own dated
+    # path so GitHub's Contents API can create it without a stale SHA. Consume
+    # the newest valid capture alongside the fixed import path used by other
+    # import flows.
+    if kind == 'directe':
+        dated = []
+        for candidate in (ROOT / 'imports' / 'directe' / 'v29').glob('*.json'):
+            value = load(candidate)
+            if (isinstance(value, dict) and value.get('schema') == SCHEMA and
+                    value.get('kind') == kind):
+                dated.append((stamp(value.get('capturedAt')), candidate, value))
+        if dated:
+            newest = max(dated, key=lambda item: item[0])
+            if packet is None or newest[0] > stamp(packet.get('capturedAt')):
+                path, packet = newest[1], newest[2]
     if packet is None:
         return None
     if not isinstance(packet, dict) or packet.get('schema') != SCHEMA or packet.get('kind') != kind:
@@ -183,8 +198,8 @@ def capture(kind, current_season):
         raise ValueError(f'Captura {kind}: nombre de files incorrecte')
     if not raw:
         if kind == 'directe':
-            raise ValueError("Captura En directe buida: s’ha pujat la plantilla, no el JSON generat per la drecera Safari.")
-        return None
+            raise ValueError('Captura En directe buida: s’ha pujat la plantilla, no el JSON generat per la drecera Safari. No s’han actualitzat marcadors.')
+        return None  # Una plantilla d’Agenda buida no altera el catàleg.
     if packet.get('season') != current_season:
         raise ValueError(f'Captura {kind}: temporada {packet.get("season")} ≠ {current_season}')
     moment = str(packet.get('capturedAt') or '')
@@ -354,6 +369,94 @@ def seven_days(agenda, season, now):
     return len(window)
 
 
+def club_match(row):
+    """Els JSON de l'app només contenen els partits dels dos clubs seguits."""
+    home, away = alias(row.get('home')), alias(row.get('away'))
+    return home.startswith(('BARCA', 'SANT CELONI')) or away.startswith(('BARCA', 'SANT CELONI'))
+
+
+def mirror_club_agenda(agenda, captured_at, now):
+    """Copia l'estat TOTAL als partits de Barça/Celoni de zonaok-data.json."""
+    path = ROOT / 'zonaok-data.json'
+    doc = load(path)
+    if not isinstance(doc, dict) or doc.get('version') != 3 or not isinstance(doc.get('data'), dict):
+        raise ValueError('zonaok-data.json invàlid; no s’han escrit fitxers')
+    section = doc['data'].get('agenda')
+    if not isinstance(section, dict) or not isinstance(section.get('rows'), list):
+        raise ValueError('Agenda de zonaok-data.json invàlida; no s’han escrit fitxers')
+    rows = section['rows']
+    if any(not isinstance(r, dict) for r in rows):
+        raise ValueError('Fila invàlida a zonaok-data.json; no s’han escrit fitxers')
+
+    def legacy_ids(row):
+        return str(row.get('id') or row.get('matchId') or '')
+
+    added = updated = 0
+    for source in agenda:
+        if not club_match(source):
+            continue
+        mid = source.get('matchId', '')
+        matches = [i for i, row in enumerate(rows)
+                   if mid and legacy_ids(row) == mid and
+                   (not source.get('leagueId') or not row.get('league') or
+                    str(row.get('league')) == source['leagueId'])]
+        if len(matches) > 1:
+            continue
+        if not matches:
+            key = strict_key(source)
+            matches = [i for i, row in enumerate(rows)
+                       if (str(row.get('iso') or ''), str(row.get('time') or ''),
+                           norm(row.get('competition')), norm(row.get('home')),
+                           norm(row.get('away'))) == key and
+                       (not mid or not legacy_ids(row) or legacy_ids(row) == mid) and
+                       (not source.get('leagueId') or not row.get('league') or
+                        str(row.get('league')) == source['leagueId'])]
+        if len(matches) > 1:
+            continue
+
+        item = dict(rows[matches[0]]) if matches else {}
+        # El format de l'app utilitza id/league; conservem alhora els camps
+        # TOTAL perquè els altres lectors no perdin informació.
+        for field in FIELDS:
+            value = source.get(field)
+            if field in ('homeScore', 'awayScore'):
+                if source.get('homeScore') is None or source.get('awayScore') is None:
+                    continue
+            elif not value:
+                continue
+            item[field] = value
+        if source.get('matchId'):
+            item['id'] = source['matchId']
+        if source.get('leagueId'):
+            item['league'] = source['leagueId']
+        item['homeClub'] = 'barca' if alias(source['home']).startswith('BARCA') else (
+            'celoni' if alias(source['home']).startswith('SANT CELONI') else '')
+        item['awayClub'] = 'barca' if alias(source['away']).startswith('BARCA') else (
+            'celoni' if alias(source['away']).startswith('SANT CELONI') else '')
+        if captured_at:
+            item['capturedAt'] = captured_at
+        if matches:
+            if item != rows[matches[0]]:
+                rows[matches[0]] = item
+                updated += 1
+        else:
+            rows.append(item)
+            added += 1
+    if added or updated:
+        section['rows'] = sorted(rows, key=lambda r: (str(r.get('iso') or ''),
+                             str(r.get('time') or ''), norm(r.get('competition')),
+                             norm(r.get('home')), norm(r.get('away'))))
+        section['counts'] = {
+            **(section.get('counts') if isinstance(section.get('counts'), dict) else {}),
+            'barca': sum(r.get('homeClub') == 'barca' or r.get('awayClub') == 'barca' for r in rows),
+            'celoni': sum(r.get('homeClub') == 'celoni' or r.get('awayClub') == 'celoni' for r in rows),
+            'partits': len(rows),
+        }
+        doc['publishedAt'] = now.astimezone(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z')
+        write(path, doc)
+    return added, updated
+
+
 def write(path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
@@ -372,11 +475,14 @@ def main():
     stats_d = merge_directe(agenda, imported_directe)
     agenda = public_agenda(agenda, season, now, original)
     count = seven_days(agenda, season, now)
+    mirror_added, mirror_updated = mirror_club_agenda(
+        agenda, max((c[1] for c in (imported_agenda, imported_directe) if c), default=''), now)
     print(f'AGENDA: {len(agenda)} partits · nous {stats_a["added"]} · revisats {stats_a["updated"]}')
     print(f'EN DIRECTE: examinats {stats_d["read"]} · coincidències {stats_d["matched"]} '
           f'· sense coincidència/ambigus {stats_d["unmatchedOrAmbiguous"]} '
           f'· marcadors actualitzats {stats_d["updatedScores"]}')
     print(f'RESULTATS: {count} partits dins dels darrers 7 dies')
+    print(f'AGENDA APP: nous {mirror_added} · actualitzats {mirror_updated}')
     return stats_a, stats_d
 
 

@@ -292,6 +292,12 @@ def generate(root=ROOT, *, now=None):
     legacy = load_json(legacy_path)
     if not isinstance(legacy, dict) or legacy.get('version') != 3 or not isinstance(legacy.get('data', {}).get('agenda', {}).get('rows'), list):
         raise ValueError('Falta zonaok-data.json V3 valid; no es toca cap fitxer')
+    classic_actes_path = root / 'zonaok-actes.json'
+    classic_actes = load_json(classic_actes_path)
+    if not isinstance(classic_actes, dict) or not isinstance(classic_actes.get('fixtures'), list):
+        raise ValueError('Falta zonaok-actes.json amb fixtures vàlides; no es toca cap fitxer')
+    if any(not isinstance(r, dict) for r in classic_actes['fixtures']):
+        raise ValueError('zonaok-actes.json conté una fitxa invàlida; no es toca cap fitxer')
     recent_path = root / 'zonaok-tots-resultats-7dies.json'
     recent = load_json(recent_path)
     if recent is not None and (not isinstance(recent, dict) or recent.get('kind') != 'resultats-7dies' or not isinstance(recent.get('rows'), list)):
@@ -315,6 +321,46 @@ def generate(root=ROOT, *, now=None):
     changed_recent, missed_recent = (0, 0)
     if recent is not None:
         changed_recent, missed_recent = apply_overlay_to_rows(recent['rows'], overlay)
+
+    # L'Actes TOTAL també alimenta la llista d'actes del menú clàssic.
+    agenda_by_key = {match_key(r): r for r in agenda if current_keys[match_key(r)] == 1}
+    fixtures = [dict(r) for r in classic_actes['fixtures']]
+    fixture_index = {(str(r.get('league') or ''), str(r.get('id') or '')): i
+                     for i, r in enumerate(fixtures)}
+    changed_classic = False
+    for acta in overlay:
+        row = agenda_by_key.get(acta['key'])
+        if row is None:
+            continue
+        if not any(alias(row.get(side)).startswith(('BARCA', 'SANT CELONI'))
+                   for side in ('home', 'away')):
+            continue
+        k = (acta['leagueId'], acta['matchId'])
+        item = {'league': acta['leagueId'], 'id': acta['matchId'],
+                'iso': row['iso'], 'time': row['time'], 'home': row['home'],
+                'away': row['away'], 'competition': row.get('competition', ''),
+                'actaUrl': acta['actaUrl']}
+        if k in fixture_index:
+            i = fixture_index[k]
+            old = fixtures[i]
+            if old.get('iso') and old['iso'] != item['iso']:
+                raise ValueError(f"Conflicte de data a Actes {acta['matchId']}; no es toca cap fitxer")
+            if any(old.get(side) and norm(old[side]) != norm(item[side]) for side in ('home', 'away')):
+                raise ValueError(f"Conflicte d'equips a Actes {acta['matchId']}; no es toca cap fitxer")
+            merged = {**old, **item}
+            if merged != old:
+                fixtures[i] = merged
+                changed_classic = True
+        else:
+            fixture_index[k] = len(fixtures)
+            fixtures.append(item)
+            changed_classic = True
+    if changed_classic:
+        classic_actes['fixtures'] = sorted(fixtures, key=lambda r: (
+            str(r.get('iso') or ''), str(r.get('time') or ''),
+            str(r.get('league') or ''), str(r.get('id') or '')))
+        classic_actes['version'] = 1
+        classic_actes['generatedAt'] = (now or datetime.now(timezone.utc)).isoformat(timespec='seconds')
     packet = {'schema': 'zonaok-actes-total-v1', 'kind': 'actes-total',
               'season': data.get('season', ''), 'source': 'FECAPA-SAFARI',
               'publishedAt': (now or datetime.now(timezone.utc)).isoformat(timespec='seconds'),
@@ -332,6 +378,8 @@ def generate(root=ROOT, *, now=None):
         writes.append((legacy_path, legacy))
     if changed_recent:
         writes.append((recent_path, recent))
+    if changed_classic:
+        writes.append((classic_actes_path, classic_actes))
     if previous is None or previous.get('rows') != packet['rows'] or previous.get('agendaCount') != packet['agendaCount']:
         writes.append((root / 'zonaok-tots-actes.json', packet))
     # Validacio completa abans de crear cap fitxer, preservant la resta del JSON.
@@ -342,6 +390,7 @@ def generate(root=ROOT, *, now=None):
         temp.replace(path)
     print('ACTES TOTAL:', len(overlay), 'fitxes | TOTAL', changed_total,
           '| Agenda', changed_legacy, '| Resultats', changed_recent,
+          '| Actes clàssiques', int(changed_classic),
           '| fonts', len(sources), '| detall', packet['stats'])
     return packet
 
