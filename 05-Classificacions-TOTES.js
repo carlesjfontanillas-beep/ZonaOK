@@ -73,7 +73,9 @@
     const bytes=new TextEncoder().encode(JSON.stringify(packet));let packed=bytes;
     if(typeof CompressionStream==='function')packed=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());
     let binary='';for(let i=0;i<packed.length;i+=8192)binary+=String.fromCharCode(...packed.subarray(i,i+8192));
-    const encoded=btoa(binary);if(encoded.length>62000)throw Error('El fitxer de totes les classificacions supera el límit; he recollit '+count+' grups, però no s’ha enviat.');
+    // URL-safe Base64 evita que els formularis/Shortcuts converteixin '+' en espai.
+    const encoded=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    if(encoded.length>62000)throw Error('El fitxer de totes les classificacions supera el límit; he recollit '+count+' grups, però no s’ha enviat.');
     completion(encoded);
   }catch(error){completion('ERROR: '+String(error?.message||error))}
 })();
