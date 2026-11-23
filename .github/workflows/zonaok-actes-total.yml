@@ -39,7 +39,7 @@ jobs:
             git reset --hard origin/main
             python3 -m unittest discover -s tests -p 'test_actes_tots.py' -v
             python3 scripts/zonaok_merge_actes_tots.py
-            git add -- zonaok-tots-agenda.json zonaok-data.json zonaok-tots-resultats-7dies.json zonaok-tots-actes.json
+            git add -- zonaok-tots-agenda.json zonaok-data.json zonaok-tots-resultats-7dies.json zonaok-tots-actes.json zonaok-actes.json
             if git diff --cached --quiet; then
               echo 'Actes TOTAL: no hi ha nous enllaços. Dades intactes.'
               exit 0

@@ -6,6 +6,7 @@ on:
     paths:
       - 'imports/tots-agenda-import.json'
       - 'imports/tots-directe-import.json'
+      - 'imports/directe/v29/*.json'
       - 'scripts/zonaok_merge_tots.py'
       - '.github/workflows/zonaok-tots-clubs.yml'
   workflow_dispatch:
@@ -45,14 +46,14 @@ jobs:
             git reset --hard origin/main
             python3 -m unittest discover -s tests -p 'test_merge_tots.py' -v
             python3 scripts/zonaok_merge_tots.py
-            git add -- zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
+            git add -- zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-data.json
             if git diff --cached --quiet; then
               echo 'Agenda i resultats ja actualitzats: cap canvi.'
               exit 0
             fi
             git commit -m 'ZonaOK Tots: actualitzar agenda i resultats'
             if git push origin HEAD:main; then
-              echo 'Publicats els dos JSON de tots els clubs.'
+              echo 'Publicats els JSON TOTAL i els partits de Barça/Sant Celoni.'
               exit 0
             fi
             echo "Main ha canviat. Repeteixo la fusió ($attempt/5)."
