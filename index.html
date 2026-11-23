@@ -218,6 +218,55 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
   #results-list table.standings td.zok-standing-team-name {min-width:165px; max-width:205px; font-size:12px;}
 }
 </style>
+<style id="zonaok-compact-club-menus">
+/* Capçalera més compacta als menús CP Sant Celoni, Barça i classificacions. */
+body.zok-ui-detail[data-zok-ui-tab="celoni"] .mast,
+body.zok-ui-detail[data-zok-ui-tab="barca"] .mast,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] .mast {
+  padding: 0 5px 4px;
+}
+body.zok-ui-detail[data-zok-ui-tab="celoni"] .brand,
+body.zok-ui-detail[data-zok-ui-tab="barca"] .brand,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] .brand {
+  font-size: 24px;
+}
+body.zok-ui-detail[data-zok-ui-tab="celoni"] .strap,
+body.zok-ui-detail[data-zok-ui-tab="barca"] .strap,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] .strap,
+body.zok-ui-detail[data-zok-ui-tab="celoni"] .emblem,
+body.zok-ui-detail[data-zok-ui-tab="barca"] .emblem,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] .emblem {
+  display: none;
+}
+body.zok-ui-detail[data-zok-ui-tab="celoni"] #results-section,
+body.zok-ui-detail[data-zok-ui-tab="barca"] #results-section,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-section {
+  margin-top: 4px;
+}
+body.zok-ui-detail[data-zok-ui-tab="celoni"] #results-section .section-head,
+body.zok-ui-detail[data-zok-ui-tab="barca"] #results-section .section-head,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-section .section-head {
+  margin-bottom: 5px;
+}
+body.zok-ui-detail[data-zok-ui-tab="celoni"] #results-section .section-head h2,
+body.zok-ui-detail[data-zok-ui-tab="barca"] #results-section .section-head h2,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-section .section-head h2 {
+  margin-top: 2px;
+}
+body.zok-ui-detail[data-zok-ui-tab="celoni"] #open-fecapa,
+body.zok-ui-detail[data-zok-ui-tab="celoni"] #ask-section,
+body.zok-ui-detail[data-zok-ui-tab="barca"] #open-fecapa,
+body.zok-ui-detail[data-zok-ui-tab="barca"] #ask-section,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] #open-fecapa,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] #ask-section {
+  display: none !important;
+}
+body.zok-ui-detail[data-zok-ui-tab="celoni"] #results-actions,
+body.zok-ui-detail[data-zok-ui-tab="barca"] #results-actions,
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
+  margin: 0;
+}
+</style>
 </head>
 <body>
 <main class="app">
