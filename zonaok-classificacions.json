@@ -1,14 +1,14 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-23T16:39:47.597006+00:00",
+  "capturedAt": "2026-11-23T18:15:56.198806+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
       "category": "NACIONAL CATALANA MASCULINA",
       "competition": "NACIONAL CATALANA MASCULINA",
       "leagueId": "4774",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4774&vista=clasificaciones",
       "standings": [
         {
@@ -322,8 +322,8 @@
       "category": "NACIONAL CATALANA FEMENINA",
       "competition": "NACIONAL CATALANA FEMENINA",
       "leagueId": "4775",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4775&vista=clasificaciones",
       "standings": [
         {
@@ -637,8 +637,8 @@
       "category": "1ª CATALANA",
       "competition": "1ª CATALANA",
       "leagueId": "4776",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=clasificaciones",
       "standings": [
         {
@@ -990,8 +990,8 @@
       "category": "1ª CATALANA",
       "competition": "1ª CATALANA",
       "leagueId": "4776",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=clasificaciones",
       "standings": [
         {
@@ -1338,13 +1338,3821 @@
         }
       ]
     },
+    "4778:1-catalana-femenina-grup-a": {
+      "name": "1ª CATALANA FEMENINA GRUP A",
+      "category": "1ª CATALANA FEMENINA",
+      "competition": "1ª CATALANA FEMENINA",
+      "leagueId": "4778",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CLUB HOQUEI ARENYS DE MAR",
+          "played": "8",
+          "points": "19",
+          "gf": "34",
+          "ga": "19",
+          "difference": "15",
+          "stats": {
+            "PTS": "19",
+            "PJ": "8",
+            "PG": "6",
+            "PE": "1",
+            "PP": "1",
+            "GF": "34",
+            "GC": "19",
+            "DIF": "15"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CLUB PATÍ VILA-SANA",
+          "played": "7",
+          "points": "15",
+          "gf": "30",
+          "ga": "19",
+          "difference": "11",
+          "stats": {
+            "PTS": "15",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "0",
+            "PP": "2",
+            "GF": "30",
+            "GC": "19",
+            "DIF": "11"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "PONS LLEIDA BELL-LLOC",
+          "played": "7",
+          "points": "15",
+          "gf": "17",
+          "ga": "5",
+          "difference": "12",
+          "stats": {
+            "PTS": "15",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "3",
+            "PP": "0",
+            "GF": "17",
+            "GC": "5",
+            "DIF": "12"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CE ARENYS DE MUNT MUNTBIKES",
+          "played": "8",
+          "points": "15",
+          "gf": "23",
+          "ga": "24",
+          "difference": "-1",
+          "stats": {
+            "PTS": "15",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "0",
+            "PP": "3",
+            "GF": "23",
+            "GC": "24",
+            "DIF": "-1"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "SHUM SELVAFIL",
+          "played": "7",
+          "points": "14",
+          "gf": "27",
+          "ga": "8",
+          "difference": "19",
+          "stats": {
+            "PTS": "14",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "2",
+            "PP": "1",
+            "GF": "27",
+            "GC": "8",
+            "DIF": "19"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "MOLLET HC",
+          "played": "6",
+          "points": "13",
+          "gf": "14",
+          "ga": "10",
+          "difference": "4",
+          "stats": {
+            "PTS": "13",
+            "PJ": "6",
+            "PG": "4",
+            "PE": "1",
+            "PP": "1",
+            "GF": "14",
+            "GC": "10",
+            "DIF": "4"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CGM IGUALADA FEMENÍ HCP",
+          "played": "7",
+          "points": "12",
+          "gf": "25",
+          "ga": "18",
+          "difference": "7",
+          "stats": {
+            "PTS": "12",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "0",
+            "PP": "3",
+            "GF": "25",
+            "GC": "18",
+            "DIF": "7"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "VICIO PHC SANT CUGAT",
+          "played": "8",
+          "points": "9",
+          "gf": "17",
+          "ga": "25",
+          "difference": "-8",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "17",
+            "GC": "25",
+            "DIF": "-8"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "FENIE ENERGIA CERDANYOLA CCH",
+          "played": "7",
+          "points": "8",
+          "gf": "19",
+          "ga": "17",
+          "difference": "2",
+          "stats": {
+            "PTS": "8",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "2",
+            "PP": "3",
+            "GF": "19",
+            "GC": "17",
+            "DIF": "2"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "REUS DEPORTIU",
+          "played": "7",
+          "points": "7",
+          "gf": "15",
+          "ga": "23",
+          "difference": "-8",
+          "stats": {
+            "PTS": "7",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "1",
+            "PP": "4",
+            "GF": "15",
+            "GC": "23",
+            "DIF": "-8"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "FUTBOL CLUB MARTINENC",
+          "played": "7",
+          "points": "3",
+          "gf": "8",
+          "ga": "33",
+          "difference": "-25",
+          "stats": {
+            "PTS": "3",
+            "PJ": "7",
+            "PG": "1",
+            "PE": "0",
+            "PP": "6",
+            "GF": "8",
+            "GC": "33",
+            "DIF": "-25"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CP BLANES",
+          "played": "7",
+          "points": "3",
+          "gf": "15",
+          "ga": "30",
+          "difference": "-15",
+          "stats": {
+            "PTS": "3",
+            "PJ": "7",
+            "PG": "1",
+            "PE": "0",
+            "PP": "6",
+            "GF": "15",
+            "GC": "30",
+            "DIF": "-15"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "FARNERS",
+          "played": "8",
+          "points": "3",
+          "gf": "15",
+          "ga": "28",
+          "difference": "-13",
+          "stats": {
+            "PTS": "3",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "0",
+            "PP": "7",
+            "GF": "15",
+            "GC": "28",
+            "DIF": "-13"
+          }
+        }
+      ]
+    },
+    "4778:1-catalana-femenina-grup-b": {
+      "name": "1ª CATALANA FEMENINA GRUP B",
+      "category": "1ª CATALANA FEMENINA",
+      "competition": "1ª CATALANA FEMENINA",
+      "leagueId": "4778",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CP SANT CELONI",
+          "played": "7",
+          "points": "16",
+          "gf": "23",
+          "ga": "15",
+          "difference": "8",
+          "stats": {
+            "PTS": "16",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "1",
+            "PP": "1",
+            "GF": "23",
+            "GC": "15",
+            "DIF": "8"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "HOQUEI CLUB ALPICAT",
+          "played": "7",
+          "points": "15",
+          "gf": "27",
+          "ga": "11",
+          "difference": "16",
+          "stats": {
+            "PTS": "15",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "0",
+            "PP": "2",
+            "GF": "27",
+            "GC": "11",
+            "DIF": "16"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CLUB PATÍ VOLTREGÀ",
+          "played": "8",
+          "points": "14",
+          "gf": "34",
+          "ga": "20",
+          "difference": "14",
+          "stats": {
+            "PTS": "14",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "2",
+            "PP": "2",
+            "GF": "34",
+            "GC": "20",
+            "DIF": "14"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CLUB PATI VILAFRANCA AKO",
+          "played": "8",
+          "points": "13",
+          "gf": "27",
+          "ga": "26",
+          "difference": "1",
+          "stats": {
+            "PTS": "13",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "1",
+            "PP": "3",
+            "GF": "27",
+            "GC": "26",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "CH MATARÓ",
+          "played": "7",
+          "points": "13",
+          "gf": "28",
+          "ga": "24",
+          "difference": "4",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "28",
+            "GC": "24",
+            "DIF": "4"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "INNOAESTHETICS HC SANT JUST",
+          "played": "7",
+          "points": "11",
+          "gf": "27",
+          "ga": "17",
+          "difference": "10",
+          "stats": {
+            "PTS": "11",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "2",
+            "PP": "2",
+            "GF": "27",
+            "GC": "17",
+            "DIF": "10"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "ROTOTANK BIGUES I RIELLS",
+          "played": "7",
+          "points": "11",
+          "gf": "18",
+          "ga": "13",
+          "difference": "5",
+          "stats": {
+            "PTS": "11",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "2",
+            "PP": "2",
+            "GF": "18",
+            "GC": "13",
+            "DIF": "5"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "UNIÓ ESPORTIVA D'HORTA",
+          "played": "7",
+          "points": "11",
+          "gf": "19",
+          "ga": "21",
+          "difference": "-2",
+          "stats": {
+            "PTS": "11",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "2",
+            "PP": "2",
+            "GF": "19",
+            "GC": "21",
+            "DIF": "-2"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "CLUB PATI CUBELLES",
+          "played": "8",
+          "points": "10",
+          "gf": "10",
+          "ga": "15",
+          "difference": "-5",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "10",
+            "GC": "15",
+            "DIF": "-5"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CP VILANOVA LA DAURADA",
+          "played": "8",
+          "points": "9",
+          "gf": "23",
+          "ga": "35",
+          "difference": "-12",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "23",
+            "GC": "35",
+            "DIF": "-12"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "SFERIC",
+          "played": "7",
+          "points": "7",
+          "gf": "17",
+          "ga": "29",
+          "difference": "-12",
+          "stats": {
+            "PTS": "7",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "1",
+            "PP": "4",
+            "GF": "17",
+            "GC": "29",
+            "DIF": "-12"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "GENERALI HC PALAU",
+          "played": "7",
+          "points": "5",
+          "gf": "18",
+          "ga": "23",
+          "difference": "-5",
+          "stats": {
+            "PTS": "5",
+            "PJ": "7",
+            "PG": "1",
+            "PE": "2",
+            "PP": "4",
+            "GF": "18",
+            "GC": "23",
+            "DIF": "-5"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CHP SANT FELIU",
+          "played": "8",
+          "points": "1",
+          "gf": "15",
+          "ga": "37",
+          "difference": "-22",
+          "stats": {
+            "PTS": "1",
+            "PJ": "8",
+            "PG": "0",
+            "PE": "1",
+            "PP": "7",
+            "GF": "15",
+            "GC": "37",
+            "DIF": "-22"
+          }
+        }
+      ]
+    },
+    "4779:2-catalana-grup-a": {
+      "name": "2ª CATALANA GRUP A",
+      "category": "2ª CATALANA",
+      "competition": "2ª CATALANA",
+      "leagueId": "4779",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "INNOAESTHETICS HC SANT JUST",
+          "played": "8",
+          "points": "24",
+          "gf": "46",
+          "ga": "11",
+          "difference": "35",
+          "stats": {
+            "PTS": "24",
+            "PJ": "8",
+            "PG": "8",
+            "PE": "0",
+            "PP": "0",
+            "GF": "46",
+            "GC": "11",
+            "DIF": "35"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CE NOIA FREIXENET",
+          "played": "8",
+          "points": "24",
+          "gf": "44",
+          "ga": "12",
+          "difference": "32",
+          "stats": {
+            "PTS": "24",
+            "PJ": "8",
+            "PG": "8",
+            "PE": "0",
+            "PP": "0",
+            "GF": "44",
+            "GC": "12",
+            "DIF": "32"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "HC VALLS INTEC ENGINYERIA",
+          "played": "8",
+          "points": "18",
+          "gf": "50",
+          "ga": "30",
+          "difference": "20",
+          "stats": {
+            "PTS": "18",
+            "PJ": "8",
+            "PG": "6",
+            "PE": "0",
+            "PP": "2",
+            "GF": "50",
+            "GC": "30",
+            "DIF": "20"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "HOQUEI CLUB ALPICAT",
+          "played": "8",
+          "points": "16",
+          "gf": "29",
+          "ga": "20",
+          "difference": "9",
+          "stats": {
+            "PTS": "16",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "1",
+            "PP": "2",
+            "GF": "29",
+            "GC": "20",
+            "DIF": "9"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "MOLLET HC",
+          "played": "8",
+          "points": "13",
+          "gf": "29",
+          "ga": "22",
+          "difference": "7",
+          "stats": {
+            "PTS": "13",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "1",
+            "PP": "3",
+            "GF": "29",
+            "GC": "22",
+            "DIF": "7"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CE ARENYS DE MUNT",
+          "played": "8",
+          "points": "11",
+          "gf": "37",
+          "ga": "29",
+          "difference": "8",
+          "stats": {
+            "PTS": "11",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "2",
+            "PP": "3",
+            "GF": "37",
+            "GC": "29",
+            "DIF": "8"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CLUB HOQUEI PRAT",
+          "played": "8",
+          "points": "10",
+          "gf": "33",
+          "ga": "27",
+          "difference": "6",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "33",
+            "GC": "27",
+            "DIF": "6"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CH PALAFRUGELL",
+          "played": "8",
+          "points": "10",
+          "gf": "30",
+          "ga": "38",
+          "difference": "-8",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "30",
+            "GC": "38",
+            "DIF": "-8"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "UNIÓ ESPORTIVA LA GARRIGA",
+          "played": "8",
+          "points": "9",
+          "gf": "22",
+          "ga": "20",
+          "difference": "2",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "3",
+            "PP": "3",
+            "GF": "22",
+            "GC": "20",
+            "DIF": "2"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "HOQUEI CLUB CASTELLAR",
+          "played": "8",
+          "points": "9",
+          "gf": "34",
+          "ga": "38",
+          "difference": "-4",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "34",
+            "GC": "38",
+            "DIF": "-4"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "SFERIC",
+          "played": "8",
+          "points": "6",
+          "gf": "19",
+          "ga": "34",
+          "difference": "-15",
+          "stats": {
+            "PTS": "6",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "0",
+            "PP": "6",
+            "GF": "19",
+            "GC": "34",
+            "DIF": "-15"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "UNIÓ ESPORTIVA D'HORTA",
+          "played": "8",
+          "points": "6",
+          "gf": "18",
+          "ga": "38",
+          "difference": "-20",
+          "stats": {
+            "PTS": "6",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "0",
+            "PP": "6",
+            "GF": "18",
+            "GC": "38",
+            "DIF": "-20"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CLUB HOQUEI MOLLERUSSA",
+          "played": "8",
+          "points": "4",
+          "gf": "21",
+          "ga": "54",
+          "difference": "-33",
+          "stats": {
+            "PTS": "4",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "1",
+            "PP": "6",
+            "GF": "21",
+            "GC": "54",
+            "DIF": "-33"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "CEH OLÍMPIC REUS",
+          "played": "8",
+          "points": "3",
+          "gf": "17",
+          "ga": "56",
+          "difference": "-39",
+          "stats": {
+            "PTS": "3",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "0",
+            "PP": "7",
+            "GF": "17",
+            "GC": "56",
+            "DIF": "-39"
+          }
+        }
+      ]
+    },
+    "4779:2-catalana-grup-b": {
+      "name": "2ª CATALANA GRUP B",
+      "category": "2ª CATALANA",
+      "competition": "2ª CATALANA",
+      "leagueId": "4779",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CH CALDES RECAM LÀSER",
+          "played": "8",
+          "points": "17",
+          "gf": "35",
+          "ga": "23",
+          "difference": "12",
+          "stats": {
+            "PTS": "17",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "2",
+            "PP": "1",
+            "GF": "35",
+            "GC": "23",
+            "DIF": "12"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CLUB HOQUEI ARENYS DE MAR",
+          "played": "8",
+          "points": "17",
+          "gf": "30",
+          "ga": "20",
+          "difference": "10",
+          "stats": {
+            "PTS": "17",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "2",
+            "PP": "1",
+            "GF": "30",
+            "GC": "20",
+            "DIF": "10"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "SHUM ALEA",
+          "played": "7",
+          "points": "16",
+          "gf": "29",
+          "ga": "18",
+          "difference": "11",
+          "stats": {
+            "PTS": "16",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "1",
+            "PP": "1",
+            "GF": "29",
+            "GC": "18",
+            "DIF": "11"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CHP MCDONALD'S AMPOSTA",
+          "played": "8",
+          "points": "16",
+          "gf": "26",
+          "ga": "24",
+          "difference": "2",
+          "stats": {
+            "PTS": "16",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "1",
+            "PP": "2",
+            "GF": "26",
+            "GC": "24",
+            "DIF": "2"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "HOQUEI CLARET",
+          "played": "7",
+          "points": "15",
+          "gf": "28",
+          "ga": "14",
+          "difference": "14",
+          "stats": {
+            "PTS": "15",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "0",
+            "PP": "2",
+            "GF": "28",
+            "GC": "14",
+            "DIF": "14"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CP VILANOVA",
+          "played": "7",
+          "points": "13",
+          "gf": "30",
+          "ga": "29",
+          "difference": "1",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "30",
+            "GC": "29",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "GENERALI HC PALAU",
+          "played": "7",
+          "points": "12",
+          "gf": "25",
+          "ga": "15",
+          "difference": "10",
+          "stats": {
+            "PTS": "12",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "3",
+            "PP": "1",
+            "GF": "25",
+            "GC": "15",
+            "DIF": "10"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "LLISTA-BELL-LLOC",
+          "played": "7",
+          "points": "12",
+          "gf": "15",
+          "ga": "9",
+          "difference": "6",
+          "stats": {
+            "PTS": "12",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "0",
+            "PP": "3",
+            "GF": "15",
+            "GC": "9",
+            "DIF": "6"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "HOQUEI PATINS TONA",
+          "played": "7",
+          "points": "7",
+          "gf": "23",
+          "ga": "24",
+          "difference": "-1",
+          "stats": {
+            "PTS": "7",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "1",
+            "PP": "4",
+            "GF": "23",
+            "GC": "24",
+            "DIF": "-1"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CHP MARTORELL",
+          "played": "8",
+          "points": "5",
+          "gf": "19",
+          "ga": "33",
+          "difference": "-14",
+          "stats": {
+            "PTS": "5",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "2",
+            "PP": "5",
+            "GF": "19",
+            "GC": "33",
+            "DIF": "-14"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "ELECTRO AD CP MASQUEFA",
+          "played": "8",
+          "points": "4",
+          "gf": "17",
+          "ga": "31",
+          "difference": "-14",
+          "stats": {
+            "PTS": "4",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "1",
+            "PP": "6",
+            "GF": "17",
+            "GC": "31",
+            "DIF": "-14"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "OXFORD HC SALT",
+          "played": "7",
+          "points": "1",
+          "gf": "12",
+          "ga": "27",
+          "difference": "-15",
+          "stats": {
+            "PTS": "1",
+            "PJ": "7",
+            "PG": "0",
+            "PE": "1",
+            "PP": "6",
+            "GF": "12",
+            "GC": "27",
+            "DIF": "-15"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CH MATARÓ",
+          "played": "7",
+          "points": "1",
+          "gf": "18",
+          "ga": "40",
+          "difference": "-22",
+          "stats": {
+            "PTS": "1",
+            "PJ": "7",
+            "PG": "0",
+            "PE": "1",
+            "PP": "6",
+            "GF": "18",
+            "GC": "40",
+            "DIF": "-22"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "CH OLOT B",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        }
+      ]
+    },
+    "4779:2-catalana-grup-c": {
+      "name": "2ª CATALANA GRUP C",
+      "category": "2ª CATALANA",
+      "competition": "2ª CATALANA",
+      "leagueId": "4779",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "HOQUEI BANYOLES",
+          "played": "8",
+          "points": "21",
+          "gf": "50",
+          "ga": "25",
+          "difference": "25",
+          "stats": {
+            "PTS": "21",
+            "PJ": "8",
+            "PG": "7",
+            "PE": "0",
+            "PP": "1",
+            "GF": "50",
+            "GC": "25",
+            "DIF": "25"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
+          "played": "8",
+          "points": "19",
+          "gf": "34",
+          "ga": "17",
+          "difference": "17",
+          "stats": {
+            "PTS": "19",
+            "PJ": "8",
+            "PG": "6",
+            "PE": "1",
+            "PP": "1",
+            "GF": "34",
+            "GC": "17",
+            "DIF": "17"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "FENIE ENERGIA CERDANYOLA CCH",
+          "played": "8",
+          "points": "18",
+          "gf": "42",
+          "ga": "22",
+          "difference": "20",
+          "stats": {
+            "PTS": "18",
+            "PJ": "8",
+            "PG": "6",
+            "PE": "0",
+            "PP": "2",
+            "GF": "42",
+            "GC": "22",
+            "DIF": "20"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CN REUS PLOMS A",
+          "played": "8",
+          "points": "18",
+          "gf": "39",
+          "ga": "23",
+          "difference": "16",
+          "stats": {
+            "PTS": "18",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "3",
+            "PP": "0",
+            "GF": "39",
+            "GC": "23",
+            "DIF": "16"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "CLUB HOQUEI SANTA PERPÈTUA",
+          "played": "8",
+          "points": "13",
+          "gf": "35",
+          "ga": "20",
+          "difference": "15",
+          "stats": {
+            "PTS": "13",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "4",
+            "PP": "1",
+            "GF": "35",
+            "GC": "20",
+            "DIF": "15"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CPI SANT IGNASI",
+          "played": "8",
+          "points": "12",
+          "gf": "20",
+          "ga": "27",
+          "difference": "-7",
+          "stats": {
+            "PTS": "12",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "0",
+            "PP": "4",
+            "GF": "20",
+            "GC": "27",
+            "DIF": "-7"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CLUB PATÍ RODA",
+          "played": "8",
+          "points": "12",
+          "gf": "29",
+          "ga": "36",
+          "difference": "-7",
+          "stats": {
+            "PTS": "12",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "0",
+            "PP": "4",
+            "GF": "29",
+            "GC": "36",
+            "DIF": "-7"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CH FIGUERES",
+          "played": "8",
+          "points": "10",
+          "gf": "35",
+          "ga": "34",
+          "difference": "1",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "35",
+            "GC": "34",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "HCSENTMENAT",
+          "played": "8",
+          "points": "9",
+          "gf": "26",
+          "ga": "41",
+          "difference": "-15",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "26",
+            "GC": "41",
+            "DIF": "-15"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CLUB PATÍ VILAFRANCA AKO",
+          "played": "8",
+          "points": "9",
+          "gf": "35",
+          "ga": "44",
+          "difference": "-9",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "35",
+            "GC": "44",
+            "DIF": "-9"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "CP SUBUR SITGES",
+          "played": "8",
+          "points": "8",
+          "gf": "32",
+          "ga": "24",
+          "difference": "8",
+          "stats": {
+            "PTS": "8",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "2",
+            "PP": "4",
+            "GF": "32",
+            "GC": "24",
+            "DIF": "8"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CP JONQUERENC",
+          "played": "8",
+          "points": "7",
+          "gf": "27",
+          "ga": "52",
+          "difference": "-25",
+          "stats": {
+            "PTS": "7",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "1",
+            "PP": "5",
+            "GF": "27",
+            "GC": "52",
+            "DIF": "-25"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "SE LA SALLE BONANOVA A",
+          "played": "8",
+          "points": "3",
+          "gf": "25",
+          "ga": "36",
+          "difference": "-11",
+          "stats": {
+            "PTS": "3",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "0",
+            "PP": "7",
+            "GF": "25",
+            "GC": "36",
+            "DIF": "-11"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "CAPELLADES",
+          "played": "8",
+          "points": "3",
+          "gf": "20",
+          "ga": "48",
+          "difference": "-28",
+          "stats": {
+            "PTS": "3",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "0",
+            "PP": "7",
+            "GF": "20",
+            "GC": "48",
+            "DIF": "-28"
+          }
+        }
+      ]
+    },
+    "4779:2-catalana-grup-d": {
+      "name": "2ª CATALANA GRUP D",
+      "category": "2ª CATALANA",
+      "competition": "2ª CATALANA",
+      "leagueId": "4779",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "IGUALADA HC",
+          "played": "7",
+          "points": "21",
+          "gf": "45",
+          "ga": "9",
+          "difference": "36",
+          "stats": {
+            "PTS": "21",
+            "PJ": "7",
+            "PG": "7",
+            "PE": "0",
+            "PP": "0",
+            "GF": "45",
+            "GC": "9",
+            "DIF": "36"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "MARTINELIA MANLLEU",
+          "played": "7",
+          "points": "21",
+          "gf": "42",
+          "ga": "18",
+          "difference": "24",
+          "stats": {
+            "PTS": "21",
+            "PJ": "7",
+            "PG": "7",
+            "PE": "0",
+            "PP": "0",
+            "GF": "42",
+            "GC": "18",
+            "DIF": "24"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "GEIEG",
+          "played": "8",
+          "points": "18",
+          "gf": "30",
+          "ga": "20",
+          "difference": "10",
+          "stats": {
+            "PTS": "18",
+            "PJ": "8",
+            "PG": "6",
+            "PE": "0",
+            "PP": "2",
+            "GF": "30",
+            "GC": "20",
+            "DIF": "10"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CLUB PATÍ RIBES FRESER",
+          "played": "7",
+          "points": "13",
+          "gf": "20",
+          "ga": "17",
+          "difference": "3",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "20",
+            "GC": "17",
+            "DIF": "3"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "CP SANT CELONI",
+          "played": "8",
+          "points": "13",
+          "gf": "23",
+          "ga": "23",
+          "difference": "0",
+          "stats": {
+            "PTS": "13",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "1",
+            "PP": "3",
+            "GF": "23",
+            "GC": "23",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "UEH BARBERÀ",
+          "played": "7",
+          "points": "12",
+          "gf": "35",
+          "ga": "27",
+          "difference": "8",
+          "stats": {
+            "PTS": "12",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "0",
+            "PP": "3",
+            "GF": "35",
+            "GC": "27",
+            "DIF": "8"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CP CONGRÉS",
+          "played": "8",
+          "points": "10",
+          "gf": "22",
+          "ga": "18",
+          "difference": "4",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "4",
+            "PP": "2",
+            "GF": "22",
+            "GC": "18",
+            "DIF": "4"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CLUB ESPORTIU OLESA PATÍ",
+          "played": "7",
+          "points": "9",
+          "gf": "26",
+          "ga": "24",
+          "difference": "2",
+          "stats": {
+            "PTS": "9",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "0",
+            "PP": "4",
+            "GF": "26",
+            "GC": "24",
+            "DIF": "2"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "HC MONTBUI",
+          "played": "8",
+          "points": "6",
+          "gf": "22",
+          "ga": "29",
+          "difference": "-7",
+          "stats": {
+            "PTS": "6",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "3",
+            "PP": "4",
+            "GF": "22",
+            "GC": "29",
+            "DIF": "-7"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CLUB D'ESPORTS VENDRELL",
+          "played": "7",
+          "points": "6",
+          "gf": "20",
+          "ga": "41",
+          "difference": "-21",
+          "stats": {
+            "PTS": "6",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "0",
+            "PP": "5",
+            "GF": "20",
+            "GC": "41",
+            "DIF": "-21"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "CLUB PATI CALAFELL",
+          "played": "8",
+          "points": "5",
+          "gf": "23",
+          "ga": "25",
+          "difference": "-2",
+          "stats": {
+            "PTS": "5",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "2",
+            "PP": "5",
+            "GF": "23",
+            "GC": "25",
+            "DIF": "-2"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CP TARADELL",
+          "played": "7",
+          "points": "3",
+          "gf": "14",
+          "ga": "40",
+          "difference": "-26",
+          "stats": {
+            "PTS": "3",
+            "PJ": "7",
+            "PG": "1",
+            "PE": "0",
+            "PP": "6",
+            "GF": "14",
+            "GC": "40",
+            "DIF": "-26"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CLUB PATÍ CENTELLES",
+          "played": "7",
+          "points": "1",
+          "gf": "6",
+          "ga": "37",
+          "difference": "-31",
+          "stats": {
+            "PTS": "1",
+            "PJ": "7",
+            "PG": "0",
+            "PE": "1",
+            "PP": "6",
+            "GF": "6",
+            "GC": "37",
+            "DIF": "-31"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "CP BLANES",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        }
+      ]
+    },
+    "4780:2-catalana-femenina-grup-a": {
+      "name": "2ª CATALANA FEMENINA GRUP A",
+      "category": "2ª CATALANA FEMENINA",
+      "competition": "2ª CATALANA FEMENINA",
+      "leagueId": "4780",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4780&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "OXFORD HC SALT",
+          "played": "7",
+          "points": "21",
+          "gf": "57",
+          "ga": "12",
+          "difference": "45",
+          "stats": {
+            "PTS": "21",
+            "PJ": "7",
+            "PG": "7",
+            "PE": "0",
+            "PP": "0",
+            "GF": "57",
+            "GC": "12",
+            "DIF": "45",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
+          "played": "7",
+          "points": "19",
+          "gf": "31",
+          "ga": "11",
+          "difference": "20",
+          "stats": {
+            "PTS": "19",
+            "PJ": "7",
+            "PG": "6",
+            "PE": "1",
+            "PP": "0",
+            "GF": "31",
+            "GC": "11",
+            "DIF": "20",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CLUB PATI TORRELLES",
+          "played": "8",
+          "points": "16",
+          "gf": "35",
+          "ga": "16",
+          "difference": "19",
+          "stats": {
+            "PTS": "16",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "1",
+            "PP": "2",
+            "GF": "35",
+            "GC": "16",
+            "DIF": "19",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "FENIE ENERGIA CERDANYOLA CCH",
+          "played": "7",
+          "points": "12",
+          "gf": "18",
+          "ga": "26",
+          "difference": "-8",
+          "stats": {
+            "PTS": "12",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "0",
+            "PP": "3",
+            "GF": "18",
+            "GC": "26",
+            "DIF": "-8",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "INNOAESTHETICS HC SANT JUST",
+          "played": "8",
+          "points": "10",
+          "gf": "17",
+          "ga": "17",
+          "difference": "0",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "17",
+            "GC": "17",
+            "DIF": "0",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CH FIGUERES",
+          "played": "8",
+          "points": "10",
+          "gf": "28",
+          "ga": "27",
+          "difference": "1",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "28",
+            "GC": "27",
+            "DIF": "1",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CLUB PATÍ RODA",
+          "played": "7",
+          "points": "9",
+          "gf": "26",
+          "ga": "20",
+          "difference": "6",
+          "stats": {
+            "PTS": "9",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "0",
+            "PP": "4",
+            "GF": "26",
+            "GC": "20",
+            "DIF": "6",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "ROTOTANK BIGUES I RIELLS",
+          "played": "8",
+          "points": "9",
+          "gf": "33",
+          "ga": "35",
+          "difference": "-2",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "33",
+            "GC": "35",
+            "DIF": "-2",
+            "SAN": "1"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "SHUM SELVAFIL",
+          "played": "7",
+          "points": "9",
+          "gf": "23",
+          "ga": "29",
+          "difference": "-6",
+          "stats": {
+            "PTS": "9",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "0",
+            "PP": "4",
+            "GF": "23",
+            "GC": "29",
+            "DIF": "-6",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CLUB HOQUEI SANTA PERPÈTUA",
+          "played": "8",
+          "points": "9",
+          "gf": "17",
+          "ga": "30",
+          "difference": "-13",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "17",
+            "GC": "30",
+            "DIF": "-13",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "MOLLET HC",
+          "played": "7",
+          "points": "8",
+          "gf": "16",
+          "ga": "15",
+          "difference": "1",
+          "stats": {
+            "PTS": "8",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "2",
+            "PP": "3",
+            "GF": "16",
+            "GC": "15",
+            "DIF": "1",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CHP SANT FELIU",
+          "played": "7",
+          "points": "6",
+          "gf": "13",
+          "ga": "41",
+          "difference": "-28",
+          "stats": {
+            "PTS": "6",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "0",
+            "PP": "5",
+            "GF": "13",
+            "GC": "41",
+            "DIF": "-28",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CH LES FRANQUESES",
+          "played": "7",
+          "points": "1",
+          "gf": "8",
+          "ga": "43",
+          "difference": "-35",
+          "stats": {
+            "PTS": "1",
+            "PJ": "7",
+            "PG": "0",
+            "PE": "1",
+            "PP": "6",
+            "GF": "8",
+            "GC": "43",
+            "DIF": "-35",
+            "SAN": "0"
+          }
+        }
+      ]
+    },
+    "4780:2-catalana-femenina-grup-b": {
+      "name": "2ª CATALANA FEMENINA GRUP B",
+      "category": "2ª CATALANA FEMENINA",
+      "competition": "2ª CATALANA FEMENINA",
+      "leagueId": "4780",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4780&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CLUB HOQUEI CASTELLET",
+          "played": "6",
+          "points": "18",
+          "gf": "47",
+          "ga": "1",
+          "difference": "46",
+          "stats": {
+            "PTS": "18",
+            "PJ": "6",
+            "PG": "6",
+            "PE": "0",
+            "PP": "0",
+            "GF": "47",
+            "GC": "1",
+            "DIF": "46",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "PONS LLEIDA",
+          "played": "8",
+          "points": "17",
+          "gf": "32",
+          "ga": "22",
+          "difference": "10",
+          "stats": {
+            "PTS": "17",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "2",
+            "PP": "1",
+            "GF": "32",
+            "GC": "22",
+            "DIF": "10",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "HOQUEI CLUB CASTELLAR",
+          "played": "7",
+          "points": "16",
+          "gf": "37",
+          "ga": "10",
+          "difference": "27",
+          "stats": {
+            "PTS": "16",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "1",
+            "PP": "1",
+            "GF": "37",
+            "GC": "10",
+            "DIF": "27",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "BADIA IGUALADA FEMENÍ HCP",
+          "played": "7",
+          "points": "13",
+          "gf": "25",
+          "ga": "15",
+          "difference": "10",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "25",
+            "GC": "15",
+            "DIF": "10",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "UEH BARBERÀ",
+          "played": "6",
+          "points": "13",
+          "gf": "23",
+          "ga": "13",
+          "difference": "10",
+          "stats": {
+            "PTS": "13",
+            "PJ": "6",
+            "PG": "4",
+            "PE": "1",
+            "PP": "1",
+            "GF": "23",
+            "GC": "13",
+            "DIF": "10",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CP MANRESA",
+          "played": "6",
+          "points": "12",
+          "gf": "31",
+          "ga": "15",
+          "difference": "16",
+          "stats": {
+            "PTS": "12",
+            "PJ": "6",
+            "PG": "4",
+            "PE": "0",
+            "PP": "2",
+            "GF": "31",
+            "GC": "15",
+            "DIF": "16",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "SANT JOSEP DE BADALONA",
+          "played": "7",
+          "points": "9",
+          "gf": "20",
+          "ga": "17",
+          "difference": "3",
+          "stats": {
+            "PTS": "9",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "0",
+            "PP": "4",
+            "GF": "20",
+            "GC": "17",
+            "DIF": "3",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CLUB ESPORTIU OLESA PATI",
+          "played": "6",
+          "points": "7",
+          "gf": "21",
+          "ga": "26",
+          "difference": "-5",
+          "stats": {
+            "PTS": "7",
+            "PJ": "6",
+            "PG": "2",
+            "PE": "1",
+            "PP": "3",
+            "GF": "21",
+            "GC": "26",
+            "DIF": "-5",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "HC VALLS",
+          "played": "7",
+          "points": "6",
+          "gf": "21",
+          "ga": "25",
+          "difference": "-4",
+          "stats": {
+            "PTS": "6",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "0",
+            "PP": "5",
+            "GF": "21",
+            "GC": "25",
+            "DIF": "-4",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CEH SABADELL",
+          "played": "7",
+          "points": "3",
+          "gf": "8",
+          "ga": "59",
+          "difference": "-51",
+          "stats": {
+            "PTS": "3",
+            "PJ": "7",
+            "PG": "1",
+            "PE": "0",
+            "PP": "6",
+            "GF": "8",
+            "GC": "59",
+            "DIF": "-51",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "FUTBOL CLUB MARTINENC",
+          "played": "7",
+          "points": "1",
+          "gf": "14",
+          "ga": "43",
+          "difference": "-29",
+          "stats": {
+            "PTS": "1",
+            "PJ": "7",
+            "PG": "0",
+            "PE": "1",
+            "PP": "6",
+            "GF": "14",
+            "GC": "43",
+            "DIF": "-29",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CH NAVARCLES",
+          "played": "6",
+          "points": "1",
+          "gf": "9",
+          "ga": "42",
+          "difference": "-33",
+          "stats": {
+            "PTS": "1",
+            "PJ": "6",
+            "PG": "0",
+            "PE": "1",
+            "PP": "5",
+            "GF": "9",
+            "GC": "42",
+            "DIF": "-33",
+            "SAN": "0"
+          }
+        }
+      ]
+    },
+    "4781:3-catalana-grup-a": {
+      "name": "3ª CATALANA GRUP A",
+      "category": "3ª CATALANA",
+      "competition": "3ª CATALANA",
+      "leagueId": "4781",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "EUROFIRMS CASSANENC",
+          "played": "9",
+          "points": "22",
+          "gf": "37",
+          "ga": "26",
+          "difference": "11",
+          "stats": {
+            "PTS": "22",
+            "PJ": "9",
+            "PG": "7",
+            "PE": "1",
+            "PP": "1",
+            "GF": "37",
+            "GC": "26",
+            "DIF": "11"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CLUB PATI TORDERA",
+          "played": "9",
+          "points": "21",
+          "gf": "55",
+          "ga": "24",
+          "difference": "31",
+          "stats": {
+            "PTS": "21",
+            "PJ": "9",
+            "PG": "7",
+            "PE": "0",
+            "PP": "2",
+            "GF": "55",
+            "GC": "24",
+            "DIF": "31"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CLUB PATÍ BREDA A",
+          "played": "9",
+          "points": "21",
+          "gf": "49",
+          "ga": "32",
+          "difference": "17",
+          "stats": {
+            "PTS": "21",
+            "PJ": "9",
+            "PG": "7",
+            "PE": "0",
+            "PP": "2",
+            "GF": "49",
+            "GC": "32",
+            "DIF": "17"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "AUTO VIGATANA PATÍ VIC A",
+          "played": "9",
+          "points": "19",
+          "gf": "61",
+          "ga": "33",
+          "difference": "28",
+          "stats": {
+            "PTS": "19",
+            "PJ": "9",
+            "PG": "6",
+            "PE": "1",
+            "PP": "2",
+            "GF": "61",
+            "GC": "33",
+            "DIF": "28"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "CP FOLGUEROLES",
+          "played": "9",
+          "points": "19",
+          "gf": "46",
+          "ga": "28",
+          "difference": "18",
+          "stats": {
+            "PTS": "19",
+            "PJ": "9",
+            "PG": "6",
+            "PE": "1",
+            "PP": "2",
+            "GF": "46",
+            "GC": "28",
+            "DIF": "18"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "FUTBOL CLUB MARTINENC",
+          "played": "9",
+          "points": "18",
+          "gf": "50",
+          "ga": "24",
+          "difference": "26",
+          "stats": {
+            "PTS": "18",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "3",
+            "PP": "1",
+            "GF": "50",
+            "GC": "24",
+            "DIF": "26"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CP CALDES A",
+          "played": "9",
+          "points": "17",
+          "gf": "40",
+          "ga": "25",
+          "difference": "15",
+          "stats": {
+            "PTS": "17",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "2",
+            "PP": "2",
+            "GF": "40",
+            "GC": "25",
+            "DIF": "15"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "ROTOTANK BIGUES I RIELLS",
+          "played": "9",
+          "points": "13",
+          "gf": "32",
+          "ga": "37",
+          "difference": "-5",
+          "stats": {
+            "PTS": "13",
+            "PJ": "9",
+            "PG": "4",
+            "PE": "1",
+            "PP": "4",
+            "GF": "32",
+            "GC": "37",
+            "DIF": "-5"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "FARNERS",
+          "played": "9",
+          "points": "13",
+          "gf": "50",
+          "ga": "37",
+          "difference": "13",
+          "stats": {
+            "PTS": "13",
+            "PJ": "9",
+            "PG": "4",
+            "PE": "1",
+            "PP": "4",
+            "GF": "50",
+            "GC": "37",
+            "DIF": "13"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CH RIPOLLET",
+          "played": "8",
+          "points": "11",
+          "gf": "56",
+          "ga": "41",
+          "difference": "15",
+          "stats": {
+            "PTS": "11",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "2",
+            "PP": "3",
+            "GF": "56",
+            "GC": "41",
+            "DIF": "15"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "CHP SANT FELIU",
+          "played": "9",
+          "points": "9",
+          "gf": "36",
+          "ga": "47",
+          "difference": "-11",
+          "stats": {
+            "PTS": "9",
+            "PJ": "9",
+            "PG": "3",
+            "PE": "0",
+            "PP": "6",
+            "GF": "36",
+            "GC": "47",
+            "DIF": "-11"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "SANT JOSEP DE BADALONA",
+          "played": "9",
+          "points": "8",
+          "gf": "36",
+          "ga": "44",
+          "difference": "-8",
+          "stats": {
+            "PTS": "8",
+            "PJ": "9",
+            "PG": "2",
+            "PE": "2",
+            "PP": "5",
+            "GF": "36",
+            "GC": "44",
+            "DIF": "-8"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CLUB HOQUEI VILASSAR",
+          "played": "8",
+          "points": "6",
+          "gf": "32",
+          "ga": "39",
+          "difference": "-7",
+          "stats": {
+            "PTS": "6",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "0",
+            "PP": "6",
+            "GF": "32",
+            "GC": "39",
+            "DIF": "-7"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "CH LLORET CAFÈS CORNELLÀ",
+          "played": "9",
+          "points": "6",
+          "gf": "24",
+          "ga": "44",
+          "difference": "-20",
+          "stats": {
+            "PTS": "6",
+            "PJ": "9",
+            "PG": "2",
+            "PE": "0",
+            "PP": "7",
+            "GF": "24",
+            "GC": "44",
+            "DIF": "-20"
+          }
+        },
+        {
+          "pos": "15",
+          "team": "CH LES FRANQUESES",
+          "played": "9",
+          "points": "3",
+          "gf": "20",
+          "ga": "72",
+          "difference": "-52",
+          "stats": {
+            "PTS": "3",
+            "PJ": "9",
+            "PG": "1",
+            "PE": "0",
+            "PP": "8",
+            "GF": "20",
+            "GC": "72",
+            "DIF": "-52"
+          }
+        },
+        {
+          "pos": "16",
+          "team": "CEH SABADELL",
+          "played": "9",
+          "points": "0",
+          "gf": "14",
+          "ga": "85",
+          "difference": "-71",
+          "stats": {
+            "PTS": "0",
+            "PJ": "9",
+            "PG": "0",
+            "PE": "0",
+            "PP": "9",
+            "GF": "14",
+            "GC": "85",
+            "DIF": "-71"
+          }
+        }
+      ]
+    },
+    "4781:3-catalana-grup-b": {
+      "name": "3ª CATALANA GRUP B",
+      "category": "3ª CATALANA",
+      "competition": "3ª CATALANA",
+      "leagueId": "4781",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CLUB PATI TORRELLES A",
+          "played": "9",
+          "points": "27",
+          "gf": "57",
+          "ga": "14",
+          "difference": "43",
+          "stats": {
+            "PTS": "27",
+            "PJ": "9",
+            "PG": "9",
+            "PE": "0",
+            "PP": "0",
+            "GF": "57",
+            "GC": "14",
+            "DIF": "43"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CH JUNEDA A",
+          "played": "9",
+          "points": "24",
+          "gf": "57",
+          "ga": "22",
+          "difference": "35",
+          "stats": {
+            "PTS": "24",
+            "PJ": "9",
+            "PG": "8",
+            "PE": "0",
+            "PP": "1",
+            "GF": "57",
+            "GC": "22",
+            "DIF": "35"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "HOQUEI CASAL ESPLUGA",
+          "played": "9",
+          "points": "24",
+          "gf": "56",
+          "ga": "26",
+          "difference": "30",
+          "stats": {
+            "PTS": "24",
+            "PJ": "9",
+            "PG": "8",
+            "PE": "0",
+            "PP": "1",
+            "GF": "56",
+            "GC": "26",
+            "DIF": "30"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CAMBRILS CH",
+          "played": "9",
+          "points": "18",
+          "gf": "31",
+          "ga": "27",
+          "difference": "4",
+          "stats": {
+            "PTS": "18",
+            "PJ": "9",
+            "PG": "6",
+            "PE": "0",
+            "PP": "3",
+            "GF": "31",
+            "GC": "27",
+            "DIF": "4"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "TRANSLOP ALCAÑIZ CLUB PATIN",
+          "played": "9",
+          "points": "15",
+          "gf": "44",
+          "ga": "36",
+          "difference": "8",
+          "stats": {
+            "PTS": "15",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "0",
+            "PP": "4",
+            "GF": "44",
+            "GC": "36",
+            "DIF": "8"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CP RIUDOMS",
+          "played": "9",
+          "points": "15",
+          "gf": "45",
+          "ga": "42",
+          "difference": "3",
+          "stats": {
+            "PTS": "15",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "0",
+            "PP": "4",
+            "GF": "45",
+            "GC": "42",
+            "DIF": "3"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CLUB HOQUEI CADÍ",
+          "played": "9",
+          "points": "15",
+          "gf": "49",
+          "ga": "46",
+          "difference": "3",
+          "stats": {
+            "PTS": "15",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "0",
+            "PP": "4",
+            "GF": "49",
+            "GC": "46",
+            "DIF": "3"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CLUB PATÍ MONJOS A",
+          "played": "9",
+          "points": "15",
+          "gf": "40",
+          "ga": "34",
+          "difference": "6",
+          "stats": {
+            "PTS": "15",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "0",
+            "PP": "4",
+            "GF": "40",
+            "GC": "34",
+            "DIF": "6"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "VICIO PHC SANT CUGAT",
+          "played": "9",
+          "points": "13",
+          "gf": "24",
+          "ga": "37",
+          "difference": "-13",
+          "stats": {
+            "PTS": "13",
+            "PJ": "9",
+            "PG": "4",
+            "PE": "1",
+            "PP": "4",
+            "GF": "24",
+            "GC": "37",
+            "DIF": "-13"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CLUB PATI CUBELLES",
+          "played": "9",
+          "points": "12",
+          "gf": "35",
+          "ga": "46",
+          "difference": "-11",
+          "stats": {
+            "PTS": "12",
+            "PJ": "9",
+            "PG": "4",
+            "PE": "0",
+            "PP": "5",
+            "GF": "35",
+            "GC": "46",
+            "DIF": "-11"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "RIBES CP A A",
+          "played": "9",
+          "points": "10",
+          "gf": "34",
+          "ga": "51",
+          "difference": "-17",
+          "stats": {
+            "PTS": "10",
+            "PJ": "9",
+            "PG": "3",
+            "PE": "1",
+            "PP": "5",
+            "GF": "34",
+            "GC": "51",
+            "DIF": "-17"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CH NAVARCLES",
+          "played": "9",
+          "points": "9",
+          "gf": "38",
+          "ga": "54",
+          "difference": "-16",
+          "stats": {
+            "PTS": "9",
+            "PJ": "9",
+            "PG": "3",
+            "PE": "0",
+            "PP": "6",
+            "GF": "38",
+            "GC": "54",
+            "DIF": "-16"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CP MANRESA",
+          "played": "9",
+          "points": "7",
+          "gf": "44",
+          "ga": "53",
+          "difference": "-9",
+          "stats": {
+            "PTS": "7",
+            "PJ": "9",
+            "PG": "2",
+            "PE": "1",
+            "PP": "6",
+            "GF": "44",
+            "GC": "53",
+            "DIF": "-9"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "JOIERIA MONER SANT RAMON A",
+          "played": "9",
+          "points": "4",
+          "gf": "26",
+          "ga": "47",
+          "difference": "-21",
+          "stats": {
+            "PTS": "4",
+            "PJ": "9",
+            "PG": "1",
+            "PE": "1",
+            "PP": "7",
+            "GF": "26",
+            "GC": "47",
+            "DIF": "-21"
+          }
+        },
+        {
+          "pos": "15",
+          "team": "CLUB HOQUEI CASTELLET",
+          "played": "9",
+          "points": "3",
+          "gf": "24",
+          "ga": "49",
+          "difference": "-25",
+          "stats": {
+            "PTS": "3",
+            "PJ": "9",
+            "PG": "1",
+            "PE": "0",
+            "PP": "8",
+            "GF": "24",
+            "GC": "49",
+            "DIF": "-25"
+          }
+        },
+        {
+          "pos": "16",
+          "team": "CP CORBERA",
+          "played": "9",
+          "points": "3",
+          "gf": "28",
+          "ga": "48",
+          "difference": "-20",
+          "stats": {
+            "PTS": "3",
+            "PJ": "9",
+            "PG": "1",
+            "PE": "0",
+            "PP": "8",
+            "GF": "28",
+            "GC": "48",
+            "DIF": "-20"
+          }
+        }
+      ]
+    },
+    "4781:3-catalana-grup-c": {
+      "name": "3ª CATALANA GRUP C",
+      "category": "3ª CATALANA",
+      "competition": "3ª CATALANA",
+      "leagueId": "4781",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "INNOAESTHETICS HC SANT JUST A",
+          "played": "8",
+          "points": "21",
+          "gf": "59",
+          "ga": "23",
+          "difference": "36",
+          "stats": {
+            "PTS": "21",
+            "PJ": "8",
+            "PG": "7",
+            "PE": "0",
+            "PP": "1",
+            "GF": "59",
+            "GC": "23",
+            "DIF": "36"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "UNIÓ ESPORTIVA D'HORTA",
+          "played": "8",
+          "points": "16",
+          "gf": "39",
+          "ga": "34",
+          "difference": "5",
+          "stats": {
+            "PTS": "16",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "1",
+            "PP": "2",
+            "GF": "39",
+            "GC": "34",
+            "DIF": "5"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CP CONGRÉS A",
+          "played": "8",
+          "points": "15",
+          "gf": "46",
+          "ga": "32",
+          "difference": "14",
+          "stats": {
+            "PTS": "15",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "0",
+            "PP": "3",
+            "GF": "46",
+            "GC": "32",
+            "DIF": "14"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "HOQUEI CLARET",
+          "played": "8",
+          "points": "13",
+          "gf": "43",
+          "ga": "34",
+          "difference": "9",
+          "stats": {
+            "PTS": "13",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "1",
+            "PP": "3",
+            "GF": "43",
+            "GC": "34",
+            "DIF": "9"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "CH CALDES RECAM LÀSER",
+          "played": "7",
+          "points": "12",
+          "gf": "32",
+          "ga": "27",
+          "difference": "5",
+          "stats": {
+            "PTS": "12",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "0",
+            "PP": "3",
+            "GF": "32",
+            "GC": "27",
+            "DIF": "5"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CLUB HOQUEI SANTA PERPÈTUA",
+          "played": "7",
+          "points": "12",
+          "gf": "29",
+          "ga": "42",
+          "difference": "-13",
+          "stats": {
+            "PTS": "12",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "0",
+            "PP": "3",
+            "GF": "29",
+            "GC": "42",
+            "DIF": "-13"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "SE LA SALLE BONANOVA B",
+          "played": "8",
+          "points": "9",
+          "gf": "35",
+          "ga": "35",
+          "difference": "0",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "35",
+            "GC": "35",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "FENIE ENERGIA CERDANYOLA CCH",
+          "played": "6",
+          "points": "9",
+          "gf": "22",
+          "ga": "28",
+          "difference": "-6",
+          "stats": {
+            "PTS": "9",
+            "PJ": "6",
+            "PG": "3",
+            "PE": "0",
+            "PP": "3",
+            "GF": "22",
+            "GC": "28",
+            "DIF": "-6"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "CHP MARTORELL",
+          "played": "7",
+          "points": "9",
+          "gf": "23",
+          "ga": "35",
+          "difference": "-12",
+          "stats": {
+            "PTS": "9",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "0",
+            "PP": "4",
+            "GF": "23",
+            "GC": "35",
+            "DIF": "-12"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CPI LA SAGRERA",
+          "played": "7",
+          "points": "8",
+          "gf": "30",
+          "ga": "27",
+          "difference": "3",
+          "stats": {
+            "PTS": "8",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "2",
+            "PP": "3",
+            "GF": "30",
+            "GC": "27",
+            "DIF": "3"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "CLUB HOQUEI PRAT",
+          "played": "7",
+          "points": "6",
+          "gf": "28",
+          "ga": "37",
+          "difference": "-9",
+          "stats": {
+            "PTS": "6",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "0",
+            "PP": "5",
+            "GF": "28",
+            "GC": "37",
+            "DIF": "-9"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CLUB PATI TORRELLES B",
+          "played": "6",
+          "points": "6",
+          "gf": "21",
+          "ga": "24",
+          "difference": "-3",
+          "stats": {
+            "PTS": "6",
+            "PJ": "6",
+            "PG": "2",
+            "PE": "0",
+            "PP": "4",
+            "GF": "21",
+            "GC": "24",
+            "DIF": "-3"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CH MATARÓ",
+          "played": "7",
+          "points": "3",
+          "gf": "21",
+          "ga": "50",
+          "difference": "-29",
+          "stats": {
+            "PTS": "3",
+            "PJ": "7",
+            "PG": "1",
+            "PE": "0",
+            "PP": "6",
+            "GF": "21",
+            "GC": "50",
+            "DIF": "-29"
+          }
+        }
+      ]
+    },
+    "4781:3-catalana-grup-d": {
+      "name": "3ª CATALANA GRUP D",
+      "category": "3ª CATALANA",
+      "competition": "3ª CATALANA",
+      "leagueId": "4781",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "GEIEG",
+          "played": "7",
+          "points": "15",
+          "gf": "33",
+          "ga": "18",
+          "difference": "15",
+          "stats": {
+            "PTS": "15",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "0",
+            "PP": "2",
+            "GF": "33",
+            "GC": "18",
+            "DIF": "15"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CE ARENYS DE MUNT",
+          "played": "6",
+          "points": "15",
+          "gf": "24",
+          "ga": "17",
+          "difference": "7",
+          "stats": {
+            "PTS": "15",
+            "PJ": "6",
+            "PG": "5",
+            "PE": "0",
+            "PP": "1",
+            "GF": "24",
+            "GC": "17",
+            "DIF": "7"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "GIRONA CLUB HOQUEI B",
+          "played": "6",
+          "points": "13",
+          "gf": "32",
+          "ga": "19",
+          "difference": "13",
+          "stats": {
+            "PTS": "13",
+            "PJ": "6",
+            "PG": "4",
+            "PE": "1",
+            "PP": "1",
+            "GF": "32",
+            "GC": "19",
+            "DIF": "13"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
+          "played": "7",
+          "points": "13",
+          "gf": "43",
+          "ga": "19",
+          "difference": "24",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "43",
+            "GC": "19",
+            "DIF": "24"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "SHUM ALEA",
+          "played": "7",
+          "points": "13",
+          "gf": "38",
+          "ga": "24",
+          "difference": "14",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "38",
+            "GC": "24",
+            "DIF": "14"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CH FIGUERES",
+          "played": "6",
+          "points": "12",
+          "gf": "33",
+          "ga": "20",
+          "difference": "13",
+          "stats": {
+            "PTS": "12",
+            "PJ": "6",
+            "PG": "4",
+            "PE": "0",
+            "PP": "2",
+            "GF": "33",
+            "GC": "20",
+            "DIF": "13"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "OXFORD HC SALT",
+          "played": "6",
+          "points": "11",
+          "gf": "26",
+          "ga": "14",
+          "difference": "12",
+          "stats": {
+            "PTS": "11",
+            "PJ": "6",
+            "PG": "3",
+            "PE": "2",
+            "PP": "1",
+            "GF": "26",
+            "GC": "14",
+            "DIF": "12"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CP JONQUERENC",
+          "played": "8",
+          "points": "8",
+          "gf": "20",
+          "ga": "32",
+          "difference": "-12",
+          "stats": {
+            "PTS": "8",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "2",
+            "PP": "4",
+            "GF": "20",
+            "GC": "32",
+            "DIF": "-12"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "CP BLANES",
+          "played": "7",
+          "points": "7",
+          "gf": "30",
+          "ga": "31",
+          "difference": "-1",
+          "stats": {
+            "PTS": "7",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "1",
+            "PP": "4",
+            "GF": "30",
+            "GC": "31",
+            "DIF": "-1"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CHAM MARISTES-SAGRERENC",
+          "played": "7",
+          "points": "6",
+          "gf": "23",
+          "ga": "38",
+          "difference": "-15",
+          "stats": {
+            "PTS": "6",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "0",
+            "PP": "5",
+            "GF": "23",
+            "GC": "38",
+            "DIF": "-15"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "CP CALDES C",
+          "played": "7",
+          "points": "2",
+          "gf": "25",
+          "ga": "45",
+          "difference": "-20",
+          "stats": {
+            "PTS": "2",
+            "PJ": "7",
+            "PG": "0",
+            "PE": "2",
+            "PP": "5",
+            "GF": "25",
+            "GC": "45",
+            "DIF": "-20"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CLUB PATÍ BREDA B",
+          "played": "6",
+          "points": "0",
+          "gf": "9",
+          "ga": "59",
+          "difference": "-50",
+          "stats": {
+            "PTS": "0",
+            "PJ": "6",
+            "PG": "0",
+            "PE": "0",
+            "PP": "6",
+            "GF": "9",
+            "GC": "59",
+            "DIF": "-50"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "HOQUEI PATINS TONA",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        }
+      ]
+    },
+    "4781:3-catalana-grup-e": {
+      "name": "3ª CATALANA GRUP E",
+      "category": "3ª CATALANA",
+      "competition": "3ª CATALANA",
+      "leagueId": "4781",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CP VILANOVA A",
+          "played": "8",
+          "points": "19",
+          "gf": "44",
+          "ga": "17",
+          "difference": "27",
+          "stats": {
+            "PTS": "19",
+            "PJ": "8",
+            "PG": "6",
+            "PE": "1",
+            "PP": "1",
+            "GF": "44",
+            "GC": "17",
+            "DIF": "27"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "JOIERIA MONER SANT RAMON B",
+          "played": "8",
+          "points": "17",
+          "gf": "42",
+          "ga": "27",
+          "difference": "15",
+          "stats": {
+            "PTS": "17",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "2",
+            "PP": "1",
+            "GF": "42",
+            "GC": "27",
+            "DIF": "15"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "HC VILA-SANA ALPICAT",
+          "played": "8",
+          "points": "13",
+          "gf": "32",
+          "ga": "21",
+          "difference": "11",
+          "stats": {
+            "PTS": "13",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "1",
+            "PP": "3",
+            "GF": "32",
+            "GC": "21",
+            "DIF": "11"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CLUB PATI CALAFELL",
+          "played": "7",
+          "points": "13",
+          "gf": "36",
+          "ga": "23",
+          "difference": "13",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "36",
+            "GC": "23",
+            "DIF": "13"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "CE NOIA FREIXENET",
+          "played": "7",
+          "points": "13",
+          "gf": "26",
+          "ga": "20",
+          "difference": "6",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "26",
+            "GC": "20",
+            "DIF": "6"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CLUB PATÍ MONJOS B",
+          "played": "7",
+          "points": "12",
+          "gf": "24",
+          "ga": "35",
+          "difference": "-11",
+          "stats": {
+            "PTS": "12",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "0",
+            "PP": "3",
+            "GF": "24",
+            "GC": "35",
+            "DIF": "-11"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "PONS LLEIDA A",
+          "played": "7",
+          "points": "12",
+          "gf": "36",
+          "ga": "21",
+          "difference": "15",
+          "stats": {
+            "PTS": "12",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "0",
+            "PP": "3",
+            "GF": "36",
+            "GC": "21",
+            "DIF": "15"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "IGUALADA HC B",
+          "played": "7",
+          "points": "11",
+          "gf": "29",
+          "ga": "28",
+          "difference": "1",
+          "stats": {
+            "PTS": "11",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "2",
+            "PP": "2",
+            "GF": "29",
+            "GC": "28",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "CP MASQUEFA",
+          "played": "7",
+          "points": "9",
+          "gf": "21",
+          "ga": "29",
+          "difference": "-8",
+          "stats": {
+            "PTS": "9",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "0",
+            "PP": "4",
+            "GF": "21",
+            "GC": "29",
+            "DIF": "-8"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "HC VALLS",
+          "played": "7",
+          "points": "7",
+          "gf": "25",
+          "ga": "31",
+          "difference": "-6",
+          "stats": {
+            "PTS": "7",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "1",
+            "PP": "4",
+            "GF": "25",
+            "GC": "31",
+            "DIF": "-6"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "HOQUEI CLUB CASTELLAR",
+          "played": "8",
+          "points": "7",
+          "gf": "21",
+          "ga": "30",
+          "difference": "-9",
+          "stats": {
+            "PTS": "7",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "1",
+            "PP": "5",
+            "GF": "21",
+            "GC": "30",
+            "DIF": "-9"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CH JUNEDA B",
+          "played": "7",
+          "points": "6",
+          "gf": "21",
+          "ga": "32",
+          "difference": "-11",
+          "stats": {
+            "PTS": "6",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "0",
+            "PP": "5",
+            "GF": "21",
+            "GC": "32",
+            "DIF": "-11"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "RIBES CP B B",
+          "played": "8",
+          "points": "0",
+          "gf": "11",
+          "ga": "54",
+          "difference": "-43",
+          "stats": {
+            "PTS": "0",
+            "PJ": "8",
+            "PG": "0",
+            "PE": "0",
+            "PP": "8",
+            "GF": "11",
+            "GC": "54",
+            "DIF": "-43"
+          }
+        }
+      ]
+    },
+    "4781:3-catalana-grup-f": {
+      "name": "3ª CATALANA GRUP F",
+      "category": "3ª CATALANA",
+      "competition": "3ª CATALANA",
+      "leagueId": "4781",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "IGUALADA HC A",
+          "played": "7",
+          "points": "21",
+          "gf": "39",
+          "ga": "18",
+          "difference": "21",
+          "stats": {
+            "PTS": "21",
+            "PJ": "7",
+            "PG": "7",
+            "PE": "0",
+            "PP": "0",
+            "GF": "39",
+            "GC": "18",
+            "DIF": "21"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "AUTO VIGATANA PATÍ VIC B",
+          "played": "7",
+          "points": "15",
+          "gf": "32",
+          "ga": "17",
+          "difference": "15",
+          "stats": {
+            "PTS": "15",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "0",
+            "PP": "2",
+            "GF": "32",
+            "GC": "17",
+            "DIF": "15"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CP RODA",
+          "played": "7",
+          "points": "15",
+          "gf": "42",
+          "ga": "34",
+          "difference": "8",
+          "stats": {
+            "PTS": "15",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "0",
+            "PP": "2",
+            "GF": "42",
+            "GC": "34",
+            "DIF": "8"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "SFERIC",
+          "played": "8",
+          "points": "15",
+          "gf": "35",
+          "ga": "30",
+          "difference": "5",
+          "stats": {
+            "PTS": "15",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "0",
+            "PP": "3",
+            "GF": "35",
+            "GC": "30",
+            "DIF": "5"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "UEH BARBERÀ",
+          "played": "8",
+          "points": "15",
+          "gf": "34",
+          "ga": "33",
+          "difference": "1",
+          "stats": {
+            "PTS": "15",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "0",
+            "PP": "3",
+            "GF": "34",
+            "GC": "33",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CP VILANOVA B",
+          "played": "8",
+          "points": "12",
+          "gf": "31",
+          "ga": "27",
+          "difference": "4",
+          "stats": {
+            "PTS": "12",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "3",
+            "PP": "2",
+            "GF": "31",
+            "GC": "27",
+            "DIF": "4"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CLUB PATÍ BELL-LLOC B",
+          "played": "7",
+          "points": "10",
+          "gf": "42",
+          "ga": "38",
+          "difference": "4",
+          "stats": {
+            "PTS": "10",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "1",
+            "PP": "3",
+            "GF": "42",
+            "GC": "38",
+            "DIF": "4"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "UNIÓ ESPORTIVA LA GARRIGA",
+          "played": "7",
+          "points": "10",
+          "gf": "33",
+          "ga": "37",
+          "difference": "-4",
+          "stats": {
+            "PTS": "10",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "1",
+            "PP": "3",
+            "GF": "33",
+            "GC": "37",
+            "DIF": "-4"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "MOLLET HC",
+          "played": "8",
+          "points": "9",
+          "gf": "28",
+          "ga": "34",
+          "difference": "-6",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "28",
+            "GC": "34",
+            "DIF": "-6"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "GENERALI HC PALAU",
+          "played": "8",
+          "points": "9",
+          "gf": "45",
+          "ga": "48",
+          "difference": "-3",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "45",
+            "GC": "48",
+            "DIF": "-3"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "JESUS MARIA I JOSEP B",
+          "played": "7",
+          "points": "6",
+          "gf": "14",
+          "ga": "18",
+          "difference": "-4",
+          "stats": {
+            "PTS": "6",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "0",
+            "PP": "5",
+            "GF": "14",
+            "GC": "18",
+            "DIF": "-4"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "INNOAESTHETICS HC SANT JUST B",
+          "played": "7",
+          "points": "3",
+          "gf": "13",
+          "ga": "36",
+          "difference": "-23",
+          "stats": {
+            "PTS": "3",
+            "PJ": "7",
+            "PG": "1",
+            "PE": "0",
+            "PP": "6",
+            "GF": "13",
+            "GC": "36",
+            "DIF": "-23"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CLUB PATÍ CENTELLES",
+          "played": "7",
+          "points": "1",
+          "gf": "23",
+          "ga": "41",
+          "difference": "-18",
+          "stats": {
+            "PTS": "1",
+            "PJ": "7",
+            "PG": "0",
+            "PE": "1",
+            "PP": "6",
+            "GF": "23",
+            "GC": "41",
+            "DIF": "-18"
+          }
+        }
+      ]
+    },
     "4782:junior-or-1": {
       "name": "JÚNIOR OR 1",
       "category": "JÚNIOR",
       "competition": "JÚNIOR OR",
       "leagueId": "4782",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=clasificaciones",
       "standings": [
         {
@@ -1487,8 +5295,8 @@
       "category": "JÚNIOR",
       "competition": "JÚNIOR OR",
       "leagueId": "4782",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=clasificaciones",
       "standings": [
         {
@@ -1631,8 +5439,8 @@
       "category": "JÚNIOR",
       "competition": "JÚNIOR OR",
       "leagueId": "4782",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=clasificaciones",
       "standings": [
         {
@@ -1775,8 +5583,8 @@
       "category": "JÚNIOR",
       "competition": "JÚNIOR OR",
       "leagueId": "4782",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=clasificaciones",
       "standings": [
         {
@@ -1919,8 +5727,8 @@
       "category": "JÚNIOR",
       "competition": "JÚNIOR OR",
       "leagueId": "4782",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=clasificaciones",
       "standings": [
         {
@@ -2063,8 +5871,8 @@
       "category": "JÚNIOR",
       "competition": "JÚNIOR OR",
       "leagueId": "4782",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=clasificaciones",
       "standings": [
         {
@@ -2207,8 +6015,8 @@
       "category": "JÚNIOR",
       "competition": "JÚNIOR OR",
       "leagueId": "4782",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=clasificaciones",
       "standings": [
         {
@@ -2365,13 +6173,555 @@
         }
       ]
     },
+    "4783:junior-plata-1": {
+      "name": "JÚNIOR PLATA 1",
+      "category": "JÚNIOR",
+      "competition": "JÚNIOR PLATA",
+      "leagueId": "4783",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4783&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "UEH BARBERÀ A",
+          "played": "9",
+          "points": "20",
+          "gf": "45",
+          "ga": "23",
+          "difference": "22",
+          "stats": {
+            "PTS": "20",
+            "PJ": "9",
+            "PG": "6",
+            "PE": "2",
+            "PP": "1",
+            "GF": "45",
+            "GC": "23",
+            "DIF": "22",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "PONS LLEIDA",
+          "played": "8",
+          "points": "19",
+          "gf": "44",
+          "ga": "19",
+          "difference": "25",
+          "stats": {
+            "PTS": "19",
+            "PJ": "8",
+            "PG": "6",
+            "PE": "1",
+            "PP": "1",
+            "GF": "44",
+            "GC": "19",
+            "DIF": "25",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CP CORBERA",
+          "played": "9",
+          "points": "17",
+          "gf": "35",
+          "ga": "27",
+          "difference": "8",
+          "stats": {
+            "PTS": "17",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "2",
+            "PP": "2",
+            "GF": "35",
+            "GC": "27",
+            "DIF": "8",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CLUB ESPORTIU OLESA PATI",
+          "played": "8",
+          "points": "16",
+          "gf": "45",
+          "ga": "24",
+          "difference": "21",
+          "stats": {
+            "PTS": "16",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "1",
+            "PP": "2",
+            "GF": "45",
+            "GC": "24",
+            "DIF": "21",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "JOIERIA MONER SANT RAMON",
+          "played": "8",
+          "points": "16",
+          "gf": "37",
+          "ga": "26",
+          "difference": "11",
+          "stats": {
+            "PTS": "16",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "1",
+            "PP": "2",
+            "GF": "37",
+            "GC": "26",
+            "DIF": "11",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CLUB PATI TORRELLES",
+          "played": "9",
+          "points": "16",
+          "gf": "47",
+          "ga": "37",
+          "difference": "10",
+          "stats": {
+            "PTS": "16",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "1",
+            "PP": "3",
+            "GF": "47",
+            "GC": "37",
+            "DIF": "10",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CLUB HOQUEI MOLLERUSSA",
+          "played": "8",
+          "points": "14",
+          "gf": "29",
+          "ga": "23",
+          "difference": "6",
+          "stats": {
+            "PTS": "14",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "2",
+            "PP": "2",
+            "GF": "29",
+            "GC": "23",
+            "DIF": "6",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CEH OLÍMPIC REUS A",
+          "played": "8",
+          "points": "11",
+          "gf": "30",
+          "ga": "32",
+          "difference": "-2",
+          "stats": {
+            "PTS": "11",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "0",
+            "PP": "4",
+            "GF": "30",
+            "GC": "32",
+            "DIF": "-2",
+            "SAN": "1"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "HC VALLS FM LOGISTIC",
+          "played": "8",
+          "points": "5",
+          "gf": "23",
+          "ga": "43",
+          "difference": "-20",
+          "stats": {
+            "PTS": "5",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "2",
+            "PP": "5",
+            "GF": "23",
+            "GC": "43",
+            "DIF": "-20",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CHP MARTORELL",
+          "played": "8",
+          "points": "5",
+          "gf": "23",
+          "ga": "47",
+          "difference": "-24",
+          "stats": {
+            "PTS": "5",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "0",
+            "PP": "6",
+            "GF": "23",
+            "GC": "47",
+            "DIF": "-24",
+            "SAN": "1"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "TRANSLOP ALCAÑIZ CLUB PATIN",
+          "played": "9",
+          "points": "5",
+          "gf": "17",
+          "ga": "41",
+          "difference": "-24",
+          "stats": {
+            "PTS": "5",
+            "PJ": "9",
+            "PG": "2",
+            "PE": "1",
+            "PP": "6",
+            "GF": "17",
+            "GC": "41",
+            "DIF": "-24",
+            "SAN": "2"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "HC MONTBUI",
+          "played": "8",
+          "points": "4",
+          "gf": "22",
+          "ga": "40",
+          "difference": "-18",
+          "stats": {
+            "PTS": "4",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "1",
+            "PP": "6",
+            "GF": "22",
+            "GC": "40",
+            "DIF": "-18",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CLUB PATI VILAFRANCA AKO",
+          "played": "8",
+          "points": "3",
+          "gf": "15",
+          "ga": "30",
+          "difference": "-15",
+          "stats": {
+            "PTS": "3",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "0",
+            "PP": "7",
+            "GF": "15",
+            "GC": "30",
+            "DIF": "-15",
+            "SAN": "0"
+          }
+        }
+      ]
+    },
+    "4783:junior-plata-2": {
+      "name": "JÚNIOR PLATA 2",
+      "category": "JÚNIOR",
+      "competition": "JÚNIOR PLATA",
+      "leagueId": "4783",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4783&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CP RODA",
+          "played": "9",
+          "points": "24",
+          "gf": "75",
+          "ga": "31",
+          "difference": "44",
+          "stats": {
+            "PTS": "24",
+            "PJ": "9",
+            "PG": "8",
+            "PE": "0",
+            "PP": "1",
+            "GF": "75",
+            "GC": "31",
+            "DIF": "44",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CH NAVARCLES",
+          "played": "8",
+          "points": "21",
+          "gf": "48",
+          "ga": "33",
+          "difference": "15",
+          "stats": {
+            "PTS": "21",
+            "PJ": "8",
+            "PG": "7",
+            "PE": "0",
+            "PP": "1",
+            "GF": "48",
+            "GC": "33",
+            "DIF": "15",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CP MANRESA",
+          "played": "9",
+          "points": "17",
+          "gf": "49",
+          "ga": "35",
+          "difference": "14",
+          "stats": {
+            "PTS": "17",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "2",
+            "PP": "2",
+            "GF": "49",
+            "GC": "35",
+            "DIF": "14",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CH FIGUERES",
+          "played": "9",
+          "points": "16",
+          "gf": "38",
+          "ga": "37",
+          "difference": "1",
+          "stats": {
+            "PTS": "16",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "2",
+            "PP": "2",
+            "GF": "38",
+            "GC": "37",
+            "DIF": "1",
+            "SAN": "1"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "CH RIPOLLET",
+          "played": "8",
+          "points": "16",
+          "gf": "56",
+          "ga": "30",
+          "difference": "26",
+          "stats": {
+            "PTS": "16",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "1",
+            "PP": "2",
+            "GF": "56",
+            "GC": "30",
+            "DIF": "26",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CLUB PATÍ CENTELLES",
+          "played": "8",
+          "points": "15",
+          "gf": "34",
+          "ga": "23",
+          "difference": "11",
+          "stats": {
+            "PTS": "15",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "0",
+            "PP": "3",
+            "GF": "34",
+            "GC": "23",
+            "DIF": "11",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "FENIE ENERGIA CERDANYOLA CCH",
+          "played": "8",
+          "points": "11",
+          "gf": "44",
+          "ga": "35",
+          "difference": "9",
+          "stats": {
+            "PTS": "11",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "2",
+            "PP": "3",
+            "GF": "44",
+            "GC": "35",
+            "DIF": "9",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "SE LA SALLE BONANOVA",
+          "played": "8",
+          "points": "10",
+          "gf": "28",
+          "ga": "32",
+          "difference": "-4",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "28",
+            "GC": "32",
+            "DIF": "-4",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "HOQUEI CLARET",
+          "played": "8",
+          "points": "9",
+          "gf": "30",
+          "ga": "43",
+          "difference": "-13",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "30",
+            "GC": "43",
+            "DIF": "-13",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CH LLORET CAFÈS CORNELLÀ",
+          "played": "9",
+          "points": "9",
+          "gf": "31",
+          "ga": "46",
+          "difference": "-15",
+          "stats": {
+            "PTS": "9",
+            "PJ": "9",
+            "PG": "3",
+            "PE": "0",
+            "PP": "6",
+            "GF": "31",
+            "GC": "46",
+            "DIF": "-15",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "CP CONGRÉS B",
+          "played": "8",
+          "points": "6",
+          "gf": "26",
+          "ga": "41",
+          "difference": "-15",
+          "stats": {
+            "PTS": "6",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "0",
+            "PP": "6",
+            "GF": "26",
+            "GC": "41",
+            "DIF": "-15",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "UEH BARBERÀ B",
+          "played": "8",
+          "points": "3",
+          "gf": "21",
+          "ga": "61",
+          "difference": "-40",
+          "stats": {
+            "PTS": "3",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "0",
+            "PP": "7",
+            "GF": "21",
+            "GC": "61",
+            "DIF": "-40",
+            "SAN": "0"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "SANT JOSEP DE BADALONA",
+          "played": "8",
+          "points": "0",
+          "gf": "19",
+          "ga": "52",
+          "difference": "-33",
+          "stats": {
+            "PTS": "0",
+            "PJ": "8",
+            "PG": "0",
+            "PE": "0",
+            "PP": "8",
+            "GF": "19",
+            "GC": "52",
+            "DIF": "-33",
+            "SAN": "0"
+          }
+        }
+      ]
+    },
     "4784:juvenil-or-1": {
       "name": "JUVENIL OR 1",
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -2533,8 +6883,8 @@
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -2677,8 +7027,8 @@
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -2840,8 +7190,8 @@
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -3003,8 +7353,8 @@
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -3147,8 +7497,8 @@
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -3291,8 +7641,8 @@
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -3435,8 +7785,8 @@
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -3579,8 +7929,8 @@
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -3723,8 +8073,8 @@
       "category": "JUVENIL",
       "competition": "JUVENIL OR",
       "leagueId": "4784",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=clasificaciones",
       "standings": [
         {
@@ -3862,13 +8212,1159 @@
         }
       ]
     },
+    "4785:juvenil-plata-1": {
+      "name": "JUVENIL PLATA 1",
+      "category": "JUVENIL",
+      "competition": "JUVENIL PLATA",
+      "leagueId": "4785",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4785&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CLUB ESPORTIU OLESA PATI A",
+          "played": "9",
+          "points": "25",
+          "gf": "96",
+          "ga": "9",
+          "difference": "87",
+          "stats": {
+            "PTS": "25",
+            "PJ": "9",
+            "PG": "8",
+            "PE": "1",
+            "PP": "0",
+            "GF": "96",
+            "GC": "9",
+            "DIF": "87"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CHP MCDONALD'S AMPOSTA",
+          "played": "8",
+          "points": "21",
+          "gf": "46",
+          "ga": "12",
+          "difference": "34",
+          "stats": {
+            "PTS": "21",
+            "PJ": "8",
+            "PG": "7",
+            "PE": "0",
+            "PP": "1",
+            "GF": "46",
+            "GC": "12",
+            "DIF": "34"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "IGUALADA HC E",
+          "played": "8",
+          "points": "17",
+          "gf": "46",
+          "ga": "14",
+          "difference": "32",
+          "stats": {
+            "PTS": "17",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "2",
+            "PP": "1",
+            "GF": "46",
+            "GC": "14",
+            "DIF": "32"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CLUB PATI CALAFELL C",
+          "played": "7",
+          "points": "14",
+          "gf": "27",
+          "ga": "22",
+          "difference": "5",
+          "stats": {
+            "PTS": "14",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "2",
+            "PP": "1",
+            "GF": "27",
+            "GC": "22",
+            "DIF": "5"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "REUS DEPORTIU E E",
+          "played": "7",
+          "points": "13",
+          "gf": "25",
+          "ga": "23",
+          "difference": "2",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "25",
+            "GC": "23",
+            "DIF": "2"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CLUB PATI VILAFRANCA AKO",
+          "played": "9",
+          "points": "12",
+          "gf": "40",
+          "ga": "33",
+          "difference": "7",
+          "stats": {
+            "PTS": "12",
+            "PJ": "9",
+            "PG": "3",
+            "PE": "3",
+            "PP": "3",
+            "GF": "40",
+            "GC": "33",
+            "DIF": "7"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "PONS LLEIDA C",
+          "played": "7",
+          "points": "11",
+          "gf": "32",
+          "ga": "25",
+          "difference": "7",
+          "stats": {
+            "PTS": "11",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "2",
+            "PP": "2",
+            "GF": "32",
+            "GC": "25",
+            "DIF": "7"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CLUB HOQUEI VILA-SECA B",
+          "played": "7",
+          "points": "11",
+          "gf": "28",
+          "ga": "22",
+          "difference": "6",
+          "stats": {
+            "PTS": "11",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "2",
+            "PP": "2",
+            "GF": "28",
+            "GC": "22",
+            "DIF": "6"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "HC MONTBUI",
+          "played": "7",
+          "points": "7",
+          "gf": "17",
+          "ga": "35",
+          "difference": "-18",
+          "stats": {
+            "PTS": "7",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "1",
+            "PP": "4",
+            "GF": "17",
+            "GC": "35",
+            "DIF": "-18"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CP SUBUR SITGES",
+          "played": "8",
+          "points": "6",
+          "gf": "25",
+          "ga": "64",
+          "difference": "-39",
+          "stats": {
+            "PTS": "6",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "0",
+            "PP": "6",
+            "GF": "25",
+            "GC": "64",
+            "DIF": "-39"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "CP RIUDOMS D",
+          "played": "8",
+          "points": "5",
+          "gf": "26",
+          "ga": "42",
+          "difference": "-16",
+          "stats": {
+            "PTS": "5",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "2",
+            "PP": "5",
+            "GF": "26",
+            "GC": "42",
+            "DIF": "-16"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CLUB PATÍ MONJOS B",
+          "played": "7",
+          "points": "4",
+          "gf": "15",
+          "ga": "23",
+          "difference": "-8",
+          "stats": {
+            "PTS": "4",
+            "PJ": "7",
+            "PG": "1",
+            "PE": "1",
+            "PP": "5",
+            "GF": "15",
+            "GC": "23",
+            "DIF": "-8"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CP CORBERA B",
+          "played": "7",
+          "points": "4",
+          "gf": "15",
+          "ga": "51",
+          "difference": "-36",
+          "stats": {
+            "PTS": "4",
+            "PJ": "7",
+            "PG": "1",
+            "PE": "1",
+            "PP": "5",
+            "GF": "15",
+            "GC": "51",
+            "DIF": "-36"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "CLUB HOQUEI MOLLERUSSA B",
+          "played": "7",
+          "points": "0",
+          "gf": "11",
+          "ga": "74",
+          "difference": "-63",
+          "stats": {
+            "PTS": "0",
+            "PJ": "7",
+            "PG": "0",
+            "PE": "0",
+            "PP": "7",
+            "GF": "11",
+            "GC": "74",
+            "DIF": "-63"
+          }
+        }
+      ]
+    },
+    "4785:juvenil-plata-2": {
+      "name": "JUVENIL PLATA 2",
+      "category": "JUVENIL",
+      "competition": "JUVENIL PLATA",
+      "leagueId": "4785",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4785&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CP CORBERA A",
+          "played": "8",
+          "points": "24",
+          "gf": "64",
+          "ga": "12",
+          "difference": "52",
+          "stats": {
+            "PTS": "24",
+            "PJ": "8",
+            "PG": "8",
+            "PE": "0",
+            "PP": "0",
+            "GF": "64",
+            "GC": "12",
+            "DIF": "52"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CHP MARTORELL",
+          "played": "8",
+          "points": "21",
+          "gf": "65",
+          "ga": "15",
+          "difference": "50",
+          "stats": {
+            "PTS": "21",
+            "PJ": "8",
+            "PG": "7",
+            "PE": "0",
+            "PP": "1",
+            "GF": "65",
+            "GC": "15",
+            "DIF": "50"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CP MANRESA",
+          "played": "8",
+          "points": "21",
+          "gf": "60",
+          "ga": "19",
+          "difference": "41",
+          "stats": {
+            "PTS": "21",
+            "PJ": "8",
+            "PG": "7",
+            "PE": "0",
+            "PP": "1",
+            "GF": "60",
+            "GC": "19",
+            "DIF": "41"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CLUB HOQUEI MOLLERUSSA A",
+          "played": "8",
+          "points": "18",
+          "gf": "46",
+          "ga": "26",
+          "difference": "20",
+          "stats": {
+            "PTS": "18",
+            "PJ": "8",
+            "PG": "6",
+            "PE": "0",
+            "PP": "2",
+            "GF": "46",
+            "GC": "26",
+            "DIF": "20"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "CE NOIA FREIXENET B",
+          "played": "8",
+          "points": "17",
+          "gf": "38",
+          "ga": "20",
+          "difference": "18",
+          "stats": {
+            "PTS": "17",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "2",
+            "PP": "1",
+            "GF": "38",
+            "GC": "20",
+            "DIF": "18"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CLUB ESPORTIU OLESA PATI B",
+          "played": "8",
+          "points": "16",
+          "gf": "34",
+          "ga": "14",
+          "difference": "20",
+          "stats": {
+            "PTS": "16",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "1",
+            "PP": "2",
+            "GF": "34",
+            "GC": "14",
+            "DIF": "20"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CPI LA SAGRERA",
+          "played": "9",
+          "points": "15",
+          "gf": "34",
+          "ga": "29",
+          "difference": "5",
+          "stats": {
+            "PTS": "15",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "0",
+            "PP": "4",
+            "GF": "34",
+            "GC": "29",
+            "DIF": "5"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CH NAVARCLES",
+          "played": "8",
+          "points": "10",
+          "gf": "36",
+          "ga": "52",
+          "difference": "-16",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "36",
+            "GC": "52",
+            "DIF": "-16"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "VICIO PHC SANT CUGAT B",
+          "played": "8",
+          "points": "9",
+          "gf": "17",
+          "ga": "35",
+          "difference": "-18",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "17",
+            "GC": "35",
+            "DIF": "-18"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "PONS LLEIDA D",
+          "played": "9",
+          "points": "8",
+          "gf": "19",
+          "ga": "50",
+          "difference": "-31",
+          "stats": {
+            "PTS": "8",
+            "PJ": "9",
+            "PG": "2",
+            "PE": "2",
+            "PP": "5",
+            "GF": "19",
+            "GC": "50",
+            "DIF": "-31"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "FUTBOL CLUB MARTINENC A A",
+          "played": "9",
+          "points": "7",
+          "gf": "22",
+          "ga": "45",
+          "difference": "-23",
+          "stats": {
+            "PTS": "7",
+            "PJ": "9",
+            "PG": "2",
+            "PE": "1",
+            "PP": "6",
+            "GF": "22",
+            "GC": "45",
+            "DIF": "-23"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "HOQUEI CLARET",
+          "played": "9",
+          "points": "7",
+          "gf": "26",
+          "ga": "34",
+          "difference": "-8",
+          "stats": {
+            "PTS": "7",
+            "PJ": "9",
+            "PG": "2",
+            "PE": "1",
+            "PP": "6",
+            "GF": "26",
+            "GC": "34",
+            "DIF": "-8"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CLUB HOQUEI PRAT B",
+          "played": "8",
+          "points": "6",
+          "gf": "22",
+          "ga": "44",
+          "difference": "-22",
+          "stats": {
+            "PTS": "6",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "3",
+            "PP": "4",
+            "GF": "22",
+            "GC": "44",
+            "DIF": "-22"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "SE LA SALLE BONANOVA",
+          "played": "9",
+          "points": "2",
+          "gf": "16",
+          "ga": "61",
+          "difference": "-45",
+          "stats": {
+            "PTS": "2",
+            "PJ": "9",
+            "PG": "0",
+            "PE": "2",
+            "PP": "7",
+            "GF": "16",
+            "GC": "61",
+            "DIF": "-45"
+          }
+        },
+        {
+          "pos": "15",
+          "team": "JESUS MARIA I JOSEP C",
+          "played": "9",
+          "points": "1",
+          "gf": "12",
+          "ga": "55",
+          "difference": "-43",
+          "stats": {
+            "PTS": "1",
+            "PJ": "9",
+            "PG": "0",
+            "PE": "1",
+            "PP": "8",
+            "GF": "12",
+            "GC": "55",
+            "DIF": "-43"
+          }
+        }
+      ]
+    },
+    "4785:juvenil-plata-3": {
+      "name": "JUVENIL PLATA 3",
+      "category": "JUVENIL",
+      "competition": "JUVENIL PLATA",
+      "leagueId": "4785",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4785&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CP CALDES B",
+          "played": "9",
+          "points": "27",
+          "gf": "45",
+          "ga": "17",
+          "difference": "28",
+          "stats": {
+            "PTS": "27",
+            "PJ": "9",
+            "PG": "9",
+            "PE": "0",
+            "PP": "0",
+            "GF": "45",
+            "GC": "17",
+            "DIF": "28"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CLUB HOQUEI SANTA PERPÈTUA",
+          "played": "8",
+          "points": "19",
+          "gf": "43",
+          "ga": "23",
+          "difference": "20",
+          "stats": {
+            "PTS": "19",
+            "PJ": "8",
+            "PG": "6",
+            "PE": "1",
+            "PP": "1",
+            "GF": "43",
+            "GC": "23",
+            "DIF": "20"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CLUB PATÍ CENTELLES",
+          "played": "8",
+          "points": "17",
+          "gf": "27",
+          "ga": "10",
+          "difference": "17",
+          "stats": {
+            "PTS": "17",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "2",
+            "PP": "1",
+            "GF": "27",
+            "GC": "10",
+            "DIF": "17"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CP BLANES A",
+          "played": "9",
+          "points": "16",
+          "gf": "32",
+          "ga": "19",
+          "difference": "13",
+          "stats": {
+            "PTS": "16",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "1",
+            "PP": "3",
+            "GF": "32",
+            "GC": "19",
+            "DIF": "13"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "GENERALI HC PALAU C",
+          "played": "8",
+          "points": "16",
+          "gf": "40",
+          "ga": "22",
+          "difference": "18",
+          "stats": {
+            "PTS": "16",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "1",
+            "PP": "2",
+            "GF": "40",
+            "GC": "22",
+            "DIF": "18"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "MOLLET HC B",
+          "played": "8",
+          "points": "15",
+          "gf": "25",
+          "ga": "27",
+          "difference": "-2",
+          "stats": {
+            "PTS": "15",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "0",
+            "PP": "3",
+            "GF": "25",
+            "GC": "27",
+            "DIF": "-2"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "ROTOTANK BIGUES I RIELLS",
+          "played": "8",
+          "points": "14",
+          "gf": "40",
+          "ga": "28",
+          "difference": "12",
+          "stats": {
+            "PTS": "14",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "2",
+            "PP": "2",
+            "GF": "40",
+            "GC": "28",
+            "DIF": "12"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CP FOLGUEROLES B",
+          "played": "9",
+          "points": "12",
+          "gf": "29",
+          "ga": "36",
+          "difference": "-7",
+          "stats": {
+            "PTS": "12",
+            "PJ": "9",
+            "PG": "4",
+            "PE": "0",
+            "PP": "5",
+            "GF": "29",
+            "GC": "36",
+            "DIF": "-7"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "CEH SABADELL",
+          "played": "9",
+          "points": "10",
+          "gf": "27",
+          "ga": "43",
+          "difference": "-16",
+          "stats": {
+            "PTS": "10",
+            "PJ": "9",
+            "PG": "3",
+            "PE": "1",
+            "PP": "5",
+            "GF": "27",
+            "GC": "43",
+            "DIF": "-16"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CH LES FRANQUESES",
+          "played": "8",
+          "points": "9",
+          "gf": "21",
+          "ga": "23",
+          "difference": "-2",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "21",
+            "GC": "23",
+            "DIF": "-2"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "CH MATARÓ C",
+          "played": "9",
+          "points": "9",
+          "gf": "41",
+          "ga": "64",
+          "difference": "-23",
+          "stats": {
+            "PTS": "9",
+            "PJ": "9",
+            "PG": "3",
+            "PE": "0",
+            "PP": "6",
+            "GF": "41",
+            "GC": "64",
+            "DIF": "-23"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CLUB HOQUEI VILASSAR",
+          "played": "9",
+          "points": "7",
+          "gf": "18",
+          "ga": "34",
+          "difference": "-16",
+          "stats": {
+            "PTS": "7",
+            "PJ": "9",
+            "PG": "2",
+            "PE": "1",
+            "PP": "6",
+            "GF": "18",
+            "GC": "34",
+            "DIF": "-16"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "FENIE ENERGIA CERDANYOLA CCH C",
+          "played": "8",
+          "points": "6",
+          "gf": "30",
+          "ga": "34",
+          "difference": "-4",
+          "stats": {
+            "PTS": "6",
+            "PJ": "8",
+            "PG": "2",
+            "PE": "0",
+            "PP": "6",
+            "GF": "30",
+            "GC": "34",
+            "DIF": "-4"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "UEH BARBERÀ B",
+          "played": "8",
+          "points": "5",
+          "gf": "14",
+          "ga": "29",
+          "difference": "-15",
+          "stats": {
+            "PTS": "5",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "2",
+            "PP": "5",
+            "GF": "14",
+            "GC": "29",
+            "DIF": "-15"
+          }
+        },
+        {
+          "pos": "15",
+          "team": "FUTBOL CLUB MARTINENC B B",
+          "played": "8",
+          "points": "1",
+          "gf": "12",
+          "ga": "35",
+          "difference": "-23",
+          "stats": {
+            "PTS": "1",
+            "PJ": "8",
+            "PG": "0",
+            "PE": "1",
+            "PP": "7",
+            "GF": "12",
+            "GC": "35",
+            "DIF": "-23"
+          }
+        }
+      ]
+    },
+    "4785:juvenil-plata-4": {
+      "name": "JUVENIL PLATA 4",
+      "category": "JUVENIL",
+      "competition": "JUVENIL PLATA",
+      "leagueId": "4785",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4785&vista=clasificaciones",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "AUTO VIGATANA PATÍ VIC D",
+          "played": "8",
+          "points": "21",
+          "gf": "47",
+          "ga": "27",
+          "difference": "20",
+          "stats": {
+            "PTS": "21",
+            "PJ": "8",
+            "PG": "7",
+            "PE": "0",
+            "PP": "1",
+            "GF": "47",
+            "GC": "27",
+            "DIF": "20"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CLUB PATÍ RODA B",
+          "played": "7",
+          "points": "18",
+          "gf": "55",
+          "ga": "19",
+          "difference": "36",
+          "stats": {
+            "PTS": "18",
+            "PJ": "7",
+            "PG": "6",
+            "PE": "0",
+            "PP": "1",
+            "GF": "55",
+            "GC": "19",
+            "DIF": "36"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CH MATARÓ B",
+          "played": "7",
+          "points": "18",
+          "gf": "34",
+          "ga": "9",
+          "difference": "25",
+          "stats": {
+            "PTS": "18",
+            "PJ": "7",
+            "PG": "6",
+            "PE": "0",
+            "PP": "1",
+            "GF": "34",
+            "GC": "9",
+            "DIF": "25"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "MARTINELIA MANLLEU B",
+          "played": "8",
+          "points": "15",
+          "gf": "27",
+          "ga": "21",
+          "difference": "6",
+          "stats": {
+            "PTS": "15",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "0",
+            "PP": "3",
+            "GF": "27",
+            "GC": "21",
+            "DIF": "6"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "CP BLANES B",
+          "played": "7",
+          "points": "15",
+          "gf": "46",
+          "ga": "23",
+          "difference": "23",
+          "stats": {
+            "PTS": "15",
+            "PJ": "7",
+            "PG": "5",
+            "PE": "0",
+            "PP": "2",
+            "GF": "46",
+            "GC": "23",
+            "DIF": "23"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CH OLOT B",
+          "played": "7",
+          "points": "13",
+          "gf": "37",
+          "ga": "17",
+          "difference": "20",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "37",
+            "GC": "17",
+            "DIF": "20"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "OXFORD HC SALT",
+          "played": "8",
+          "points": "13",
+          "gf": "28",
+          "ga": "27",
+          "difference": "1",
+          "stats": {
+            "PTS": "13",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "1",
+            "PP": "3",
+            "GF": "28",
+            "GC": "27",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CH LLORET CAFÈS CORNELLÀ",
+          "played": "8",
+          "points": "12",
+          "gf": "27",
+          "ga": "32",
+          "difference": "-5",
+          "stats": {
+            "PTS": "12",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "0",
+            "PP": "4",
+            "GF": "27",
+            "GC": "32",
+            "DIF": "-5"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "CP CALDES A",
+          "played": "7",
+          "points": "10",
+          "gf": "31",
+          "ga": "28",
+          "difference": "3",
+          "stats": {
+            "PTS": "10",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "1",
+            "PP": "3",
+            "GF": "31",
+            "GC": "28",
+            "DIF": "3"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CP FOLGUEROLES A",
+          "played": "7",
+          "points": "9",
+          "gf": "37",
+          "ga": "36",
+          "difference": "1",
+          "stats": {
+            "PTS": "9",
+            "PJ": "7",
+            "PG": "3",
+            "PE": "0",
+            "PP": "4",
+            "GF": "37",
+            "GC": "36",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "VIATGES ADÒNIA CASSANENC",
+          "played": "8",
+          "points": "9",
+          "gf": "22",
+          "ga": "41",
+          "difference": "-19",
+          "stats": {
+            "PTS": "9",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "0",
+            "PP": "5",
+            "GF": "22",
+            "GC": "41",
+            "DIF": "-19"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "GEIEG B",
+          "played": "9",
+          "points": "4",
+          "gf": "18",
+          "ga": "38",
+          "difference": "-20",
+          "stats": {
+            "PTS": "4",
+            "PJ": "9",
+            "PG": "1",
+            "PE": "1",
+            "PP": "7",
+            "GF": "18",
+            "GC": "38",
+            "DIF": "-20"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "FARNERS B",
+          "played": "8",
+          "points": "3",
+          "gf": "14",
+          "ga": "36",
+          "difference": "-22",
+          "stats": {
+            "PTS": "3",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "0",
+            "PP": "7",
+            "GF": "14",
+            "GC": "36",
+            "DIF": "-22"
+          }
+        },
+        {
+          "pos": "14",
+          "team": "CP JONQUERENC",
+          "played": "9",
+          "points": "0",
+          "gf": "11",
+          "ga": "80",
+          "difference": "-69",
+          "stats": {
+            "PTS": "0",
+            "PJ": "9",
+            "PG": "0",
+            "PE": "0",
+            "PP": "9",
+            "GF": "11",
+            "GC": "80",
+            "DIF": "-69"
+          }
+        }
+      ]
+    },
     "4786:infantil-or-1": {
       "name": "INFANTIL OR 1",
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -4030,8 +9526,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -4174,8 +9670,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -4337,8 +9833,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -4500,8 +9996,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -4663,8 +10159,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -4826,8 +10322,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -4989,8 +10485,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -5152,8 +10648,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -5296,8 +10792,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -5440,8 +10936,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -5611,8 +11107,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -5762,8 +11258,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -5933,8 +11429,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -6104,8 +11600,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -6275,8 +11771,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -6446,8 +11942,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -6617,8 +12113,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -6788,8 +12284,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -6939,8 +12435,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -7090,8 +12586,8 @@
       "category": "MINIFEM 2ª FASE",
       "competition": "MINIFEM 2ª FASE",
       "leagueId": "4808",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4808&vista=clasificaciones",
       "standings": [
         {
@@ -7301,8 +12797,8 @@
       "category": "MINIFEM",
       "competition": "MINIFEM",
       "leagueId": "4808",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4808&vista=clasificaciones",
       "standings": [
         {
@@ -7412,8 +12908,8 @@
       "category": "MINIFEM",
       "competition": "MINIFEM",
       "leagueId": "4808",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4808&vista=clasificaciones",
       "standings": [
         {
@@ -7523,8 +13019,8 @@
       "category": "BENJAMÍ OR GIRONA",
       "competition": "BENJAMÍ OR GIRONA",
       "leagueId": "4822",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4822&vista=clasificaciones",
       "standings": [
         {
@@ -7705,8 +13201,8 @@
       "category": "CLASSIFICACIÓ GENERAL",
       "competition": "CLASSIFICACIÓ GENERAL",
       "leagueId": "4822",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4822&vista=clasificaciones",
       "standings": [
         {
@@ -7887,8 +13383,8 @@
       "category": "BENJAMÍ PLATA GIRONA FASE 1",
       "competition": "BENJAMÍ PLATA GIRONA FASE 1",
       "leagueId": "4823",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4823&vista=clasificaciones",
       "standings": [
         {
@@ -8050,8 +13546,8 @@
       "category": "BENJAMÍ PLATA GIRONA FASE1",
       "competition": "BENJAMÍ PLATA GIRONA FASE1",
       "leagueId": "4823",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4823&vista=clasificaciones",
       "standings": [
         {
@@ -8213,8 +13709,8 @@
       "category": "BENJAMÍ PLATA GIRONA FASE1",
       "competition": "BENJAMÍ PLATA GIRONA FASE1",
       "leagueId": "4823",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4823&vista=clasificaciones",
       "standings": [
         {
@@ -8357,8 +13853,8 @@
       "category": "CLASSIFICACIÓ GENERAL",
       "competition": "CLASSIFICACIÓ GENERAL",
       "leagueId": "4823",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4823&vista=clasificaciones",
       "standings": [
         {
@@ -8805,8 +14301,8 @@
       "category": "CLASSIFICACIÓ GENERAL",
       "competition": "CLASSIFICACIÓ GENERAL",
       "leagueId": "4824",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4824&vista=clasificaciones",
       "standings": [
         {
@@ -8949,8 +14445,8 @@
       "category": "PREBENJAMÍ OR GIRONA",
       "competition": "PREBENJAMÍ OR GIRONA",
       "leagueId": "4824",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4824&vista=clasificaciones",
       "standings": [
         {
@@ -9093,8 +14589,8 @@
       "category": "CLASSIFICACIÓ GENERAL",
       "competition": "CLASSIFICACIÓ GENERAL",
       "leagueId": "4825",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4825&vista=clasificaciones",
       "standings": [
         {
@@ -9446,8 +14942,8 @@
       "category": "PREBENJAMÍ PLATA GIRONA",
       "competition": "PREBENJAMÍ PLATA GIRONA",
       "leagueId": "4825",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4825&vista=clasificaciones",
       "standings": [
         {
@@ -9742,8 +15238,8 @@
       "category": "FASE DE GRUPS LLIGA CATALANA PLATA",
       "competition": "FASE DE GRUPS LLIGA CATALANA PLATA",
       "leagueId": "4856",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4856&vista=clasificaciones",
       "standings": [
         {
@@ -9833,8 +15329,8 @@
       "category": "CLASSIFICACIÓ GENERAL",
       "competition": "CLASSIFICACIÓ GENERAL",
       "leagueId": "5082",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=5082&vista=clasificaciones",
       "standings": [
         {
@@ -10015,8 +15511,8 @@
       "category": "VETERANS TARRAGONA",
       "competition": "VETERANS TARRAGONA",
       "leagueId": "5082",
-      "capturedAt": "2026-11-23T16:39:47.597006+00:00",
-      "standingsAt": "2026-11-23T16:39:47.597006+00:00",
+      "capturedAt": "2026-11-23T18:15:56.198806+00:00",
+      "standingsAt": "2026-11-23T18:15:56.198806+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=5082&vista=clasificaciones",
       "standings": [
         {
