@@ -268,50 +268,57 @@
   }
 
   function updateClubOptions() {
-    const chosen = clubFilter.value;
     const clubs = new Map();
     for (const r of matches) for (const [name, logo] of [[r.home,r.homeLogo],[r.away,r.awayLogo]]) {
       const k=teamKey(name,logo);
       if (!clubs.has(k)) clubs.set(k,teamLabel(name,k));
     }
-    const options = [...clubs.entries()].sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'}));
-    clubFilter.replaceChildren(new Option('Tots els clubs',''));
-    for (const [key,label] of options) clubFilter.add(new Option(label,key));
-    clubFilter.value = clubs.has(chosen) ? chosen : '';
+    const options = [...clubs.entries()].sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})).map(([,label])=>label);
+    setSuggestions(clubFilter, options);
   }
+
+  function setSuggestions(input, values) {
+    const list = input.list;
+    if (!list) return;
+    list.replaceChildren(...[...new Set(values)].map(value => {
+      const option = document.createElement('option');
+      option.value = value;
+      return option;
+    }));
+  }
+  const queryMatches = (value, query) => !query || norm(value).includes(norm(query));
 
   function updateCategoryOptions() {
     const chosen = categoryFilter.value;
     const selectedClub = clubFilter.value;
     const selectedCompetition = competitionFilter.value;
     const categories = [...new Set(matches.filter(r => (!selectedClub ||
-      teamKey(r.home,r.homeLogo) === selectedClub || teamKey(r.away,r.awayLogo) === selectedClub) &&
-      (!selectedCompetition || sameCategory(competitionGroup(r.competition),selectedCompetition)))
+      queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo)),selectedClub) ||
+      queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo)),selectedClub)) &&
+      queryMatches(competitionGroup(r.competition),selectedCompetition))
       .map(r => String(r.competition || 'Categoria no informada')))]
       .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
-    categoryFilter.replaceChildren(new Option('Totes les categories', ''));
-    for (const category of categories) categoryFilter.add(new Option(category, category));
-    categoryFilter.value = categories.some(c => sameCategory(c, chosen)) ? chosen : '';
+    setSuggestions(categoryFilter, categories);
+    categoryFilter.value = chosen;
   }
 
   function updateCompetitionOptions() {
-    const chosen = competitionFilter.value;
     const selectedClub = clubFilter.value;
-    const competitions = [...new Map(matches.filter(r => !selectedClub ||
-      teamKey(r.home,r.homeLogo) === selectedClub || teamKey(r.away,r.awayLogo) === selectedClub)
+    const competitions = [...new Map(matches.filter(r => (!selectedClub ||
+      queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo)),selectedClub) ||
+      queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo)),selectedClub)) &&
+      (queryMatches(r.competition,categoryFilter.value)))
       .map(r => {const label=competitionGroup(r.competition);return [norm(label),label];})).values()]
       .sort((a,b)=>a.localeCompare(b,'ca',{sensitivity:'base'}));
-    competitionFilter.replaceChildren(new Option('Totes les competicions',''));
-    for(const label of competitions)competitionFilter.add(new Option(label,label));
-    competitionFilter.value=competitions.some(c=>sameCategory(c,chosen))?chosen:'';
+    setSuggestions(competitionFilter, competitions);
   }
 
   function renderCards() {
     const club = clubFilter.value, category = categoryFilter.value, competition=competitionFilter.value;
     const selected = matches.filter(r =>
-      (!club || teamKey(r.home,r.homeLogo) === club || teamKey(r.away,r.awayLogo) === club) &&
-      (!category || sameCategory(r.competition, category)) &&
-      (!competition || sameCategory(competitionGroup(r.competition),competition)));
+      (!club || queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo)),club) || queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo)),club)) &&
+      queryMatches(r.competition, category) &&
+      queryMatches(competitionGroup(r.competition),competition));
     counter.textContent = `${selected.length} ${selected.length === 1 ? 'partit' : 'partits'}`;
     content.replaceChildren();
     if (!selected.length) {
@@ -342,6 +349,7 @@
       matches = await enrichActes(matches);
       updateClubOptions();
       updateCategoryOptions();
+      updateCompetitionOptions();
       renderCards();
     } catch (error) {
       matches = [];
@@ -392,7 +400,7 @@
       body.zok-recent-mode #${ID}{display:block!important}
       body.zok-recent-mode #${ID} .zok-recent-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin:14px 0 7px}
       #${ID} .zok-recent-filters label{display:grid;gap:6px;font-size:12px;font-weight:850;color:#b9dbec}
-      #${ID} .zok-recent-filters select{width:100%;min-width:0;padding:12px 8px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fff;font:inherit;font-size:12px}
+      #${ID} .zok-recent-filters input{width:100%;min-width:0;padding:12px 8px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fff;font:inherit;font-size:12px}
       #${ID} .zok-recent-period{font-size:12px;color:#b3cee1;margin:7px 0 14px}
       /* V4 · Dues línies i sense franja inferior: només menú Resultats. */
       #${ID} .cards{display:grid;grid-template-columns:minmax(0,1fr);gap:5px}
@@ -448,21 +456,23 @@
     header.append(left, counter);
     const filterRow = make('div', 'zok-recent-filters');
     const clubLabel = make('label', '', 'Club');
-    clubFilter = make('select');
+    clubFilter = make('input');
+    clubFilter.type = 'search'; clubFilter.placeholder = 'Tots els clubs'; clubFilter.setAttribute('list','zok-results-clubs');
+    const clubList = make('datalist'); clubList.id = 'zok-results-clubs';
     clubFilter.setAttribute('aria-label', 'Filtra els resultats per club');
-    clubFilter.append(new Option('Tots els clubs', ''));
-    for (const [value, label] of CLUBS) clubFilter.add(new Option(label, value));
-    clubLabel.append(clubFilter);
+    clubLabel.append(clubFilter,clubList);
     const categoryLabel = make('label', '', 'Categoria');
-    categoryFilter = make('select');
+    categoryFilter = make('input');
+    categoryFilter.type='search'; categoryFilter.placeholder='Totes les categories'; categoryFilter.setAttribute('list','zok-results-categories');
+    const categoryList=make('datalist'); categoryList.id='zok-results-categories';
     categoryFilter.setAttribute('aria-label', 'Filtra els resultats per categoria');
-    categoryFilter.append(new Option('Totes les categories', ''));
-    categoryLabel.append(categoryFilter);
+    categoryLabel.append(categoryFilter,categoryList);
     const competitionLabel = make('label', '', 'Competició');
-    competitionFilter = make('select');
+    competitionFilter = make('input');
+    competitionFilter.type='search'; competitionFilter.placeholder='Totes les competicions'; competitionFilter.setAttribute('list','zok-results-competitions');
+    const competitionList=make('datalist'); competitionList.id='zok-results-competitions';
     competitionFilter.setAttribute('aria-label', 'Filtra els resultats per competició');
-    competitionFilter.append(new Option('Totes les competicions', ''));
-    competitionLabel.append(competitionFilter);
+    competitionLabel.append(competitionFilter,competitionList);
     filterRow.append(clubLabel, categoryLabel, competitionLabel);
     content = make('div', 'cards');
     status = make('p', 'zok-recent-stamp', 'Font: Agenda i En directe');
@@ -485,9 +495,9 @@
         panel.hidden = true;
       }
     }, true);
-    clubFilter.addEventListener('change', () => { updateCompetitionOptions(); updateCategoryOptions(); renderCards(); });
-    categoryFilter.addEventListener('change', renderCards);
-    competitionFilter.addEventListener('change', () => { updateCategoryOptions(); renderCards(); });
+    clubFilter.addEventListener('input', () => { updateCompetitionOptions(); updateCategoryOptions(); renderCards(); });
+    categoryFilter.addEventListener('input', () => { updateCompetitionOptions(); renderCards(); });
+    competitionFilter.addEventListener('input', () => { updateCategoryOptions(); renderCards(); });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install, {once: true});
