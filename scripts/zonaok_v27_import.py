@@ -23,24 +23,26 @@ MAX_PACKET = 62000
 def decode_payload(value):
     """Extract the Base64 payload without accidentally decoding wrapper text."""
     value=unicodedata.normalize('NFKC',str(value or '')).strip()
-    # Filtering non-Base64 characters corrupts wrapper text because its letters
-    # are valid Base64 too. Decode candidate runs and accept only gzip or JSON.
+    # Wrapper labels may contain valid Base64 letters; don't strip punctuation
+    # and concatenate those letters into the payload.
     candidates=re.findall(r'[A-Za-z0-9+/_-]+={0,2}',value)
-    # Some Shortcuts versions turn '+' into spaces. Restore them only if the
-    # whole input otherwise consists solely of Base64 characters and spaces.
     if re.fullmatch(r'[A-Za-z0-9/_=+\-\s]+',value):
         candidates.append(re.sub(r'\s+','',value))
         candidates.append(re.sub(r'\s+','+',value))
     candidates=sorted({x for x in candidates if len(x)>=16},key=len,reverse=True)
     for candidate in candidates:
-        if len(candidate)>MAX_PACKET:continue
-        encoded=candidate.replace('-','+').replace('_','/')
-        encoded+='='*(-len(encoded)%4)
-        try: raw=base64.b64decode(encoded,validate=True)
-        except (ValueError,base64.binascii.Error):continue
-        if raw.startswith(b'\x1f\x8b') or raw.lstrip().startswith((b'{',b'[')):
-            return raw
-    raise ValueError('El paquet rebut no és Base64 vàlid o no conté gzip/JSON. No s’ha escrit res; revisa la variable payload de la drecera.')
+        # Accommodate a short label concatenated directly to the Base64 text.
+        for offset in range(min(128,len(candidate))):
+            fragment=candidate[offset:]
+            if len(fragment)>MAX_PACKET:continue
+            encoded=fragment.replace('-','+').replace('_','/')
+            encoded+='='*(-len(encoded)%4)
+            try: raw=base64.b64decode(encoded,validate=True)
+            except (ValueError,base64.binascii.Error):continue
+            if raw.startswith(b'\x1f\x8b') or raw.lstrip().startswith((b'{',b'[')):
+                return raw
+    sizes=','.join(str(len(x)) for x in candidates[:6]) or 'cap'
+    raise ValueError(f'Base64 vàlid absent o no conté gzip/JSON (entrada={len(value)} caràcters; trams Base64={sizes}). No s’ha escrit res.')
 
 
 def stamp(value):
