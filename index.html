@@ -335,6 +335,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
       <label>Categoria<select id="standing-category-filter" aria-label="Filtra la classificació per categoria"><option value="">Totes les categories</option></select></label>
       <label>Competició<select id="standing-competition-filter" aria-label="Filtra la classificació per competició"><option value="">Totes les competicions</option></select></label>
     </div>
+    <p id="zonaok-classificacions-status" class="helper" hidden role="status" aria-live="polite"></p>
     <div id="results-list" class="cards"></div>
   </section>
   <section class="section">
@@ -374,7 +375,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
   <div class="navgrid">
     <button data-tab="celoni" class="navbtn" aria-label="CP Sant Celoni" title="CP Sant Celoni"><span class="club-icon club-icon-celoni"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/281.png" alt="" loading="eager" decoding="async"></span><strong>CP Sant Celoni</strong><small>Setmana</small></button>
     <button data-tab="barca" class="navbtn" aria-label="Bar&#xE7;a" title="Bar&#xE7;a"><span class="club-icon club-icon-barca"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/234.png" alt="" loading="eager" decoding="async"></span><strong>Bar&#xE7;a</strong><small>Setmana</small></button>
-    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>&#x25A5;</span><strong>Classificacions</strong><small>Grups FECAPA</small></button>
+    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>&#x25A5;</span><strong>Classificacions</strong><small id="zonaok-classificacions-count">Carregant…</small></button>
     <button data-tab="grupalevi" class="navbtn" aria-label="Alev&#xED; OR 3 &#xB7; Temporada de Mag&#xED;" title="Alev&#xED; OR 3 &#xB7; Mag&#xED;"><span class="nav-name">Mag&#xED;</span><strong>Bar&#xE7;a Alev&#xED; OR 3</strong><small>Setmana</small></button>
     <button data-tab="grupinfantil" class="navbtn" aria-label="Infantil OR 10 &#xB7; Temporada de Ton" title="Infantil OR 10 &#xB7; Ton"><span class="nav-name">Ton</span><strong>Sant Celoni B Infantil OR 10</strong><small>Setmana</small></button>
     <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>&#x2302;</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
@@ -1456,6 +1457,17 @@ function renderClassificationSection(box){
   const root=$$('#standings-filters'),club=$$('#standing-club-filter'),category=$$('#standing-category-filter'),competition=$$('#standing-competition-filter');
   root.hidden=false;
   const entries=Object.entries(store.classifications||{}).map(([id,item])=>({id,name:String(item.name||id),category:String(item.category||zonaokStandingCategory(item.name||id)),competition:String(item.competition||zonaokStandingCompetition(item.name||id)),rows:item.standings||[],standingsAt:item.standingsAt||item.capturedAt||''}));
+  const loaded=entries.filter(e=>e.rows.length).length;
+  const navCount=document.querySelector('[data-tab="classificacions"] small');
+  if(navCount)navCount.textContent=loaded?loaded+' grups':'Sense importar';
+  const status=$$('#zonaok-classificacions-status');
+  if(status){
+    status.hidden=false;
+    status.textContent=loaded
+      ? loaded+' grups de classificació carregats del JSON de GitHub.'
+      : (window.ZonaOKClassificacionsError || 'Carregant les classificacions del JSON de GitHub…');
+  }
+
   for(const id of Object.keys(LEAGUES))if(!entries.some(entry=>entry.id===id||entry.id.startsWith(id+':'))&&(store[id]?.standings||[]).length)entries.push({id,name:LEAGUES[id].name,category:zonaokStandingCategory(LEAGUES[id].name),competition:zonaokStandingCompetition(LEAGUES[id].name),rows:store[id].standings,standingsAt:store[id].standingsAt||''});
   const clubOptions=new Map();
   for(const entry of entries)for(const row of entry.rows){const display=zonaokStandingDisplayName(entry.id,row.team),key=zonaokStandingClubKey(display);if(key&&!clubOptions.has(key))clubOptions.set(key,String(display).replace(/\s+[A-D]$/i,''));}
@@ -1487,7 +1499,7 @@ function renderClassificationSection(box){
   }
   if(!any&&entries.every(entry=>!entry.rows.length))toast('Importa les classificacions des de Safari.');
 }
-function renderSection(key){const section=SECTIONS[key];if(!section)return;const standingsFilters=$$('#standings-filters');if(standingsFilters)standingsFilters.hidden=key!=='classificacions';weekText();const seasonToggle=$$('#season-toggle');if(seasonToggle){seasonToggle.hidden=['classificacions','barca','celoni','grupalevi','grupinfantil'].includes(key);seasonToggle.textContent=showSeason?'Veure setmana':'Tota la temporada';}$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const {start,end}=chosenWeek();if(key==='classificacions'){renderClassificationSection(box);return;}
+function renderSection(key){const section=SECTIONS[key];if(!section)return;const standingsFilters=$$('#standings-filters');if(standingsFilters)standingsFilters.hidden=key!=='classificacions';const classStatus=$$('#zonaok-classificacions-status');if(classStatus)classStatus.hidden=key!=='classificacions';weekText();const seasonToggle=$$('#season-toggle');if(seasonToggle){seasonToggle.hidden=['classificacions','barca','celoni','grupalevi','grupinfantil'].includes(key);seasonToggle.textContent=showSeason?'Veure setmana':'Tota la temporada';}$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const {start,end}=chosenWeek();if(key==='classificacions'){renderClassificationSection(box);return;}
 if(key==='grupalevi'||key==='grupinfantil'){mostrarTemporadaJugador(key,box);return;}
 if(key==='celoni'||key==='barca'){
   const club=key==='celoni'?'celoni':'barca',source=clubRows();
@@ -1880,114 +1892,126 @@ window.ZonaOKRefreshSources=async function(){
 })();
 </script>
 <script id="zonaok-v27-classificacions">
-/* ZonaOK V27.7 · Lectura del catàleg unificat de classificacions.
-   Correcció: funcions internes pròpies (sense dependències del script app.js).
-   Manté Agenda, En directe i Actes sense modificacions.
-   Carrega tots els grups de zonaok-classificacions.json, i actualitza
-   les classificacions ràpides de Magí / Ton a partir dels seus grups.
+/* ZonaOK V27.8 · Classificacions de tots els grups presents al JSON.
+   Lector autònom, recompte dinàmic, recàrrega quan s'obre la pestanya.
+   El catàleg unificat és la font principal. Els JSON de 3 lligues són
+   només una compatibilitat per als grups que encara no s'han importat.
+   NO modifica l'Agenda, els marcadors, les actes ni la captura Safari.
 */
 (function(){
   'use strict';
+  const SAFE=window.ZonaOKSafeStorage;
   const LEAGUES=['4789','4786','4784'];
-  const FAVORITE_GROUPS={
-    '4789':'ALEVI OR 3',
-    '4786':'INFANTIL OR 10',
-    '4784':'JUVENIL OR 6'
-  };
+  const GROUPS={'4789':'ALEVI OR 3','4786':'INFANTIL OR 10','4784':'JUVENIL OR 6'};
   const has=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
-  const normalizeName=x=>String(x??'').normalize('NFD')
-    .replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-zA-Z0-9]+/g,' ').trim().toUpperCase();
+  const norm=x=>String(x??'').normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,' ').trim().toUpperCase();
   const stamp=x=>{const n=Date.parse(String(x||''));return Number.isFinite(n)?n:0;};
+  const countLabel=n=>{
+    const node=document.querySelector('[data-tab="classificacions"] small');
+    if(node)node.textContent=n?n+' grups':'Sense importar';
+  };
   let busy=null;
 
   async function loadStandings(){
     if(busy)return busy;
     busy=(async()=>{
-      let changed=0;
+      let changes=0;
       const imported=new Set();
-
-      // Font principal: totes les classificacions de tots els grups FECAPA.
+      let error='';
       try{
-        const response=await fetch('zonaok-classificacions.json?v27='+Date.now(),{cache:'no-store'});
-        if(response.ok){
-          const data=await response.json();
-          const catalog=has(data)&&['zonaok-classificacions-v1','zonaok-classificacions-v2'].includes(data.schema)
-            ?(has(data.competitions)?data.competitions:data.leagues):null;
-          if(has(catalog)){
-            const local=window.ZonaOKSafeStorage.read();
-            const merged={...(has(local.classifications)?local.classifications:{})};
-
-            for(const [id,item] of Object.entries(catalog)){
-              if(!has(item)||!Array.isArray(item.standings)||item.standings.length<2||item.standings.length>50||
-                 item.standings.some(x=>!has(x)||!String(x.team||'').trim()))continue;
-              const at=String(item.standingsAt||item.capturedAt||'');
-              if(!stamp(at))continue;
-              const old=merged[id]||{};
-              if(stamp(at)<stamp(old.standingsAt||old.capturedAt))continue;
-
-              merged[id]={...old,...item,standingsAt:at};
-              changed++;
-              const league=String(item.leagueId||id.split(':')[0]);
-              imported.add(league);
-
-              // Les finestres de classificació Magí/Ton llegeixen store[league].
-              // No confondre tota la lliga 4789 amb el grup Aleví OR 3.
-              if(LEAGUES.includes(league)&&normalizeName(item.name)===FAVORITE_GROUPS[league]){
-                const current=window.ZonaOKSafeStorage.read()[league]||{};
-                if(stamp(at)>=stamp(current.standingsAt)){
-                  window.ZonaOKSafeStorage.setSection(league,{
-                    ...current,standings:item.standings,standingsAt:at
-                  });
-                }
-              }
-            }
-            if(Object.keys(merged).length){
-              window.ZonaOKSafeStorage.setClassifications(merged);
+        const url=new URL('zonaok-classificacions.json',document.baseURI);
+        url.searchParams.set('zonaok_v278',String(Date.now()));
+        const response=await fetch(url.href,{cache:'no-store'});
+        if(!response.ok)throw Error('JSON unificat: HTTP '+response.status);
+        const data=await response.json();
+        if(!has(data)||!['zonaok-classificacions-v1','zonaok-classificacions-v2'].includes(data.schema))
+          throw Error('Format de classificacions no reconegut');
+        const catalog=has(data.competitions)?data.competitions:data.leagues;
+        if(!has(catalog))throw Error('El JSON no conté el catàleg de competicions');
+        const current=SAFE.read();
+        const merged={...(has(current.classifications)?current.classifications:{})};
+        let accepted=0;
+        for(const [id,item] of Object.entries(catalog)){
+          if(!has(item)||!Array.isArray(item.standings)||item.standings.length<2||item.standings.length>50||
+             item.standings.some(r=>!has(r)||!String(r.team||'').trim()))continue;
+          const at=String(item.standingsAt||item.capturedAt||data.capturedAt||'');
+          if(!stamp(at))continue;
+          const old=merged[id]||{};
+          if(stamp(at)<stamp(old.standingsAt||old.capturedAt))continue;
+          merged[id]={...old,...item,standingsAt:at};
+          accepted++;
+          const league=String(item.leagueId||id.split(':')[0]);
+          imported.add(league);
+          if(LEAGUES.includes(league)&&norm(item.name)===GROUPS[league]){
+            const prior=SAFE.read()[league]||{};
+            if(stamp(at)>=stamp(prior.standingsAt)){
+              SAFE.setSection(league,{...prior,standings:item.standings,standingsAt:at});
             }
           }
         }
-      }catch(error){
-        console.warn('ZonaOK: error llegint el JSON unificat de classificacions',error);
+        if(!accepted)throw Error('No hi ha classificacions vàlides al catàleg');
+        SAFE.setClassifications(merged);
+        changes+=accepted;
+        countLabel(Object.values(merged).filter(x=>Array.isArray(x?.standings)&&x.standings.length).length);
+        window.ZonaOKClassificacionsError='';
+      }catch(e){
+        error=e.message||String(e);
+        console.warn('ZonaOK: error JSON unificat classificacions',e);
       }
 
-      // Compatibilitat amb els JSON individuals publicats anteriorment.
-      // Només es consulten si el catàleg no aporta aquella lliga.
+      // Compatibilitat: només per a les lligues que no apareixen al catàleg.
       for(const id of LEAGUES){
         if(imported.has(id))continue;
-        const file='zonaok-classificacio-'+id+'.json';
         try{
-          const response=await fetch(file+'?v27='+Date.now(),{cache:'no-store'});
+          const url=new URL('zonaok-classificacio-'+id+'.json',document.baseURI);
+          url.searchParams.set('zonaok_v278',String(Date.now()));
+          const response=await fetch(url.href,{cache:'no-store'});
           if(!response.ok)continue;
           const data=await response.json();
           if(!has(data)||data.schema!=='zonaok-classificacio-v1'||String(data.league)!==id||
              !Array.isArray(data.standings)||data.standings.length<2||data.standings.length>50||
-             data.standings.some(x=>!has(x)||!String(x.team||'').trim()))continue;
+             data.standings.some(r=>!has(r)||!String(r.team||'').trim()))continue;
           const at=String(data.standingsAt||data.capturedAt||'');
-          if(!stamp(at))continue;
-          const old=window.ZonaOKSafeStorage.read()[id]||{};
-          if(stamp(at)<stamp(old.standingsAt))continue;
-          window.ZonaOKSafeStorage.setSection(id,{
+          const old=SAFE.read()[id]||{};
+          if(!stamp(at)||stamp(at)<stamp(old.standingsAt))continue;
+          SAFE.setSection(id,{
             ...old,standings:data.standings,standingsAt:at,
             capturedAt:stamp(at)>stamp(old.capturedAt)?at:String(old.capturedAt||'')
           });
-          changed++;
-        }catch(error){console.warn('ZonaOK: error llegint '+file,error);}
+          changes++;
+        }catch(e){console.warn('ZonaOK: error JSON individual '+id,e);}
       }
-      if(changed)window.ZonaOKRender?.();
-      return changed>0;
+      const snapshot=SAFE.read();
+      const total=Object.values(snapshot.classifications||{}).filter(x=>Array.isArray(x?.standings)&&x.standings.length).length;
+      countLabel(total);
+      window.ZonaOKClassificacionsError=total?'':
+        (error?'No s’ha carregat el JSON unificat: '+error:'No hi ha grups al JSON unificat.');
+      if(typeof window.ZonaOKRender==='function')window.ZonaOKRender();
+      return changes>0;
     })();
     try{return await busy}finally{busy=null;}
   }
 
   const previous=window.ZonaOKRefreshSources;
   window.ZonaOKRefreshSources=async function(){
-    // Preservem exactament el carregador anterior d'Agenda i Actes.
-    const old=typeof previous==='function'?await previous():false;
-    const newer=await loadStandings();
-    return Boolean(old||newer);
+    // Primer es carrega l'Agenda, i després les classificacions, per evitar
+    // que la substitució de zonaok-data.json esborri el catàleg carregat.
+    let other=false;
+    try{other=typeof previous==='function'?await previous():false;}
+    catch(e){console.warn('ZonaOK: error actualitzant fonts anteriors',e);}
+    const classes=await loadStandings();
+    return Boolean(other||classes);
   };
   window.ZonaOKReloadClassificacions=loadStandings;
+  const tab=document.querySelector('[data-tab="classificacions"]');
+  if(tab)tab.addEventListener('click',()=>{loadStandings();});
+  // Si el carregador inicial d'Agenda no s'ha executat, encara podem
+  // importar classificacions. L'espera evita competir amb la càrrega inicial.
+  window.addEventListener('load',()=>{
+    const loaded=SAFE.read().classifications;
+    if(!has(loaded)||!Object.keys(loaded).length)loadStandings();
+  },{once:true});
 })();
 </script>
 <script id="zonaok-pull-refresh-v23">
