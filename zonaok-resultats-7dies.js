@@ -277,15 +277,13 @@
     setSuggestions(clubFilter, options);
   }
 
-  function setSuggestions(input, values) {
-    const list = input.list;
-    if (!list) return;
-    list.replaceChildren(...[...new Set(values)].map(value => {
-      const option = document.createElement('option');
-      option.value = value;
-      return option;
-    }));
+  function mountSuggestions(input) {
+    const wrap=make('div','zok-suggest-wrap'),menu=make('div','zok-suggestions');
+    menu.setAttribute('role','listbox'); input.removeAttribute('list'); input.parentNode.insertBefore(wrap,input); wrap.append(input,menu); input._zokOptions=[];
+    const draw=()=>{const q=input.value,values=input._zokOptions.filter(v=>!q||norm(v).includes(norm(q))).slice(0,40);menu.replaceChildren(...values.map(value=>{const b=make('button','',value);b.type='button';b.setAttribute('role','option');b.addEventListener('mousedown',e=>e.preventDefault());b.addEventListener('click',()=>{input.value=value;menu.classList.remove('open');input.dispatchEvent(new Event('input',{bubbles:true}));input.focus()});return b}));menu.classList.toggle('open',document.activeElement===input&&values.length>0)};
+    input.addEventListener('focus',draw);input.addEventListener('input',draw);input.addEventListener('keydown',e=>{if(e.key==='Escape')menu.classList.remove('open')});input.addEventListener('blur',()=>setTimeout(()=>menu.classList.remove('open'),130));input._zokDraw=draw;
   }
+  function setSuggestions(input, values) { input._zokOptions=[...new Set(values)]; input._zokDraw?.(); }
   const queryMatches = (value, query) => !query || norm(value).includes(norm(query));
 
   function updateCategoryOptions() {
@@ -401,6 +399,11 @@
       body.zok-recent-mode #${ID} .zok-recent-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin:14px 0 7px}
       #${ID} .zok-recent-filters label{display:grid;gap:6px;font-size:12px;font-weight:850;color:#b9dbec}
       #${ID} .zok-recent-filters input{width:100%;min-width:0;padding:12px 8px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fff;font:inherit;font-size:12px}
+      #${ID} .zok-suggest-wrap{position:relative;min-width:0}
+      #${ID} .zok-suggestions{display:none;position:absolute;z-index:30;top:calc(100% + 4px);left:0;right:0;max-height:220px;overflow:auto;padding:4px;border:1px solid #7597b0;border-radius:10px;background:#183d5b;box-shadow:0 8px 24px #001522aa}
+      #${ID} .zok-suggestions.open{display:grid}
+      #${ID} .zok-suggestions button{padding:9px 10px;border:0;border-radius:7px;background:transparent;color:#fff;text-align:left;font:inherit;font-size:12px;cursor:pointer}
+      #${ID} .zok-suggestions button:hover,#${ID} .zok-suggestions button:focus{background:#2869c7;outline:0}
       #${ID} .zok-recent-period{font-size:12px;color:#b3cee1;margin:7px 0 14px}
       /* V4 · Dues línies i sense franja inferior: només menú Resultats. */
       #${ID} .cards{display:grid;grid-template-columns:minmax(0,1fr);gap:5px}
@@ -458,21 +461,18 @@
     const clubLabel = make('label', '', 'Club');
     clubFilter = make('input');
     clubFilter.type = 'search'; clubFilter.placeholder = 'Tots els clubs'; clubFilter.setAttribute('list','zok-results-clubs');
-    const clubList = make('datalist'); clubList.id = 'zok-results-clubs';
     clubFilter.setAttribute('aria-label', 'Filtra els resultats per club');
-    clubLabel.append(clubFilter,clubList);
+    clubLabel.append(clubFilter); mountSuggestions(clubFilter);
     const categoryLabel = make('label', '', 'Categoria');
     categoryFilter = make('input');
     categoryFilter.type='search'; categoryFilter.placeholder='Totes les categories'; categoryFilter.setAttribute('list','zok-results-categories');
-    const categoryList=make('datalist'); categoryList.id='zok-results-categories';
     categoryFilter.setAttribute('aria-label', 'Filtra els resultats per categoria');
-    categoryLabel.append(categoryFilter,categoryList);
+    categoryLabel.append(categoryFilter); mountSuggestions(categoryFilter);
     const competitionLabel = make('label', '', 'Competició');
     competitionFilter = make('input');
     competitionFilter.type='search'; competitionFilter.placeholder='Totes les competicions'; competitionFilter.setAttribute('list','zok-results-competitions');
-    const competitionList=make('datalist'); competitionList.id='zok-results-competitions';
     competitionFilter.setAttribute('aria-label', 'Filtra els resultats per competició');
-    competitionLabel.append(competitionFilter,competitionList);
+    competitionLabel.append(competitionFilter); mountSuggestions(competitionFilter);
     filterRow.append(clubLabel, categoryLabel, competitionLabel);
     content = make('div', 'cards');
     status = make('p', 'zok-recent-stamp', 'Font: Agenda i En directe');
