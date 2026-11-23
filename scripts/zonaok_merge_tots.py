@@ -186,7 +186,15 @@ def capture(kind, current_season):
     if kind == 'directe':
         dated = []
         for candidate in (ROOT / 'imports' / 'directe' / 'v29').glob('*.json'):
-            value = load(candidate)
+            try:
+                value = load(candidate)
+            except json.JSONDecodeError:
+                # Les versions anteriors de la drecera desaven missatges
+                # d'error com a .json. No són captures vàlides ni han de
+                # bloquejar una importació posterior correcta.
+                if candidate.read_text(encoding='utf-8').lstrip().startswith('ERROR:'):
+                    continue
+                raise
             if (isinstance(value, dict) and value.get('schema') == SCHEMA and
                     value.get('kind') == kind):
                 dated.append((stamp(value.get('capturedAt')), candidate, value))
