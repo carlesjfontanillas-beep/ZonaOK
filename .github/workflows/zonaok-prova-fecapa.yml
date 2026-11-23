@@ -1,0 +1,125 @@
+
+name: ZonaOK - Prova navegador FECAPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provar-fecapa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Instal·lar Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Navegar a FECAPA
+        run: |
+          cat > prova-fecapa.cjs <<'JS'
+          const { chromium } = require('playwright');
+          const fs = require('node:fs');
+
+          (async () => {
+            const browser = await chromium.launch({
+              headless: false
+            });
+
+            try {
+              const context = await browser.newContext({
+                locale: 'ca-ES',
+                timezoneId: 'Europe/Madrid',
+                viewport: { width: 1440, height: 900 }
+              });
+
+              const page = await context.newPage();
+
+              page.on('response', response => {
+                if ([403, 429].includes(response.status())) {
+                  console.log('HTTP bloquejat:',
+                    response.status(), response.url());
+                }
+              });
+
+              const url =
+                'https://www.hoqueipatins.fecapa.cat/' +
+                '?liga=4789&vista=clasificaciones';
+
+              let error = '';
+
+              try {
+                await page.goto(url, {
+                  waitUntil: 'domcontentloaded',
+                  timeout: 45000
+                });
+
+                await page.locator(
+                  'table.sidgad-clasif-tabla tbody tr'
+                ).first().waitFor({ timeout: 45000 });
+
+              } catch (e) {
+                error = String(e.message || e);
+              }
+
+              const result = await page.evaluate(() => ({
+                url: location.href,
+                title: document.title,
+                groups: document.querySelectorAll(
+                  'table.sidgad-clasif-tabla'
+                ).length,
+                rows: document.querySelectorAll(
+                  'table.sidgad-clasif-tabla tbody tr'
+                ).length,
+                headings: [
+                  ...document.querySelectorAll('h1,h2,h3,h4')
+                ].map(e => e.textContent.trim())
+                 .filter(Boolean).slice(0, 30)
+              }));
+
+              result.error = error;
+
+              console.log('RESULTAT FECAPA:',
+                JSON.stringify(result, null, 2));
+
+              await page.screenshot({
+                path: 'prova-fecapa.png',
+                fullPage: true
+              });
+
+              fs.writeFileSync(
+                'prova-fecapa.json',
+                JSON.stringify(result, null, 2)
+              );
+
+              if (result.rows < 2) process.exitCode = 1;
+
+            } finally {
+              await browser.close();
+            }
+          })().catch(e => {
+            console.error(e);
+            process.exitCode = 1;
+          });
+          JS
+
+          xvfb-run -a node prova-fecapa.cjs
+
+      - name: Guardar diagnòstic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prova-navegador-fecapa
+          path: |
+            prova-fecapa.png
+            prova-fecapa.json
+          if-no-files-found: warn
