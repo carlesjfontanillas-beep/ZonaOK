@@ -48,11 +48,9 @@
     const count=Object.keys(competitions).length;if(!count)throw Error('No he pogut llegir taules de classificació. Obre la pestanya «Classificacions» i espera que carregui.');
     const packet={source:'FECAPA-SAFARI',version:3,kind:'classificacions-total',capturedAt:new Date().toISOString(),competitions};
     const bytes=new TextEncoder().encode(JSON.stringify(packet));let packed=bytes;
-    if(typeof CompressionStream==='function')packed=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());
+    if(typeof CompressionStream==='function')packed=new Uint8Array(await (async()=>{const source=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);const compressor=new CompressionStream('gzip');const ;
     let binary='';for(let i=0;i<packed.length;i+=8192)binary+=String.fromCharCode(...packed.subarray(i,i+8192));
     const encoded=btoa(binary).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
     if(!/^[A-Za-z0-9_-]+$/.test(encoded))throw Error('El paquet no s’ha pogut convertir en Base64 URL segura; no s’ha enviat.');
-    if(encoded.length>62000)throw Error('El fitxer de totes les classificacions supera el límit; he recollit '+count+' grups, però no s’ha enviat.');
-    completion(encoded);
-  }catch(error){completion('ERROR: '+String(error?.message||error))}
+    if(encoded.length>62000)throw Error('El fitxer de totes les classificacions supera el límit; he recollit '+count+' grups, pwriter=compressor.writable.getWriter();await writer.write(source);await writer.close();return new Response(compressor.readable).arrayBuffer()})())}catch(error){completion('')}mpletion('ERROR: '+String(error?.message||error))}
 })();
