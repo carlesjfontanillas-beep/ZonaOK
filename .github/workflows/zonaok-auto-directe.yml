@@ -1,0 +1,112 @@
+
+name: 'ZonaOK - En directe TOTAL AUTO (Chromium Playwright)'
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Agenda: maxim lligues; Actes: maxim fitxes; 0 = totes. Directe: sense efecte'
+        required: true
+        type: number
+        default: 1
+      publish:
+        description: 'Publicar les dades verificades? Desmarcat en les primeres proves.'
+        required: true
+        type: boolean
+        default: false
+  # Programacio desactivada fins a validar les captures reals.
+  # schedule:
+  #   - cron: '*/30 7-22 * * *'
+
+permissions:
+  contents: write
+
+# Mateix grup que l'antic consolidador: cap actualitzacio simultania dels JSON.
+concurrency:
+  group: zonaok-tots-clubs
+  cancel-in-progress: false
+
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instal·lar Playwright + Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install 'playwright>=1.55,<2'
+          python -m playwright install --with-deps chromium
+      - name: Proves de fusió conservadora
+        shell: bash
+        run: python -m unittest discover -s tests -p 'test_fecapa_unificat.py' -v
+      - name: Capturar directe a FECAPA amb navegador real
+        shell: bash
+        env:
+          LIMIT: ${{ inputs.limit }}
+        run: |
+          set -euo pipefail
+          xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \
+            --mode directe --limit "${LIMIT:-1}" \
+            --capture captura-directe-auto.json --report diagnostic-directe-auto.json
+      - name: Fusionar JSON únic i generar fitxers compatibles
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/zonaok_fecapa_unificat.py merge \
+            --mode directe --capture captura-directe-auto.json \
+            --output zonaok-tots-partits.json --compat --report fusio-directe-auto.json
+      - name: Publicar només si l'usuari ho activa
+        if: ${{ inputs.publish == true || github.event_name == 'schedule' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # Captura ja feta, pero es refa la fusio amb el main mes recent.
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/zonaok_fecapa_unificat.py merge \
+              --mode directe --capture captura-directe-auto.json \
+              --output zonaok-tots-partits.json --compat --report fusio-directe-auto.json
+            git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
+            if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
+            if git diff --cached --quiet; then echo 'Sense canvis nous'; exit 0; fi
+            git commit -m 'ZonaOK AUTO: directe actualitzar JSON unificat'
+            if git push origin HEAD:main; then exit 0; fi
+            echo 'Canvi concurrent a main, es reintenta la fusio...'
+            sleep 2
+          done
+          echo "ERROR: no s'ha pogut publicar després de 4 intents" >&2
+          exit 1
+      - name: Resum de captura i fusio
+        if: always()
+        shell: bash
+        run: |
+          for f in diagnostic-directe-auto.json fusio-directe-auto.json; do
+            if [ -f "$f" ]; then
+              echo "## $f" >> "$GITHUB_STEP_SUMMARY"
+              echo '```json' >> "$GITHUB_STEP_SUMMARY"
+              head -c 8000 "$f" >> "$GITHUB_STEP_SUMMARY"
+              printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+      - name: Desar diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zonaok-directe-diagnostic
+          if-no-files-found: ignore
+          path: |
+            diagnostic-directe-auto.json
+            captura-directe-auto.json
+            fusio-directe-auto.json
