@@ -52,7 +52,7 @@ jobs:
           python -m pip install 'playwright>=1.55,<2'
           python -m playwright install --with-deps chromium
 
-      - name: Navegar per FECAPA i capturar les lligues
+      - name: Navegar per FECAPA i capturar les lligues (V3)
         env:
           LIMIT: ${{ github.event_name == 'schedule' && '0' || inputs.limit }}
         shell: bash
@@ -64,6 +64,39 @@ jobs:
             --capture captura-classificacions.json \
             --report diagnostic-classificacions.json
           python -m json.tool diagnostic-classificacions.json
+
+      - name: Informar dels grups i errors trobats
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PYCODE'
+          import json, os
+          from pathlib import Path
+          file = Path('diagnostic-classificacions.json')
+          if not file.exists():
+              print('::warning::No s’ha generat el diagnòstic de FECAPA')
+          else:
+              data = json.loads(file.read_text(encoding='utf-8'))
+              stats = data.get('stats', {})
+              summary = [
+                  '## ZonaOK — Diagnòstic Classificacions V3',
+                  f"- Descobertes: {stats.get('discoveredLeagues', 0)} lligues",
+                  f"- Comprovades: {stats.get('checkedLeagues', 0)} lligues",
+                  f"- Llegides: {stats.get('validLeagues', 0)} lligues, {stats.get('groups', 0)} grups, {stats.get('teams', 0)} equips",
+                  f"- Amb error: {stats.get('failedLeagues', 0)} lligues",
+              ]
+              for e in data.get('failed', []):
+                  msg=f"Lliga {e.get('leagueId')}: {e.get('error', '')}"
+                  print('::warning::'+msg[:500])
+                  summary.append('- Error: '+msg[:200])
+              for msg in data.get('warnings', []):
+                  print('::warning::'+str(msg)[:500])
+                  summary.append('- Avís: '+str(msg)[:200])
+              path=os.environ.get('GITHUB_STEP_SUMMARY')
+              if path:
+                  with open(path,'a',encoding='utf-8') as f:
+                      f.write('\n'.join(summary)+'\n')
+          PYCODE
 
       - name: Arxivar captura i diagnòstic
         if: always()
