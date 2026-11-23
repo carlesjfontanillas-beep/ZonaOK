@@ -1,0 +1,108 @@
+name: ZonaOK - Classificacions AUTO (prova segura)
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Nombre maxim de lligues a comprovar; 0 = totes les descobertes'
+        required: true
+        type: choice
+        options:
+          - '5'
+          - '10'
+          - '0'
+        default: '5'
+      publish:
+        description: 'Publicar al JSON? DESACTIVAT per defecte; primer verificar el diagnostic'
+        required: true
+        type: boolean
+        default: false
+  # Activar NOMES quan la prova amb limit=0 sigui satisfactoria.
+  # schedule:
+  #   - cron: '20 4 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zonaok-v27-classificacions-resultats
+  cancel-in-progress: false
+
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Repositori actual
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instal·lar navegador Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install 'playwright>=1.55,<2'
+          python -m playwright install --with-deps chromium
+
+      - name: Navegar per FECAPA i capturar les lligues
+        env:
+          LIMIT: ${{ github.event_name == 'schedule' && '0' || inputs.limit }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          xvfb-run -a python scripts/zonaok_classificacions_auto.py collect \
+            --limit "$LIMIT" \
+            --existing zonaok-classificacions.json \
+            --capture captura-classificacions.json \
+            --report diagnostic-classificacions.json
+          python -m json.tool diagnostic-classificacions.json
+
+      - name: Arxivar captura i diagnòstic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zonaok-classificacions-diagnostic
+          path: |
+            captura-classificacions.json
+            diagnostic-classificacions.json
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Fusionar i publicar (només amb publish=true)
+        if: ${{ (github.event_name == 'schedule') || (inputs.publish == true) }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/zonaok_classificacions_auto.py merge \
+              --capture captura-classificacions.json \
+              --existing zonaok-classificacions.json \
+              --output zonaok-classificacions.json \
+              --report diagnostic-fusio.json
+            git add -- zonaok-classificacions.json
+            if git diff --cached --quiet; then
+              echo 'Sense canvis de classificacio.'
+              exit 0
+            fi
+            git commit -m 'ZonaOK: actualitzar classificacions des de Chromium'
+            if git push origin HEAD:main; then
+              echo 'Classificacions publicades a main.'
+              exit 0
+            fi
+            echo "Conflicte de publicacio, reintent $attempt"
+            sleep 3
+          done
+          echo 'ERROR: cinc reintents de publicacio fallits.' >&2
+          exit 1
