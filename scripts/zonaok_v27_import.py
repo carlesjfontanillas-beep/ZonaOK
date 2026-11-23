@@ -21,19 +21,26 @@ MAX_PACKET = 62000
 
 
 def decode_payload(value):
-    """Decode URL-safe Base64 while ignoring characters added by text transport."""
-    encoded=unicodedata.normalize('NFKC',str(value or ''))
-    # The shortcut emits URL-safe Base64 (A-Z, a-z, 0-9, '-' and '_').
-    # Strip whitespace, markup and any other transport artifacts before decoding.
-    encoded=''.join(ch for ch in encoded if ch in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=+')
-    encoded=encoded.replace('-','+').replace('_','/')
-    if not encoded or len(encoded)>MAX_PACKET:
-        raise ValueError('Entrada buida o massa gran')
-    encoded += '=' * (-len(encoded) % 4)
-    try:
-        return base64.b64decode(encoded,validate=True)
-    except (ValueError,base64.binascii.Error) as exc:
-        raise ValueError('El paquet rebut no és Base64 vàlid. Torna a executar la drecera Classificacions TOTAL.') from exc
+    """Extract the Base64 payload without accidentally decoding wrapper text."""
+    value=unicodedata.normalize('NFKC',str(value or '')).strip()
+    # Filtering non-Base64 characters corrupts wrapper text because its letters
+    # are valid Base64 too. Decode candidate runs and accept only gzip or JSON.
+    candidates=re.findall(r'[A-Za-z0-9+/_-]+={0,2}',value)
+    # Some Shortcuts versions turn '+' into spaces. Restore them only if the
+    # whole input otherwise consists solely of Base64 characters and spaces.
+    if re.fullmatch(r'[A-Za-z0-9/_=+\-\s]+',value):
+        candidates.append(re.sub(r'\s+','',value))
+        candidates.append(re.sub(r'\s+','+',value))
+    candidates=sorted({x for x in candidates if len(x)>=16},key=len,reverse=True)
+    for candidate in candidates:
+        if len(candidate)>MAX_PACKET:continue
+        encoded=candidate.replace('-','+').replace('_','/')
+        encoded+='='*(-len(encoded)%4)
+        try: raw=base64.b64decode(encoded,validate=True)
+        except (ValueError,base64.binascii.Error):continue
+        if raw.startswith(b'\x1f\x8b') or raw.lstrip().startswith((b'{',b'[')):
+            return raw
+    raise ValueError('El paquet rebut no és Base64 vàlid o no conté gzip/JSON. No s’ha escrit res; revisa la variable payload de la drecera.')
 
 
 def stamp(value):
