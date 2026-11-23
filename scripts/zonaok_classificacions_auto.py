@@ -24,8 +24,11 @@ from urllib.parse import parse_qs, urlencode, urlparse
 ROOT = "https://www.hoqueipatins.fecapa.cat/"
 ALLOWED_HOSTS = {"hoqueipatins.fecapa.cat", "www.hoqueipatins.fecapa.cat"}
 # Referències oficials de competicions conegudes; NO equival a un catàleg exhaustiu.
-SEEDS = ("4789", "4786", "4784", "4822", "4823", "4824", "4825", "5082")
-MAX_DISCOVERED = 250
+# Competicions amb URL oficial FECAPA coneguda. No és un inventari complet.
+# Les dues primeres són importants per provar les fallades de V2.
+SEEDS = ("4789", "4786", "4784", "4822", "4823", "4824", "4825", "5082",
+         "4774", "4775", "4776", "4782", "4808", "4856")
+MAX_DISCOVERED = 300
 LEAGUE_RX = re.compile(r"(?i)(?:[?&]|%3[fF]|%26)liga(?:=|%3[dD])(\d{4,6})(?!\d)")
 ID_RX = re.compile(r"\d{4,6}")
 
@@ -125,37 +128,48 @@ JS_EXTRACT = r"""() => {
 }"""
 
 JS_DISCOVER = r"""() => {
-  const ids=new Set(),sources=[];
-  const add=(v,source)=>{
-    if(/^\d{4,6}$/.test(String(v||'')) && !['2026','2027','2028'].includes(String(v))) {
-      ids.add(String(v));sources.push([String(v),source]);
+  const ids=new Set(), sources=[];
+  const add=(value,source)=>{
+    const v=String(value??'').trim();
+    if(/^\d{4,6}$/.test(v) && !['2026','2027','2028'].includes(v)) {
+      ids.add(v);sources.push([v,source]);
     }
   };
-  const fromUrl=(s,source)=>{
-    try {const u=new URL(s,location.href);
+  const fromUrl=(value,source)=>{
+    try {
+      const u=new URL(value,location.href);
       if(!/^(?:www\.)?hoqueipatins\.fecapa\.cat$/i.test(u.hostname))return;
       add(u.searchParams.get('liga'),source);
     }catch(_){}
   };
   fromUrl(location.href,'pagina');
   const html=document.documentElement.outerHTML;
-  for (const m of html.matchAll(/[?&]liga(?:%3D|=)(\d{4,6})/gi))add(m[1],'HTML');
-  document.querySelectorAll('a[href], [data-liga], [data-id-liga], [data-league-id], [data-id-competicion]').forEach(el=>{
+  for (const m of html.matchAll(/[?&]liga(?:%3[Dd]|=)(\d{4,6})/gi)) add(m[1],'HTML');
+  document.querySelectorAll('a[href], [data-liga], [data-id-liga], [data-league-id], [data-id-competicion], [onclick]').forEach(el=>{
     fromUrl(el.getAttribute('href')||'', 'enllac');
-    for(const attr of ['data-liga','data-id-liga','data-league-id','data-id-competicion'])
-      add(el.getAttribute(attr),attr);
+    for(const attr of [...el.attributes]) {
+      if(/liga|league|competici/i.test(attr.name)){
+        add(attr.value, 'atribut:'+attr.name);
+        fromUrl(attr.value,'atribut-url:'+attr.name);
+        for(const m of attr.value.matchAll(/(?:liga|league)(?:_id|Id)?\D{0,8}(\d{4,6})/gi))add(m[1],'atribut:'+attr.name);
+      }
+    }
   });
   document.querySelectorAll('select').forEach(select=>{
-    const label=((select.id||'')+' '+(select.name||'')+' '+
-       (select.getAttribute('aria-label')||'')).toLowerCase();
+    const label=((select.id||'')+' '+(select.name||'')+' '+(select.getAttribute('aria-label')||'')).toLowerCase();
     for(const opt of select.querySelectorAll('option')){
       fromUrl(opt.value,'option-url');
       if(/liga|league|competi/.test(label))add(opt.value,'selector-competicio');
     }
   });
-  return {ids:[...ids],sources:sources.slice(0,1000)};
+  // Competitions can appear inside inline JS / JSON script nodes.
+  for(const el of document.querySelectorAll('script:not([src])')){
+    const body=el.textContent||'';
+    if(body.length>300000)continue;
+    for(const m of body.matchAll(/(?:[?&]liga=|["'](?:id_liga|league_id|liga)["']\s*:\s*["']?)(\d{4,6})/gi)) add(m[1],'script');
+  }
+  return {ids:[...ids],sources:sources.slice(0,2000)};
 }"""
-
 
 class Discovery:
     def __init__(self) -> None:
@@ -172,26 +186,30 @@ class Discovery:
         for match in LEAGUE_RX.finditer(text):
             self.add(match.group(1), source)
 
-    def from_json(self, value: object, source: str, depth: int = 0) -> None:
-        if depth > 7:
+    def from_json(self, value: object, source: str, depth: int = 0, parent: str = "") -> None:
+        if depth > 9:
             return
         if isinstance(value, dict):
-            for k, v in value.items():
-                key = norm(k).replace(" ", "_")
-                if key in {"LIGA", "ID_LIGA", "LEAGUE", "LEAGUE_ID", "ID_COMPETICION", "ID_COMPETICIO", "COMPETITION_ID", "ID_COMPETITION"}:
-                    self.add(v, source + ":" + key)
-                if isinstance(v, str) and len(v) < 25000:
-                    self.urls_from_text(v, source)
-                elif isinstance(v, (dict, list)):
-                    self.from_json(v, source, depth+1)
+            for key, val in value.items():
+                field = norm(key).replace(" ", "_")
+                if field in {"LIGA", "ID_LIGA", "LEAGUE", "LEAGUE_ID", "ID_COMPETICION", "ID_COMPETICIO", "COMPETITION_ID", "ID_COMPETITION"}:
+                    self.add(val, source+":"+field)
+                # Generic ID is safe only inside an explicitly named league collection.
+                if field in {"ID", "IDENTIFICADOR"} and re.search(r"LIGA|LEAGUE|COMPETI", parent):
+                    self.add(val, source+":ID-DINS-LLIGUES")
+                if isinstance(val, str) and len(val) < 350000:
+                    self.urls_from_text(val,source)
+                elif isinstance(val, (dict, list)):
+                    self.from_json(val, source, depth+1, field)
         elif isinstance(value, list):
-            for v in value[:2000]:
-                self.from_json(v, source, depth+1)
+            for item in value[:5000]:
+                self.from_json(item,source,depth+1,parent)
 
     async def inspect_response(self, response) -> None:
         try:
             url = response.url
-            if not any(x in urlparse(url).hostname or "" for x in ["fecapa.cat", "sidgad"]):
+            host = (urlparse(url).hostname or "").lower()
+            if not (host.endswith("fecapa.cat") or host.endswith("sidgad.es") or host.endswith("sidgad.cloud")):
                 return
             self.urls_from_text(url, "URL-XHR")
             typ = response.headers.get("content-type", "").lower()
@@ -225,110 +243,152 @@ class Discovery:
             pass
 
 
+async def inspect_catalogue(page, discover: Discovery, diagnostic: dict, location: str) -> None:
+    """Discover from the *rendered* catalogue; no raw HTTP scraping required."""
+    try:
+        await page.goto(location, wait_until="domcontentloaded", timeout=28000)
+        await page.wait_for_timeout(1700)
+        await discover.gather_page(page,"cataleg:"+location)
+        # A visible league/category menu is often a link rather than a button.
+        for pattern in (r"^(?:LEAGUES|LLIGUES)$", r"^(?:COMPETITIONS|COMPETICIONS|COMPETICIONES)$"):
+            for role in ("button", "link"):
+                choices=page.get_by_role(role,name=re.compile(pattern,re.I))
+                if await choices.count():
+                    try:
+                        await choices.first.click(timeout=2000)
+                        await page.wait_for_timeout(850)
+                        await discover.gather_page(page,"cataleg-menu:"+location)
+                    except Exception:
+                        pass
+        # Read any selectors that are dynamically populated after opening the catalogue.
+        await discover.gather_page(page,"cataleg-final:"+location)
+    except Exception as exc:
+        diagnostic["warnings"].append("Catàleg no llegible "+location+": "+str(exc)[:150])
+
+
+async def read_league(context, league: str, expected_groups: int, max_tries: int = 3) -> tuple[list, list, list]:
+    """One fresh tab per attempt prevents stale DOM from the previous league.
+
+    We poll for VALID rows, not the existence of a placeholder table. A stable
+    group/row signature over consecutive polls avoids prematurely reading XHR.
+    """
+    url=ROOT+"?"+urlencode({"liga":league,"vista":"clasificaciones"})
+    errors=[]
+    warnings=[]
+    best=[]
+    for attempt in range(1,max_tries+1):
+        page=await context.new_page()
+        page.set_default_timeout(12000)
+        try:
+            await page.goto(url,wait_until="domcontentloaded",timeout=30000)
+            # The page often renders a blank classification component then fills
+            # it asynchronously. Poll for fully parsed rows, not table existence.
+            stable=0
+            signature=None
+            latest=[]
+            for poll in range(24):
+                await page.wait_for_timeout(650)
+                result=await page.evaluate(JS_EXTRACT)
+                groups=result.get("groups",[])
+                if len(groups)>len(best):best=groups
+                err=result.get("errors",[])
+                if groups:
+                    current=tuple(sorted((g["name"],len(g["rows"])) for g in groups))
+                    stable=stable+1 if signature==current else 1
+                    signature=current
+                    latest=groups
+                    if len(groups)>=max(1,expected_groups) and stable>=3:
+                        return groups, errors, warnings+err[:5]
+                if poll==23:
+                    errors.append(f"Intent {attempt}: {len(groups)} grups; esperats >= {max(1,expected_groups)}"+
+                                  ("; "+"; ".join(err[:2]) if err else ""))
+            # On a newly discovered league, a single valid group can be genuine.
+            if latest and not expected_groups and stable>=3:
+                return latest, errors, warnings
+            if best and len(best)>=expected_groups and expected_groups>0:
+                # It may have loaded at the deadline; do not discard consistent rows.
+                return best, errors, warnings
+        except Exception as exc:
+            errors.append(f"Intent {attempt}: {str(exc)[:180]}")
+        finally:
+            await page.close()
+        if attempt<max_tries:
+            await asyncio.sleep(min(2,attempt))
+    return [],errors,warnings
+
+
 async def collect(args) -> dict:
     from playwright.async_api import async_playwright
-
-    diag = {"source": "FECAPA-PLAYWRIGHT", "checkedAt": datetime.now(timezone.utc).isoformat(),
-            "discovery": [], "found": [], "failed": [], "warnings": [], "mode": "navegador-grafic-headful"}
-    data = {}
-    discover = Discovery()
-    for league in SEEDS: discover.add(league, "referencia-coneguda")
-    existing = Path(args.existing)
+    diag={"source":"FECAPA-PLAYWRIGHT","checkedAt":datetime.now(timezone.utc).isoformat(),
+          "discovery":[],"found":[],"failed":[],"warnings":[],
+          "mode":"navegador-grafic-headful", "version":3}
+    data={}
+    discover=Discovery()
+    existing_groups={}
+    existing=Path(args.existing)
+    for league in SEEDS: discover.add(league,"referencia-coneguda")
     if existing.exists():
         try:
-            doc = json.loads(existing.read_text(encoding="utf-8"))
-            for obj in doc.get("competitions", {}).values():
-                if isinstance(obj, dict): discover.add(obj.get("leagueId"), "json-existent")
-        except (ValueError, OSError, AttributeError):
-            diag["warnings"].append("No es pot llegir el JSON existent per ampliar les llavors")
+            doc=json.loads(existing.read_text(encoding="utf-8"))
+            if isinstance(doc.get("competitions"),dict):
+                existing_groups=doc["competitions"]
+                for obj in existing_groups.values():
+                    if isinstance(obj,dict):discover.add(obj.get("leagueId"),"json-existent")
+        except (ValueError,OSError,AttributeError):
+            diag["warnings"].append("El JSON existent no es pot llegir com a font de IDs")
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, args=["--no-sandbox"])
-        context = await browser.new_context(locale="ca-ES", timezone_id="Europe/Madrid",
-                                            viewport={"width":1360,"height":980},
-                                            user_agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
-        context.set_default_timeout(12000)
-        page = await context.new_page()
-        discover.attach(page)
-        for url in [ROOT, ROOT+"?vista=clasificaciones", ROOT+"?vista=classificacions"]:
-            try:
-                await page.goto(url, wait_until="domcontentloaded", timeout=25000)
-                await page.wait_for_timeout(1800)
-                await discover.gather_page(page,"cataleg")
-                # A FECAPA el botó LEAGUES pot mostrar el selector de les lligues.
-                for label in ["LEAGUES", "LLIGUES", "COMPETICIONES", "COMPETICIONS"]:
-                    btn = page.get_by_role("button", name=re.compile("^"+label+"$", re.I))
-                    if await btn.count():
-                        try:
-                            await btn.first.click(timeout=2500)
-                            await page.wait_for_timeout(1000)
-                            await discover.gather_page(page,"cataleg-boto")
-                        except Exception:
-                            pass
-                        break
-            except Exception as exc:
-                diag["warnings"].append("Catàleg inaccessible " + url + ": " + str(exc)[:160])
+        browser=await p.chromium.launch(headless=False,args=["--no-sandbox"])
+        context=await browser.new_context(locale="ca-ES",timezone_id="Europe/Madrid",
+                                          viewport={"width":1360,"height":980})
+        discover_page=await context.new_page()
+        discover.attach(discover_page)
+        for url in [ROOT,ROOT+"?vista=clasificaciones",ROOT+"?vista=classificacions",ROOT+"ag/"]:
+            await inspect_catalogue(discover_page, discover, diag, url)
         await discover.gather_network()
-        ids = sorted(discover.ids, key=lambda x:int(x))
-        if len(ids) > MAX_DISCOVERED:
-            diag["warnings"].append(f"Descoberts {len(ids)} possibles IDs; s'aplica límit {MAX_DISCOVERED}")
-            ids = ids[:MAX_DISCOVERED]
-        diag["discovery"] = [{"leagueId":i,"sources":sorted(discover.ids[i])} for i in ids]
-        if args.limit:
-            # Posar les conegudes primer facilita una comprovació ràpida de la 4789.
-            priority = [x for x in SEEDS if x in ids]
-            ids = (priority+[x for x in ids if x not in priority])[:args.limit]
-        for ix, league in enumerate(ids, 1):
-            url = ROOT + "?" + urlencode({"liga":league,"vista":"clasificaciones"})
-            success = False
-            groups = []
-            last_error = "cap taula de classificació llegible"
-            for attempt in range(2):
-                try:
-                    await page.goto(url, wait_until="domcontentloaded", timeout=30000)
-                    try:
-                        await page.wait_for_function(
-                            "document.querySelector('table.sidgad-clasif-tabla, table') !== null",
-                            timeout=10000)
-                    except Exception: pass
-                    await page.wait_for_timeout(700)
-                    result = await page.evaluate(JS_EXTRACT)
-                    groups = result.get("groups",[])
-                    if not groups:
-                        last_error = "; ".join(result.get("errors",[])[:2]) or last_error
-                        continue
-                    for group in groups:
-                        name = clean(group["name"])
-                        key = league+":"+slug(name)
-                        item = {"name":name, "category":category_name(name),
-                                "competition":competition_name(name),"leagueId":league,
-                                "url":url,"rows":group["rows"]}
-                        if key in data and data[key] != item:
-                            raise ValueError("Clau duplicada amb dades diferents: "+key)
-                        data[key] = item
-                    diag["found"].append({"leagueId":league,"groups":len(groups),
-                                          "teams":sum(len(g["rows"]) for g in groups),
-                                          "warnings":result.get("errors",[])[:10]})
-                    success = True
-                    break
-                except Exception as exc:
-                    last_error = str(exc)[:180]
-                if attempt == 0:
-                    await page.wait_for_timeout(1000)
-            if not success:
-                diag["failed"].append({"leagueId":league,"error":last_error})
-            print(f"[{ix}/{len(ids)}] Lliga {league}: "+
-                  (f"{len(groups)} grups" if success else f"sense dades ({last_error})"),flush=True)
-        await browser.close()
+        await discover_page.close()
 
-    diag["stats"] = {"discoveredLeagues":len(diag["discovery"]),
-                     "checkedLeagues":len(ids),"validLeagues":len(diag["found"]),
-                     "failedLeagues":len(diag["failed"]),"groups":len(data),
-                     "teams":sum(len(g["rows"]) for g in data.values())}
-    now = datetime.now(timezone.utc).isoformat()
-    return {"packet":{"source":"FECAPA-SAFARI", "version":3,
-                       "kind":"classificacions-total", "capturedAt":now,
-                       "competitions":data},"diagnostic":diag}
+        ids=sorted(discover.ids,key=lambda x:int(x))
+        if len(ids)>MAX_DISCOVERED:
+            diag["warnings"].append(f"{len(ids)} IDs possibles, límit de seguretat {MAX_DISCOVERED}")
+            ids=ids[:MAX_DISCOVERED]
+        diag["discovery"]=[{"leagueId":value,"sources":sorted(discover.ids[value])} for value in ids]
+        if args.limit:
+            priority=[v for v in SEEDS if v in ids]
+            ids=(priority+[v for v in ids if v not in priority])[:args.limit]
+
+        for ix,league in enumerate(ids,1):
+            expected=sum(1 for value in existing_groups.values()
+                         if isinstance(value,dict) and str(value.get("leagueId"))==league)
+            groups, errors, warnings=await read_league(context,league,expected)
+            if groups:
+                url=ROOT+"?"+urlencode({"liga":league,"vista":"clasificaciones"})
+                for g in groups:
+                    name=clean(g["name"])
+                    key=league+":"+slug(name)
+                    data[key]={"name":name,"category":category_name(name),
+                               "competition":competition_name(name),"leagueId":league,
+                               "url":url,"rows":g["rows"]}
+                diag["found"].append({"leagueId":league,"groups":len(groups),
+                                      "teams":sum(len(g["rows"]) for g in groups),
+                                      "expectedFromPrevious":expected,
+                                      "warnings":warnings+errors[:3]})
+            else:
+                diag["failed"].append({"leagueId":league,"expectedFromPrevious":expected,
+                                       "error":"; ".join(errors[-3:]) or "Cap grup vàlid"})
+            print(f"[{ix}/{len(ids)}] Lliga {league}: "+
+                  (f"{len(groups)} grups" if groups else "sense taules completes"),flush=True)
+        await context.close()
+        await browser.close()
+    diag["stats"]={"discoveredLeagues":len(diag["discovery"]),"checkedLeagues":len(ids),
+                   "validLeagues":len(diag["found"]),"failedLeagues":len(diag["failed"]),
+                   "groups":len(data),"teams":sum(len(v["rows"]) for v in data.values())}
+    if len(diag["discovery"])<25:
+        diag["warnings"].append("Descobriment encara incomplet: menys de 25 lligues; no afirmar cobertura total")
+    now=datetime.now(timezone.utc).isoformat()
+    return {"packet":{"source":"FECAPA-SAFARI","version":3,
+                      "kind":"classificacions-total","capturedAt":now,"competitions":data},
+            "diagnostic":diag}
 
 
 def parse_time(value: object) -> datetime | None:
