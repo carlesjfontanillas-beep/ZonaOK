@@ -1,9 +1,10 @@
 name: ZonaOK - Classificacions AUTO (prova segura)
 
+
 on:
   workflow_dispatch:
     inputs:
-            limit:
+      limit:
         description: 'Nombre de lligues a comprovar; 0 = totes'
         required: true
         type: number
@@ -13,6 +14,7 @@ on:
         required: true
         type: boolean
         default: false
+
   # Activar NOMES quan la prova amb limit=0 sigui satisfactoria.
   # schedule:
   #   - cron: '20 4 * * *'
