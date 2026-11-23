@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       payload:
-        description: 'Base64 de la drecera Safari, classificació o resultats (màx. 62000 caràcters)'
+        description: 'Base64 de la drecera Safari, classificació o resultats (màx. 62000 caràcters, Base64 comprimit si és possible)'
         required: true
         type: string
 permissions:
@@ -38,6 +38,7 @@ jobs:
             # Afegim exclusivament els fitxers de dades que existeixen.
             for file in \
               zonaok-data.json \
+              zonaok-classificacions.json \
               zonaok-classificacio-4789.json \
               zonaok-classificacio-4786.json \
               zonaok-classificacio-4784.json; do
