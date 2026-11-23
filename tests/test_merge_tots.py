@@ -24,6 +24,10 @@ class MergeTotsTests(unittest.TestCase):
         patcher.start()
         self.addCleanup(patcher.stop)
         self.now = datetime.now(ZoneInfo('Europe/Madrid'))
+        # La fusió també manté el JSON de l'app quan és present.
+        (self.root / 'zonaok-data.json').write_text(json.dumps({
+            'version': 3, 'data': {'agenda': {'capturedAt': self.now.isoformat(), 'rows': []}}
+        }), encoding='utf8')
         self.past = self.now - timedelta(days=1)
         self.date = self.past.strftime('%Y-%m-%d')
         self.hour = self.past.strftime('%H:%M')

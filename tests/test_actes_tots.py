@@ -17,6 +17,10 @@ def link(lid='4786', mid='152399', **other):
             'actaUrl': m.canonical_url(lid, mid), **other}
 
 
+def seed_classic_actes(root):
+    (root / 'zonaok-actes.json').write_text(json.dumps({'version': 1, 'fixtures': []}))
+
+
 class ActesTotsTests(unittest.TestCase):
     def test_verificacio_url(self):
         self.assertTrue(m.inspect_link(m.canonical_url('4786','152399'),'4786','152399'))
@@ -87,6 +91,7 @@ class ActesTotsTests(unittest.TestCase):
                 {'key':m.match_key(f()),'leagueId':'4786','matchId':'152399','actaUrl':m.canonical_url('4786','152399')} ]}
             (root/'zonaok-tots-actes.json').write_text(json.dumps(orig))
             (root/'zonaok-data.json').write_text(json.dumps({'version':3,'data':{'agenda':{'rows':[f()]}}}))
+            seed_classic_actes(root)
             data=m.generate(root,now=datetime(2026,11,22,tzinfo=timezone.utc))
             self.assertEqual(data['count'],1)
             self.assertEqual(data['rows'][0]['matchId'],'152399')
@@ -96,6 +101,7 @@ class ActesTotsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             root=Path(t)
             (root/'imports/actes-tots').mkdir(parents=True)
+            seed_classic_actes(root)
             r=f()
             (root/'zonaok-tots-agenda.json').write_text(json.dumps({'schema':'zonaok-all-v1','kind':'agenda','season':'2026/2027','rows':[r]}))
             (root/'zonaok-data.json').write_text(json.dumps({'version':3,'data':{'agenda':{'rows':[r]},'other':{'unmodified':True}}}))
