@@ -220,6 +220,11 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
 </style>
 <style id="zonaok-compact-club-menus">
 /* Capçalera més compacta als menús CP Sant Celoni, Barça i classificacions. */
+.zok-standing-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:8px 0 12px}
+.zok-standing-filters[hidden]{display:none!important}
+.zok-standing-filters label{display:grid;gap:5px;color:#b9dbec;font-size:12px;font-weight:850}
+.zok-standing-filters select{width:100%;min-width:0;padding:11px 8px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fff;font:inherit;font-size:12px}
+@media(max-width:350px){.zok-standing-filters{grid-template-columns:minmax(0,1fr)}}
 body.zok-ui-detail[data-zok-ui-tab="celoni"] .mast,
 body.zok-ui-detail[data-zok-ui-tab="barca"] .mast,
 body.zok-ui-detail[data-zok-ui-tab="classificacions"] .mast {
@@ -320,10 +325,16 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
       <button id="open-fecapa" class="secondary">FECAPA &#x2197;</button>
       <button id="ask-section" class="secondary">ChatGPT &#x2197;</button>
       <button id="season-toggle" type="button" class="secondary">Tota la temporada</button>
+      <button id="open-classificacio" type="button" class="secondary" hidden>▤ Classificació</button>
       <button id="open-golejadors" type="button" class="secondary" hidden>🥅 Golejadors</button>
     </div>
     <p id="results-week" class="zok-results-week"></p>
     <p id="results-note" class="helper"></p>
+    <div id="standings-filters" class="zok-standing-filters" hidden>
+      <label>Club<select id="standing-club-filter" aria-label="Filtra la classificació per club"><option value="">Tots els clubs</option></select></label>
+      <label>Categoria<select id="standing-category-filter" aria-label="Filtra la classificació per categoria"><option value="">Totes les categories</option></select></label>
+      <label>Competició<select id="standing-competition-filter" aria-label="Filtra la classificació per competició"><option value="">Totes les competicions</option></select></label>
+    </div>
     <div id="results-list" class="cards"></div>
   </section>
   <section class="section">
@@ -416,6 +427,11 @@ try {
   function setSection(name,value){
     if(!['4789','4786','4784'].includes(String(name)) || !obj(value))throw Error('Secció no permesa');
     memory[String(name)]=clone(value);
+    return read();
+  }
+  function setClassifications(value){
+    if(!obj(value))throw Error('Classificacions no vàlides');
+    memory.classifications=clone(value);
     return read();
   }
   // Mateixa data, competició i equips. Un ID oficial coincident també identifica el partit.
@@ -526,7 +542,7 @@ try {
     memory=mergeState(read(),candidate);
     return read();
   }
-  global.ZonaOKSafeStorage=Object.freeze({read,replace,setSection,mergeState,mergeRows,commit});
+  global.ZonaOKSafeStorage=Object.freeze({read,replace,setSection,setClassifications,mergeState,mergeRows,commit});
 })(window);
 </script>
 <script data-zonaok-locked="V19" data-source="zonaok-sync-v5.js" data-fix="RESULTATS-V22">
@@ -1432,7 +1448,46 @@ function zonaokStandingIsFavorite(league,value){
     ? ['BAR','BARCA','FCBARCELONA'].includes(key)
     : ['CPSC','CPSANTCELONIB'].includes(key);
 }
-function renderSection(key){const section=SECTIONS[key];if(!section)return;weekText();const seasonToggle=$$('#season-toggle');if(seasonToggle){seasonToggle.hidden=['classificacions','barca','celoni','grupalevi','grupinfantil'].includes(key);seasonToggle.textContent=showSeason?'Veure setmana':'Tota la temporada';}$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const {start,end}=chosenWeek();if(key==='classificacions'){let any=false;const statLabels={PTS:'Pts',PJ:'PJ',PG:'PG',PE:'PE',PP:'PP',GF:'GF',GC:'GC',DIF:'DIF',SAN:'SAN'};for(const id of section.ids){const rows=store[id]?.standings||[];box.append(mk('h3','',LEAGUES[id].name));if(store[id]?.standingsAt)box.append(mk('small','helper','Lectura: '+formatTimestamp(store[id].standingsAt)));if(!rows.length){emptyResults('Classificaci\u00F3 pendent de lectura des de Safari.',[id]);continue;}any=true;const statKeys=[...new Set(rows.flatMap(r=>Object.keys(r.stats||{})))];const columns=[['pos','Pos.'],['team','Equip'],...statKeys.map(k=>['stats.'+k,statLabels[k]||k]),...(statKeys.length?[]:[['played','PJ'],['gf','GF'],['ga','GC'],['difference','DIF'],['points','Pts']])];for(const [k] of [...columns])if(k.startsWith('stats.')){const raw=k.slice(6);if(rows.every(r=>r.stats?.[raw]===null||r.stats?.[raw]===undefined||r.stats?.[raw]===''))columns.splice(columns.findIndex(c=>c[0]===k),1)}const table=mk('table','standings'),head=mk('tr');for(const [,label] of columns)head.append(mk('th','',label));table.append(head);for(const r of rows){const tr=mk('tr',zonaokStandingIsFavorite(id,r.team)?'highlight':'');for(const [k] of columns){const value=k==='team'?zonaokStandingDisplayName(id,r.team):(k.startsWith('stats.')?r.stats?.[k.slice(6)]:r[k]);const td=mk('td','',value??'\u2014');if(k==='team'){td.classList.add('zok-standing-team-name');if(String(value)!==String(r.team||''))td.title='Codi FECAPA: '+r.team;}tr.append(td)}table.append(tr)}const wrap=mk('div','standings-wrap');wrap.append(table);box.append(wrap)}if(!any)toast('Importa les classificacions des de Safari.');return;}
+function zonaokStandingClubKey(value){return normalize(value).replace(/\s+[ABCD]$/,'').trim();}
+function zonaokStandingCompetition(value){return String(value||'').trim().replace(/\s+/g,' ')
+  .replace(/\b(OR|PLATA|BRONZE)\s+\d+\b/gi,'$1').replace(/\s+(?:GRUP|GRUPO)\s+[A-Z0-9]+\b/gi,'').trim();}
+function zonaokStandingCategory(value){const name=String(value||'').trim();return name.replace(/\s+(?:OR|PLATA|BRONZE)\s+\d+\b/i,'').replace(/\s+(?:GRUP|GRUPO)\s+[A-Z0-9]+\b/i,'').trim()||name;}
+function renderClassificationSection(box){
+  const root=$$('#standings-filters'),club=$$('#standing-club-filter'),category=$$('#standing-category-filter'),competition=$$('#standing-competition-filter');
+  root.hidden=false;
+  const entries=Object.entries(store.classifications||{}).map(([id,item])=>({id,name:String(item.name||id),category:String(item.category||zonaokStandingCategory(item.name||id)),competition:String(item.competition||zonaokStandingCompetition(item.name||id)),rows:item.standings||[],standingsAt:item.standingsAt||item.capturedAt||''}));
+  for(const id of Object.keys(LEAGUES))if(!entries.some(entry=>entry.id===id)&&(store[id]?.standings||[]).length)entries.push({id,name:LEAGUES[id].name,category:zonaokStandingCategory(LEAGUES[id].name),competition:zonaokStandingCompetition(LEAGUES[id].name),rows:store[id].standings,standingsAt:store[id].standingsAt||''});
+  const clubOptions=new Map();
+  for(const entry of entries)for(const row of entry.rows){const display=zonaokStandingDisplayName(entry.id,row.team),key=zonaokStandingClubKey(display);if(key&&!clubOptions.has(key))clubOptions.set(key,String(display).replace(/\s+[A-D]$/i,''));}
+  const prior={club:club.value,category:category.value,competition:competition.value};
+  const hasClub=(entry,value)=>!value||entry.rows.some(row=>zonaokStandingClubKey(zonaokStandingDisplayName(entry.id,row.team))===value);
+  const base=entries.filter(entry=>hasClub(entry,prior.club));
+  const cats=[...new Map(base.filter(entry=>!prior.competition||entry.competition===prior.competition).map(entry=>[entry.id,entry.name]))];
+  const comps=[...new Set(base.filter(entry=>!prior.category||entry.id===prior.category).map(entry=>entry.competition))];
+  function options(select,placeholder,items,chosen){select.replaceChildren(new Option(placeholder,''));for(const [value,label] of items)select.add(new Option(label,value));select.value=items.some(([value])=>value===chosen)?chosen:'';}
+  options(club,'Tots els clubs',[...clubOptions].sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})),prior.club);
+  options(category,'Totes les categories',cats,prior.category);
+  options(competition,'Totes les competicions',comps.map(value=>[value,value]).sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})),prior.competition);
+  const selectedClub=club.value,selectedCategory=category.value,selectedCompetition=competition.value;
+  let any=false;
+  for(const entry of entries){
+    if((selectedCategory&&entry.id!==selectedCategory)||(selectedCompetition&&entry.competition!==selectedCompetition)||!hasClub(entry,selectedClub))continue;
+    box.append(mk('h3','',entry.name));
+    if(entry.standingsAt)box.append(mk('small','helper','Lectura: '+formatTimestamp(entry.standingsAt)));
+    const rows=entry.rows;
+    if(!rows.length){emptyResults('Classificació pendent d’importar des de Safari.',[entry.id]);continue;}
+    any=true;
+    const statLabels={PTS:'Pts',PJ:'PJ',PG:'PG',PE:'PE',PP:'PP',GF:'GF',GC:'GC',DIF:'DIF',SAN:'SAN'};
+    const statKeys=[...new Set(rows.flatMap(row=>Object.keys(row.stats||{})))];
+    const columns=[['pos','Pos.'],['team','Equip'],...statKeys.map(key=>['stats.'+key,statLabels[key]||key]),...(statKeys.length?[]:[['played','PJ'],['gf','GF'],['ga','GC'],['difference','DIF'],['points','Pts']])];
+    for(const [key] of [...columns])if(key.startsWith('stats.')){const raw=key.slice(6);if(rows.every(row=>row.stats?.[raw]===null||row.stats?.[raw]===undefined||row.stats?.[raw]===''))columns.splice(columns.findIndex(col=>col[0]===key),1)}
+    const table=mk('table','standings'),head=mk('tr');for(const [,label] of columns)head.append(mk('th','',label));table.append(head);
+    for(const row of rows){const team=zonaokStandingDisplayName(entry.id,row.team),highlight=selectedClub?zonaokStandingClubKey(team)===selectedClub:zonaokStandingIsFavorite(entry.id,row.team);const tr=mk('tr',highlight?'highlight':'');for(const [key] of columns){const value=key==='team'?team:(key.startsWith('stats.')?row.stats?.[key.slice(6)]:row[key]);const td=mk('td','',value??'—');if(key==='team'){td.classList.add('zok-standing-team-name');if(String(value)!==String(row.team||''))td.title='Codi FECAPA: '+row.team;}tr.append(td)}table.append(tr)}
+    const wrap=mk('div','standings-wrap');wrap.append(table);box.append(wrap);
+  }
+  if(!any&&entries.every(entry=>!entry.rows.length))toast('Importa les classificacions des de Safari.');
+}
+function renderSection(key){const section=SECTIONS[key];if(!section)return;const standingsFilters=$$('#standings-filters');if(standingsFilters)standingsFilters.hidden=key!=='classificacions';weekText();const seasonToggle=$$('#season-toggle');if(seasonToggle){seasonToggle.hidden=['classificacions','barca','celoni','grupalevi','grupinfantil'].includes(key);seasonToggle.textContent=showSeason?'Veure setmana':'Tota la temporada';}$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;$$('#open-fecapa').onclick=()=>window.open(section.source,'_blank','noopener');$$('#ask-section').onclick=()=>ask(key);const box=$$('#results-list');box.replaceChildren();const {start,end}=chosenWeek();if(key==='classificacions'){renderClassificationSection(box);return;}
 if(key==='grupalevi'||key==='grupinfantil'){mostrarTemporadaJugador(key,box);return;}
 if(key==='celoni'||key==='barca'){
   const club=key==='celoni'?'celoni':'barca',source=clubRows();
@@ -1447,6 +1502,35 @@ if(key==='celoni'||key==='barca'){
 }
 emptyResults('No hi ha partits disponibles per a aquesta secci\u00F3.',section.ids);}
 
+let quickStandingDialog=null;
+window.ZonaOKShowStanding= function(id){
+  if(!['4789','4786'].includes(String(id)))return;
+  const league=String(id),rows=store[league]?.standings||[];
+  if(!quickStandingDialog){
+    const style=mk('style');style.textContent=`.zok-standing-dialog:not([open]){display:none}.zok-standing-dialog[open]{display:flex;flex-direction:column}.zok-standing-dialog{position:fixed;margin:auto;inset:0;box-sizing:border-box;width:min(98vw,1050px);max-width:98vw;height:min(93vh,940px);height:min(93dvh,940px);max-height:93vh;max-height:93dvh;padding:0;overflow:hidden;border:1px solid #34536d;border-radius:17px;background:#f3f6fa;color:#082238;box-shadow:0 20px 70px #000a}.zok-standing-dialog::backdrop{background:#03172bd9}.zok-standing-dialog header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#061f38;color:#fff;padding:12px 14px}.zok-standing-dialog header strong{font-size:1rem}.zok-standing-dialog header button{border:1px solid #b5c9d3;border-radius:10px;background:#244860;color:#fff;font-size:1.5rem;line-height:1;padding:6px 11px}.zok-standing-dialog .zok-standings-content{padding:12px;overflow:auto}.zok-standing-dialog .standings-wrap{margin:8px 0}.zok-standing-dialog .zok-standing-source{display:inline-flex;margin:4px 12px 12px;color:#245d9f;font-weight:700}@media(max-width:600px){.zok-standing-dialog{width:96vw;max-width:96vw;height:94dvh;max-height:94dvh;border-radius:15px}}`;document.head.append(style);
+    quickStandingDialog=mk('dialog','zok-standing-dialog');quickStandingDialog.setAttribute('aria-label','Classificació de la lliga');
+    const header=mk('header');header.append(mk('strong',''));const close=mk('button','','×');close.type='button';close.setAttribute('aria-label','Tancar classificació');close.onclick=()=>quickStandingDialog.close();header.append(close);
+    const content=mk('div','zok-standings-content');quickStandingDialog.append(header,content);document.body.append(quickStandingDialog);
+    quickStandingDialog.addEventListener('click',e=>{if(e.target===quickStandingDialog)quickStandingDialog.close();});
+  }
+  const title=league==='4789'?'Classificació · Magí · Aleví OR 3':'Classificació · Ton · Infantil OR 10';
+  const header=quickStandingDialog.querySelector('header strong'),content=quickStandingDialog.querySelector('.zok-standings-content');
+  header.textContent=title;content.replaceChildren();
+  if(store[league]?.standingsAt)content.append(mk('small','helper','Lectura: '+formatTimestamp(store[league].standingsAt)));
+  if(!rows.length){
+    content.append(mk('p','helper','Encara no hi ha cap classificació importada a ZonaOK.'));
+    const link=mk('a','zok-standing-source','Obrir classificació FECAPA ↗');link.href='https://www.hoqueipatins.fecapa.cat/?liga='+league+'&vista=clasificaciones';link.target='_blank';link.rel='noopener';content.append(link);
+  }else{
+    const statLabels={PTS:'Pts',PJ:'PJ',PG:'PG',PE:'PE',PP:'PP',GF:'GF',GC:'GC',DIF:'DIF',SAN:'SAN'};
+    const statKeys=[...new Set(rows.flatMap(r=>Object.keys(r.stats||{})))];
+    const columns=[['pos','Pos.'],['team','Equip'],...statKeys.map(k=>['stats.'+k,statLabels[k]||k]),...(statKeys.length?[]:[['played','PJ'],['gf','GF'],['ga','GC'],['difference','DIF'],['points','Pts']])];
+    for(const [key] of [...columns])if(key.startsWith('stats.')){const raw=key.slice(6);if(rows.every(r=>r.stats?.[raw]===null||r.stats?.[raw]===undefined||r.stats?.[raw]===''))columns.splice(columns.findIndex(c=>c[0]===key),1)}
+    const table=mk('table','standings'),head=mk('tr');for(const [,label] of columns)head.append(mk('th','',label));table.append(head);
+    for(const r of rows){const tr=mk('tr',zonaokStandingIsFavorite(league,r.team)?'highlight':'');for(const [key] of columns){const value=key==='team'?zonaokStandingDisplayName(league,r.team):(key.startsWith('stats.')?r.stats?.[key.slice(6)]:r[key]);const td=mk('td','',value??'—');if(key==='team'){td.classList.add('zok-standing-team-name');if(String(value)!==String(r.team||''))td.title='Codi FECAPA: '+r.team;}tr.append(td)}table.append(tr)}
+    const wrap=mk('div','standings-wrap');wrap.append(table);content.append(wrap);
+  }
+  quickStandingDialog.showModal();
+};
 function selectSection(key){showSeason=isSeasonMenu(key);if(key==='home'){section='home';$$('#results-section').classList.add('hide');$$('#home-cards').scrollIntoView({behavior:'smooth',block:'start'});}else{section=key;$$('#results-section').classList.remove('hide');renderSection(key);$$('#results-section').scrollIntoView({behavior:'smooth',block:'start'});}document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.tab===key));}
 function escapeICS(v){return String(v||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
 function exportICS(r){if(!r.iso||!r.time)return toast('No hi ha data i hora confirmades');const local=(r.iso.replace(/-/g,'')+'T'+r.time.replace(':','')+'00');const h=+r.time.slice(0,2);const end=(h+2)%24;const next=end<h?plusDays(r.iso,1).replace(/-/g,''):r.iso.replace(/-/g,'');const finish=next+'T'+String(end).padStart(2,'0')+r.time.slice(3,5)+'00';const event=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ZonaOK//FECAPA//CA','BEGIN:VEVENT','UID:zonaok-'+(r.id||Date.now())+'@zonaok.local','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z'),'DTSTART;TZID=Europe/Madrid:'+local,'DTEND;TZID=Europe/Madrid:'+finish,'SUMMARY:'+escapeICS(r.home+' - '+r.away),'LOCATION:'+escapeICS(r.venue||''),'DESCRIPTION:'+escapeICS('Consulta la font FECAPA. Durada provisional de 2 hores.'),'END:VEVENT','END:VCALENDAR'].join('\r\n');const url=URL.createObjectURL(new Blob([event],{type:'text/calendar;charset=utf-8'}));const a=mk('a');a.href=url;a.download='ZonaOK-partit.ics';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
@@ -1718,6 +1802,7 @@ $$('#export-shared').onclick=downloadShared;
 $$('#publish-shared').onclick=()=>window.open('https://github.com/carlesjfontanillas-beep/ZonaOK/upload/main','_blank','noopener');
 $$('#reload-shared').onclick=()=>window.ZonaOKRefreshSources?.();
 $$('#guide-button').onclick=()=>$$('#guide').showModal();$$('#guide-close').onclick=()=>$$('#guide').close();$$('#clear-button').onclick=()=>window.ZonaOKRefreshSources?.();$$('#ask-home').onclick=()=>ask('home');$$('#refresh-home').onclick=()=>selectSection('home');$$('#close-results').onclick=()=>selectSection('home');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>selectSection(b.dataset.tab));
+for(const id of ['standing-club-filter','standing-category-filter','standing-competition-filter'])$$(('#'+id)).addEventListener('change',()=>{if(section==='classificacions')renderSection('classificacions')});
 $$('#week-prev').onclick=()=>changeWeek(-1);
 $$('#week-next').onclick=()=>changeWeek(1);
 $$('#week-today').onclick=resetWeek;
@@ -1810,7 +1895,31 @@ window.ZonaOKRefreshSources=async function(){
    if(busy)return busy;
    busy=(async()=>{
      let changed=0;
+     const imported=new Set();
+     try{
+       const response=await fetch('zonaok-classificacions.json?v29='+Date.now(),{cache:'no-store'});
+       if(response.ok){
+         const data=await response.json();
+         const catalog=has(data)&&(data.schema==='zonaok-classificacions-v2'||data.schema==='zonaok-classificacions-v1')
+           ?(has(data.competitions)?data.competitions:data.leagues):null;
+         if(has(catalog)){
+           const local=window.ZonaOKSafeStorage.read(),merged={...(local.classifications||{})};
+           for(const [id,item] of Object.entries(catalog)){
+             if(!has(item)||!Array.isArray(item.standings)||item.standings.length<2||item.standings.length>50||
+                item.standings.some(x=>!has(x)||!String(x.team||'').trim()))continue;
+             const at=String(item.standingsAt||item.capturedAt||'');if(!stamp(at))continue;
+             const old=merged[id]||{};
+             if(stamp(at)>=stamp(old.standingsAt||old.capturedAt))merged[id]={...old,...item,standingsAt:at};
+             imported.add(String(item.leagueId||''));changed++;
+             const league=String(item.leagueId||'');
+             if(LEAGUES.includes(league)&&normalize(item.name)===normalize(LEAGUES[league].name))window.ZonaOKSafeStorage.setSection(league,{...(window.ZonaOKSafeStorage.read()[league]||{}),standings:item.standings,standingsAt:at});
+           }
+           if(Object.keys(merged).length)window.ZonaOKSafeStorage.setClassifications(merged);
+         }
+       }
+     }catch(error){console.warn('ZonaOK: no es pot llegir el JSON unificat de classificacions',error);}
      for(const id of LEAGUES){
+       if(imported.has(id))continue;
        const file='zonaok-classificacio-'+id+'.json';
        try{
          const response=await fetch(file+'?v27='+Date.now(),{cache:'no-store'});
@@ -1911,7 +2020,7 @@ window.ZonaOKRefreshSources=async function(){
  window.ZonaOKPullRefresh=refresh;
 })();
 </script>
-  <script defer src="zonaok-resultats-7dies.js?v=20261121-r5"></script>
-  <script defer src="zonaok-golejadors.js?v=20261122-r1"></script>
+  <script defer src="zonaok-resultats-7dies.js?v=20261123-r6"></script>
+  <script defer src="zonaok-golejadors.js?v=20261123-r1"></script>
 </body>
 </html>

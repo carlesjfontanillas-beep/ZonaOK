@@ -33,16 +33,19 @@
     if (/^CPSC(?:[AB]| [AB])?$/.test(s) || /\bSANT CELONI\b/.test(s)) return 'celoni';
     return '';
   };
+  const baseClubName = name => String(name || '').trim().replace(/\s+[A-D]$/i, '').trim();
   const teamKey = (name, logo) => {
     const known = clubOf(name);
     if (known) return known;
+    const base = norm(baseClubName(name));
+    if (base) return 'team:' + base;
     const match = String(logo || '').match(/^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/(\d+)\.png$/);
     return match ? 'logo:' + match[1] : 'team:' + norm(name);
   };
   const teamLabel = (name, key) => {
     if (key === 'barca') return 'Barça';
     if (key === 'celoni') return 'CP Sant Celoni';
-    return String(name || '').trim();
+    return baseClubName(name);
   };
   const canonical = name => {
     const raw = norm(name);
@@ -53,6 +56,9 @@
     return raw;
   };
   const categoryCore = text => norm(text).replace(/\s+\d+$/, '').replace(/\s+(?:GRUP|GRUPO)\s+[A-Z0-9]+$/, '');
+  const competitionGroup = text => String(text || 'Categoria no informada').trim().replace(/\s+/g, ' ')
+    .replace(/\b(OR|PLATA|BRONZE)\s+\d+\b/gi, '$1')
+    .replace(/\s+(?:GRUP|GRUPO)\s+[A-Z0-9]+\b/gi, '').trim();
   const key = r => [r.iso, r.time, norm(r.competition), norm(r.home), norm(r.away)].join('|');
   const pairsMatch = (agenda, score) => {
     if (agenda.iso !== score.iso || agenda.time !== score.time) return false;
@@ -84,7 +90,7 @@
 
   let matches = [];
   let publishedAt = '';
-  let panel, navButton, clubFilter, categoryFilter, content, counter, status;
+  let panel, navButton, clubFilter, categoryFilter, competitionFilter, content, counter, status;
 
   function combinedAgenda(data) {
     const source = Array.isArray(data?.agenda?.rows) ? data.agenda.rows : [];
@@ -277,8 +283,10 @@
   function updateCategoryOptions() {
     const chosen = categoryFilter.value;
     const selectedClub = clubFilter.value;
-    const categories = [...new Set(matches.filter(r => !selectedClub ||
-      teamKey(r.home,r.homeLogo) === selectedClub || teamKey(r.away,r.awayLogo) === selectedClub)
+    const selectedCompetition = competitionFilter.value;
+    const categories = [...new Set(matches.filter(r => (!selectedClub ||
+      teamKey(r.home,r.homeLogo) === selectedClub || teamKey(r.away,r.awayLogo) === selectedClub) &&
+      (!selectedCompetition || sameCategory(competitionGroup(r.competition),selectedCompetition)))
       .map(r => String(r.competition || 'Categoria no informada')))]
       .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
     categoryFilter.replaceChildren(new Option('Totes les categories', ''));
@@ -286,11 +294,24 @@
     categoryFilter.value = categories.some(c => sameCategory(c, chosen)) ? chosen : '';
   }
 
+  function updateCompetitionOptions() {
+    const chosen = competitionFilter.value;
+    const selectedClub = clubFilter.value;
+    const competitions = [...new Map(matches.filter(r => !selectedClub ||
+      teamKey(r.home,r.homeLogo) === selectedClub || teamKey(r.away,r.awayLogo) === selectedClub)
+      .map(r => {const label=competitionGroup(r.competition);return [norm(label),label];})).values()]
+      .sort((a,b)=>a.localeCompare(b,'ca',{sensitivity:'base'}));
+    competitionFilter.replaceChildren(new Option('Totes les competicions',''));
+    for(const label of competitions)competitionFilter.add(new Option(label,label));
+    competitionFilter.value=competitions.some(c=>sameCategory(c,chosen))?chosen:'';
+  }
+
   function renderCards() {
-    const club = clubFilter.value, category = categoryFilter.value;
+    const club = clubFilter.value, category = categoryFilter.value, competition=competitionFilter.value;
     const selected = matches.filter(r =>
       (!club || teamKey(r.home,r.homeLogo) === club || teamKey(r.away,r.awayLogo) === club) &&
-      (!category || sameCategory(r.competition, category)));
+      (!category || sameCategory(r.competition, category)) &&
+      (!competition || sameCategory(competitionGroup(r.competition),competition)));
     counter.textContent = `${selected.length} ${selected.length === 1 ? 'partit' : 'partits'}`;
     content.replaceChildren();
     if (!selected.length) {
@@ -437,7 +458,12 @@
     categoryFilter.setAttribute('aria-label', 'Filtra els resultats per categoria');
     categoryFilter.append(new Option('Totes les categories', ''));
     categoryLabel.append(categoryFilter);
-    filterRow.append(clubLabel, categoryLabel);
+    const competitionLabel = make('label', '', 'Competició');
+    competitionFilter = make('select');
+    competitionFilter.setAttribute('aria-label', 'Filtra els resultats per competició');
+    competitionFilter.append(new Option('Totes les competicions', ''));
+    competitionLabel.append(competitionFilter);
+    filterRow.append(clubLabel, categoryLabel, competitionLabel);
     content = make('div', 'cards');
     status = make('p', 'zok-recent-stamp', 'Font: Agenda i En directe');
     panel.append(header, filterRow,
@@ -459,8 +485,9 @@
         panel.hidden = true;
       }
     }, true);
-    clubFilter.addEventListener('change', () => { updateCategoryOptions(); renderCards(); });
+    clubFilter.addEventListener('change', () => { updateCompetitionOptions(); updateCategoryOptions(); renderCards(); });
     categoryFilter.addEventListener('change', renderCards);
+    competitionFilter.addEventListener('change', () => { updateCategoryOptions(); renderCards(); });
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install, {once: true});

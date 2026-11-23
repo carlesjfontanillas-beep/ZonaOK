@@ -34,6 +34,10 @@ Vegeu `GUIA_PROVA_SAFARI.md`. És una prova manual, no una consulta directa des 
 - El botó `⌕ Acta` obre la fitxa oficial del partit. FECAPA obre la fitxa a la pestanya Resum i cal triar-hi «Acta del partit»: el lloc no admet un enllaç públic que obri directament aquesta pestanya.
 - La drecera mostra les files examinades, el nombre de partits, quants tenen marcador i quants disposen d'identificador d'acta. Si FECAPA canvia l'estructura de la taula, cal revisar aquests recomptes abans de confiar en la importació.
 
+## Classificacions completes
+- `05-Classificacions-TOTES.js` és el codi de la drecera `ZO Classificacions TOTAL`: detecta els IDs del catàleg FECAPA, llegeix totes les taules de cada lliga amb el nom oficial del grup i envia un únic JSON comprimit a `zonaok-classificacions.json`.
+- El menú Classificacions mostra totes les competicions importades i ofereix filtres de club, categoria i competició.
+
 
 ## Agenda de temporada sencera
 - A la pàgina oficial FECAPA `/ag/`, selecciona tots els clubs i el rang complet de la temporada actual. Executa `ZonaOK Agenda` des de Safari per importar tots els partits de Barça i CP Sant Celoni; no es limita a dilluns–diumenge.
