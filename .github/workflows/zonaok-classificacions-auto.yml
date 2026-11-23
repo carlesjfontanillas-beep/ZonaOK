@@ -3,15 +3,11 @@ name: ZonaOK - Classificacions AUTO (prova segura)
 on:
   workflow_dispatch:
     inputs:
-      limit:
-        description: 'Nombre maxim de lligues a comprovar; 0 = totes les descobertes'
+            limit:
+        description: 'Nombre de lligues a comprovar; 0 = totes'
         required: true
-        type: choice
-        options:
-          - '5'
-          - '10'
-          - '0'
-        default: '5'
+        type: number
+        default: 5
       publish:
         description: 'Publicar al JSON? DESACTIVAT per defecte; primer verificar el diagnostic'
         required: true
