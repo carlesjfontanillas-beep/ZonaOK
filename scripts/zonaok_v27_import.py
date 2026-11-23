@@ -20,6 +20,29 @@ LEAGUES = ('4789', '4786', '4784')
 MAX_PACKET = 62000
 
 
+def decode_payload(value):
+    """Decode Base64 from Shortcuts, tolerating Unicode whitespace/format marks."""
+    encoded=unicodedata.normalize('NFKC',str(value or '')).strip()
+    # Shortcuts can insert non-breaking spaces or zero-width formatting marks
+    # when passing long text through an action. They are transport artifacts,
+    # not part of Base64. Keep all other unexpected non-ASCII visible to errors.
+    encoded=''.join(ch for ch in encoded if not ch.isspace() and unicodedata.category(ch)!='Cf')
+    try:
+        encoded=encoded.encode('ascii').decode('ascii')
+    except UnicodeEncodeError as exc:
+        raise ValueError('El text rebut conté caràcters no ASCII dins del Base64. Torna a copiar el resultat de la drecera.') from exc
+    # Some form encoders turn '+' into spaces; the Safari script emits URL-safe
+    # Base64, and older shortcut copies can still contain standard Base64.
+    encoded=encoded.replace('-','+').replace('_','/')
+    if not encoded or len(encoded)>MAX_PACKET:
+        raise ValueError('Entrada buida o massa gran')
+    encoded += '=' * (-len(encoded) % 4)
+    try:
+        return base64.b64decode(encoded,validate=True)
+    except (ValueError,base64.binascii.Error) as exc:
+        raise ValueError('El paquet rebut no és Base64 vàlid. Torna a executar la drecera Classificacions TOTAL.') from exc
+
+
 def stamp(value):
     try:
         d = datetime.fromisoformat(str(value).replace('Z','+00:00'))
@@ -222,9 +245,7 @@ def apply(packet,read_json):
 
 
 def run():
-    payload_b64=os.environ.get('ZONAOK_PAYLOAD_B64','').strip()
-    if not 1<=len(payload_b64)<=MAX_PACKET:raise ValueError('Entrada buida o massa gran')
-    raw=base64.b64decode(payload_b64,validate=True)
+    raw=decode_payload(os.environ.get('ZONAOK_PAYLOAD_B64',''))
     if raw.startswith(b'\x1f\x8b'):raw=gzip.decompress(raw)
     packet=json.loads(raw.decode('utf-8'))
     root=Path(os.environ.get('GITHUB_WORKSPACE') or '.').resolve()
