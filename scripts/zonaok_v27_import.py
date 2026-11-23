@@ -23,6 +23,9 @@ MAX_PACKET = 62000
 def decode_payload(value):
     """Extract the Base64 payload without accidentally decoding wrapper text."""
     value=unicodedata.normalize('NFKC',str(value or '')).strip()
+    if value.startswith('ERROR:'):
+        message=value[len('ERROR:'):].strip()[:180]
+        raise ValueError('La drecera Safari ha retornat error i no ha generat les dades: '+message)
     # Wrapper labels may contain valid Base64 letters; don't strip punctuation
     # and concatenate those letters into the payload.
     candidates=re.findall(r'[A-Za-z0-9+/_-]+={0,2}',value)
