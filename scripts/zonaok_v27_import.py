@@ -7,6 +7,7 @@ Requereix el paquet FECAPA-SAFARI en Base64 al workflow_dispatch.
 from __future__ import annotations
 import base64
 import copy
+import gzip
 from datetime import datetime, timezone
 import json
 import os
@@ -154,9 +155,49 @@ def apply(packet,read_json):
         raise ValueError('Font no reconeguda')
     captured=stamp(packet.get('capturedAt'))
     if not captured: raise ValueError('La captura no té data UTC correcta')
+    kind=packet.get('kind')
+    if kind in ('standings-all','classificacions-total'):
+        incoming_leagues=packet.get('competitions',packet.get('leagues'))
+        if not isinstance(incoming_leagues,dict) or not incoming_leagues or len(incoming_leagues)>500:
+            raise ValueError('Cal una llista de classificacions vàlida (màxim 500)')
+        filename='zonaok-classificacions.json'
+        existing=read_json(filename)
+        if existing is not None and not isinstance(existing,dict):
+            raise ValueError('Fitxer unificat de classificacions mal format')
+        existing=existing or {}
+        if existing and existing.get('schema') not in ('zonaok-classificacions-v1','zonaok-classificacions-v2'):
+            raise ValueError('Esquema unificat incompatible; cap sobreescriptura')
+        old_leagues=existing.get('competitions') or existing.get('leagues') or {}
+        if not isinstance(old_leagues,dict):raise ValueError('Classificacions existents mal formades')
+        result={};updated=0;preserved=0;total=0
+        incoming_names={norm(item.get('name')) for item in incoming_leagues.values() if isinstance(item,dict)}
+        for league,item in incoming_leagues.items():
+            league=str(league).strip()[:160]
+            if not re.fullmatch(r'[A-Za-z0-9:_-]{1,160}',league):raise ValueError('Identificador de classificació no vàlid')
+            if not isinstance(item,dict):raise ValueError('Classificació '+league+' mal formada')
+            rows=clean_standings(item.get('rows'))
+            old=old_leagues.get(league)
+            old_at=stamp(old.get('standingsAt') or old.get('capturedAt')) if isinstance(old,dict) else None
+            if isinstance(old,dict) and old_at and old_at>=captured and isinstance(old.get('standings'),list):
+                result[league]=old;preserved+=1
+            else:
+                result[league]={'name':str(item.get('name') or league)[:100],
+                    'category':str(item.get('category') or '')[:100],
+                    'competition':str(item.get('competition') or '')[:100],
+                    'leagueId':str(item.get('leagueId') or '')[:30],
+                    'capturedAt':captured.isoformat(),'standingsAt':captured.isoformat(),
+                    'url':str(item.get('url') or '')[:500],'standings':rows}
+                updated+=1
+            total+=len(result[league]['standings'])
+        # Conserva classificacions antigues que una passada incompleta no hagi inclòs.
+        for league,item in old_leagues.items():
+            if league not in result and isinstance(item,dict) and norm(item.get('name')) not in incoming_names:result[league]=item
+        content={'schema':'zonaok-classificacions-v2','capturedAt':captured.isoformat(),
+            'competitions':result}
+        return filename,content,{'classificacions_actualitzades':updated,
+            'conservades_mes_recents':preserved,'classificacions':len(result),'equips':total}
     incoming=packet.get('rows')
     if not isinstance(incoming,list) or not incoming or len(incoming)>300:raise ValueError('Files buides o massa nombroses')
-    kind=packet.get('kind')
     if kind in ('standings','classificacio-v27','classificacio-v25'):
         league=str(packet.get('league') or '')
         if league not in LEAGUES:raise ValueError('Lliga desconeguda')
@@ -183,7 +224,9 @@ def apply(packet,read_json):
 def run():
     payload_b64=os.environ.get('ZONAOK_PAYLOAD_B64','').strip()
     if not 1<=len(payload_b64)<=MAX_PACKET:raise ValueError('Entrada buida o massa gran')
-    packet=json.loads(base64.b64decode(payload_b64,validate=True).decode('utf-8'))
+    raw=base64.b64decode(payload_b64,validate=True)
+    if raw.startswith(b'\x1f\x8b'):raw=gzip.decompress(raw)
+    packet=json.loads(raw.decode('utf-8'))
     root=Path(os.environ.get('GITHUB_WORKSPACE') or '.').resolve()
     def load(filename):
         path=root/filename
