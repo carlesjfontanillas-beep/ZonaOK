@@ -223,12 +223,7 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
 .zok-standing-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:8px 0 12px}
 .zok-standing-filters[hidden]{display:none!important}
 .zok-standing-filters label{display:grid;gap:5px;color:#b9dbec;font-size:12px;font-weight:850}
-.zok-standing-filters input{width:100%;min-width:0;padding:11px 8px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fff;font:inherit;font-size:12px}
-.zok-standing-filters .zok-standing-wrap{position:relative;min-width:0}
-.zok-standing-filters .zok-filter-suggestions{display:none;position:absolute;z-index:30;top:calc(100% + 4px);left:0;right:0;max-height:220px;overflow:auto;padding:4px;border:1px solid #7597b0;border-radius:10px;background:#183d5b;box-shadow:0 8px 24px #001522aa}
-.zok-standing-filters .zok-filter-suggestions.open{display:grid}
-.zok-standing-filters .zok-filter-suggestions button{padding:9px 10px;border:0;border-radius:7px;background:transparent;color:#fff;text-align:left;font:inherit;font-size:12px;cursor:pointer}
-.zok-standing-filters .zok-filter-suggestions button:hover{background:#2869c7}
+.zok-standing-filters select{width:100%;min-width:0;padding:11px 8px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fff;font:inherit;font-size:12px}
 @media(max-width:350px){.zok-standing-filters{grid-template-columns:minmax(0,1fr)}}
 body.zok-ui-detail[data-zok-ui-tab="celoni"] .mast,
 body.zok-ui-detail[data-zok-ui-tab="barca"] .mast,
@@ -336,9 +331,9 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
     <p id="results-week" class="zok-results-week"></p>
     <p id="results-note" class="helper"></p>
     <div id="standings-filters" class="zok-standing-filters" hidden>
-      <label>Club<div class="zok-standing-wrap"><input id="standing-club-filter" type="search" placeholder="Tots els clubs" aria-label="Filtra la classificació per club"><div class="zok-filter-suggestions" role="listbox"></div></div></label>
-      <label>Categoria<div class="zok-standing-wrap"><input id="standing-category-filter" type="search" placeholder="Totes les categories" aria-label="Filtra la classificació per categoria"><div class="zok-filter-suggestions" role="listbox"></div></div></label>
-      <label>Competició<div class="zok-standing-wrap"><input id="standing-competition-filter" type="search" placeholder="Totes les competicions" aria-label="Filtra la classificació per competició"><div class="zok-filter-suggestions" role="listbox"></div></div></label>
+      <label>Club<select id="standing-club-filter" aria-label="Filtra la classificació per club"><option value="">Tots els clubs</option></select></label>
+      <label>Categoria<select id="standing-category-filter" aria-label="Filtra la classificació per categoria"><option value="">Totes les categories</option></select></label>
+      <label>Competició<select id="standing-competition-filter" aria-label="Filtra la classificació per competició"><option value="">Totes les competicions</option></select></label>
     </div>
     <div id="results-list" class="cards"></div>
   </section>
@@ -1465,19 +1460,18 @@ function renderClassificationSection(box){
   const clubOptions=new Map();
   for(const entry of entries)for(const row of entry.rows){const display=zonaokStandingDisplayName(entry.id,row.team),key=zonaokStandingClubKey(display);if(key&&!clubOptions.has(key))clubOptions.set(key,String(display).replace(/\s+[A-D]$/i,''));}
   const prior={club:club.value,category:category.value,competition:competition.value};
-  const contains=(value,query)=>!query||normalize(value).includes(normalize(query));
-  const hasClub=(entry,value)=>!value||entry.rows.some(row=>contains(String(zonaokStandingDisplayName(entry.id,row.team)).replace(/\s+[A-D]$/i,''),value));
+  const hasClub=(entry,value)=>!value||entry.rows.some(row=>zonaokStandingClubKey(zonaokStandingDisplayName(entry.id,row.team))===value);
   const base=entries.filter(entry=>hasClub(entry,prior.club));
-  const cats=[...new Map(base.filter(entry=>contains(entry.competition,prior.competition)).map(entry=>[entry.id,[entry.id,entry.name]])).values()];
-  const comps=[...new Set(base.filter(entry=>contains(entry.name,prior.category)).map(entry=>entry.competition))];
-  function options(input,items){input._zokOptions=[...new Set(items.map(([,label])=>label))];const menu=input.parentElement.querySelector('.zok-filter-suggestions');if(!menu)return;const q=input.value,values=input._zokOptions.filter(v=>!q||normalize(v).includes(normalize(q))).slice(0,40);menu.replaceChildren(...values.map(value=>{const button=mk('button','',value);button.type='button';button.setAttribute('role','option');button.addEventListener('mousedown',event=>event.preventDefault());button.addEventListener('click',()=>{input.value=value;menu.classList.remove('open');input.dispatchEvent(new Event('input',{bubbles:true}));input.focus()});return button}));menu.classList.toggle('open',document.activeElement===input&&values.length>0)}
-  options(club,[...clubOptions].sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})).map(([value,label])=>[value,label]));
-  options(category,cats);
-  options(competition,comps.map(value=>[value,value]).sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})));
+  const cats=[...new Map(base.filter(entry=>!prior.competition||entry.competition===prior.competition).map(entry=>[entry.id,entry.name]))];
+  const comps=[...new Set(base.filter(entry=>!prior.category||entry.id===prior.category).map(entry=>entry.competition))];
+  function options(select,placeholder,items,chosen){select.replaceChildren(new Option(placeholder,''));for(const [value,label] of items)select.add(new Option(label,value));select.value=items.some(([value])=>value===chosen)?chosen:'';}
+  options(club,'Tots els clubs',[...clubOptions].sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})),prior.club);
+  options(category,'Totes les categories',cats,prior.category);
+  options(competition,'Totes les competicions',comps.map(value=>[value,value]).sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})),prior.competition);
   const selectedClub=club.value,selectedCategory=category.value,selectedCompetition=competition.value;
   let any=false;
   for(const entry of entries){
-    if(!contains(entry.name,selectedCategory)||!contains(entry.competition,selectedCompetition)||!hasClub(entry,selectedClub))continue;
+    if((selectedCategory&&entry.id!==selectedCategory)||(selectedCompetition&&entry.competition!==selectedCompetition)||!hasClub(entry,selectedClub))continue;
     box.append(mk('h3','',entry.name));
     if(entry.standingsAt)box.append(mk('small','helper','Lectura: '+formatTimestamp(entry.standingsAt)));
     const rows=entry.rows;
@@ -1808,7 +1802,7 @@ $$('#export-shared').onclick=downloadShared;
 $$('#publish-shared').onclick=()=>window.open('https://github.com/carlesjfontanillas-beep/ZonaOK/upload/main','_blank','noopener');
 $$('#reload-shared').onclick=()=>window.ZonaOKRefreshSources?.();
 $$('#guide-button').onclick=()=>$$('#guide').showModal();$$('#guide-close').onclick=()=>$$('#guide').close();$$('#clear-button').onclick=()=>window.ZonaOKRefreshSources?.();$$('#ask-home').onclick=()=>ask('home');$$('#refresh-home').onclick=()=>selectSection('home');$$('#close-results').onclick=()=>selectSection('home');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>selectSection(b.dataset.tab));
-for(const id of ['standing-club-filter','standing-category-filter','standing-competition-filter']){const input=$$('#'+id),menu=input.parentElement.querySelector('.zok-filter-suggestions');input.addEventListener('focus',()=>{if(section==='classificacions')renderSection('classificacions')});input.addEventListener('input',()=>{if(section==='classificacions')renderSection('classificacions')});input.addEventListener('blur',()=>setTimeout(()=>menu.classList.remove('open'),130));input.addEventListener('keydown',e=>{if(e.key==='Escape')menu.classList.remove('open')});}
+for(const id of ['standing-club-filter','standing-category-filter','standing-competition-filter'])$$(('#'+id)).addEventListener('change',()=>{if(section==='classificacions')renderSection('classificacions')});
 $$('#week-prev').onclick=()=>changeWeek(-1);
 $$('#week-next').onclick=()=>changeWeek(1);
 $$('#week-today').onclick=resetWeek;
