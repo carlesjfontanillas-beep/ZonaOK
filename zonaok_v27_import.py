@@ -21,11 +21,18 @@ MAX_PACKET = 62000
 
 
 def decode_payload(value):
-    """Decode regular or URL-safe Base64, including '+' changed to spaces by forms."""
-    encoded=str(value or '').strip()
-    # Some Shortcut/API form encoders treat '+' as a space. The client now sends
-    # URL-safe Base64, while this keeps older saved shortcuts working as well.
-    encoded=encoded.replace(' ','+').replace('\r','').replace('\n','').replace('\t','')
+    """Decode Base64 from Shortcuts, tolerating Unicode whitespace/format marks."""
+    encoded=unicodedata.normalize('NFKC',str(value or '')).strip()
+    # Shortcuts can insert non-breaking spaces or zero-width formatting marks
+    # when passing long text through an action. They are transport artifacts,
+    # not part of Base64. Keep all other unexpected non-ASCII visible to errors.
+    encoded=''.join(ch for ch in encoded if not ch.isspace() and unicodedata.category(ch)!='Cf')
+    try:
+        encoded=encoded.encode('ascii').decode('ascii')
+    except UnicodeEncodeError as exc:
+        raise ValueError('El text rebut conté caràcters no ASCII dins del Base64. Torna a copiar el resultat de la drecera.') from exc
+    # Some form encoders turn '+' into spaces; the Safari script emits URL-safe
+    # Base64, and older shortcut copies can still contain standard Base64.
     encoded=encoded.replace('-','+').replace('_','/')
     if not encoded or len(encoded)>MAX_PACKET:
         raise ValueError('Entrada buida o massa gran')
