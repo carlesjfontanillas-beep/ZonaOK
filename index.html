@@ -267,10 +267,11 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
       <div><span class="overline" id="results-eyebrow">CONSULTA</span><h2 id="results-title">Resultats</h2></div>
       <button id="close-results" class="mini">Inici &#x2715;</button>
     </div>
-    <div class="context-actions">
+    <div class="context-actions" id="results-actions">
       <button id="open-fecapa" class="secondary">FECAPA &#x2197;</button>
       <button id="ask-section" class="secondary">ChatGPT &#x2197;</button>
       <button id="season-toggle" type="button" class="secondary">Tota la temporada</button>
+      <button id="open-golejadors" type="button" class="secondary" hidden>🥅 Golejadors</button>
     </div>
     <p id="results-week" class="zok-results-week"></p>
     <p id="results-note" class="helper"></p>
@@ -1862,5 +1863,6 @@ window.ZonaOKRefreshSources=async function(){
 })();
 </script>
   <script defer src="zonaok-resultats-7dies.js?v=20261121-r5"></script>
+  <script defer src="zonaok-golejadors.js?v=20261122-r1"></script>
 </body>
 </html>
