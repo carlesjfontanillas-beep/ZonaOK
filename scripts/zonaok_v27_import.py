@@ -21,18 +21,11 @@ MAX_PACKET = 62000
 
 
 def decode_payload(value):
-    """Decode Base64 from Shortcuts, tolerating Unicode whitespace/format marks."""
-    encoded=unicodedata.normalize('NFKC',str(value or '')).strip()
-    # Shortcuts can insert non-breaking spaces or zero-width formatting marks
-    # when passing long text through an action. They are transport artifacts,
-    # not part of Base64. Keep all other unexpected non-ASCII visible to errors.
-    encoded=''.join(ch for ch in encoded if not ch.isspace() and unicodedata.category(ch)!='Cf')
-    try:
-        encoded=encoded.encode('ascii').decode('ascii')
-    except UnicodeEncodeError as exc:
-        raise ValueError('El text rebut conté caràcters no ASCII dins del Base64. Torna a copiar el resultat de la drecera.') from exc
-    # Some form encoders turn '+' into spaces; the Safari script emits URL-safe
-    # Base64, and older shortcut copies can still contain standard Base64.
+    """Decode URL-safe Base64 while ignoring characters added by text transport."""
+    encoded=unicodedata.normalize('NFKC',str(value or ''))
+    # The shortcut emits URL-safe Base64 (A-Z, a-z, 0-9, '-' and '_').
+    # Strip whitespace, markup and any other transport artifacts before decoding.
+    encoded=''.join(ch for ch in encoded if ch in 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=+')
     encoded=encoded.replace('-','+').replace('_','/')
     if not encoded or len(encoded)>MAX_PACKET:
         raise ValueError('Entrada buida o massa gran')
