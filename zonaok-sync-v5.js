@@ -429,7 +429,7 @@
     // Actualitzar sempre els titols, fins si les targetes ja estan pintades.
     if($('#results-title'))$('#results-title').textContent=labels[tab];
     if($('#results-note'))$('#results-note').textContent=isWeeklyClub
-      ?selected.length+' partits del club \u00b7 '+nice(start)+' \u2014 '+nice(end)
+      ?selected.length+' partits del club'
       :selected.length+' partits \u00b7 Temporada '+seasonName+' \u00b7 M\u00e9s recents primer.';
     if($('#open-fecapa'))$('#open-fecapa').onclick=()=>window.open(
       seasonId?ROOT+'?liga='+seasonId+'&vista=calendar':AGENDA,'_blank','noopener');
