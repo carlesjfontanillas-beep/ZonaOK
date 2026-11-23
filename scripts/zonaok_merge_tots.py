@@ -168,7 +168,12 @@ class AgendaIndex:
 
 
 def load(path):
-    return json.loads(path.read_text(encoding='utf-8')) if path.is_file() else None
+    if not path.is_file():
+        return None
+    raw = path.read_text(encoding='utf-8')
+    # Les pujades interrompudes de les dreceres poden deixar fitxers de 0 bytes.
+    # Tractar-los com a captures absents; el JSON no buit continua validant-se.
+    return json.loads(raw) if raw.strip() else None
 
 
 def capture(kind, current_season):
