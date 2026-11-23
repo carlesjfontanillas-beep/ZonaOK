@@ -374,7 +374,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
   <div class="navgrid">
     <button data-tab="celoni" class="navbtn" aria-label="CP Sant Celoni" title="CP Sant Celoni"><span class="club-icon club-icon-celoni"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/281.png" alt="" loading="eager" decoding="async"></span><strong>CP Sant Celoni</strong><small>Setmana</small></button>
     <button data-tab="barca" class="navbtn" aria-label="Bar&#xE7;a" title="Bar&#xE7;a"><span class="club-icon club-icon-barca"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/234.png" alt="" loading="eager" decoding="async"></span><strong>Bar&#xE7;a</strong><small>Setmana</small></button>
-    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>&#x25A5;</span><strong>Classificacions</strong><small>3 grups</small></button>
+    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>&#x25A5;</span><strong>Classificacions</strong><small>Grups FECAPA</small></button>
     <button data-tab="grupalevi" class="navbtn" aria-label="Alev&#xED; OR 3 &#xB7; Temporada de Mag&#xED;" title="Alev&#xED; OR 3 &#xB7; Mag&#xED;"><span class="nav-name">Mag&#xED;</span><strong>Bar&#xE7;a Alev&#xED; OR 3</strong><small>Setmana</small></button>
     <button data-tab="grupinfantil" class="navbtn" aria-label="Infantil OR 10 &#xB7; Temporada de Ton" title="Infantil OR 10 &#xB7; Ton"><span class="nav-name">Ton</span><strong>Sant Celoni B Infantil OR 10</strong><small>Setmana</small></button>
     <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>&#x2302;</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
@@ -1320,7 +1320,7 @@ function renderHome(){const box=$$('#home-cards');box.replaceChildren();const {s
  if(store.live||store.agenda){const rows=clubRows().filter(r=>r.iso>=start&&r.iso<=end&&(r.homeClub==='barca'||r.awayClub==='barca'||r.homeClub==='celoni'||r.awayClub==='celoni')&&(store.agenda||(/ALEVI OR/.test(normalize(r.competition))&&(r.homeClub==='barca'||r.awayClub==='barca'))||(/^(INFANTIL|JUVENIL) OR/.test(normalize(r.competition))&&(r.homeClub==='celoni'||r.awayClub==='celoni')))).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));for(const r of rows){const card=createCard(r,'live');if(r.homeClub==='celoni'||r.awayClub==='celoni')card.append(mk('p','helper','FECAPA no identifica A/B ni el grup en aquest llistat.'));box.append(card);n++;}if(!n)box.append(mk('div','empty','No hi ha partits identificables dels teus equips aquesta setmana al llistat importat. La font pot mostrar encara la setmana anterior. Consulta els botons de club; no es pot concloure que no hi hagi partits.'));}
  else for(const id of ['4789','4784','4786']){const matches=allRows(id).filter(r=>r.iso>=start&&r.iso<=end&&matchFav(r,id)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));if(matches.length){for(const r of matches){box.append(createCard(r,id));n++;}}else box.append(missing(id));}$$('#home-count').textContent=n+' partits';}
 function emptyResults(message,ids=[]){const v=mk('div','empty');v.append(mk('div','',message));for(const id of ids){const a=mk('a','','Obrir '+LEAGUES[id].name+' \u2197');a.href=calendarUrl(id);a.target='_blank';a.rel='noopener';v.append(mk('div','', ' '));v.append(a)}$$('#results-list').append(v)}
-const SECTIONS={celoni:{name:'CP Sant Celoni \u00B7 Setmana',source:BASE,ids:['4786','4784'],msg:'Partits del CP Sant Celoni presents al llistat En directe. La llista pot ser parcial; FECAPA no hi distingeix sempre A/B ni el grup.'},barca:{name:'Bar\u00E7a \u00B7 Setmana',source:BASE,ids:['4789'],msg:'Partits del Bar\u00E7a presents al llistat En directe. Mostrem la categoria publicada i l\u2019hora de la lectura; la llista pot ser parcial.'},classificacions:{name:'Classificacions \u00B7 3 grups',source:calendarUrl('4789','clasificaciones'),ids:['4789','4786','4784'],msg:'Les classificacions nom\u00E9s apareixen despr\u00E9s d\u2019importar les taules oficials de FECAPA des de Safari.'},grupalevi:{name:'Alev\u00ED OR 3 \u00B7 Temporada',source:calendarUrl('4789'),ids:['4789'],msg:'Tots els partits de la temporada del Bar\u00E7a a Alev\u00ED OR 3, amb els marcadors publicats per FECAPA.'},grupinfantil:{name:'Infantil OR 10 \u00B7 Temporada',source:calendarUrl('4786'),ids:['4786'],msg:'Tots els partits de la temporada del Sant Celoni B a Infantil OR 10, amb els marcadors publicats per FECAPA.'}};
+const SECTIONS={celoni:{name:'CP Sant Celoni \u00B7 Setmana',source:BASE,ids:['4786','4784'],msg:'Partits del CP Sant Celoni presents al llistat En directe. La llista pot ser parcial; FECAPA no hi distingeix sempre A/B ni el grup.'},barca:{name:'Bar\u00E7a \u00B7 Setmana',source:BASE,ids:['4789'],msg:'Partits del Bar\u00E7a presents al llistat En directe. Mostrem la categoria publicada i l\u2019hora de la lectura; la llista pot ser parcial.'},classificacions:{name:'Classificacions',source:calendarUrl('4789','clasificaciones'),ids:['4789','4786','4784'],msg:'Classificacions de FECAPA importades i publicades al JSON de GitHub.'},grupalevi:{name:'Alev\u00ED OR 3 \u00B7 Temporada',source:calendarUrl('4789'),ids:['4789'],msg:'Tots els partits de la temporada del Bar\u00E7a a Alev\u00ED OR 3, amb els marcadors publicats per FECAPA.'},grupinfantil:{name:'Infantil OR 10 \u00B7 Temporada',source:calendarUrl('4786'),ids:['4786'],msg:'Tots els partits de la temporada del Sant Celoni B a Infantil OR 10, amb els marcadors publicats per FECAPA.'}};
 /* MAGI i TON - mostrar partits reals de l'AGENDA importada, no dependre
    d'una segona importacio per lliga. La lectura de tota la temporada existeix
    a store.agenda.rows; les entrades store[4789/4786].rows poden estar buides.
@@ -1440,11 +1440,11 @@ function zonaokStandingCode(value){
 }
 function zonaokStandingDisplayName(league,value){
   const raw=String(value==null?'':value).trim();
-  return ZONAOK_STANDINGS_DISPLAY_NAMES[String(league)]?.[zonaokStandingCode(raw)]||raw;
+  return ZONAOK_STANDINGS_DISPLAY_NAMES[String(league).split(':')[0]]?.[zonaokStandingCode(raw)]||raw;
 }
 function zonaokStandingIsFavorite(league,value){
   const key=zonaokStandingCode(value);
-  return String(league)==='4789'
+  return String(league).split(':')[0]==='4789'
     ? ['BAR','BARCA','FCBARCELONA'].includes(key)
     : ['CPSC','CPSANTCELONIB'].includes(key);
 }
@@ -1456,7 +1456,7 @@ function renderClassificationSection(box){
   const root=$$('#standings-filters'),club=$$('#standing-club-filter'),category=$$('#standing-category-filter'),competition=$$('#standing-competition-filter');
   root.hidden=false;
   const entries=Object.entries(store.classifications||{}).map(([id,item])=>({id,name:String(item.name||id),category:String(item.category||zonaokStandingCategory(item.name||id)),competition:String(item.competition||zonaokStandingCompetition(item.name||id)),rows:item.standings||[],standingsAt:item.standingsAt||item.capturedAt||''}));
-  for(const id of Object.keys(LEAGUES))if(!entries.some(entry=>entry.id===id)&&(store[id]?.standings||[]).length)entries.push({id,name:LEAGUES[id].name,category:zonaokStandingCategory(LEAGUES[id].name),competition:zonaokStandingCompetition(LEAGUES[id].name),rows:store[id].standings,standingsAt:store[id].standingsAt||''});
+  for(const id of Object.keys(LEAGUES))if(!entries.some(entry=>entry.id===id||entry.id.startsWith(id+':'))&&(store[id]?.standings||[]).length)entries.push({id,name:LEAGUES[id].name,category:zonaokStandingCategory(LEAGUES[id].name),competition:zonaokStandingCompetition(LEAGUES[id].name),rows:store[id].standings,standingsAt:store[id].standingsAt||''});
   const clubOptions=new Map();
   for(const entry of entries)for(const row of entry.rows){const display=zonaokStandingDisplayName(entry.id,row.team),key=zonaokStandingClubKey(display);if(key&&!clubOptions.has(key))clubOptions.set(key,String(display).replace(/\s+[A-D]$/i,''));}
   const prior={club:club.value,category:category.value,competition:competition.value};
@@ -1880,83 +1880,115 @@ window.ZonaOKRefreshSources=async function(){
 })();
 </script>
 <script id="zonaok-v27-classificacions">
-/* ZonaOK V27 · Compatibilitat amb la importació d'Agenda existent.
-   Afegeix 3 classificacions independents; NO canvia Agenda ni Actes.
-   Els JSON antics són font de compatibilitat fins que es publiquin els nous.
+/* ZonaOK V27.7 · Lectura del catàleg unificat de classificacions.
+   Correcció: funcions internes pròpies (sense dependències del script app.js).
+   Manté Agenda, En directe i Actes sense modificacions.
+   Carrega tots els grups de zonaok-classificacions.json, i actualitza
+   les classificacions ràpides de Magí / Ton a partir dels seus grups.
 */
 (function(){
- 'use strict';
- const LEAGUES=['4789','4786','4784'];
- const KEY='ZONAOK_FECAPA_SAFARI_V2';
- const has=x=>x&&typeof x==='object'&&!Array.isArray(x);
- const stamp=x=>{const n=Date.parse(String(x||''));return Number.isFinite(n)?n:0;};
- let busy=null;
- async function loadStandings(){
-   if(busy)return busy;
-   busy=(async()=>{
-     let changed=0;
-     const imported=new Set();
-     try{
-       const response=await fetch('zonaok-classificacions.json?v29='+Date.now(),{cache:'no-store'});
-       if(response.ok){
-         const data=await response.json();
-         const catalog=has(data)&&(data.schema==='zonaok-classificacions-v2'||data.schema==='zonaok-classificacions-v1')
-           ?(has(data.competitions)?data.competitions:data.leagues):null;
-         if(has(catalog)){
-           const local=window.ZonaOKSafeStorage.read(),merged={...(local.classifications||{})};
-           for(const [id,item] of Object.entries(catalog)){
-             if(!has(item)||!Array.isArray(item.standings)||item.standings.length<2||item.standings.length>50||
-                item.standings.some(x=>!has(x)||!String(x.team||'').trim()))continue;
-             const at=String(item.standingsAt||item.capturedAt||'');if(!stamp(at))continue;
-             const old=merged[id]||{};
-             if(stamp(at)>=stamp(old.standingsAt||old.capturedAt))merged[id]={...old,...item,standingsAt:at};
-             imported.add(String(item.leagueId||''));changed++;
-             const league=String(item.leagueId||'');
-             if(LEAGUES.includes(league)&&normalize(item.name)===normalize(LEAGUES[league].name))window.ZonaOKSafeStorage.setSection(league,{...(window.ZonaOKSafeStorage.read()[league]||{}),standings:item.standings,standingsAt:at});
-           }
-           if(Object.keys(merged).length)window.ZonaOKSafeStorage.setClassifications(merged);
-         }
-       }
-     }catch(error){console.warn('ZonaOK: no es pot llegir el JSON unificat de classificacions',error);}
-     for(const id of LEAGUES){
-       if(imported.has(id))continue;
-       const file='zonaok-classificacio-'+id+'.json';
-       try{
-         const response=await fetch(file+'?v27='+Date.now(),{cache:'no-store'});
-         // 404 fins a la primera importació és normal: no tocar les classificacions locals.
-         if(!response.ok)continue;
-         const data=await response.json();
-         if(!has(data)||data.schema!=='zonaok-classificacio-v1'||String(data.league)!==id||
-            !Array.isArray(data.standings)||data.standings.length<2||data.standings.length>50||
-            data.standings.some(x=>!has(x)||!String(x.team||'').trim()))continue;
-         const at=String(data.standingsAt||data.capturedAt||'');
-         if(!stamp(at))continue;
-         const local=window.ZonaOKSafeStorage.read();
-         const old=local[id]||{};
-         // El JSON de classificació independent és la font prioritària.
-         window.ZonaOKSafeStorage.setSection(id,{
-           ...old,standings:data.standings,standingsAt:at,
-           capturedAt:stamp(at)>stamp(old.capturedAt)?at:String(old.capturedAt||'')
-         });
-         changed++;
-       }catch(error){console.warn('ZonaOK: no es pot llegir '+file,error);}
-     }
-     if(changed)window.ZonaOKRender?.();
-     return changed>0;
-   })();
-   try{return await busy}finally{busy=null}
- }
- const previous=window.ZonaOKRefreshSources;
- window.ZonaOKRefreshSources=async function(){
-   // Agenda i actes conserven el mateix lector que fins ara.
-   const old=typeof previous==='function'?await previous():false;
-   const newer=await loadStandings();
-   return Boolean(old||newer);
- };
- // La primera càrrega es fa després de l'Agenda, via ZonaOKRefreshSources.
- window.ZonaOKReloadClassificacions=loadStandings;
-})();
+  'use strict';
+  const LEAGUES=['4789','4786','4784'];
+  const FAVORITE_GROUPS={
+    '4789':'ALEVI OR 3',
+    '4786':'INFANTIL OR 10',
+    '4784':'JUVENIL OR 6'
+  };
+  const has=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+  const normalizeName=x=>String(x??'').normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-zA-Z0-9]+/g,' ').trim().toUpperCase();
+  const stamp=x=>{const n=Date.parse(String(x||''));return Number.isFinite(n)?n:0;};
+  let busy=null;
 
+  async function loadStandings(){
+    if(busy)return busy;
+    busy=(async()=>{
+      let changed=0;
+      const imported=new Set();
+
+      // Font principal: totes les classificacions de tots els grups FECAPA.
+      try{
+        const response=await fetch('zonaok-classificacions.json?v27='+Date.now(),{cache:'no-store'});
+        if(response.ok){
+          const data=await response.json();
+          const catalog=has(data)&&['zonaok-classificacions-v1','zonaok-classificacions-v2'].includes(data.schema)
+            ?(has(data.competitions)?data.competitions:data.leagues):null;
+          if(has(catalog)){
+            const local=window.ZonaOKSafeStorage.read();
+            const merged={...(has(local.classifications)?local.classifications:{})};
+
+            for(const [id,item] of Object.entries(catalog)){
+              if(!has(item)||!Array.isArray(item.standings)||item.standings.length<2||item.standings.length>50||
+                 item.standings.some(x=>!has(x)||!String(x.team||'').trim()))continue;
+              const at=String(item.standingsAt||item.capturedAt||'');
+              if(!stamp(at))continue;
+              const old=merged[id]||{};
+              if(stamp(at)<stamp(old.standingsAt||old.capturedAt))continue;
+
+              merged[id]={...old,...item,standingsAt:at};
+              changed++;
+              const league=String(item.leagueId||id.split(':')[0]);
+              imported.add(league);
+
+              // Les finestres de classificació Magí/Ton llegeixen store[league].
+              // No confondre tota la lliga 4789 amb el grup Aleví OR 3.
+              if(LEAGUES.includes(league)&&normalizeName(item.name)===FAVORITE_GROUPS[league]){
+                const current=window.ZonaOKSafeStorage.read()[league]||{};
+                if(stamp(at)>=stamp(current.standingsAt)){
+                  window.ZonaOKSafeStorage.setSection(league,{
+                    ...current,standings:item.standings,standingsAt:at
+                  });
+                }
+              }
+            }
+            if(Object.keys(merged).length){
+              window.ZonaOKSafeStorage.setClassifications(merged);
+            }
+          }
+        }
+      }catch(error){
+        console.warn('ZonaOK: error llegint el JSON unificat de classificacions',error);
+      }
+
+      // Compatibilitat amb els JSON individuals publicats anteriorment.
+      // Només es consulten si el catàleg no aporta aquella lliga.
+      for(const id of LEAGUES){
+        if(imported.has(id))continue;
+        const file='zonaok-classificacio-'+id+'.json';
+        try{
+          const response=await fetch(file+'?v27='+Date.now(),{cache:'no-store'});
+          if(!response.ok)continue;
+          const data=await response.json();
+          if(!has(data)||data.schema!=='zonaok-classificacio-v1'||String(data.league)!==id||
+             !Array.isArray(data.standings)||data.standings.length<2||data.standings.length>50||
+             data.standings.some(x=>!has(x)||!String(x.team||'').trim()))continue;
+          const at=String(data.standingsAt||data.capturedAt||'');
+          if(!stamp(at))continue;
+          const old=window.ZonaOKSafeStorage.read()[id]||{};
+          if(stamp(at)<stamp(old.standingsAt))continue;
+          window.ZonaOKSafeStorage.setSection(id,{
+            ...old,standings:data.standings,standingsAt:at,
+            capturedAt:stamp(at)>stamp(old.capturedAt)?at:String(old.capturedAt||'')
+          });
+          changed++;
+        }catch(error){console.warn('ZonaOK: error llegint '+file,error);}
+      }
+      if(changed)window.ZonaOKRender?.();
+      return changed>0;
+    })();
+    try{return await busy}finally{busy=null;}
+  }
+
+  const previous=window.ZonaOKRefreshSources;
+  window.ZonaOKRefreshSources=async function(){
+    // Preservem exactament el carregador anterior d'Agenda i Actes.
+    const old=typeof previous==='function'?await previous():false;
+    const newer=await loadStandings();
+    return Boolean(old||newer);
+  };
+  window.ZonaOKReloadClassificacions=loadStandings;
+})();
 </script>
 <script id="zonaok-pull-refresh-v23">
 /* Safari iPhone · estirar avall per reconsultar els JSON de GitHub.
