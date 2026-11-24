@@ -76,6 +76,11 @@ body.zok-ui-detail #results-note {display:none!important}
  #home-cards .side strong {font-size:11px}
  #home-cards .score {font-size:18px!important}
 }
+#results-read-at{margin:0 0 8px;font-size:12px;color:inherit;opacity:.82}
+#home-cards .match .zok-home-acta{min-height:25px;padding:4px 8px;border:0;border-radius:8px;background:#173d5b;color:#fff;font-size:10px;font-weight:800}
+#home-cards .match.zok-v5-barca .zok-home-acta{background:#a92e61}
+#home-cards .match.zok-v5-infantil .zok-home-acta,#home-cards .match.zok-v5-juvenil .zok-home-acta{background:#2868be}
+#home-cards .match.zok-v5-neutral .zok-home-acta{background:#526b7d}
 </style>
 <style id="zonaok-ui5-fixes">
 
@@ -330,6 +335,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
     </div>
     <p id="results-week" class="zok-results-week"></p>
     <p id="results-note" class="helper"></p>
+    <p id="results-read-at" class="helper zok-read-at" hidden></p>
     <div id="standings-filters" class="zok-standing-filters" hidden>
       <label>Club<select id="standing-club-filter" aria-label="Filtra la classificació per club"><option value="">Tots els clubs</option></select></label>
       <label>Categoria<select id="standing-category-filter" aria-label="Filtra la classificació per categoria"><option value="">Totes les categories</option></select></label>
@@ -368,7 +374,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
       </div>
     </div>
   </section>
-  <footer class="footer">Font esportiva &#xFA;nica: <a href="https://www.hoqueipatins.fecapa.cat/" target="_blank" rel="noopener">FECAPA</a>. Els marcadors es mostren quan existeixen en les dades importades. Les consultes a ChatGPT s&#xF3;n alternatives.</footer>
+  
 </main>
 <nav class="bottom" aria-label="Sis consultes">
   <div class="bottom-title">CONSULTES R&#xC0;PIDES</div>
@@ -376,8 +382,8 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
     <button data-tab="celoni" class="navbtn" aria-label="CP Sant Celoni" title="CP Sant Celoni"><span class="club-icon club-icon-celoni"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/281.png" alt="" loading="eager" decoding="async"></span><strong>CP Sant Celoni</strong><small>Setmana</small></button>
     <button data-tab="barca" class="navbtn" aria-label="Bar&#xE7;a" title="Bar&#xE7;a"><span class="club-icon club-icon-barca"><img src="https://sidgad.cloud/fecapa/images/logos_clubes/234.png" alt="" loading="eager" decoding="async"></span><strong>Bar&#xE7;a</strong><small>Setmana</small></button>
     <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>&#x25A5;</span><strong>Classificacions</strong><small id="zonaok-classificacions-count">Carregant…</small></button>
-    <button data-tab="grupalevi" class="navbtn" aria-label="Alev&#xED; OR 3 &#xB7; Temporada de Mag&#xED;" title="Alev&#xED; OR 3 &#xB7; Mag&#xED;"><span class="nav-name">Mag&#xED;</span><strong>Bar&#xE7;a Alev&#xED; OR 3</strong><small>Setmana</small></button>
-    <button data-tab="grupinfantil" class="navbtn" aria-label="Infantil OR 10 &#xB7; Temporada de Ton" title="Infantil OR 10 &#xB7; Ton"><span class="nav-name">Ton</span><strong>Sant Celoni B Infantil OR 10</strong><small>Setmana</small></button>
+    <button data-tab="grupalevi" class="navbtn" aria-label="Magí · Aleví OR 3" title="Magí · Aleví OR 3"><span class="nav-name">👤 Magí</span><strong>Bar&#xE7;a Alev&#xED; OR 3</strong><small>Setmana</small></button>
+    <button data-tab="grupinfantil" class="navbtn" aria-label="Ton · Infantil OR 10" title="Ton · Infantil OR 10"><span class="nav-name">👤 Ton</span><strong>Sant Celoni B Infantil OR 10</strong><small>Setmana</small></button>
     <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>&#x2302;</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
   </div>
 </nav>
@@ -831,10 +837,6 @@ try {
     // V15: les actes són només una interacció addicional; NO substituïm
     // el filtratge de temporada V10.5 ni els resultats de les targetes.
     if(validScore(r.homeScore)&&validScore(r.awayScore)){
-      const acta=el('button','zok-acta-chip','⌕ Acta');acta.type='button';
-      acta.setAttribute('aria-label','Obrir acta de '+r.home+' contra '+r.away);
-      acta.addEventListener('click',ev=>{ev.stopPropagation();window.ZonaOKActes?.open(r,inferLeague(r));});
-      middle.append(acta);
       c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');
       c.addEventListener('click',ev=>{if(ev.target.closest?.('button,a,input,select,textarea'))return;window.ZonaOKActes?.open(r,inferLeague(r));});
       c.addEventListener('keydown',ev=>{if(ev.target!==c||(ev.key!=='Enter'&&ev.key!==' '))return;ev.preventDefault();window.ZonaOKActes?.open(r,inferLeague(r));});
@@ -858,9 +860,14 @@ try {
       c.append(venue);
     }
     const actions=el('div','match-actions');
-    if(r.actaUrl){
+    if(r.actaUrl&&compact){
       const link=el('a','light','\u2315 Acta');link.href=r.actaUrl;link.target='_blank';link.rel='noopener';
       link.setAttribute('aria-label','Obrir la fitxa i l\u2019acta oficial del partit');actions.append(link);
+    } else if(!compact&&validScore(r.homeScore)&&validScore(r.awayScore)){
+      const acta=el('button','zok-home-acta','⌕ Acta');acta.type='button';
+      acta.setAttribute('aria-label','Obrir acta de '+r.home+' contra '+r.away);
+      acta.addEventListener('click',ev=>{ev.stopPropagation();window.ZonaOKActes?.open(r,inferLeague(r));});
+      actions.append(acta);
     }
     if(actions.childNodes.length)c.append(actions);
     return c;
@@ -962,14 +969,16 @@ try {
     const labels={
       barca:'Bar\u00e7a \u00b7 Setmana',
       celoni:'CP Sant Celoni \u00b7 Setmana',
-      grupalevi:'Mag\u00ed \u00b7 Bar\u00e7a Alev\u00ed OR 3 \u00b7 Temporada',
-      grupinfantil:'Ton \u00b7 CP Sant Celoni B Infantil OR 10 \u00b7 Temporada'
+      grupalevi:'Mag\u00ed \u00b7 Bar\u00e7a Alev\u00ed OR 3',
+      grupinfantil:'Ton \u00b7 CP Sant Celoni B Infantil OR 10'
     };
     // Actualitzar sempre els titols, fins si les targetes ja estan pintades.
     if($('#results-title'))$('#results-title').textContent=labels[tab];
     if($('#results-note'))$('#results-note').textContent=isWeeklyClub
       ?selected.length+' partits del club'
-      :selected.length+' partits \u00b7 Temporada '+seasonName+' \u00b7 M\u00e9s recents primer.';
+      :selected.length+' partits · '+seasonName+' · Més recents primer';
+    const readAt=seasonId?(seasonItem.capturedAt||store[seasonId]?.capturedAt||store.agenda?.capturedAt||''):'';
+    const readNode=$('#results-read-at');if(readNode){readNode.hidden=!readAt;readNode.textContent=readAt?'Lectura: '+timestamp(readAt):'';}
     if($('#open-fecapa'))$('#open-fecapa').onclick=()=>window.open(
       seasonId?ROOT+'?liga='+seasonId+'&vista=calendar':AGENDA,'_blank','noopener');
 
@@ -1270,8 +1279,9 @@ function weekText(){
   $$('#week').title=label;
   const resultLabel=$$('#results-week');
   if(resultLabel){
-    resultLabel.hidden=section==='classificacions';
-    resultLabel.textContent=isSeasonMenu(section)?'Tota la temporada':'Setmana: '+label;
+    const fullSeason=section==='grupalevi'||section==='grupinfantil';
+    resultLabel.hidden=section==='classificacions'||fullSeason;
+    resultLabel.textContent=fullSeason?'':'Setmana: '+label;
   }
   const today=$$('#week-today');if(today)today.disabled=start===mondayISO()&&!showSeason;
 }
@@ -1321,7 +1331,7 @@ function renderHome(){const box=$$('#home-cards');box.replaceChildren();const {s
  if(store.live||store.agenda){const rows=clubRows().filter(r=>r.iso>=start&&r.iso<=end&&(r.homeClub==='barca'||r.awayClub==='barca'||r.homeClub==='celoni'||r.awayClub==='celoni')&&(store.agenda||(/ALEVI OR/.test(normalize(r.competition))&&(r.homeClub==='barca'||r.awayClub==='barca'))||(/^(INFANTIL|JUVENIL) OR/.test(normalize(r.competition))&&(r.homeClub==='celoni'||r.awayClub==='celoni')))).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));for(const r of rows){const card=createCard(r,'live');if(r.homeClub==='celoni'||r.awayClub==='celoni')card.append(mk('p','helper','FECAPA no identifica A/B ni el grup en aquest llistat.'));box.append(card);n++;}if(!n)box.append(mk('div','empty','No hi ha partits identificables dels teus equips aquesta setmana al llistat importat. La font pot mostrar encara la setmana anterior. Consulta els botons de club; no es pot concloure que no hi hagi partits.'));}
  else for(const id of ['4789','4784','4786']){const matches=allRows(id).filter(r=>r.iso>=start&&r.iso<=end&&matchFav(r,id)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));if(matches.length){for(const r of matches){box.append(createCard(r,id));n++;}}else box.append(missing(id));}$$('#home-count').textContent=n+' partits';}
 function emptyResults(message,ids=[]){const v=mk('div','empty');v.append(mk('div','',message));for(const id of ids){const a=mk('a','','Obrir '+LEAGUES[id].name+' \u2197');a.href=calendarUrl(id);a.target='_blank';a.rel='noopener';v.append(mk('div','', ' '));v.append(a)}$$('#results-list').append(v)}
-const SECTIONS={celoni:{name:'CP Sant Celoni \u00B7 Setmana',source:BASE,ids:['4786','4784'],msg:'Partits del CP Sant Celoni presents al llistat En directe. La llista pot ser parcial; FECAPA no hi distingeix sempre A/B ni el grup.'},barca:{name:'Bar\u00E7a \u00B7 Setmana',source:BASE,ids:['4789'],msg:'Partits del Bar\u00E7a presents al llistat En directe. Mostrem la categoria publicada i l\u2019hora de la lectura; la llista pot ser parcial.'},classificacions:{name:'Classificacions',source:calendarUrl('4789','clasificaciones'),ids:['4789','4786','4784'],msg:'Classificacions de FECAPA importades i publicades al JSON de GitHub.'},grupalevi:{name:'Alev\u00ED OR 3 \u00B7 Temporada',source:calendarUrl('4789'),ids:['4789'],msg:'Tots els partits de la temporada del Bar\u00E7a a Alev\u00ED OR 3, amb els marcadors publicats per FECAPA.'},grupinfantil:{name:'Infantil OR 10 \u00B7 Temporada',source:calendarUrl('4786'),ids:['4786'],msg:'Tots els partits de la temporada del Sant Celoni B a Infantil OR 10, amb els marcadors publicats per FECAPA.'}};
+const SECTIONS={celoni:{name:'CP Sant Celoni \u00B7 Setmana',source:BASE,ids:['4786','4784'],msg:'Partits del CP Sant Celoni presents al llistat En directe. La llista pot ser parcial; FECAPA no hi distingeix sempre A/B ni el grup.'},barca:{name:'Bar\u00E7a \u00B7 Setmana',source:BASE,ids:['4789'],msg:'Partits del Bar\u00E7a presents al llistat En directe. Mostrem la categoria publicada i l\u2019hora de la lectura; la llista pot ser parcial.'},classificacions:{name:'Classificacions',source:calendarUrl('4789','clasificaciones'),ids:['4789','4786','4784'],msg:'Classificacions de FECAPA importades i publicades al JSON de GitHub.'},grupalevi:{name:'Alev\u00ED OR 3',source:calendarUrl('4789'),ids:['4789'],msg:'Tots els partits de la temporada del Bar\u00E7a a Alev\u00ED OR 3, amb els marcadors publicats per FECAPA.'},grupinfantil:{name:'Infantil OR 10',source:calendarUrl('4786'),ids:['4786'],msg:'Tots els partits de la temporada del Sant Celoni B a Infantil OR 10, amb els marcadors publicats per FECAPA.'}};
 /* MAGI i TON - mostrar partits reals de l'AGENDA importada, no dependre
    d'una segona importacio per lliga. La lectura de tota la temporada existeix
    a store.agenda.rows; les entrades store[4789/4786].rows poden estar buides.
@@ -1388,8 +1398,11 @@ function mostrarTemporadaJugador(key,box){
   const {rows:seasonRows,periode,diagnostic}=partitsTemporadaJugador(key);
   // No llegir chosenWeek() aquí: MAGÍ i TON SEMPRE mostren tota la temporada.
   const rows=seasonRows;
-  $$('#results-title').textContent=(magi?'Mag\u00ED \u00B7 Bar\u00E7a Alev\u00ED OR 3':'Ton \u00B7 CP Sant Celoni B Infantil OR 10')+' \u00B7 Temporada';
-  $$('#results-note').textContent=periode.nom+' \u00B7 '+rows.length+' partits disponibles de la temporada. Ordre: m\u00E9s recents primer.';
+  $$('#results-title').textContent=(magi?'Mag\u00ED \u00B7 Bar\u00E7a Alev\u00ED OR 3':'Ton \u00B7 CP Sant Celoni B Infantil OR 10');
+  $$('#results-note').textContent=rows.length+' partits · '+periode.nom+' · Més recents primer';
+  const readAt=store.seasons?.[id]?.capturedAt||store[id]?.capturedAt||store.agenda?.capturedAt||store.live?.capturedAt||'';
+  const readNode=$$('#results-read-at');
+  if(readNode){readNode.hidden=!readAt;readNode.textContent=readAt?'Lectura: '+formatTimestamp(readAt):'';}
   if(!rows.length){
     if(seasonRows.length){
       emptyResults('No hi ha dades de temporada disponibles en aquesta còpia.',[id]);

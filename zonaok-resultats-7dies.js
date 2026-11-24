@@ -329,8 +329,8 @@
         const stamp = new Intl.DateTimeFormat('ca-ES', {
           timeZone: 'Europe/Madrid', dateStyle: 'short', timeStyle: 'short'
         }).format(new Date(publishedAt));
-        status.textContent = `Font: FECAPA · JSON publicats · Actualització ${stamp}`;
-      } catch (_) { status.textContent = 'Font: FECAPA · JSON publicats a GitHub'; }
+        status.textContent = `Actualització: ${stamp}`;
+      } catch (_) { status.textContent = 'Actualització no disponible'; }
     }
   }
 
@@ -423,7 +423,7 @@
       #${ID} .zok-recent-card .crest img{width:23px;height:23px;object-fit:contain}
       #${ID} .zok-recent-card .middle{min-width:0;max-width:52px;width:52px;align-self:center;justify-items:center;gap:0}
       #${ID} .zok-recent-card .score{font-size:19px;line-height:1.1;white-space:nowrap}
-      #${ID} .zok-recent-stamp{font-size:11px;color:#b6d2e5;margin-top:14px;line-height:1.45}
+      #${ID} .zok-recent-stamp{font-size:11px;color:#b6d2e5;margin:0 0 10px;line-height:1.35}
       @media(max-width:370px){
         #${ID} .zok-recent-card{padding:4px 6px}
         #${ID} .zok-recent-card .match-top{column-gap:4px}
@@ -475,10 +475,10 @@
     competitionLabel.append(competitionFilter); mountSuggestions(competitionFilter);
     filterRow.append(clubLabel, categoryLabel, competitionLabel);
     content = make('div', 'cards');
-    status = make('p', 'zok-recent-stamp', 'Font: Agenda i En directe');
+    status = make('p', 'zok-recent-stamp', '');
     panel.append(header, filterRow,
       make('p', 'zok-recent-period', 'Darrers 7 dies · Tots els partits · Més recents primer'),
-      content, status);
+      status, content);
     const footer = main.querySelector('.footer');
     main.insertBefore(panel, footer || null);
 
