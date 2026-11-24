@@ -66,9 +66,7 @@
   }
   function shortTeamName(value) {
     const name = norm(value);
-    const santCeloni = name.match(/^(?:CP )?SANT CELONI(?: ([A-D]))?$/) ||
-      name.match(/^CPSC(?: ([A-D]))?$/);
-    return santCeloni ? `CPSC${santCeloni[1] || ''}` : clean(value);
+    return clean(value);
   }
   function clubLabel(record) {
     const code = norm(record.clubCode);
@@ -78,9 +76,11 @@
       return 'CP SANT CELONI';
     if (code === 'BARCA' || /^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETERANS|FCBETRANS)(?: [A-Z0-9]+)?$/.test(team))
       return 'BARÇA';
-    const name = clean(record.team);
-    // La lletra final A/B/C/D identifica un equip dins del club.
-    return name.replace(/\s+[A-D]$/i, '');
+    return clubBaseName(record.team);
+  }
+  function clubBaseName(value) {
+    return clean(value).replace(/\s*-\s*[A-Z]$/i, '').replace(/\s+[A-Z]$/i, '').replace(/\s*-\s*$/i, '').trim();
+  }
   }
   function buildCatalog(agenda, classifications) {
     const teamRecords = new Map();
@@ -152,10 +152,27 @@
       competitions: sorted(competitions),
       teamRecords: enrichedRecords
     };
+    const clubsByName = new Map(catalog.clubs.map(club => [norm(club), club]));
+    const clubAliases = new Map(), migratedClubs = [];
+    for (const oldClub of selected.clubs || []) {
+      const canonical = clubsByName.get(norm(clubBaseName(oldClub))) || clubsByName.get(norm(oldClub));
+      if (canonical) { clubAliases.set(oldClub, canonical); migratedClubs.push(canonical); }
+    }
+    const migrateClubMap = source => {
+      const result = {...(source || {})};
+      for (const [oldClub, canonical] of clubAliases) {
+        if (oldClub === canonical) continue;
+        if (!result[canonical] && result[oldClub]) result[canonical] = result[oldClub];
+        delete result[oldClub];
+      }
+      return result;
+    };
     selected = {...Object.fromEntries(GROUPS.map(([key]) => {
       const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
-      return [key, selected[key].filter(value => allowed.has(value))];
-    })), teamNames: selected.teamNames || {}, clubLogoUrls: selected.clubLogoUrls || {}, teamLogoUrls: selected.teamLogoUrls || {}, clubColors: selected.clubColors || {}, teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
+      const values = key === 'clubs' ? [...new Set(migratedClubs)] : selected[key];
+      return [key, values.filter(value => allowed.has(value))];
+    })), teamNames: selected.teamNames || {}, clubLogoUrls: migrateClubMap(selected.clubLogoUrls), teamLogoUrls: selected.teamLogoUrls || {}, clubColors: migrateClubMap(selected.clubColors), teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
+    save();
     render();
   }
   function scopedOptions(key, matchingClubs = new Set()) {
@@ -331,10 +348,10 @@
           const club = catalog.teamRecords.find(record => record.leagueId === league && [record.club,record.clubCode].some(value => {
             const alias=norm(value);return alias && (alias===alt||alt.includes(alias)||alias.includes(alt));
           }));
-          if (club && selected.clubs.includes(club.club) && !selected.clubLogoUrls[club.club]) {
+          if (club && !selected.clubLogoUrls[club.club]) {
             selected.clubLogoUrls[club.club]=url;changed=true;
           }
-          for (const record of chosen.filter(record=>record.leagueId===league)) {
+          for (const record of catalog.teamRecords.filter(record=>record.leagueId===league)) {
             const aliases=[record.team,record.club,record.clubCode].map(norm).filter(Boolean);
             if (aliases.some(alias=>alt===alias||alt.includes(alias)||alias.includes(alt))) {
               if (!selected.teamLogoUrls[record.key]) {selected.teamLogoUrls[record.key]=url;changed=true;}
