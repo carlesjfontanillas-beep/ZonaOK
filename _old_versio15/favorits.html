@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#061d33">
+  <meta name="description" content="Tria els clubs, equips, categories i competicions que vols tenir a mà a ZonaOK.">
+  <title>Favorits · ZonaOK</title>
+  <link rel="stylesheet" href="style.css?v=20261118-season">
+  <link rel="stylesheet" href="favorits.css?v=1">
+  <script defer src="favorits.js?v=20261124-safari-sync"></script>
+</head>
+<body>
+<main class="app zok-favorites-app">
+  <header class="mast">
+    <div><div class="brand">ZONA<span>OK</span></div><div class="strap">ELS TEUS PARTITS · EL TEU HOQUEI</div></div>
+    <a class="secondary zok-back" href="index.html?v=20261124-favorites-sync">← Inici</a>
+  </header>
+  <section class="hero zok-favorites-hero">
+    <div class="overline">EL TEU ESPAI</div>
+    <h1>Els meus favorits</h1>
+    <p>Marca un club per limitar els equips, categories i competicions a les opcions on participa.</p>
+  </section>
+  <section class="keyline" aria-live="polite"><span id="favorites-status">Carregant dades de ZonaOK…</span><span id="favorites-count">0 seleccionats</span></section>
+  <section class="section zok-favorites-controls">
+    <label for="favorites-search">Cerca a la llista</label>
+    <input id="favorites-search" type="search" placeholder="Escriu per filtrar…" autocomplete="off">
+    <div class="zok-favorites-actions">
+      <button id="favorites-scope-toggle" type="button" class="secondary" hidden>Mostra totes les opcions</button>
+      <button id="favorites-clear" type="button" class="secondary">Esborra les seleccions</button>
+    </div>
+    <p id="favorites-scope-note" class="zok-favorites-scope-note" role="status" aria-live="polite"></p>
+  </section>
+  <div id="favorites-groups" class="zok-favorites-groups" aria-live="polite"></div>
+  <p class="footer">Les seleccions es desen en aquest navegador. No cal crear cap compte.</p>
+</main>
+</body>
+</html>
