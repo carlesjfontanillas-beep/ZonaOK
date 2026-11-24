@@ -16,7 +16,7 @@ def url(league,season,team=None,player=None):
     if player: q["jugador"]=player
     q["s"]=season
     return BASE+"?"+urlencode(q)
-def empty(season): return {"schema":SCHEMA,"source":"FECAPA","seasonId":season,"players":{},"memberships":{}}
+def empty(season): return {"schema":SCHEMA,"source":"FECAPA","seasonId":season,"players":{},"memberships":{},"matchAppearances":{}}
 def save(path,data):
     path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
     with tempfile.NamedTemporaryFile("w",encoding="utf-8",dir=path.parent,delete=False) as f:
@@ -122,6 +122,15 @@ def verify_master(d):
         if key!=expected or m["seasonId"]!=d["seasonId"] or m["playerId"] not in d["players"]:raise ValueError("membership_invalid")
         if m["profileUrl"]!=url(m["leagueId"],m["seasonId"],m["teamFilterId"],m["playerId"]):raise ValueError("profile_url_invalid")
         referenced.add(m["playerId"])
+    for key,a in d.get("matchAppearances",{}).items():
+        expected="|".join([a["seasonId"],a["leagueId"],a["matchId"],a["side"],a["playerId"]])
+        if key!=expected or a["seasonId"]!=d["seasonId"] or a["playerId"] not in d["players"]:raise ValueError("appearance_invalid")
+        expected_url=BASE+"?"+urlencode({"liga":a["leagueId"],"vista":"calendar","partido":a["matchId"]})
+        if a["actaUrl"]!=expected_url:raise ValueError("appearance_url_invalid")
+        if a.get("teamFilterId"):
+            mk="|".join([a["seasonId"],a["leagueId"],a["teamFilterId"],a["playerId"]])
+            if mk not in d["memberships"]:raise ValueError("appearance_membership_invalid")
+        referenced.add(a["playerId"])
     if referenced!=set(d["players"]):raise ValueError("unlinked_player")
     return True
 def persistence_probe(d):

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "ZonaOK – Jugadors master v1",
+  "title": "ZonaOK – Jugadors master v1 (contracte ampliat)",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -197,6 +197,10 @@
               "blueCards": {
                 "type": "integer",
                 "minimum": 0
+              },
+              "assists": {
+                "type": "integer",
+                "minimum": 0
               }
             }
           },
@@ -270,6 +274,10 @@
               "blueCards": {
                 "type": "integer",
                 "minimum": 0
+              },
+              "assists": {
+                "type": "integer",
+                "minimum": 0
               }
             }
           },
@@ -332,6 +340,143 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "matchAppearances": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[1-9][0-9]*\\|[1-9][0-9]*\\|[1-9][0-9]*\\|(home|away)\\|[1-9][0-9]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "seasonId",
+          "leagueId",
+          "matchId",
+          "side",
+          "playerId",
+          "actaUrl",
+          "source",
+          "participation",
+          "checkedAt"
+        ],
+        "properties": {
+          "seasonId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "leagueId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "matchId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "side": {
+            "enum": [
+              "home",
+              "away"
+            ]
+          },
+          "playerId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "teamFilterId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "teamName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "shirtNumber": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "position": {
+            "enum": [
+              "goalkeeper",
+              "field"
+            ]
+          },
+          "captain": {
+            "type": "boolean"
+          },
+          "participation": {
+            "enum": [
+              "listed",
+              "played"
+            ]
+          },
+          "stats": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "goals": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "assists": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "yellowCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "blueCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "redCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "penaltiesTaken": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "penaltiesScored": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "directFreeHitsTaken": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "directFreeHitsScored": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "saves": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "minutes": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "actaUrl": {
+            "type": "string",
+            "pattern": "^https://www\\.hoqueipatins\\.fecapa\\.cat/\\?"
+          },
+          "source": {
+            "enum": [
+              "FECAPA:acta_resum",
+              "FECAPA:acta_oficial",
+              "FECAPA:fitxa_partits_jugats"
+            ]
+          },
+          "checkedAt": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }

@@ -1,9 +1,14 @@
-# ZonaOK — contracte JSON de jugadors (esborrany V1)
+# ZonaOK — contracte mestre de jugadors
+Font única FECAPA. Contracte ampliat compatible amb els documents v1 anteriors. Un master per temporada; el fitxer públic és una plantilla buida. No fusionar ni desplegar fins a validar la importació i un destí privat autoritzat.
 
-Font única FECAPA, plantilles. L'esquema és a `schemas/jugadors-master.schema.json`. Una fitxa per ID de jugador; vinculacions indexades per temporada|lliga|filtre|jugador. El filtre no equival necessàriament a l'ID de club ni a l'ID federatiu de l'equip. Els camps no verificats són nuls o absents, mai inventats. Les estadístiques opcionals pertanyen a una vinculació esportiva, no es sumen automàticament; validar capçaleres i significat.
+## Col·leccions
+- players: ID federatiu, nom, variants, any de naixement opcional (mai data completa), marques de verificació.
+- memberships: clau temporada|lliga|filtre|jugador. Noms de club, equip, lliga i grup, escut, URL de fitxa. Un jugador pot tenir diverses vinculacions. El filtre no equival necessàriament a l'ID federatiu de l'equip ni al club.
+- matchAppearances: clau temporada|lliga|partit|home/away|jugador. Dorsal, P (porter), C (capità), participació, estadístiques opcionals, URL canònica i font. El filtre d'equip només es conserva si correspon a una vinculació verificada, no es copia del filtre de navegació. No es deduplica per nom ni dorsal.
+- sports (plantilles), profileStats (resum) i matches (historial anterior): fonts independents. No sumar totals entre fonts o comptar dues vegades la mateixa aparició. L'índex canònic per partit és matchAppearances.
 
-Camps amb cobertura real V5: playerId/name 252/252; leagueId/teamFilterId/seasonId/teamName/profileUrl 297/297; clubId per escut 132/297 (pendent de confirmar significat complet); sports.played 181/297. Els camps opcionals sports.number/goals/yellowCards/redCards/blueCards i teamId/clubName no estan confirmats. La prova V6 investiga més camps. No es recullen dates de naixement ni altres dades delicades.
-
-La prova V7 escriu un master real temporal en un directori privat efímer del runner, el rellegeix i valida esquema, claus, vinculacions, URL i reimportació sense duplicats. El directori s'elimina. Només es conserva el diagnòstic agregat, amb resultat i mida del fitxer; no es publiquen registres identificables ni es guarden com a artefacte. El master de l'arrel continua buit. Persistència real entre execucions requereix destí privat autoritzat i queda pendent.
-
-No fusionar encara. No modifica la UI ni els altres imports.
+## Semàntica
+P explícita = goalkeeper; buit només implica field si la columna i la convenció s'han verificat. C explícita = captain true; buit només implica false si es verifica. Num = dorsal en aquell partit. Una alineació significa listed; played exigeix evidència de participació. Absència no equival a zero. No inferir gols, targetes, assistències, penals o altres estadístiques sense verificar columnes i valors. Els camps de gols, assistències, targetes, penals, faltes directes, aturades i minuts són opcionals; no tots estan confirmats.
+ 
+## Validació i persistència
+V12 confirma lectura de Resum i Partits, filtre Totes les competicions en 10/12 fitxes; no ha incorporat historial. Actes V2: sis URL, quatre partits, 69 files de jugadors amb ID i dorsal. V3 valida P/C. La lectura i fusió real d'aparicions queda pendent de validar. Les proves escriuen i rellegeixen el JSON temporal i comproven claus i referències, sense publicar dades identificables. Els diagnòstics públics són agregats. No es modifiquen la UI ni altres imports.
