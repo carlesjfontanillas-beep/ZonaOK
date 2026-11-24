@@ -363,20 +363,62 @@ JS_CALENDAR = r"""(league) => {
   };
   const rows=[];let examined=0,invalid=0,ambiguousIds=0;
   const leaguesFound=new Set();
-  for(const el of document.querySelectorAll('.sidgad-partido-fila')){
+  // El calendari REAL es troba a sidgad-calendario-table. En directe és
+  // un mòdul global amb sidgad-partido-fila que sovint és ocult.
+  const calendarRows=[...document.querySelectorAll('tr.sidgad-calendario-partido')];
+  let phase='';
+  for(const node of document.querySelectorAll('.sidgad-calendario-fase,tr.sidgad-calendario-partido')){
+    if(node.matches('.sidgad-calendario-fase')){phase=T(node);continue;}
+    if(!node.matches('tr.sidgad-calendario-partido'))continue;
     examined++;
-    const home=T(el.querySelector('.sidgad-local .sidgad-equipo-nombre'));
-    const away=T(el.querySelector('.sidgad-visitante .sidgad-equipo-nombre'));
-    const sub=T(el.querySelector('.sidgad-local .sidgad-equipo-sub'));
-    const date=parsed(sub),time=clock(sub);
+    const home=T(node.querySelector('.sidgad-col-equipo-home'));
+    const away=T(node.querySelector('.sidgad-col-equipo-away'));
+    const date=parsed(T(node.querySelector('.sidgad-col-dia')));
+    const time=clock(T(node.querySelector('.sidgad-col-hora')));
     if(!home||!away||N(home)===N(away)||!date||!time){invalid++;continue;}
-    const meta=idsFromFixture(el);
-    if(meta.ambiguous)ambiguousIds++;
-    if(meta.leagueId)leaguesFound.add(meta.leagueId);
-    const sco=score(T(el.querySelector('.sidgad-resultado-texto')));
-    const comp=T(el.closest('.sidgad-liga-grupo')?.querySelector('.sidgad-liga-header-separador'))||T(document.querySelector('h1,h2'));
-    rows.push({iso:date,time,home,away,competition:comp,leagueId:meta.leagueId,matchId:meta.matchId,
-      homeScore:sco[0],awayScore:sco[1],actaUrl:'',status:T(el.querySelector('.sidgad-status-tag')),venue:''});
+    // Lliga independent del paràmetre de la pàgina: dos links dels equips
+    // dins de la mateixa fila. L'IDP surt del botó de detalls de la fila.
+    const teamLinks=[...node.querySelectorAll('.sidgad-col-equipo-home a[href],.sidgad-col-equipo-away a[href]')];
+    const linkedLeagues=new Set();
+    for(const a of teamLinks){
+      try{
+        const u=new URL(a.getAttribute('href'),document.baseURI);
+        if(u.protocol==='https:'&&/^(?:www\.)?hoqueipatins\.fecapa\.cat$/i.test(u.hostname)&&
+            /^\d{4,6}$/.test(u.searchParams.get('liga')||''))linkedLeagues.add(u.searchParams.get('liga'));
+      }catch(_){}
+    }
+    const matchIds=[...new Set([...node.querySelectorAll('[data-calendar-action="details"][data-match-id]')]
+      .map(x=>x.getAttribute('data-match-id')).filter(x=>/^\d{4,10}$/.test(x||'')))];
+    if(linkedLeagues.size>1||matchIds.length>1)ambiguousIds++;
+    const leagueId=linkedLeagues.size===1&&teamLinks.length>=2?[...linkedLeagues][0]:'';
+    const matchId=matchIds.length===1?matchIds[0]:'';
+    if(leagueId)leaguesFound.add(leagueId);
+    const sc=score(T(node.querySelector('.sidgad-col-resultado')));
+    const competition=phase||T(document.querySelector('.sidgad-calendario-fase'))||'';
+    rows.push({iso:date,time,home,away,competition,leagueId,matchId,
+      homeScore:sc[0],awayScore:sc[1],actaUrl:'',status:'',
+      venue:T(node.querySelector('.sidgad-col-pista'))});
+  }
+  // Compatibilitat amb calendaris de format antic, només quan no hi ha
+  // taules del calendari real. Mai agafem targetes globals ocultes.
+  if(!calendarRows.length){
+    for(const el of document.querySelectorAll('.sidgad-partido-fila')){
+      const css=getComputedStyle(el),box=el.getBoundingClientRect();
+      if(css.display==='none'||css.visibility==='hidden'||box.width<1||box.height<1)continue;
+      examined++;
+      const home=T(el.querySelector('.sidgad-local .sidgad-equipo-nombre'));
+      const away=T(el.querySelector('.sidgad-visitante .sidgad-equipo-nombre'));
+      const sub=T(el.querySelector('.sidgad-local .sidgad-equipo-sub'));
+      const date=parsed(sub),time=clock(sub);
+      if(!home||!away||N(home)===N(away)||!date||!time){invalid++;continue;}
+      const meta=idsFromFixture(el);
+      if(meta.ambiguous)ambiguousIds++;
+      if(meta.leagueId)leaguesFound.add(meta.leagueId);
+      const sc=score(T(el.querySelector('.sidgad-resultado-texto')));
+      const comp=T(el.closest('.sidgad-liga-grupo')?.querySelector('.sidgad-liga-header-separador'))||T(document.querySelector('h1,h2'));
+      rows.push({iso:date,time,home,away,competition:comp,leagueId:meta.leagueId,matchId:meta.matchId,
+        homeScore:sc[0],awayScore:sc[1],actaUrl:'',status:'',venue:''});
+    }
   }
   return {rows,count:rows.length,examined,invalid,ambiguousIds,leaguesFound:[...leaguesFound],requestedLeague:league};
 }"""
@@ -606,15 +648,8 @@ async def collect_agenda(ctx,args,diagnostic):
         for lid in leagues:
             try:
                 await page.goto(ROOT+f'?liga={lid}&vista=calendar',wait_until='domcontentloaded',timeout=28000)
-                # Wait for official per-fixture match links, rather than the
-                # first generic table (often the same 532 rows on every page).
-                try:
-                    await page.wait_for_function('''lid => [...document.querySelectorAll('a[href*="partido="]')]
-                        .some(a=>{try{const u=new URL(a.href);return u.searchParams.get('liga')===lid
-                            && /^\\d{4,10}$/.test(u.searchParams.get('partido')||'')}catch(_){return false}})''',
-                        arg=lid,timeout=9000)
-                except Exception:
-                    await page.wait_for_timeout(900)
+                # Esperem les files reals de calendari, mai les targetes ocultes.
+                await page_ready(page,'tr.sidgad-calendario-partido',20000)
                 data=await page.evaluate(JS_CALENDAR,lid)
                 if len(diagnostic.setdefault('domEvidence',{}).get('leagues',[])) < 5:
                     diagnostic['domEvidence'].setdefault('leagues',[]).append({
@@ -784,7 +819,7 @@ async def collect_actes(ctx,args,diagnostic):
 async def collect(args):
     from playwright.async_api import async_playwright
     diagnostic={'mode':args.mode,'source':'FECAPA-PLAYWRIGHT','checkedAt':utc_now(),
-                'season':SEASON,'warnings':[],'errors':[], 'version':5,'scope':args.scope}
+                'season':SEASON,'warnings':[],'errors':[], 'version':6,'scope':args.scope}
     async with async_playwright() as p:
         browser,ctx=await chromium_context(p)
         try:
