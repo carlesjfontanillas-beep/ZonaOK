@@ -449,7 +449,8 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
 try {
   for(let i=localStorage.length-1;i>=0;i--){
     const k=localStorage.key(i);
-    if(k&&/^(?:ZONAOK_|ZOK_)/.test(k))localStorage.removeItem(k);
+    // Keep user favorites and onboarding state across Inici/Favorits navigation.
+    if(k&&/^(?:ZONAOK_|ZOK_)/.test(k)&&k!=='ZONAOK_FAVORITS_V1'&&k!=='ZONAOK_FAVORITS_ONBOARDING_V1')localStorage.removeItem(k);
   }
   sessionStorage.removeItem('ZONAOK_SETMANA_ACTIVA_V2');
 }catch(_){ /* Navegadors amb l'emmagatzematge bloquejat */ }
