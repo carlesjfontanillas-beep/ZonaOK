@@ -1775,7 +1775,7 @@ function zonaokStandingSuggestions(input,values){
     input.parentNode.insertBefore(wrap,input);wrap.append(input,menu);
     let items=[],active=-1,suppressed=false;
     const close=()=>{menu.classList.remove('open');input.setAttribute('aria-expanded','false');input.removeAttribute('aria-activedescendant');active=-1};
-    const choose=value=>{input.value=value;suppressed=true;close();input.dispatchEvent(new Event('input',{bubbles:true}));if(document.activeElement!==input)input.focus()};
+    const choose=value=>{input.value=value;input.dispatchEvent(new Event('input',{bubbles:true}));suppressed=true;close();if(document.activeElement!==input)input.focus()};
     const draw=()=>{
       active=-1;input.removeAttribute('aria-activedescendant');
       const filtered=items.filter(v=>zonaokStandingQueryMatches(v,input.value)).slice(0,40);
