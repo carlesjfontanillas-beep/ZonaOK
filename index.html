@@ -1416,7 +1416,7 @@ function renderHome(){
  }
  box.classList.remove('zok-home-no-favorites');
  const found=new Map();
- const teamIds=Array.isArray(state.teams)?state.teams.map((id,index)=>({id,index})).filter(x=>typeof x.id==='string'&&x.id.startsWith('TEAM|')):[];
+ const teamIds=Array.isArray(state.teams)?state.teams.map((id,index)=>({id,index})).filter(x=>typeof x.id==='string'&&x.id.toUpperCase().startsWith('TEAM|')):[];
  const clubFavorites=Array.isArray(state.clubs)?state.clubs.map((name,index)=>({name,index})).filter(x=>typeof x.name==='string'&&x.name.trim()):[];
  // Els equips concrets seleccionats defineixen la portada; no s'hi barregen partits del club.
  if(teamIds.length){
