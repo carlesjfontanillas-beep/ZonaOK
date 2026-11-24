@@ -40,8 +40,12 @@
   }
   function save() {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(selected));
-      nodes.status.textContent = 'Seleccions desades en aquest navegador.';
+      const serialized = JSON.stringify(selected);
+      localStorage.setItem(STORAGE_KEY, serialized);
+      if (localStorage.getItem(STORAGE_KEY) !== serialized) throw new Error('Storage verification failed');
+      nodes.status.textContent = location.protocol === 'file:'
+        ? 'Desades a la previsualització local. Safari pot no compartir-les amb Inici; prova l’adreça web de ZonaOK.'
+        : 'Seleccions desades en aquest navegador.';
     } catch (_) {
       nodes.status.textContent = 'No s’han pogut desar les seleccions en aquest navegador.';
     }
@@ -287,7 +291,9 @@
       let standings = {};
       if (standingsResponse.ok) standings = await standingsResponse.json();
       buildCatalog(packet.data.agenda.rows, standings);
-      nodes.status.textContent = 'Dades carregades dels JSON publicats a ZonaOK.';
+      nodes.status.textContent = location.protocol === 'file:'
+        ? 'Previsualització local: Safari pot separar les seleccions de Favorits i Inici.'
+        : 'Dades carregades dels JSON publicats a ZonaOK.';
       discoverClubLogos();
     } catch (_) {
       nodes.status.textContent = 'No s’han pogut carregar els catàlegs. Comprova la connexió i torna-ho a provar.';
