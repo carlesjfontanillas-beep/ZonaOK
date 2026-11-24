@@ -50,20 +50,13 @@
   function teamKey(team, competition, leagueId) {
     return ['team', team, competition, leagueId].map(norm).join('|');
   }
-  function clubLabel(record, allTeams) {
+  function clubLabel(record) {
     const code = norm(record.clubCode);
     if (code === 'CELONI') return 'CP SANT CELONI';
     if (code === 'BARCA') return 'BARÇA';
     const name = clean(record.team);
-    const suffix = name.match(/^(.*)\s+([A-Z])$/i);
-    if (!suffix) return name;
-    const prefix = norm(suffix[1]);
-    const hasSibling = allTeams.some(other => {
-      const candidate = clean(other.team).match(/^(.*)\s+([A-Z])$/i);
-      return candidate && norm(candidate[1]) === prefix &&
-        candidate[2].toUpperCase() !== suffix[2].toUpperCase();
-    });
-    return hasSibling ? suffix[1] : name;
+    // Segueix el patró de noms de clubs de ZonaOK: A/B/C/D final identifica equip.
+    return name.replace(/\s+[A-D]$/i, '');
   }
   function buildCatalog(agenda, classifications) {
     const teamRecords = new Map();
@@ -106,7 +99,7 @@
 
     const records = [...teamRecords.values()];
     catalog = {
-      clubs: sorted(records.map(record => clubLabel(record, records))),
+      clubs: sorted(records.map(record => clubLabel(record))),
       teams: records.sort((a, b) => a.team.localeCompare(b.team, 'ca', {sensitivity: 'base'}) ||
         a.competition.localeCompare(b.competition, 'ca', {sensitivity: 'base'})).map(record => ({
           id: record.key,
