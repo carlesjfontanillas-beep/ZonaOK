@@ -1,0 +1,172 @@
+/* Favorits ZonaOK · selector independent, alimentat pels JSON ja publicats. */
+(() => {
+  'use strict';
+  const STORAGE_KEY = 'ZONAOK_FAVORITS_V1';
+  const GROUPS = [
+    ['clubs', 'Clubs'],
+    ['teams', 'Equips'],
+    ['categories', 'Categories'],
+    ['competitions', 'Competicions']
+  ];
+  const norm = value => String(value ?? '').normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, ' ').trim().toUpperCase();
+  const clean = value => String(value ?? '').trim().replace(/\s+/g, ' ');
+  const sorted = values => [...new Set(values.map(clean).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
+  const nodes = {
+    status: document.getElementById('favorites-status'),
+    count: document.getElementById('favorites-count'),
+    groups: document.getElementById('favorites-groups'),
+    search: document.getElementById('favorites-search'),
+    clear: document.getElementById('favorites-clear')
+  };
+  let catalog = Object.fromEntries(GROUPS.map(([key]) => [key, []]));
+  let selected = readSelection();
+
+  function readSelection() {
+    try {
+      const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      return Object.fromEntries(GROUPS.map(([key]) => [key,
+        Array.isArray(value[key]) ? value[key].map(clean).filter(Boolean) : []]));
+    } catch (_) {
+      return Object.fromEntries(GROUPS.map(([key]) => [key, []]));
+    }
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(selected));
+      nodes.status.textContent = 'Seleccions desades en aquest navegador.';
+    } catch (_) {
+      nodes.status.textContent = 'No s’han pogut desar les seleccions en aquest navegador.';
+    }
+    renderCount();
+  }
+  function clubName(team, variants) {
+    // Agrupa A/B/C només quan el catàleg confirma que comparteixen club.
+    const value = clean(team);
+    const suffix = value.match(/^(.*)\s+([A-Z])$/i);
+    if (!suffix) return value;
+    const prefix = norm(suffix[1]);
+    return variants.some(other => {
+      const candidate = clean(other).match(/^(.*)\s+([A-Z])$/i);
+      return candidate && norm(candidate[1]) === prefix && candidate[2].toUpperCase() !== suffix[2].toUpperCase();
+    }) ? suffix[1] : value;
+  }
+  function categoryName(value) {
+    return clean(value).replace(/\b(OR|PLATA|BRONZE)\s+\d+\b/gi, '$1')
+      .replace(/\s+(?:GRUP|GRUPO)\s+[A-Z0-9]+\b/gi, '').trim();
+  }
+  function buildCatalog(agenda, classifications) {
+    const teams = [];
+    const clubs = [];
+    const categories = [];
+    const competitions = [];
+    for (const row of agenda) {
+      if (!row || typeof row !== 'object') continue;
+      for (const field of ['home', 'away']) {
+        const team = clean(row[field]);
+        if (team) { teams.push(team); clubs.push(clubName(team)); }
+      }
+      categories.push(row.category || row.categoria || categoryName(row.competition));
+      competitions.push(row.competition);
+    }
+    const entries = classifications && typeof classifications === 'object'
+      ? Object.values(classifications.competitions || classifications.leagues || {}) : [];
+    for (const item of entries) {
+      if (!item || typeof item !== 'object') continue;
+      categories.push(item.category || item.name);
+      competitions.push(item.competition || item.name);
+      for (const row of Array.isArray(item.standings) ? item.standings : []) {
+        const team = clean(row && row.team);
+        if (team) { teams.push(team); clubs.push(clubName(team)); }
+      }
+    }
+    catalog = {
+      clubs: sorted(teams.map(team => clubName(team, teams))),
+      teams: sorted(teams),
+      categories: sorted(categories),
+      competitions: sorted(competitions)
+    };
+    selected = Object.fromEntries(GROUPS.map(([key]) => [key,
+      selected[key].filter(value => catalog[key].includes(value))]));
+    render();
+  }
+  function renderCount() {
+    const count = GROUPS.reduce((total, [key]) => total + selected[key].length, 0);
+    nodes.count.textContent = `${count} ${count === 1 ? 'seleccionat' : 'seleccionats'}`;
+  }
+  function render() {
+    const query = norm(nodes.search.value);
+    nodes.groups.replaceChildren();
+    for (const [key, title] of GROUPS) {
+      const section = document.createElement('section');
+      section.className = 'zok-favorite-group';
+      const heading = document.createElement('h2');
+      heading.textContent = title;
+      const amount = document.createElement('small');
+      amount.textContent = `${selected[key].length} / ${catalog[key].length}`;
+      heading.append(amount);
+      section.append(heading);
+      const list = document.createElement('div');
+      list.className = 'zok-favorite-list';
+      for (const label of catalog[key]) {
+        const row = document.createElement('label');
+        row.className = 'zok-favorite-option';
+        row.hidden = Boolean(query && !norm(label).includes(query));
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = selected[key].includes(label);
+        checkbox.addEventListener('change', () => {
+          selected[key] = checkbox.checked
+            ? [...selected[key], label]
+            : selected[key].filter(value => value !== label);
+          save();
+          render();
+        });
+        const text = document.createElement('span');
+        text.textContent = label;
+        row.append(checkbox, text);
+        list.append(row);
+      }
+      if (!catalog[key].length) {
+        const empty = document.createElement('p');
+        empty.className = 'zok-favorite-empty';
+        empty.textContent = 'No hi ha dades disponibles en els JSON publicats.';
+        list.append(empty);
+      }
+      section.append(list);
+      nodes.groups.append(section);
+    }
+    renderCount();
+  }
+  async function load() {
+    try {
+      const [dataResponse, standingsResponse] = await Promise.all([
+        fetch(`zonaok-data.json?favorits=${Date.now()}`, {cache: 'no-store'}),
+        fetch(`zonaok-classificacions.json?favorits=${Date.now()}`, {cache: 'no-store'})
+      ]);
+      if (!dataResponse.ok) throw new Error(`Agenda: ${dataResponse.status}`);
+      const packet = await dataResponse.json();
+      if (packet.version !== 3 || !Array.isArray(packet.data?.agenda?.rows))
+        throw new Error('format d’agenda no reconegut');
+      let standings = {};
+      if (standingsResponse.ok) standings = await standingsResponse.json();
+      buildCatalog(packet.data.agenda.rows, standings);
+      nodes.status.textContent = 'Dades carregades dels JSON publicats a ZonaOK.';
+    } catch (error) {
+      nodes.status.textContent = 'No s’han pogut carregar els catàlegs. Comprova la connexió i torna-ho a provar.';
+      nodes.groups.replaceChildren();
+      const message = document.createElement('p');
+      message.className = 'empty';
+      message.textContent = 'Els favorits utilitzen zonaok-data.json i zonaok-classificacions.json.';
+      nodes.groups.append(message);
+    }
+  }
+  nodes.search.addEventListener('input', render);
+  nodes.clear.addEventListener('click', () => {
+    selected = Object.fromEntries(GROUPS.map(([key]) => [key, []]));
+    save();
+    render();
+  });
+  load();
+})();
