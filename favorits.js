@@ -13,7 +13,7 @@
   const clean = value => String(value ?? '').trim().replace(/\s+/g, ' ');
   const sorted = values => [...new Set(values.map(clean).filter(Boolean))]
     .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
-  const emptySelection = () => ({...Object.fromEntries(GROUPS.map(([key]) => [key, []])), teamNames: {}});
+  const emptySelection = () => ({...Object.fromEntries(GROUPS.map(([key]) => [key, []])), teamNames: {}, clubLogoUrls: {}});
   const nodes = {
     status: document.getElementById('favorites-status'),
     count: document.getElementById('favorites-count'),
@@ -32,7 +32,8 @@
       const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
       return {...Object.fromEntries(GROUPS.map(([key]) => [key,
         Array.isArray(value[key]) ? value[key].map(clean).filter(Boolean) : []])),
-        teamNames: value.teamNames && typeof value.teamNames === 'object' ? value.teamNames : {}};
+        teamNames: value.teamNames && typeof value.teamNames === 'object' ? value.teamNames : {},
+        clubLogoUrls: value.clubLogoUrls && typeof value.clubLogoUrls === 'object' ? value.clubLogoUrls : {}};
     } catch (_) {
       return emptySelection();
     }
@@ -145,7 +146,7 @@
     selected = {...Object.fromEntries(GROUPS.map(([key]) => {
       const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
       return [key, selected[key].filter(value => allowed.has(value))];
-    })), teamNames: selected.teamNames || {}};
+    })), teamNames: selected.teamNames || {}, clubLogoUrls: selected.clubLogoUrls || {}};
     render();
   }
   function scopedOptions(key) {
@@ -233,6 +234,35 @@
     }
     renderCount();
   }
+  async function discoverClubLogos() {
+    for (const club of selected.clubs.slice(0, 2)) {
+      if (selected.clubLogoUrls[club]) continue;
+      const records = catalog.teamRecords.filter(record => record.club === club && /^\d+$/.test(record.leagueId));
+      const league = records[0]?.leagueId;
+      if (!league) continue;
+      try {
+        const response = await fetch(`https://www.hoqueipatins.fecapa.cat/?liga=${encodeURIComponent(league)}&vista=plantillas`, {mode: 'cors', cache: 'no-store'});
+        if (!response.ok) continue;
+        const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
+        const aliases = records.map(record => norm(record.team)).filter(Boolean);
+        const match = [...doc.querySelectorAll('img[src*="logos_clubes/"]')].find(image => aliases.some(alias => {
+          const alt = norm(image.alt || image.title || '');
+          return alt && (alt === alias || alt.startsWith(alias + ' ') || alias.startsWith(alt + ' '));
+        }));
+        if (match) {
+          const url = new URL(match.getAttribute('src'), 'https://www.hoqueipatins.fecapa.cat/').href;
+          const parsed = new URL(url);
+          if (parsed.hostname === 'sidgad.cloud' && /\/logos_clubes\/\d+\.png$/.test(parsed.pathname)) {
+            selected.clubLogoUrls[club] = url;
+            save();
+            window.dispatchEvent(new CustomEvent('zonaok:favorites-updated'));
+          }
+        }
+      } catch (_) {
+        // Si FECAPA no permet la lectura entre dominis, l'app conserva els escuts coneguts.
+      }
+    }
+  }
   async function load() {
     try {
       const [dataResponse, standingsResponse] = await Promise.all([
@@ -247,6 +277,7 @@
       if (standingsResponse.ok) standings = await standingsResponse.json();
       buildCatalog(packet.data.agenda.rows, standings);
       nodes.status.textContent = 'Dades carregades dels JSON publicats a ZonaOK.';
+      discoverClubLogos();
     } catch (_) {
       nodes.status.textContent = 'No s’han pogut carregar els catàlegs. Comprova la connexió i torna-ho a provar.';
       nodes.groups.replaceChildren();
