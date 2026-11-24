@@ -74,7 +74,7 @@ DISCOVER=r"""({league,season})=>{
 }"""
 EXTRACT=r"""({league,team,season})=>{
  const out=new Map(), t=x=>(x||'').replace(/\s+/g,' ').trim();
- let links=0,missing=0;
+ let links=0,missing=0; const headerCounts={}, logoPatterns={};
  for(const a of document.querySelectorAll('.sidgad-plantillas a.sidgad-player-link[href]')){
   if(!a.getClientRects().length)continue;
   let u;try{u=new URL(a.getAttribute('href'),document.baseURI)}catch{continue}
@@ -90,7 +90,12 @@ EXTRACT=r"""({league,team,season})=>{
     const h=table.querySelector('thead tr:last-child')||[...table.rows].find(r=>[...r.cells].some(c=>c.tagName==='TH'));
     if(h&&h.cells.length===row.cells.length&&[...h.cells,...row.cells].every(c=>c.colSpan===1&&c.rowSpan===1)){
       [...h.cells].forEach((c,i)=>{
-        const field=fields[norm(c.innerText)]||fields[norm(c.title)];
+        const label=norm(c.innerText), title=norm(c.title);
+        // Only emit recognized sports labels and aggregate unknown counts.
+        const safeLabels=/^(nom|nombre|jugador|jugadora|dorsal|numero|num|n|pj|pg|pe|pp|g|gl|gol|gols|goles|gf|gc|p|pts|pt|ta|tr|tb|tg|tv|min|mj|mp|pos|posicio|posicion|partits jugats|partidos jugados|targetes grogues|targetes vermelles|targetes blaves|tarjetas amarillas|tarjetas rojas|tarjetas azules)$/;
+        const key=safeLabels.test(label)?label:safeLabels.test(title)?title:'other';
+        headerCounts[key]=(headerCounts[key]||0)+1;
+        const field=fields[label]||fields[title];
         const v=t(row.cells[i].innerText);
         if(field&&/^\d{1,5}$/.test(v))sports[field]=Number(v);
       });
@@ -100,10 +105,20 @@ EXTRACT=r"""({league,team,season})=>{
   const teamName=t(sel?.getAttribute('data-team-name')||sel?.querySelector('.sidgad-team-selector-name')?.textContent);
   const logo=sel?.querySelector('img[src]');let clubId=null;
   if(logo){try{const u=new URL(logo.getAttribute('src'),document.baseURI),m=u.pathname.match(/^\/fecapa\/images\/logos_clubes\/(\d+)\.png$/i);if(u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&m)clubId=m[1]}catch{}}
-  out.set(id,{id,name,league,team,season,sports,teamName,clubId});
+  const prior=out.get(id);
+  if(prior){
+    // Repeated links may represent different tables. Keep fields only if
+    // consistent, and never sum statistics from different rows.
+    for(const [k,v] of Object.entries(sports)){
+      if(k in prior.sports&&prior.sports[k]!==v){delete prior.sports[k];prior.conflicts.add(k);}
+      else if(!prior.conflicts.has(k))prior.sports[k]=v;
+    }
+    continue;
+  }
+  out.set(id,{id,name,league,team,season,sports,teamName,clubId,conflicts:new Set()});
  }
  const birthLabel=[...document.querySelectorAll('th,label,dt')].some(e=>/nacimiento|naixement|fecha de nacimiento|data de naixement/i.test(e.textContent||''));
- return {rows:[...out.values()],links,missing,birthLabel};
+ return {rows:[...out.values()].map(({conflicts,...r})=>({...r,conflictCount:conflicts.size})),links,missing,birthLabel,headerCounts};
 }"""
 DIAG=r"""()=>{
  const count=s=>document.querySelectorAll(s).length;
@@ -143,6 +158,33 @@ async def open_page(page,target,selector):
     try: await page.locator(selector).first.wait_for(timeout=15000)
     except Exception: pass
     await page.wait_for_timeout(5000)
+PROFILE_DIAG=r"""()=>{
+ const hero=document.querySelector('.sidgad-player-hero-card');
+ const name=hero?.querySelector('.sidgad-player-name-compact');
+ const visible=e=>!!e&&e.getClientRects().length>0;
+ const scope=document.querySelector('.sidgad-player-overlay-body');
+ if(!visible(hero)||!visible(name)||!name.innerText.trim()||!visible(scope))return {ready:false};
+ const nodes=[...scope.querySelectorAll('th,label,dt,.sidgad-player-meta-item,.sidgad-ficha-subtitulo')];
+ // Field-presence flags only. No text, dates, names or raw profile values in output.
+ const has=rx=>nodes.some(e=>rx.test(e.innerText||''));
+ return {ready:true,team:visible(hero.querySelector('.sidgad-player-team-name')),
+ number:has(/\bdorsal\b/i),position:has(/posici[oó]/i),
+ played:has(/partits jugats|partidos jugados|\bPJ\b/i),
+ goals:has(/\bgols?\b|\bgoles?\b/i),
+ cards:has(/targetes|tarjetas/i)};
+}"""
+async def inspect_profile(ctx,league,team,season,pid):
+    page=await ctx.new_page()
+    try:
+        await open_page(page,url(league,season,team,pid),'.sidgad-player-name-compact')
+        for _ in range(16):
+            result=await page.evaluate(PROFILE_DIAG)
+            if result.get("ready"):return result
+            await page.wait_for_timeout(650)
+        return {"ready":False}
+    except Exception:return {"ready":False}
+    finally:await page.close()
+
 async def collect(a,leagues,doc,report):
     from playwright.async_api import async_playwright
     async with async_playwright() as pw:
@@ -218,11 +260,17 @@ async def collect(a,leagues,doc,report):
                     n=merge(doc,league,team,accepted["rows"],filters[team],now())
                     lr["links"]+=accepted["links"];lr["missingNames"]+=accepted["missing"];lr["birthLabelTeams"]+=int(accepted["birthLabel"])
                     lr["membershipsObserved"]+=n;lr["teamsObserved"]+=int(n>0);lr["errors"]+=int(n==0)
+                    hc=lr.setdefault("sportsHeaderCounts",{})
+                    for k,v in accepted["headerCounts"].items():hc[k]=hc.get(k,0)+v
+                    lr["duplicateLinks"]=lr.get("duplicateLinks",0)+accepted["links"]-len(accepted["rows"])
+                    lr["conflictingSportsFields"]=lr.get("conflictingSportsFields",0)+sum(r.get("conflictCount",0) for r in accepted["rows"])
+                    if a.inspect_profiles and "profileFieldProbe" not in lr and accepted["rows"]:
+                        lr["profileFieldProbe"]=await inspect_profile(ctx,league,team,a.season,accepted["rows"][0]["id"])
                     await asyncio.sleep(1)
         finally:await ctx.close();await browser.close()
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--max-teams",type=int);p.add_argument("--diagnostic-only",action="store_true");p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
+    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--max-teams",type=int);p.add_argument("--inspect-profiles",action="store_true");p.add_argument("--diagnostic-only",action="store_true");p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
     a=p.parse_args()
     if not numeric(a.season) or any(not numeric(x) for x in a.league) or any(not re.fullmatch(r"[1-9]\d*:[1-9]\d*",x) for x in a.seed):p.error("IDs invàlids")
     a.seed=[tuple(s.split(":")) for s in a.seed]
