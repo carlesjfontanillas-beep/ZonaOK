@@ -1,5 +1,5 @@
 /*
- * ZonaOK TOTS · Agenda · V1
+ * ZonaOK TOTS · Agenda · V2 (escuts PNG i GIF)
  * Drecera Safari: "Executar JavaScript a la pàgina web" => retorna TEXT JSON.
  * La drecera ha de DESAR el resultat com imports/tots-agenda-import.json.
  * Llegeix només el DOM carregat de https://www.hoqueipatins.fecapa.cat/ag/
@@ -72,7 +72,7 @@ completion((() => {
       try {
         const u = new URL(src,location.href);
         return u.protocol==='https:' && u.hostname==='sidgad.cloud' &&
-          /^\/fecapa\/images\/logos_clubes\/\d+\.png$/i.test(u.pathname) ? u.href : '';
+          /^\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(u.pathname) ? u.href : '';
       } catch (_) {return '';}
     };
     const all = new Map(); let inspected=0,invalid=0,recognizedTables=0;
