@@ -179,20 +179,32 @@ JS_AGENDA = r"""() => {
   const time=v=>{const m=C(v).match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);return m?m[1].padStart(2,'0')+':'+m[2]:'';};
   const score=v=>{const m=C(v).match(/(?:^|\s)(\d{1,3})\s*[-–:]\s*(\d{1,3})(?:\s|$)/);return m?[+m[1],+m[2]]:[null,null];};
   const meta=tr=>{
-    let matchId='',leagueId='',actaUrl='';
-    for(const k of ['idp','partidoId','partitId'])if(/^\d{4,10}$/.test(tr.dataset?.[k]||''))matchId=tr.dataset[k];
-    for(const a of tr.querySelectorAll('a[href]')){
-      const raw=a.getAttribute('href')||'';
-      const m=raw.match(/fecapa_gr_(\d{4,10})_|(?:idp|partido|partit|match)(?:=|\/|_)(\d{4,10})/i);
-      if(m&&!matchId)matchId=m[1]||m[2];
+    const pairs=new Set(), looseIDs=new Set();
+    const inspect=raw=>{
+      raw=C(raw); if(!raw)return;
+      const part=raw.match(/(?:[?&]partido=|[?&]idp=|fecapa_gr_)(\d{4,10})(?:\b|_)/i);
+      if(part)looseIDs.add(part[1]);
+      // Do not infer the league from location.href: this can be a generic listing.
+      const league=raw.match(/[?&]liga=(\d{4,6})\b/i);
+      if(part&&league)pairs.add(league[1]+':'+part[1]);
       try{
         const u=new URL(raw,location.href);
-        if(u.protocol!=='https:'||!/^(?:www\.)?hoqueipatins\.fecapa\.cat$/i.test(u.hostname))continue;
-        if(/^\d{4,6}$/.test(u.searchParams.get('liga')||''))leagueId=u.searchParams.get('liga');
-        if(/^\d{4,10}$/.test(u.searchParams.get('partido')||'') && /^\d{4,6}$/.test(u.searchParams.get('liga')||''))actaUrl=u.href;
+        if(u.protocol!=='https:'||!/^(?:www\.)?hoqueipatins\.fecapa\.cat$/i.test(u.hostname))return;
+        const li=u.searchParams.get('liga')||'',id=u.searchParams.get('partido')||'';
+        if(/^\d{4,6}$/.test(li)&&/^\d{4,10}$/.test(id))pairs.add(li+':'+id);
       }catch(_){}
+    };
+    for(const node of [tr,...tr.querySelectorAll('[data-idp],[data-partido],[data-partido-id],[data-liga],[data-league-id],[onclick],a[href]')]){
+      const d=node.dataset||{};
+      const li=d.liga||d.leagueId||d.ligaId||'',id=d.idp||d.partido||d.partidoId||d.idPartido||d.matchId||'';
+      if(/^\d{4,10}$/.test(id))looseIDs.add(id);
+      if(/^\d{4,6}$/.test(li)&&/^\d{4,10}$/.test(id))pairs.add(li+':'+id);
+      for(const k of ['href','onclick','data-url','data-href','data-link'])inspect(node.getAttribute?.(k));
     }
-    return {matchId,leagueId,actaUrl};
+    const [pair]=pairs;
+    if(pairs.size>1)return {matchId:'',leagueId:'',actaUrl:'',ambiguousId:true};
+    const leagueId=pair?pair.split(':')[0]:'', matchId=pair?pair.split(':')[1]:(looseIDs.size===1?[...looseIDs][0]:'');
+    return {matchId,leagueId,actaUrl:pair?'https://www.hoqueipatins.fecapa.cat/?liga='+leagueId+'&vista=calendar&partido='+matchId:'',ambiguousId:false};
   };
   const logo=el=>{
     const src=el?.querySelector('img[src]')?.getAttribute('src')||'';
@@ -318,19 +330,18 @@ JS_CALENDAR = r"""(league) => {
   // IDs ONLY from the fixture element, never from the page's ?liga= route.
   const idsFromFixture=el=>{
     const pairs=new Set();
-    for(const node of [el,...el.querySelectorAll('[data-liga],[data-league-id],[data-idp],[data-partido-id]')]){
-      const ds=node.dataset||{};
-      const lid=ds.liga||ds.leagueId||ds.ligaId||'';
-      const mid=ds.idp||ds.partidoId||ds.partitId||ds.matchId||'';
+    for(const node of [el,...el.querySelectorAll('[data-liga],[data-league-id],[data-idp],[data-partido-id],[onclick],a[href]')]){
+      const ds=node.dataset||{},lid=ds.liga||ds.leagueId||ds.ligaId||'',mid=ds.idp||ds.partidoId||ds.partido||ds.idPartido||ds.matchId||'';
       if(/^\d{4,6}$/.test(lid)&&/^\d{4,10}$/.test(mid))pairs.add(lid+':'+mid);
-    }
-    for(const a of el.querySelectorAll('a[href]')){
-      try{
-        const u=new URL(a.getAttribute('href')||'',location.href);
-        if(u.protocol!=='https:'||!/^(?:www\.)?hoqueipatins\.fecapa\.cat$/i.test(u.hostname))continue;
-        const lid=u.searchParams.get('liga')||'',mid=u.searchParams.get('partido')||'';
-        if(/^\d{4,6}$/.test(lid)&&/^\d{4,10}$/.test(mid))pairs.add(lid+':'+mid);
-      }catch(_){}
+      for(const k of ['href','onclick','data-url','data-href']){
+        const raw=node.getAttribute?.(k)||'';
+        const li=raw.match(/[?&]liga=(\d{4,6})\b/i),mi=raw.match(/(?:[?&]partido=|[?&]idp=|fecapa_gr_)(\d{4,10})(?:\b|_)/i);
+        if(li&&mi)pairs.add(li[1]+':'+mi[1]);
+        try{const u=new URL(raw,location.href);if(u.protocol==='https:'&&/^(?:www\.)?hoqueipatins\.fecapa\.cat$/i.test(u.hostname)){
+          const l=u.searchParams.get('liga')||'',m=u.searchParams.get('partido')||'';
+          if(/^\d{4,6}$/.test(l)&&/^\d{4,10}$/.test(m))pairs.add(l+':'+m);
+        }}catch(_){}
+      }
     }
     if(pairs.size!==1)return {leagueId:'',matchId:'',ambiguous:pairs.size>1};
     const [leagueId,matchId]=[...pairs][0].split(':');
@@ -354,6 +365,33 @@ JS_CALENDAR = r"""(league) => {
       homeScore:sco[0],awayScore:sco[1],actaUrl:'',status:T(el.querySelector('.sidgad-status-tag')),venue:''});
   }
   return {rows,count:rows.length,examined,invalid,ambiguousIds,leaguesFound:[...leaguesFound],requestedLeague:league};
+}"""
+
+
+# Captura forense mínima del DOM de FECAPA: útil quan la web canvia de
+# components (taules en lloc de targetes), sense guardar el contingut complet.
+JS_DOM_DIAGNOSTIC = r"""() => {
+  const C=x=>String(x??'').replace(/\s+/g,' ').trim();
+  const short=(x,n=300)=>C(x).slice(0,n);
+  const tables=[...document.querySelectorAll('table')];
+  const cards=[...document.querySelectorAll('.sidgad-partido-fila')];
+  const tableBrief=t=>({
+    headers:[...t.querySelectorAll('thead tr:first-child th,thead tr:first-child td')].map(x=>short(x.textContent,60)).slice(0,16),
+    rows:t.querySelectorAll('tr').length,
+    sample:[...t.querySelectorAll('tr')].slice(0,3).map(tr=>({text:short(tr.innerText||tr.textContent,300),
+      html:short(tr.outerHTML,1800)}))
+  });
+  const anchors=[...document.querySelectorAll('a[href]')]
+    .filter(a=>/partido|liga=|fecapa_gr_|acta/i.test((a.getAttribute('href')||'')+' '+(a.getAttribute('onclick')||'')))
+    .slice(0,12).map(a=>({text:short(a.textContent,80),href:short(a.getAttribute('href'),240),onclick:short(a.getAttribute('onclick'),180)}));
+  const onclicks=[...document.querySelectorAll('[onclick]')].slice(0,8)
+    .map(a=>({tag:a.tagName,onclick:short(a.getAttribute('onclick'),180)}));
+  return {url:location.href,title:short(document.title,140),ready:document.readyState,
+    headings:[...document.querySelectorAll('h1,h2,h3,.sidgad-liga-header-separador')].slice(0,10).map(x=>short(x.textContent,120)),
+    tables:tables.length,firstTables:tables.slice(0,2).map(tableBrief),cards:cards.length,
+    firstCards:cards.slice(0,2).map(x=>short(x.outerHTML,1800)),anchors,onclicks,
+    selectors:[...document.querySelectorAll('select')].slice(0,6).map(s=>({id:s.id,name:s.name,value:s.value,selected:short(s.selectedOptions?.[0]?.textContent,120)})),
+    bodyPreview:short(document.body?.innerText,360)};
 }"""
 
 
@@ -526,6 +564,7 @@ async def collect_agenda(ctx,args,diagnostic):
         try:
             await page.goto(AGENDA_URL,wait_until='domcontentloaded',timeout=40000)
             await page_ready(page,'table',19000)
+            diagnostic.setdefault('domEvidence',{})['agenda'] = await page.evaluate(JS_DOM_DIAGNOSTIC)
             # IDs de selectors i enllaços de l'Agenda REAL, no d'XHR genèrics.
             catalogue.update(await page.evaluate(JS_LEAGUES))
             await set_agenda_filters(page,diagnostic,args.scope)
@@ -559,6 +598,9 @@ async def collect_agenda(ctx,args,diagnostic):
                 except Exception:
                     await page.wait_for_timeout(900)
                 data=await page.evaluate(JS_CALENDAR,lid)
+                if len(diagnostic.setdefault('domEvidence',{}).get('leagues',[])) < 5:
+                    diagnostic['domEvidence'].setdefault('leagues',[]).append({
+                        'leagueId':lid, **(await page.evaluate(JS_DOM_DIAGNOSTIC))})
                 # Table view is supported, but no row without BOTH IDs may
                 # inherit the requested league ID.
                 tabular=await page.evaluate(JS_AGENDA)
@@ -592,8 +634,9 @@ async def collect_agenda(ctx,args,diagnostic):
                               'genericAgendaRows':sum(x.get('exported',0) for x in counts)}
         diagnostic['coverage']='Els calendaris només compten com a verificats si cada fila identificada té liga+IDP propi i el DOM no barreja altres lligues. Pendents a selection.pendingLeagueIds.'
         diagnostic['publishSafe']=not (args.scope=='full' and not meta['verifiedLeagues'])
-        if not rows and not (args.scope=='fast'):
-            raise ValueError('Cap partit vàlid recuperat de /ag/ ni calendaris FECAPA')
+        if not rows:
+            diagnostic['errors'].append('Cap partit vàlid recuperat de /ag/ ni calendaris FECAPA')
+            diagnostic['publishSafe']=False
         return rows
     finally:await page.close()
 
@@ -716,7 +759,7 @@ async def collect_actes(ctx,args,diagnostic):
 async def collect(args):
     from playwright.async_api import async_playwright
     diagnostic={'mode':args.mode,'source':'FECAPA-PLAYWRIGHT','checkedAt':utc_now(),
-                'season':SEASON,'warnings':[],'errors':[], 'version':3,'scope':args.scope}
+                'season':SEASON,'warnings':[],'errors':[], 'version':4,'scope':args.scope}
     async with async_playwright() as p:
         browser,ctx=await chromium_context(p)
         try:
@@ -952,8 +995,8 @@ def main():
         Path(args.capture).write_text(json.dumps(packet,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         Path(args.report).write_text(json.dumps(diag,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         print(json.dumps(diag,ensure_ascii=False,indent=2))
-        if args.mode=='agenda' and args.scope=='full' and not diag.get('publishSafe',True):
-            print('ERROR: cap lliga verificada. Captura i diagnòstic desats; no publicar.',file=sys.stderr)
+        if args.mode=='agenda' and (not packet['rows'] or not diag.get('publishSafe',True)):
+            print('ERROR: Agenda sense partits verificats. Diagnòstic DESAT a '+args.report+'; no publicar.',file=sys.stderr)
             return 2
         return 0
     packet=json.loads(Path(args.capture).read_text(encoding='utf-8'))
