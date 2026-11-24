@@ -976,6 +976,11 @@ def merge_unified(packet,previous,mode):
         if not isinstance(raw,dict):counts['ambiguousOrInvalid']+=1;continue
         r=dict(raw)
         if mode!='actes' and not validate_row(r,mode):counts['ambiguousOrInvalid']+=1;continue
+        # Un calendari de lliga només és font d'Agenda amb liga+IDP verificats.
+        # Les files genèriques de /ag/ no porten cap d'aquests identificadors.
+        # No tornar a introduir targetes globals amb una lliga atribuïda per la URL.
+        if mode=='agenda' and clean(r.get('leagueId')) and not clean(r.get('matchId')):
+            counts['ambiguousOrInvalid']+=1;continue
         if mode=='actes':
             lid=clean(r.get('leagueId'));mid=clean(r.get('matchId'))
             if not official_match_url(r.get('actaUrl',''),lid,mid):counts['ambiguousOrInvalid']+=1;continue
