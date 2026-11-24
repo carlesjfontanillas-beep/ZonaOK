@@ -18,9 +18,20 @@ async def inspect(page, lid):
             if re.search(r"partido=|idp=|fecapa_gr_|(?:/acta|/report)",r.url,re.I) and len(events)<60 else None)
     try:
         await page.goto(report["url"], wait_until="domcontentloaded",timeout=45000)
-        await page.wait_for_selector(".sidgad-partido-fila",timeout=20000)
-        await page.wait_for_timeout(900)
-        buttons=page.locator(".sidgad-partido-fila")
+        await page.wait_for_timeout(1500)
+        report["surface"]=await page.evaluate("""() => {
+          const visible=e=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};
+          const matchish=[...document.querySelectorAll('[class*="calendar"],[class*="calend"],[class*="partido"],[class*="match"]')];
+          return {
+            title:document.title,url:location.href,body:(document.body?.innerText||'').slice(0,7500),
+            totalMatchish:matchish.length,
+            visibleMatchish:matchish.filter(visible).slice(0,45).map(e=>({tag:e.tagName,cls:String(e.className).slice(0,180),id:e.id,
+                text:(e.innerText||'').slice(0,320),html:e.outerHTML.slice(0,550)})),
+            allButtons:[...document.querySelectorAll('button')].filter(visible).slice(0,35).map(e=>({text:(e.innerText||'').slice(0,120),cls:e.className})),
+            officialAnchors:[...document.querySelectorAll('a[href]')].filter(a=>/partido=|idp=|fecapa_gr_|calendar/i.test(a.href)).slice(0,40).map(a=>({href:a.href,text:(a.innerText||'').slice(0,70),visible:visible(a)}))
+          };
+        }""")
+        buttons=page.locator(".sidgad-partido-fila:visible")
         report["cards"]=await buttons.count()
         for index in range(min(3,report["cards"])):
             item={"index":index,"beforeUrl":page.url}
@@ -50,9 +61,8 @@ async def inspect(page, lid):
             # Independent page state for each investigated card
             if index+1<min(3,report["cards"]):
                 await page.goto(report["url"],wait_until="domcontentloaded",timeout=45000)
-                await page.wait_for_selector(".sidgad-partido-fila",timeout=20000)
                 await page.wait_for_timeout(300)
-                buttons=page.locator(".sidgad-partido-fila")
+                buttons=page.locator(".sidgad-partido-fila:visible")
     except Exception as exc:
         report["error"]=str(exc)[:350]
     return report
