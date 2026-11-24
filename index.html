@@ -836,24 +836,24 @@ try {
     let s={};try{s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){}
     if(isBarca(name))return 'https://sidgad.cloud/fecapa/images/logos_clubes/234.png';
     if(isCeloni(name))return 'https://sidgad.cloud/fecapa/images/logos_clubes/281.png';
-    const n=norm(name);
+    const clubKey=value=>norm(value).replace(/\\s+[A-Z]$/,'').trim();
+    const n=norm(name),target=clubKey(name);
     for(const [key,url] of Object.entries({...s.clubLogoUrls,...s.teamLogoUrls})){
       if(!url)continue;
-      const k=norm(key);
-      if(k&&(n===k||n.startsWith(k+' ')||k.startsWith(n+' ')))return url;
+      const k=clubKey(key);
+      if(k&&(target===k||target.startsWith(k+' ')||k.startsWith(target+' ')))return url;
     }
-    const target=typeof zonaokFavoriteClubKey==='function'?zonaokFavoriteClubKey(name):n;
     for(const [club,url] of Object.entries(window.ZonaOKFullAgendaClubLogos||{})){
       if(!url||!club)continue;
-      const key=typeof zonaokFavoriteClubKey==='function'?zonaokFavoriteClubKey(club):norm(club);
-      if(key===target)return url;
+      const key=clubKey(club);
+      if(key===target||key.startsWith(target+' ')||target.startsWith(key+' '))return url;
     }
     for(const row of window.ZonaOKFullAgendaRows||[]){
       for(const side of ['home','away']){
         const team=row?.[side]||'',url=row?.[side+'Logo']||'';
         if(!url||!team)continue;
-        const key=typeof zonaokFavoriteClubKey==='function'?zonaokFavoriteClubKey(team):norm(team);
-        if(key===target)return url;
+        const key=clubKey(team);
+        if(key===target||key.startsWith(target+' ')||target.startsWith(key+' '))return url;
       }
     }
     return '';
