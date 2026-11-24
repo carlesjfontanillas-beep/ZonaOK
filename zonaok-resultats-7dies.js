@@ -217,10 +217,19 @@
     return team;
   }
 
+  function favoriteColorForRow(row) {
+    let s={};try{s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){}
+    const norm=value=>String(value||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,' ').trim().toUpperCase();
+    for(const id of (s.teams||[])){const parts=String(id).split('|'),team=norm(parts[1]),category=norm(parts.slice(2).join('|'));if(team&&category===norm(row.competition)&&(row.home&&norm(row.home)===team||row.away&&norm(row.away)===team)){const color=s.teamColors?.[id];if(/^#[0-9a-f]{6}$/i.test(color||''))return color}}
+    for(const club of (s.clubs||[])){const color=s.clubColors?.[club];if(!/^#[0-9a-f]{6}$/i.test(color||''))continue;const key=norm(club);if([row.home,row.away].some(value=>{const name=norm(value);return key==='BARCA'?/\\b(?:BAR|BARCA|FC BARCELONA)\\b/.test(name):key==='CP SANT CELONI'?name.includes(key)||/^CPSC(?: |$)/.test(name):name===key||name.startsWith(key+' ')||key.startsWith(name+' ')}))return color}
+    return '';
+  }
+  function softColor(color){const hex=color.slice(1),n=parseInt(hex,16),mix=x=>Math.round(x*.32+255*.68).toString(16).padStart(2,'0');return '#'+mix(n>>16)+mix(n>>8&255)+mix(n&255)}
   function buildCard(row) {
     const club = clubOf(row.home) || clubOf(row.away);
     const card = make('article', 'match ' + (club === 'barca' ? 'pink' : club === 'celoni' ? 'blue' : 'gray'));
     card.classList.add('zok-recent-card');
+    const favoriteColor=favoriteColorForRow(row);if(favoriteColor)card.style.setProperty('background-color',softColor(favoriteColor),'important');
 
     // Disseny compacte de la versió facilitada: només dues línies per partit.
     // Capçalera: categoria, hora, data i Acta (sense pista ni «Marcador Agenda»).
