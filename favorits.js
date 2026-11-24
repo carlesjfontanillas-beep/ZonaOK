@@ -19,10 +19,13 @@
     count: document.getElementById('favorites-count'),
     groups: document.getElementById('favorites-groups'),
     search: document.getElementById('favorites-search'),
-    clear: document.getElementById('favorites-clear')
+    clear: document.getElementById('favorites-clear'),
+    scope: document.getElementById('favorites-scope-toggle'),
+    scopeNote: document.getElementById('favorites-scope-note')
   };
   let catalog = {clubs: [], teams: [], categories: [], competitions: []};
   let selected = readSelection();
+  let showAllOptions = false;
 
   function readSelection() {
     try {
@@ -98,21 +101,33 @@
     }
 
     const records = [...teamRecords.values()];
+    const enrichedRecords = records.map(record => ({...record, club: clubLabel(record)}));
     catalog = {
-      clubs: sorted(records.map(record => clubLabel(record))),
-      teams: records.sort((a, b) => a.team.localeCompare(b.team, 'ca', {sensitivity: 'base'}) ||
+      clubs: sorted(enrichedRecords.map(record => record.club)),
+      teams: enrichedRecords.sort((a, b) => a.team.localeCompare(b.team, 'ca', {sensitivity: 'base'}) ||
         a.competition.localeCompare(b.competition, 'ca', {sensitivity: 'base'})).map(record => ({
           id: record.key,
-          label: record.competition ? `${record.team} · ${record.competition}` : record.team
+          label: record.competition ? `${record.team} · ${record.competition}` : record.team,
+          club: record.club
         })),
       categories: sorted(categories),
-      competitions: sorted(competitions)
+      competitions: sorted(competitions),
+      teamRecords: enrichedRecords
     };
     selected = Object.fromEntries(GROUPS.map(([key]) => {
       const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
       return [key, selected[key].filter(value => allowed.has(value))];
     }));
     render();
+  }
+  function scopedOptions(key) {
+    if (key === 'clubs' || showAllOptions || !selected.clubs.length) return catalog[key];
+    const clubs = new Set(selected.clubs);
+    const records = catalog.teamRecords.filter(record => clubs.has(record.club));
+    if (key === 'teams') return catalog.teams.filter(option => clubs.has(option.club));
+    if (key === 'categories') return sorted(records.map(record => record.category));
+    if (key === 'competitions') return sorted(records.map(record => record.competition));
+    return catalog[key];
   }
   function optionId(option) {
     return typeof option === 'string' ? option : option.id;
@@ -126,6 +141,13 @@
   }
   function render() {
     const query = norm(nodes.search.value);
+    const hasClubScope = selected.clubs.length > 0;
+    nodes.scope.hidden = !hasClubScope;
+    nodes.scope.textContent = showAllOptions ? 'Limita a clubs marcats' : 'Mostra totes les opcions';
+    nodes.scopeNote.textContent = hasClubScope && !showAllOptions
+      ? 'Equips, categories i competicions filtrats pels clubs marcats. Les seleccions desades es conserven.'
+      : hasClubScope ? 'Mostrant totes les opcions; les seleccions desades es conserven.'
+      : 'Marca un club per limitar els equips, les categories i les competicions disponibles.';
     nodes.groups.replaceChildren();
     for (const [key, title] of GROUPS) {
       const section = document.createElement('section');
@@ -138,7 +160,10 @@
       section.append(heading);
       const list = document.createElement('div');
       list.className = 'zok-favorite-list';
-      for (const option of catalog[key]) {
+      const options = scopedOptions(key);
+      const availableIds = new Set(options.map(optionId));
+      amount.textContent = `${selected[key].filter(id => availableIds.has(id)).length} / ${options.length}`;
+      for (const option of options) {
         const id = optionId(option);
         const label = optionLabel(option);
         const row = document.createElement('label');
@@ -194,6 +219,10 @@
     }
   }
   nodes.search.addEventListener('input', render);
+  nodes.scope.addEventListener('click', () => {
+    showAllOptions = !showAllOptions;
+    render();
+  });
   nodes.clear.addEventListener('click', () => {
     selected = emptySelection();
     save();
