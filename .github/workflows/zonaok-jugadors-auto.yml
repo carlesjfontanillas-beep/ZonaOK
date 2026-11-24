@@ -33,9 +33,9 @@ jobs:
           EVENT: ${{ github.event_name }}
         run: |
           if [ "$EVENT" = "push" ]; then
-            python scripts/zonaok_jugadors_auto.py --only-seed --seed 4789:11173
+            xvfb-run -a python scripts/zonaok_jugadors_auto.py --only-seed --seed 4789:11173
           else
-            python scripts/zonaok_jugadors_auto.py --inventory zonaok-classificacions.json --inventory zonaok-tots-agenda.json --seed 4789:11173
+            xvfb-run -a python scripts/zonaok_jugadors_auto.py --inventory zonaok-classificacions.json --inventory zonaok-tots-agenda.json --seed 4789:11173
           fi
       - name: Xifrar candidat amb clau pública opcional
         if: always()

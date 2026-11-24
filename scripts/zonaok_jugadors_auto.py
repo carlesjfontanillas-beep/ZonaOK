@@ -117,11 +117,11 @@ async def open_page(page,target,selector):
     if u.scheme!="https" or u.hostname not in {"www.hoqueipatins.fecapa.cat","hoqueipatins.fecapa.cat"} or any(q.get(k)!=v for k,v in want.items() if k!="s") or ("s" in q and q["s"]!=want.get("s")):raise RuntimeError("context")
     try: await page.locator(selector).first.wait_for(timeout=15000)
     except Exception: pass
-    await page.wait_for_timeout(3000)
+    await page.wait_for_timeout(5000)
 async def collect(a,leagues,doc,report):
     from playwright.async_api import async_playwright
     async with async_playwright() as pw:
-        browser=await pw.chromium.launch(headless=True)
+        browser=await pw.chromium.launch(headless=False,args=["--no-sandbox"])
         try:
             page=await browser.new_page(locale="ca-ES",timezone_id="Europe/Madrid",viewport={"width":1420,"height":960})
             network={}
@@ -129,8 +129,11 @@ async def collect(a,leagues,doc,report):
                 try:
                     u=urlparse(resp.url)
                     if resp.request.resource_type not in ("xhr","fetch","script","document"):return
-                    if u.hostname not in ("www.hoqueipatins.fecapa.cat","hoqueipatins.fecapa.cat","sidgad.cloud"):return
+                    if u.hostname not in ("www.hoqueipatins.fecapa.cat","hoqueipatins.fecapa.cat","sidgad.cloud","sidgad.es","www.sidgad.es"):return
                     key=f"{u.hostname}|{resp.request.resource_type}|{resp.status}"
+                    if resp.request.resource_type=="script" and resp.status>=400:
+                        asset=u.path.rsplit("/",1)[-1]
+                        if re.fullmatch(r"[A-Za-z][A-Za-z0-9_.-]{0,100}\.js",asset):key+="|"+asset
                     network[key]=network.get(key,0)+1
                 except Exception:pass
             page.on("response",on_response)
