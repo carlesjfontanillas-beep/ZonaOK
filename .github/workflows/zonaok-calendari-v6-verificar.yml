@@ -43,7 +43,7 @@ jobs:
           print(json.dumps({'version':d.get('version'),'counts':d.get('counts'),
             'checkedLeagues':d.get('checkedLeagues')},ensure_ascii=False,indent=2))
           assert d['counts']['withIDs']>=50, 'No hi ha 50 IDP verificats'
-          assert d['counts']['verifiedLeagues']>=1, 'Cap calendari verificat'
+          assert all(x.get('foreignRows',0)==0 and x.get('withIDs',0)>0 for x in d['checkedLeagues']), 'IDP de lligues alienes o sense identificar'
           rows=json.load(open('captura-agenda-v6.json'))['rows']
           ids=[(r.get('leagueId'),r.get('matchId')) for r in rows if r.get('matchId')]
           assert len(ids)==len(set(ids)), 'Hi ha IDP duplicats'
