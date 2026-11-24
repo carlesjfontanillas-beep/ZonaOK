@@ -75,8 +75,8 @@ jobs:
         shell: bash
         env:
           LIMIT: ${{ github.event_name == 'schedule' && github.event.schedule == '1,6,11,16,21,26,31,36,41,46,51,56 * * * *' && '20' || (github.event_name == 'schedule' && '0' || inputs.limit) }}
-          SCOPE: ${{ github.event_name == 'schedule' && github.event.schedule == '1-59/5 * * * *' && 'fast' || (github.event_name == 'schedule' && 'full' || inputs.scope) }}
-          OFFSET: ${{ github.event_name == 'schedule' && github.event.schedule == '1-59/5 * * * *' && 'auto' || (github.event_name == 'schedule' && '0' || inputs.offset) }}
+          SCOPE: ${{ github.event_name == 'schedule' && github.event.schedule == '1,6,11,16,21,26,31,36,41,46,51,56 * * * *' && 'fast' || (github.event_name == 'schedule' && 'full' || inputs.scope) }}
+          OFFSET: ${{ github.event_name == 'schedule' && github.event.schedule == '1,6,11,16,21,26,31,36,41,46,51,56 * * * *' && 'auto' || (github.event_name == 'schedule' && '0' || inputs.offset) }}
         run: |
           set -euo pipefail
           xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \
