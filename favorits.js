@@ -58,14 +58,13 @@
   }
   function buildCatalog(agenda, classifications) {
     const teams = [];
-    const clubs = [];
     const categories = [];
     const competitions = [];
     for (const row of agenda) {
       if (!row || typeof row !== 'object') continue;
       for (const field of ['home', 'away']) {
         const team = clean(row[field]);
-        if (team) { teams.push(team); clubs.push(clubName(team)); }
+        if (team) teams.push(team);
       }
       categories.push(row.category || row.categoria || categoryName(row.competition));
       competitions.push(row.competition);
@@ -74,11 +73,11 @@
       ? Object.values(classifications.competitions || classifications.leagues || {}) : [];
     for (const item of entries) {
       if (!item || typeof item !== 'object') continue;
-      categories.push(item.category || item.name);
+      categories.push(categoryName(item.category || item.name));
       competitions.push(item.competition || item.name);
       for (const row of Array.isArray(item.standings) ? item.standings : []) {
         const team = clean(row && row.team);
-        if (team) { teams.push(team); clubs.push(clubName(team)); }
+        if (team) teams.push(team);
       }
     }
     catalog = {
