@@ -9,7 +9,7 @@ BASE="https://www.hoqueipatins.fecapa.cat/"
 PROBE=r"""({league,match})=>{
  const visible=e=>!!e&&e.getClientRects().length>0&&getComputedStyle(e).visibility!=='hidden';
  const norm=v=>String(v||'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/\s+/g,' ').trim();
- const known={number:/^(?:dorsal|num|numero|numero de dorsal|n[º°])$/,position:/^(?:posicio|posicion|rol|demarcacio|demarcacion)$/,player:/^(?:jugador|jugadora|nom|nombre|nom i cognoms|nombre y apellidos)$/,played:/^(?:pj|partits jugats|partidos jugados)$/,goals:/^(?:g|gols?|goles?)$/,assists:/^(?:a|assistencies|asistencias)$/,yellowCards:/^(?:ta|targetes grogues|tarjetas amarillas)$/,blueCards:/^(?:tb|targetes blaves|tarjetas azules)$/,redCards:/^(?:tr|targetes vermelles|tarjetas rojas)$/,minutes:/^(?:min|minuts|minutos)$/,starter:/^(?:titular|titulars|titulares)$/,substitute:/^(?:suplent|suplente|suplents|suplentes)$/,penalties:/^(?:penals|penaltis|penalties)$/,saves:/^(?:aturades|paradas)$/,role:/^(?:porter|portero|portera|jugador de pista|jugador de campo)$/};
+ const known={goalkeeper:/^(?:p|porter|portero|portera)$/,captain:/^(?:c|capita|capitana|capitan)$/,number:/^(?:dorsal|num|numero|numero de dorsal|n[º°])$/,position:/^(?:posicio|posicion|rol|demarcacio|demarcacion)$/,player:/^(?:jugador|jugadora|nom|nombre|nom i cognoms|nombre y apellidos)$/,played:/^(?:pj|partits jugats|partidos jugados)$/,goals:/^(?:g|gols?|goles?)$/,assists:/^(?:a|assistencies|asistencias)$/,yellowCards:/^(?:ta|targetes grogues|tarjetas amarillas)$/,blueCards:/^(?:tb|targetes blaves|tarjetas azules)$/,redCards:/^(?:tr|targetes vermelles|tarjetas rojas)$/,minutes:/^(?:min|minuts|minutos)$/,starter:/^(?:titular|titulars|titulares)$/,substitute:/^(?:suplent|suplente|suplents|suplentes)$/,penalties:/^(?:penals|penaltis|penalties)$/,saves:/^(?:aturades|paradas)$/,role:/^(?:jugador de pista|jugador de campo)$/};
  const field=v=>Object.keys(known).find(k=>known[k].test(norm(v).replace(/[.:]+$/,'')))||null;
  const scopes=[...document.querySelectorAll('.sidgad-match-modal')].filter(visible);
  // Never treat the underlying competition roster as acta evidence.
@@ -65,7 +65,7 @@ PROBE=r"""({league,match})=>{
      const candidates=[...new Set(values.map(field).filter(Boolean))];return candidates.length===1?candidates[0]:'unknown';
    }):[];
    const rows=[...tb.rows].filter(r=>r!==h&&[...r.cells].some(c=>c.tagName==='TD')&&visible(r));
-   let playerLinks=0,linkedRows=0;const populated={};
+   let playerLinks=0,linkedRows=0;const populated={},markerCoverage={},linkedMarkerCoverage={};
    for(const row of rows){
      let links=0;
      for(const a of row.querySelectorAll('a[href]')){
@@ -76,9 +76,16 @@ PROBE=r"""({league,match})=>{
      if(columns.length===row.cells.length&&[...row.cells].every(c=>c.colSpan===1&&c.rowSpan===1))columns.forEach((k,i)=>{
        if(k==='unknown')return;const val=norm(row.cells[i].innerText);
        if(val)populated[k]=(populated[k]||0)+1;
+       // User-confirmed acta conventions: P = goalkeeper, C = captain, Num = shirt number.
+       // Only count an explicit marker in its own unambiguous column.
+       if(!["goalkeeper","captain","number"].includes(k)||columns.filter(x=>x===k).length!==1)return;
+       const marker=k==="goalkeeper"?"p":k==="captain"?"c":null;
+       const status=k==="number"?(/^\d{1,3}$/.test(val)?"numeric":val?"other":"blank"):(val===marker?"marked":!val?"blank":"other");
+       const bump=dest=>{const d=dest[k]||(dest[k]={});d[status]=(d[status]||0)+1};
+       bump(markerCoverage);if(links===1)bump(linkedMarkerCoverage);
      });
    }
-   tables.push({columns,rows:rows.length,playerLinks,linkedRows,populated});
+   tables.push({columns,rows:rows.length,playerLinks,linkedRows,populated,markerCoverage,linkedMarkerCoverage});
  }
  const labels={};
  for(const e of scope.querySelectorAll('th,h2,h3,h4,dt,label,[title],[aria-label]')){
