@@ -7,6 +7,7 @@ on:
       - scripts/zonaok_jugadors_auto.py
       - tests/test_jugadors_auto.py
       - schemas/jugadors-master.schema.json
+      - tests/test_jugadors_names.py
       - .github/workflows/zonaok-jugadors-auto.yml
   workflow_dispatch:
   schedule:
@@ -28,7 +29,7 @@ jobs:
       - run: python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
       - run: python -m playwright install --with-deps chromium
       - name: Proves de fusió i persistència
-        run: python -m unittest discover -s tests -p test_jugadors_auto.py -v
+        run: python -m unittest discover -s tests -p 'test_jugadors*.py' -v
       - name: Importar plantilles FECAPA
         env:
           EVENT: ${{ github.event_name }}

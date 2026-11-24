@@ -39,10 +39,75 @@ def merge(d,league,team,rows,label,stamp):
         m=d["memberships"].setdefault(key,{"playerId":pid,"leagueId":league,"teamFilterId":team,"seasonId":d["seasonId"],"teamName":None,"teamId":None,"clubId":None,"clubName":None,"firstSeenAt":stamp})
         if r.get("teamName") or label: m["teamName"]=r.get("teamName") or label
         if numeric(r.get("clubId")): m["clubId"]=r["clubId"]
+        if re.fullmatch(r"[1-9]\d*(?:_\d+)?",str(r.get("clubCrestId") or "")):m["clubCrestId"]=r["clubCrestId"]
         if isinstance(r.get("sports"),dict): m["sports"]=r["sports"]
         m.update(lastSeenAt=stamp,profileUrl=url(league,d["seasonId"],team,pid))
         seen.add(key)
     return len(seen)
+def enrich_names(doc,root=None):
+    """Use exact catalog keys and unambiguous matches; never infer IDs from fuzzy names."""
+    from collections import defaultdict, Counter
+    import unicodedata
+    root=Path(root) if root else Path(__file__).resolve().parents[1]
+    def norm(v):
+        return " ".join("".join(c for c in unicodedata.normalize("NFKD",str(v or "")) if not unicodedata.combining(c)).upper().split())
+    def unique(values):
+        by={norm(v):v for v in values if isinstance(v,str) and v.strip()}
+        return next(iter(by.values())) if len(by)==1 else None
+    def read(name):
+        try:return json.loads((root/name).read_text(encoding="utf-8"))
+        except (OSError,ValueError):return {}
+    crest={}
+    try:
+        raw=(root/"favorits.js").read_text(encoding="utf-8")
+        hit=re.search(r"const CLUB_NAMES_BY_CREST\s*=\s*(\{[^\n]*?\})\s*;",raw)
+        if hit:crest=json.loads(hit[1])
+    except (OSError,ValueError):pass
+    league_names=defaultdict(set); team_groups=defaultdict(set); agenda_groups=defaultdict(set)
+    for g in read("zonaok-classificacions.json").get("competitions",{}).values():
+        if not isinstance(g,dict):continue
+        lid=str(g.get("leagueId") or "")
+        if not numeric(lid):continue
+        label=g.get("competition") or g.get("category")
+        if isinstance(label,str) and label:league_names[lid].add(label)
+        group=g.get("name")
+        if not isinstance(group,str) or not group:continue
+        for row in g.get("standings",[]):
+            if isinstance(row,dict) and norm(row.get("team")):team_groups[(lid,norm(row["team"]))].add(group)
+    agenda=read("zonaok-tots-agenda.json")
+    for r in agenda.get("rows",agenda.get("matches",[])):
+        if not isinstance(r,dict):continue
+        lid=str(r.get("leagueId") or "")
+        group=r.get("competition") or r.get("category")
+        if not numeric(lid) or not isinstance(group,str) or not group:continue
+        for side in ("home","away"):
+            name=norm(r.get(side))
+            if name:agenda_groups[(lid,name)].add(group)
+    counts=Counter()
+    for m in doc["memberships"].values():
+        sources={}
+        def assign(k,v,source):
+            if v is not None and v!="":
+                m[k]=v;sources[k]=source;counts[k]+=1
+            elif k not in m:m[k]=None
+        lid=m["leagueId"]; team=m.get("teamName")
+        if team:sources["teamName"]="FECAPA:plantilles"
+        assign("leagueName",unique(league_names[lid]),"classificacions")
+        key=(lid,norm(team))
+        groups=team_groups[key]
+        group=unique(groups)
+        if group:assign("groupName",group,"classificacions:lliga+nom_exacte")
+        elif not groups:
+            assign("groupName",unique(agenda_groups[key]),"agenda:lliga+nom_exacte")
+        else:m.setdefault("groupName",None);counts["ambiguousGroup"]+=1
+        assign("seasonName","2026/2027" if m["seasonId"]=="41" else None,"temporada_configurada")
+        crest_id=m.get("clubCrestId") or m.get("clubId")
+        if crest_id and crest_id in crest:assign("clubName",crest[crest_id],"favorits:escut_exacte")
+        else:
+            m.setdefault("clubName",None)
+        m["nameSources"]=sources
+    return {"catalogCrests":len(crest),"catalogLeagueIds":len(league_names),"resolved":dict(counts)}
+
 def verify_master(d):
     from jsonschema import Draft202012Validator
     schema_path=Path(__file__).resolve().parents[1]/"schemas"/"jugadors-master.schema.json"
@@ -142,8 +207,8 @@ EXTRACT=r"""({league,team,season})=>{
   }
   const sel=[...document.querySelectorAll('.sidgad-liga-team-selector .sidgad-team-selector-item[data-team-id]')].find(x=>x.getAttribute('data-team-id')===team);
   const teamName=t(sel?.getAttribute('data-team-name')||sel?.querySelector('.sidgad-team-selector-name')?.textContent);
-  const logo=sel?.querySelector('img[src]');let clubId=null;
-  if(logo){try{const u=new URL(logo.getAttribute('src'),document.baseURI),m=u.pathname.match(/^\/fecapa\/images\/logos_clubes\/(\d+)\.png$/i);if(u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&m)clubId=m[1]}catch{}}
+  const logo=sel?.querySelector('img[src]');let clubId=null,clubCrestId=null;
+  if(logo){try{const u=new URL(logo.getAttribute('src'),document.baseURI),m=u.pathname.match(/^\/fecapa\/images\/logos_clubes\/(\d+(?:_\d+)?)\.(?:png|gif)$/i);if(u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&m){clubCrestId=m[1];if(/^\d+$/.test(m[1]))clubId=m[1]}}catch{}}
   const prior=out.get(id);
   if(prior){
     // Repeated links may represent different tables. Keep fields only if
@@ -154,7 +219,7 @@ EXTRACT=r"""({league,team,season})=>{
     }
     continue;
   }
-  out.set(id,{id,name,league,team,season,sports,teamName,clubId,conflicts:new Set()});
+  out.set(id,{id,name,league,team,season,sports,teamName,clubId,clubCrestId,conflicts:new Set()});
  }
  const birthLabel=[...document.querySelectorAll('th,label,dt')].some(e=>/nacimiento|naixement|fecha de nacimiento|data de naixement/i.test(e.textContent||''));
  return {rows:[...out.values()].map(({conflicts,...r})=>({...r,conflictCount:conflicts.size})),links,missing,birthLabel,headerCounts};
@@ -324,12 +389,13 @@ def main():
     except Exception as e:report["fatalError"]=type(e).__name__
     n=sum(x["membershipsObserved"] for x in report["leagues"])
     report.update(status="candidate_only" if n else "no_verified_rows",observedMemberships=n,playersInCandidate=len(doc["players"]),membershipsInCandidate=len(doc["memberships"]))
+    report["nameEnrichment"]=enrich_names(doc)
     from collections import Counter, defaultdict
     coverage=Counter()
     linked=defaultdict(list)
     for m in doc["memberships"].values():
         linked[m["playerId"]].append(m)
-        for k in ("teamName","teamId","clubId","clubName","profileUrl"):
+        for k in ("teamName","teamId","clubId","clubCrestId","clubName","leagueName","groupName","seasonName","profileUrl"):
             if m.get(k):coverage[k]+=1
         for k in m.get("sports",{}):coverage["sports."+k]+=1
     report["fieldCoverage"]={"playerId":len(doc["players"]),"name":sum(bool(p.get("name")) for p in doc["players"].values()),"leagueId":len(doc["memberships"]),"teamFilterId":len(doc["memberships"]),"seasonId":len(doc["memberships"]),**dict(coverage)}

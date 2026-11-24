@@ -191,6 +191,43 @@
                 "minimum": 0
               }
             }
+          },
+          "leagueName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "groupName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "seasonName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "clubCrestId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*(?:_[0-9]+)?$"
+          },
+          "nameSources": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "propertyNames": {
+              "enum": [
+                "teamName",
+                "leagueName",
+                "groupName",
+                "seasonName",
+                "clubName"
+              ]
+            }
           }
         }
       }
