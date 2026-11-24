@@ -37,6 +37,7 @@
   // Les sigles de resultats es poden mostrar amb el nom complet d'Agenda quan
   // una altra fila del mateix paquet n'aporta una equivalència inequívoca.
   let teamAliases = new Map();
+  let rowTeamAliases = new WeakMap();
   const aliasCandidates = name => {
     const words = norm(name).split(' ').filter(Boolean);
     if (words.length < 2) return [];
@@ -57,8 +58,10 @@
   };
   const setTeamAliases = rows => {
     const candidates = new Map();
+    rowTeamAliases = new WeakMap();
     for (const row of rows) {
       if (!row?.iso || !row?.time) continue;
+      const perRow = {};
       for (const other of rows) {
         if (other === row || other.iso !== row.iso || other.time !== row.time ||
             String(other.homeScore ?? '') !== String(row.homeScore ?? '') ||
@@ -69,17 +72,22 @@
           const full = baseClubName(other[side]);
           const shortKey = norm(short).replace(/ /g, '');
           if (shortKey.length > 6 || norm(full).replace(/ /g, '').length <= 6) continue;
+          if (!perRow[side]) perRow[side] = new Set();
+          perRow[side].add(full);
           if (!candidates.has(shortKey)) candidates.set(shortKey, new Set());
           candidates.get(shortKey).add(full);
         }
       }
+      rowTeamAliases.set(row, perRow);
     }
     teamAliases = new Map([...candidates].filter(([, values]) => values.size === 1)
       .map(([alias, values]) => [alias, [...values][0]]));
   };
-  const displayTeamName = name => {
+  const displayTeamName = (name, row, side) => {
     const base = baseClubName(name);
     const key = norm(base).replace(/ /g, '');
+    const contextual = row && rowTeamAliases.get(row)?.[side];
+    if (contextual?.size === 1) return [...contextual][0];
     return teamAliases.get(key) || base;
   };
   const teamKey = (name, logo) => {
@@ -90,10 +98,10 @@
     const match = String(logo || '').match(/^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/(\d+)\.png$/);
     return match ? 'logo:' + match[1] : 'team:' + norm(name);
   };
-  const teamLabel = (name, key) => {
+  const teamLabel = (name, key, row, side) => {
     if (key === 'barca') return 'Barça';
     if (key === 'celoni') return 'CP Sant Celoni';
-    return displayTeamName(name);
+    return displayTeamName(name, row, side);
   };
   const canonical = name => {
     const raw = norm(name);
@@ -247,7 +255,7 @@
     });
   }
 
-  function buildTeam(name, importedLogo) {
+  function buildTeam(name, importedLogo, row, side) {
     const team = make('div', 'side');
     const crest = make('div', 'crest');
     const club = clubOf(name);
@@ -261,7 +269,7 @@
       image.onerror = () => crest.replaceChildren(make('span', 'crest-fallback', name.charAt(0)));
       crest.append(image);
     } else crest.append(make('span', 'crest-fallback', String(name).charAt(0).toUpperCase()));
-    team.append(crest, make('strong', '', displayTeamName(name)));
+    team.append(crest, make('strong', '', displayTeamName(name, row, side)));
     return team;
   }
 
@@ -319,7 +327,7 @@
     const center = make('div', 'middle');
     const score = validResult(row) ? `${Number(row.homeScore)} : ${Number(row.awayScore)}` : '– : –';
     center.append(make('strong', 'score', score));
-    teams.append(buildTeam(row.home, row.homeLogo), center, buildTeam(row.away, row.awayLogo));
+    teams.append(buildTeam(row.home, row.homeLogo, row, 'home'), center, buildTeam(row.away, row.awayLogo, row, 'away'));
     card.append(top, teams);
     return card;
   }
@@ -328,7 +336,7 @@
     const clubs = new Map();
     for (const r of matches) for (const [name, logo] of [[r.home,r.homeLogo],[r.away,r.awayLogo]]) {
       const k=teamKey(name,logo);
-      if (!clubs.has(k)) clubs.set(k,teamLabel(name,k));
+      if (!clubs.has(k)) clubs.set(k,teamLabel(name,k,r,name===r.home?'home':'away'));
     }
     const options = [...clubs.entries()].sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})).map(([,label])=>label);
     setSuggestions(clubFilter, options);
@@ -348,8 +356,8 @@
     const selectedClub = clubFilter.value;
     const selectedCompetition = competitionFilter.value;
     const categories = [...new Set(matches.filter(r => (!selectedClub ||
-      queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo)),selectedClub) ||
-      queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo)),selectedClub)) &&
+      queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo),r,'home'),selectedClub) ||
+      queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo),r,'away'),selectedClub)) &&
       queryMatches(competitionGroup(r.competition),selectedCompetition))
       .map(r => String(r.competition || 'Categoria no informada')))]
       .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
@@ -360,8 +368,8 @@
   function updateCompetitionOptions() {
     const selectedClub = clubFilter.value;
     const competitions = [...new Map(matches.filter(r => (!selectedClub ||
-      queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo)),selectedClub) ||
-      queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo)),selectedClub)) &&
+      queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo),r,'home'),selectedClub) ||
+      queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo),r,'away'),selectedClub)) &&
       (queryMatches(r.competition,categoryFilter.value)))
       .map(r => {const label=competitionGroup(r.competition);return [norm(label),label];})).values()]
       .sort((a,b)=>a.localeCompare(b,'ca',{sensitivity:'base'}));
@@ -371,7 +379,7 @@
   function renderCards() {
     const club = clubFilter.value, category = categoryFilter.value, competition=competitionFilter.value;
     const selected = matches.filter(r =>
-      (!club || queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo)),club) || queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo)),club)) &&
+      (!club || queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo),r,'home'),club) || queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo),r,'away'),club)) &&
       queryMatches(r.competition, category) &&
       queryMatches(competitionGroup(r.competition),competition));
     counter.textContent = `${selected.length} ${selected.length === 1 ? 'partit' : 'partits'}`;
@@ -401,8 +409,8 @@
     try {
       const data = await loadData();
       matches = data.__all ? rowsInLastSevenDays(data.rows) : combinedAgenda(data);
-      setTeamAliases(matches);
       matches = await enrichActes(matches);
+      setTeamAliases(matches);
       updateClubOptions();
       updateCategoryOptions();
       updateCompetitionOptions();
