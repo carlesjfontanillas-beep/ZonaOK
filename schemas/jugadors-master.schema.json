@@ -74,6 +74,14 @@
               "minLength": 1
             },
             "uniqueItems": true
+          },
+          "birthYear": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2100
+          },
+          "birthYearConflict": {
+            "type": "boolean"
           }
         }
       }
@@ -227,6 +235,76 @@
                 "seasonName",
                 "clubName"
               ]
+            }
+          },
+          "position": {
+            "enum": [
+              "goalkeeper",
+              "field"
+            ]
+          },
+          "profileStats": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "number": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "played": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "goals": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "yellowCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "redCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "blueCards": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "profileCheckedAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "matchId",
+                "leagueId",
+                "source",
+                "actaUrl"
+              ],
+              "properties": {
+                "matchId": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*$"
+                },
+                "leagueId": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*$"
+                },
+                "source": {
+                  "const": "FECAPA:fitxa_partits_jugats"
+                },
+                "actaUrl": {
+                  "type": "string",
+                  "pattern": "^https://www\\.hoqueipatins\\.fecapa\\.cat/\\?"
+                }
+              }
             }
           }
         }

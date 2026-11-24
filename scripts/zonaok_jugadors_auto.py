@@ -262,32 +262,123 @@ async def open_page(page,target,selector):
     try: await page.locator(selector).first.wait_for(timeout=15000)
     except Exception: pass
     await page.wait_for_timeout(5000)
-PROFILE_DIAG=r"""()=>{
+PROFILE_DIAG=r"""({league,team,season})=>{
+ const visible=e=>!!e&&e.getClientRects().length>0&&getComputedStyle(e).visibility!=='hidden';
+ const t=x=>String(x||'').replace(/\s+/g,' ').trim();
+ const norm=x=>t(x).normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
  const hero=document.querySelector('.sidgad-player-hero-card');
  const name=hero?.querySelector('.sidgad-player-name-compact');
- const visible=e=>!!e&&e.getClientRects().length>0;
  const scope=document.querySelector('.sidgad-player-overlay-body');
- if(!visible(hero)||!visible(name)||!name.innerText.trim()||!visible(scope))return {ready:false};
- const nodes=[...scope.querySelectorAll('th,label,dt,.sidgad-player-meta-item,.sidgad-ficha-subtitulo')];
- // Field-presence flags only. No text, dates, names or raw profile values in output.
- const has=rx=>nodes.some(e=>rx.test(e.innerText||''));
- return {ready:true,team:visible(hero.querySelector('.sidgad-player-team-name')),
- number:has(/\bdorsal\b/i),position:has(/posici[oó]/i),
- played:has(/partits jugats|partidos jugados|\bPJ\b/i),
- goals:has(/\bgols?\b|\bgoles?\b/i),
- cards:has(/targetes|tarjetas/i)};
+ if(!visible(hero)||!visible(name)||!t(name.innerText)||!visible(scope))return {ready:false};
+ const bag=new Map(), matches=new Map(), labelCounts={};
+ const offer=(key,v)=>{if(v===null||v===undefined)return; if(!bag.has(key))bag.set(key,new Set());bag.get(key).add(v)};
+ const labels={number:/^(?:dorsal|numero de dorsal|numero de camiseta|numero de samarreta)$/,position:/^(?:posicio|posicion|rol|demarcacio|demarcacion|tipus de jugador|tipo de jugador)$/,birthYear:/^(?:any de naixement|ano de nacimiento|data de naixement|fecha de nacimiento|naixement|nacimiento)$/,played:/^(?:pj|partits jugats|partidos jugados)$/,goals:/^(?:gols?|goles?|goles marcados|gols marcats)$/,yellowCards:/^(?:targetes grogues|tarjetas amarillas)$/,blueCards:/^(?:targetes blaves|tarjetas azules)$/,redCards:/^(?:targetes vermelles|tarjetas rojas)$/};
+ const identify=x=>Object.keys(labels).find(k=>labels[k].test(norm(x).replace(/[:.]+$/,'').trim()));
+ const position=v=>/^(?:porter[ae]?|portero|portera|guarda ?metas?|goalkeeper)$/.test(norm(v))?'goalkeeper':/^(?:jugador[ae]?|jugador[ae]? de pista|jugador[ae]? de campo|pista|campo|field player)$/.test(norm(v))?'field':null;
+ function read(key,value){
+   const v=t(value);
+   if(key==='position')return offer(key,position(v));
+   if(key==='birthYear'){
+     // Only retain a year when an explicit birth label exists; discard the date itself.
+     const m=v.match(/^(?:\d{1,2}[\/.-]\d{1,2}[\/.-])?((?:19|20)\d{2})$|^((?:19|20)\d{2})-\d{2}-\d{2}$/);
+     const y=Number(m?.[1]||m?.[2]||0);
+     if(y>=1900&&y<=new Date().getFullYear())offer(key,y);
+     return;
+   }
+   if(/^\d{1,5}$/.test(v))offer(key,Number(v));
+ }
+ const containers=[...new Set([...hero.querySelectorAll('.sidgad-player-meta-item,.sidgad-player-tag-list>*'),...scope.querySelectorAll('.sidgad-player-meta-item,dt,tr,li,label')])];
+ for(const e of containers){
+   if(!visible(e))continue;
+   const raw=String(e.innerText||'').trim();
+   const parts=raw.split(/\n+|:\s*/).map(t).filter(Boolean);
+   if(parts.length===2){
+     const k=identify(parts[0]);if(k){read(k,parts[1]);labelCounts[k]=(labelCounts[k]||0)+1;}
+   }
+   if(e.tagName==='DT'&&e.nextElementSibling?.tagName==='DD'&&visible(e.nextElementSibling)){
+     const k=identify(raw);if(k)read(k,e.nextElementSibling.innerText);
+   }
+   const cells=e.tagName==='TR'?[...e.cells]:[];
+   if(cells.length===2&&cells[0].tagName==='TH'){
+     const k=identify(cells[0].innerText)||identify(cells[0].title);if(k)read(k,cells[1].innerText);
+   }
+   // Role chips may contain just the exact role label.
+   if(e.closest('.sidgad-player-tag-list'))offer('position',position(raw));
+ }
+ for(const el of hero.querySelectorAll('[title],[aria-label]')){
+   if(!visible(el))continue;
+   for(const attr of ['title','aria-label']){
+     const v=t(el.getAttribute(attr)); const p=v.split(/:\s*/);
+     if(p.length===2){const k=identify(p[0]);if(k)read(k,p[1]);}
+   }
+ }
+ const tableInfo=[];
+ for(const table of scope.querySelectorAll('table')){
+   if(!visible(table))continue;
+   const h=table.querySelector('thead tr:last-child')||[...table.rows].find(r=>[...r.cells].some(c=>c.tagName==='TH'));
+   const headers=h?[...h.cells].map(c=>identify(c.innerText)||identify(c.title)||identify(c.getAttribute('aria-label'))||identify(c.querySelector('[title]')?.title)||'other'):[];
+   const dataRows=[...table.rows].filter(r=>r!==h&&[...r.cells].some(c=>c.tagName==='TD')&&visible(r));
+   tableInfo.push({columns:headers,rows:dataRows.length});
+   // Only an explicitly labelled player history, not a general team calendar.
+   let section=table.parentElement;
+   let playedSection=false;
+   for(let i=0;section&&section!==scope&&i<4;i++,section=section.parentElement){
+     const heading=section.querySelector(':scope > h2,:scope > h3,:scope > h4,:scope > .sidgad-ficha-subtitulo');
+     if(heading&&/^(?:partits jugats|partidos jugados|historial de partits jugats|historial de partidos jugados)(?:\s*\(\d+\))?$/.test(norm(heading.innerText)))playedSection=true;
+   }
+   if(!playedSection)continue;
+   for(const row of dataRows){
+     for(const link of row.querySelectorAll('a[href]')){
+       let u;try{u=new URL(link.getAttribute('href'),document.baseURI)}catch{continue}
+       const q=u.searchParams,mid=q.get('partido');
+       if(u.protocol!=='https:'||!/^(www\.)?hoqueipatins\.fecapa\.cat$/.test(u.hostname)||!/^[1-9]\d*$/.test(mid||'')||q.get('liga')!==league)continue;
+       if(q.has('s')&&q.get('s')!==season)continue;
+       matches.set(mid,{matchId:mid,leagueId:league,source:'FECAPA:fitxa_partits_jugats'});
+     }
+   }
+ }
+ const out={ready:true,team:visible(hero.querySelector('.sidgad-player-team-name')),fields:{},matches:[...matches.values()],tableInfo,labelCounts,metaItems:hero.querySelectorAll('.sidgad-player-meta-item').length,roleTags:hero.querySelectorAll('.sidgad-player-tag-list>*').length,conflicts:0};
+ for(const [k,v] of bag){if(v.size===1)out.fields[k]=[...v][0];else out.conflicts++;}
+ return out;
 }"""
 async def inspect_profile(ctx,league,team,season,pid):
     page=await ctx.new_page()
     try:
         await open_page(page,url(league,season,team,pid),'.sidgad-player-name-compact')
+        args={"league":league,"team":team,"season":season}
+        last=None;stable=0
         for _ in range(16):
-            result=await page.evaluate(PROFILE_DIAG)
-            if result.get("ready"):return result
+            result=await page.evaluate(PROFILE_DIAG,args)
+            if result.get("ready"):
+                signature=json.dumps(result,sort_keys=True)
+                stable=stable+1 if signature==last else 1;last=signature
+                if stable>=3:return result
             await page.wait_for_timeout(650)
         return {"ready":False}
     except Exception:return {"ready":False}
     finally:await page.close()
+
+def merge_profile(doc,league,team,pid,result):
+    if not result.get("ready"):return
+    key="|".join([doc["seasonId"],league,team,pid])
+    m=doc["memberships"].get(key);p=doc["players"].get(pid)
+    if m is None or p is None:return
+    fields=result.get("fields",{})
+    year=fields.get("birthYear")
+    if type(year) is int and 1900<=year<=datetime.now(timezone.utc).year:
+        if not p.get("birthYearConflict"):
+            if "birthYear" in p and p["birthYear"]!=year:
+                p.pop("birthYear",None);p["birthYearConflict"]=True
+            else:p["birthYear"]=year
+    if fields.get("position") in {"goalkeeper","field"}:m["position"]=fields["position"]
+    stats={k:v for k,v in fields.items() if k in {"number","played","goals","yellowCards","blueCards","redCards"} and type(v) is int and v>=0}
+    if stats:m["profileStats"]={**m.get("profileStats",{}),**stats}
+    matches={x["matchId"]:x for x in m.get("matches",[]) if isinstance(x,dict) and numeric(x.get("matchId"))}
+    for x in result.get("matches",[]):
+        if numeric(x.get("matchId")) and x.get("leagueId")==league and x.get("source")=="FECAPA:fitxa_partits_jugats":
+            matches[x["matchId"]]={"matchId":x["matchId"],"leagueId":league,"source":x["source"],"actaUrl":BASE+"?"+urlencode({"liga":league,"vista":"calendar","partido":x["matchId"]})}
+    if matches:m["matches"]=list(matches.values())
+    m["profileCheckedAt"]=now()
 
 async def collect(a,leagues,doc,report):
     from playwright.async_api import async_playwright
@@ -368,14 +459,30 @@ async def collect(a,leagues,doc,report):
                     for k,v in accepted["headerCounts"].items():hc[k]=hc.get(k,0)+v
                     lr["duplicateLinks"]=lr.get("duplicateLinks",0)+accepted["links"]-len(accepted["rows"])
                     lr["conflictingSportsFields"]=lr.get("conflictingSportsFields",0)+sum(r.get("conflictCount",0) for r in accepted["rows"])
-                    if a.inspect_profiles and "profileFieldProbe" not in lr and accepted["rows"]:
-                        lr["profileFieldProbe"]=await inspect_profile(ctx,league,team,a.season,accepted["rows"][0]["id"])
+                    if a.inspect_profiles:
+                        lr.setdefault("profilesAttempted",0);lr.setdefault("profilesReady",0)
+                        pc=lr.setdefault("profileFieldCoverage",{})
+                        for row in accepted["rows"][:a.profiles_per_team]:
+                            pid=row["id"]
+                            lr["profilesAttempted"]+=1
+                            result=await inspect_profile(ctx,league,team,a.season,pid)
+                            if not result.get("ready"):continue
+                            lr["profilesReady"]+=1
+                            merge_profile(doc,league,team,pid,result)
+                            for k in result["fields"]:pc[k]=pc.get(k,0)+1
+                            if result["matches"]:pc["matches"]=pc.get("matches",0)+1
+                            lr["profileMatchesObserved"]=lr.get("profileMatchesObserved",0)+len(result["matches"])
+                            lr["profileConflicts"]=lr.get("profileConflicts",0)+result["conflicts"]
+                            # Only schema shape and counts, never individual values.
+                            if "profileFieldProbe" not in lr:lr["profileFieldProbe"]={k:result[k] for k in ("tableInfo","labelCounts","metaItems","roleTags")}
+                            await asyncio.sleep(1)
                     await asyncio.sleep(1)
         finally:await ctx.close();await browser.close()
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--max-teams",type=int);p.add_argument("--inspect-profiles",action="store_true");p.add_argument("--diagnostic-only",action="store_true");p.add_argument("--test-persistence",action="store_true");p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
+    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--max-teams",type=int);p.add_argument("--inspect-profiles",action="store_true");p.add_argument("--profiles-per-team",type=int,default=2);p.add_argument("--diagnostic-only",action="store_true");p.add_argument("--test-persistence",action="store_true");p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
     a=p.parse_args()
+    if a.profiles_per_team<1:p.error("Límit de fitxes invàlid")
     if not numeric(a.season) or any(not numeric(x) for x in a.league) or any(not re.fullmatch(r"[1-9]\d*:[1-9]\d*",x) for x in a.seed):p.error("IDs invàlids")
     a.seed=[tuple(s.split(":")) for s in a.seed]
     leagues=set(a.league)|{l for l,f in a.seed}
@@ -395,10 +502,12 @@ def main():
     linked=defaultdict(list)
     for m in doc["memberships"].values():
         linked[m["playerId"]].append(m)
-        for k in ("teamName","teamId","clubId","clubCrestId","clubName","leagueName","groupName","seasonName","profileUrl"):
+        for k in ("teamName","teamId","clubId","clubCrestId","clubName","leagueName","groupName","seasonName","profileUrl","position","matches","profileCheckedAt"):
             if m.get(k):coverage[k]+=1
         for k in m.get("sports",{}):coverage["sports."+k]+=1
-    report["fieldCoverage"]={"playerId":len(doc["players"]),"name":sum(bool(p.get("name")) for p in doc["players"].values()),"leagueId":len(doc["memberships"]),"teamFilterId":len(doc["memberships"]),"seasonId":len(doc["memberships"]),**dict(coverage)}
+        for k in m.get("profileStats",{}):coverage["profileStats."+k]+=1
+    report["fieldCoverage"]={"playerId":len(doc["players"]),"name":sum(bool(p.get("name")) for p in doc["players"].values()),"birthYear":sum("birthYear" in p for p in doc["players"].values()),"leagueId":len(doc["memberships"]),"teamFilterId":len(doc["memberships"]),"seasonId":len(doc["memberships"]),**dict(coverage)}
+    report["profileMatchesTotal"]=sum(len(m.get("matches",[])) for m in doc["memberships"].values())
     report["multiMembershipPlayers"]=sum(len(v)>1 for v in linked.values())
     report["multiClubPlayersVerifiedByLogo"]=sum(len({m["clubId"] for m in v if m.get("clubId")})>1 for v in linked.values())
     report["teamsObserved"]=sum(x["teamsObserved"] for x in report["leagues"])
