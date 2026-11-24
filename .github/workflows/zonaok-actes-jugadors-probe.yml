@@ -1,0 +1,31 @@
+name: ZonaOK — Actes jugadors (prova esborrany)
+on:
+  push:
+    branches:
+      - esborrany/jugadors-total-auto
+    paths:
+      - scripts/zonaok_actes_jugadors_probe.py
+      - .github/workflows/zonaok-actes-jugadors-probe.yml
+permissions:
+  contents: read
+concurrency:
+  group: zonaok-actes-jugadors-probe
+  cancel-in-progress: false
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'playwright>=1.55,<2'
+      - run: python -m playwright install --with-deps chromium
+      - run: xvfb-run -a python scripts/zonaok_actes_jugadors_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: actes-jugadors-diagnostic
+          path: actes-jugadors-diagnostic.json
+          if-no-files-found: warn
