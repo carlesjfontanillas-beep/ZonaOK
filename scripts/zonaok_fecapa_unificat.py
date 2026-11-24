@@ -729,7 +729,7 @@ async def collect_agenda(ctx,args,diagnostic):
         rows=unique_rows(rows,'agenda')
         diagnostic['sourceUrl']=AGENDA_URL
         diagnostic['clubLogos']=club_logos
-        diagnostic['idpSources=['competicio-calendar']
+        diagnostic['idpSources']=['competicio-calendar']
         diagnostic['checkedLeagues']=checked
         diagnostic['warnings'].extend(errors)
         diagnostic['counts']={'agendaTables':sum(x.get('recognizedTables',0) for x in counts),
