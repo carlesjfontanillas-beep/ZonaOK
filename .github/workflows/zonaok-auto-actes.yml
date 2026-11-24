@@ -1,14 +1,26 @@
-
 name: 'ZonaOK - Actes TOTAL AUTO (Chromium Playwright)'
 
 on:
   workflow_dispatch:
     inputs:
+      scope:
+        description: 'fast=actualitzacio dels darrers 7 dies; full=repàs historic'
+        required: true
+        type: choice
+        options:
+          - fast
+          - full
+        default: fast
       limit:
-        description: 'Agenda: maxim lligues; Actes: maxim fitxes; 0 = totes. Directe: sense efecte'
+        description: 'Nombre de partits a revisar (nomes Actes); 0=tots'
         required: true
         type: string
         default: '40'
+      offset:
+        description: 'Mode full Actes: auto o numero de partida'
+        required: true
+        type: string
+        default: 'auto'
       publish:
         description: 'Publicar les dades verificades? Desmarcat en les primeres proves.'
         required: true
@@ -21,7 +33,7 @@ on:
 permissions:
   contents: write
 
-# Mateix grup que l'antic consolidador: cap actualitzacio simultania dels JSON.
+# Agenda, Directe i Actes comparteixen el JSON; executar-los en serie.
 concurrency:
   group: zonaok-tots-clubs
   cancel-in-progress: false
@@ -47,15 +59,17 @@ jobs:
           python -m playwright install --with-deps chromium
       - name: Proves de fusió conservadora
         shell: bash
-        run: python -m unittest discover -s tests -p 'test_fecapa_unificat.py' -v
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Capturar actes a FECAPA amb navegador real
         shell: bash
         env:
-          LIMIT: ${{ inputs.limit }}
+          LIMIT: ${{ github.event_name == 'schedule' && '40' || inputs.limit }}
+          SCOPE: ${{ github.event_name == 'schedule' && 'fast' || inputs.scope }}
+          OFFSET: ${{ github.event_name == 'schedule' && 'auto' || inputs.offset }}
         run: |
           set -euo pipefail
           xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \
-            --mode actes --limit "${LIMIT:-40}" \
+            --mode actes --scope "${SCOPE:-fast}" --offset "${OFFSET:-auto}" --limit "${LIMIT:-40}" \
             --capture captura-actes-auto.json --report diagnostic-actes-auto.json
       - name: Fusionar JSON únic i generar fitxers compatibles
         shell: bash
@@ -78,6 +92,7 @@ jobs:
             python scripts/zonaok_fecapa_unificat.py merge \
               --mode actes --capture captura-actes-auto.json \
               --output zonaok-tots-partits.json --compat --report fusio-actes-auto.json
+            python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
             git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
             if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
             if git diff --cached --quiet; then echo 'Sense canvis nous'; exit 0; fi
