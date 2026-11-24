@@ -949,18 +949,65 @@ try {
     const url=kind==='standings'?'https://www.hoqueipatins.fecapa.cat/?liga='+encodeURIComponent(league)+'&vista=clasificaciones':source.stats;
     x.head.textContent=displayTitle.toLocaleUpperCase('ca')+' · FECAPA';x.sub.textContent=displayTitle+' · '+name;x.link.href=url;x.hint.textContent=source.pending||'Si FECAPA no mostra la taula, pots obrir-la directament.';x.frame.hidden=!!source.pending;x.frame.style.display=source.pending?'none':'';if(source.pending)x.frame.removeAttribute('src');else x.frame.src=url;x.d.showModal();
   }
+  function buildFavoriteRanking(data,league,fav){
+ const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Za-z0-9]+/g,' ').trim().toUpperCase().replace(/\bFASE\s*(\d+)\b/g,'FASE $1');
+ const num=v=>v==null||String(v).trim()===''||!Number.isFinite(Number(v))?null:Number(v);
+ const all=Object.values(data?.competitions||{}).filter(g=>Array.isArray(g?.standings)),cat=norm(fav.category),team=norm(fav.team);
+ const byLeague=all.filter(g=>league&&String(g.leagueId)===String(league));
+ const specific=byLeague.filter(g=>norm(g.name)!=='CLASSIFICACIO GENERAL');
+ const pool=specific.length?specific:byLeague;
+ const exact=pool.filter(g=>norm(g.name)===cat),fallback=all.filter(g=>norm(g.name)===cat&&norm(g.name)!=='CLASSIFICACIO GENERAL');
+ const anchors=exact.length?exact:pool.length?pool:fallback;
+ const matching=anchors.filter(g=>g.standings.some(r=>norm(r.team)===team));
+ const anchor=matching.length===1?matching[0]:anchors.length===1?anchors[0]:null;
+ if(!anchor)throw Error('No s’ha pogut identificar un únic grup de l’equip a les classificacions importades.');
+ const familyOf=g=>norm(g.competition||g.name).replace(/^BCN PB INICIACIO \d+$/,'BCN PB INICIACIO');
+ const categoryOf=g=>norm(g.category).replace(/^BCN PB INICIACIO \d+$/,'BCN PB INICIACIO');
+ const family=familyOf(anchor),groups=all.filter(g=>String(g.leagueId)===String(anchor.leagueId)&&familyOf(g)===family&&categoryOf(g)===categoryOf(anchor));
+ const seen=new Set(),rows=[];
+ for(const g of groups)for(const r of g.standings){
+  const key=norm(g.name)+'|'+norm(r.team);if(!r.team||seen.has(key))continue;seen.add(key);
+  const s=r.stats||{},pj=num(r.played??s.PJ),pts=num(r.points??s.PTS),gf=num(r.gf??s.GF),gc=num(r.ga??s.GC),dg=gf!==null&&gc!==null?gf-gc:num(r.difference??s.DIF),valid=pj!==null&&pj>0&&pts!==null;
+  rows.push({team:r.team,group:g.name,pj,pts,gf,gc,dg,pg:num(s.PG),pe:num(s.PE),pp:num(s.PP),coef:valid?pts/pj:null,dgm:valid&&dg!==null?dg/pj:null,gfm:valid&&gf!==null?gf/pj:null,favorite:norm(g.name)===norm(anchor.name)&&norm(r.team)===team});
+ }
+ const desc=(a,b)=>a===b?0:a===null?1:b===null?-1:b-a;
+ rows.sort((a,b)=>desc(a.coef,b.coef)||desc(a.dgm,b.dgm)||desc(a.gfm,b.gfm)||a.team.localeCompare(b.team,'ca')||a.group.localeCompare(b.group,'ca'));
+ let prev=null,rank=0;rows.forEach((r,i)=>{if(r.coef===null){r.rank=null;return}if(!prev||desc(prev.coef,r.coef)||desc(prev.dgm,r.dgm)||desc(prev.gfm,r.gfm))rank=i+1;r.rank=rank;prev=r});
+ return {rows,groups,competition:family==='BCN PB INICIACIO'?'BCN PB-INICIACIÓ':anchor.competition||anchor.name,capturedAt:data.capturedAt};
+}
+  function openFavoriteRanking(league,fav){
+ if(window.ZonaOKRankingDialog?.open)window.ZonaOKRankingDialog.close();
+ if(!document.getElementById('zok-ranking-style')){
+ const style=document.createElement('style');style.id='zok-ranking-style';style.textContent='.zok-ranking-dialog[open]{display:flex;flex-direction:column}.zok-ranking-dialog{position:fixed;inset:0;margin:auto;width:min(96vw,1000px);height:min(92dvh,900px);padding:0;overflow:hidden;border:1px solid #34536d;border-radius:18px;background:#f4f7fa;color:#082238;box-shadow:0 20px 70px #000a}.zok-ranking-dialog::backdrop{background:#03172bdd}.zok-ranking-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:#061f38;color:#fff}.zok-ranking-head button{background:transparent;color:#fff;border:0;font-size:26px;padding:0 8px}.zok-ranking-meta{padding:10px 12px;background:#e3eaf0;font-size:12px;line-height:1.45}.zok-ranking-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}.zok-ranking-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;white-space:nowrap;color:#082238}.zok-ranking-table th,.zok-ranking-table td{padding:7px 8px;border-bottom:1px solid #d6e0e9;text-align:right;background:#f4f7fa}.zok-ranking-table th{position:sticky;top:0;background:#d5e2ee;z-index:2}.zok-ranking-table th:first-child,.zok-ranking-table td:first-child{position:sticky;left:0;min-width:32px;width:32px;box-sizing:border-box;z-index:1}.zok-ranking-table th:first-child{z-index:3;background:#d5e2ee}.zok-ranking-table th:nth-child(2),.zok-ranking-table td:nth-child(2){text-align:left;min-width:130px;max-width:190px;white-space:normal;position:sticky;left:32px;z-index:1}.zok-ranking-table th:nth-child(2){z-index:3;background:#d5e2ee}.zok-ranking-table tr.zok-ranking-top td{font-weight:800}.zok-ranking-table tr.zok-ranking-favorite td{background:#ffedbf;color:#082238;font-weight:800}.zok-ranking-group{display:block;font-size:10px;opacity:.75}.zok-ranking-foot{padding:8px 12px;background:#061f38;color:#fff;font-size:11px;line-height:1.4}@media(max-width:480px){.zok-ranking-dialog{height:94dvh}.zok-ranking-table th,.zok-ranking-table td{padding:6px}}';document.head.append(style);
+ }
+ const d=el('dialog','zok-ranking-dialog'),head=el('div','zok-ranking-head'),title=el('strong','','📊 RÀNQUING'),close=el('button','','×'),meta=el('div','zok-ranking-meta','Carregant classificacions FECAPA…'),scroll=el('div','zok-ranking-scroll'),foot=el('div','zok-ranking-foot','Rànquing ZonaOK (no oficial). PTS/PJ · desempat DG/PJ i GF/PJ. No ajusta la dificultat dels rivals.');
+ d.setAttribute('aria-label','Rànquing de la competició');close.type='button';close.setAttribute('aria-label','Tancar');close.addEventListener('click',()=>d.close());head.append(title,close);d.append(head,meta,scroll,foot);document.body.append(d);window.ZonaOKRankingDialog=d;d.addEventListener('close',()=>{d.remove();if(window.ZonaOKRankingDialog===d)window.ZonaOKRankingDialog=null});d.showModal();
+ const url=new URL('zonaok-classificacions.json',document.baseURI);url.searchParams.set('v',String(Date.now()));
+ fetch(url,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No s’han pogut carregar les classificacions.');return r.json()}).then(data=>{
+  if(!d.isConnected)return;
+  const result=buildFavoriteRanking(data,league,fav),favorite=result.rows.find(r=>r.favorite),dt=new Date(result.capturedAt),stamp=Number.isNaN(dt.getTime())?'—':dt.toLocaleString('ca-ES',{timeZone:'Europe/Madrid',dateStyle:'short',timeStyle:'short'});
+  title.textContent='📊 RÀNQUING · '+result.competition;
+  meta.replaceChildren(el('strong','',result.rows.length+' equips · '+result.groups.length+' grups importats'),el('div','',favorite?(favorite.team+' · '+(favorite.rank===null?'sense posició':favorite.rank+'a posició')):'Equip favorit no identificat exactament.'),el('div','','Dades FECAPA: '+stamp+' · Cobertura segons l’última importació; pot ser parcial.'));
+  const table=el('table','zok-ranking-table'),thead=el('thead'),header=el('tr'),body=el('tbody');
+  ['#','Equip / grup','Coef.','PJ','PG','PE','PP','PTS','GF','GC','DG','DG/PJ','GF/PJ'].forEach(v=>{const th=el('th','',v);th.scope='col';header.append(th)});thead.append(header);
+  const fmt=(v,digits=0)=>v===null?'—':v.toLocaleString('ca-ES',{minimumFractionDigits:digits,maximumFractionDigits:digits});
+  result.rows.forEach((r,i)=>{const tr=el('tr');if(i<20&&r.rank!==null)tr.classList.add('zok-ranking-top');if(r.favorite)tr.classList.add('zok-ranking-favorite');tr.append(el('td','',r.rank===null?'—':String(r.rank)));const name=el('td','',r.team);name.append(el('span','zok-ranking-group',r.group));tr.append(name);[fmt(r.coef,3),fmt(r.pj),fmt(r.pg),fmt(r.pe),fmt(r.pp),fmt(r.pts),fmt(r.gf),fmt(r.gc),fmt(r.dg),fmt(r.dgm,3),fmt(r.gfm,3)].forEach(v=>tr.append(el('td','',v)));body.append(tr)});
+  table.append(thead,body);scroll.replaceChildren(table);
+ }).catch(e=>{if(d.isConnected)meta.textContent=e.message||'Error en carregar el rànquing.'});
+}
   function appendFavoriteTeamActions(key,box){
     const state=(()=>{try{return JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){return {}}})();
     const index=Number(key.replace('favteam',''))-1,id=String(state.teams?.[index]||''),parts=id.split('|');
     const fav=parts.length>=3?{id,team:norm(parts[1]),category:norm(parts.slice(2).join('|')),name:String(state.teamNames?.[id]||'').trim()}:null;if(!fav)return;
     const league=favoriteTeamLeague(fav);
     const playerId=String(state.playerIds?.[fav.id]||'').trim(),playerName=String(fav.name||'').trim()||'Jugador';
-    if(!document.getElementById('zok-team-quick-style')){const style=document.createElement('style');style.id='zok-team-quick-style';style.textContent='.zok-team-quick-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 10px}.zok-team-quick-actions button{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:42px;padding:8px 5px;border:1px solid #315875;border-radius:12px;background:#173a57;color:#f2f8ff;font:inherit;font-size:12px;font-weight:800;line-height:1.15}.zok-team-quick-actions button:focus-visible{outline:2px solid #ffb66f;outline-offset:2px}';document.head.append(style)}
+    if(!document.getElementById('zok-team-quick-style')){const style=document.createElement('style');style.id='zok-team-quick-style';style.textContent='.zok-team-quick-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0 0 10px}.zok-team-quick-actions button{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:42px;padding:8px 5px;border:1px solid #315875;border-radius:12px;background:#173a57;color:#f2f8ff;font:inherit;font-size:clamp(10px,2.8vw,12px);overflow-wrap:anywhere;font-weight:800;line-height:1.15}.zok-team-quick-actions button:focus-visible{outline:2px solid #ffb66f;outline-offset:2px}';document.head.append(style)}
     const actions=el('div','zok-team-quick-actions');
     const add=(label,icon,run)=>{const b=el('button','',icon+' '+label);b.type='button';b.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();run()});actions.append(b)};
     add('Classificació','🏆',()=>league?openFavoriteFecapaDialog('CLASSIFICACIÓ · '+fav.category,{liga:league,vista:'clasificaciones'}):openFavoriteFecapaDialog('CLASSIFICACIÓ · '+fav.category,{}, {pending:'No s’ha pogut identificar la lliga FECAPA d’aquest equip.'}));
     add('Golejadors','⚽',()=>league?openFavoriteFecapaDialog('GOLEJADORS · '+fav.category,{liga:league,vista:'estadisticas'}):openFavoriteFecapaDialog('GOLEJADORS · '+fav.category,{}, {pending:'No s’ha pogut identificar la lliga FECAPA d’aquest equip.'}));
     add(playerName,'👤',()=>league?openFavoriteFecapaDialog('PLANTILLA · '+fav.category,{liga:league,vista:'plantillas'}):openFavoriteFecapaDialog('PLANTILLA · '+fav.category,{}, {pending:'No s’ha pogut identificar la lliga FECAPA d’aquest equip.'}));
+    add('Rànquing','📊',()=>openFavoriteRanking(league,fav));
     box.append(actions);
   }
   window.ZonaOKAppendFavoriteTeamActions=appendFavoriteTeamActions;
