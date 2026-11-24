@@ -264,7 +264,7 @@ async def open_page(page,target,selector):
     try: await page.locator(selector).first.wait_for(timeout=15000)
     except Exception: pass
     await page.wait_for_timeout(5000)
-PROFILE_DIAG=r"""({league,team,season})=>{
+PROFILE_DIAG=r"""({league,team,season,matchTab=false})=>{
  const visible=e=>!!e&&e.getClientRects().length>0&&getComputedStyle(e).visibility!=='hidden';
  const t=x=>String(x||'').replace(/\s+/g,' ').trim();
  const norm=x=>t(x).normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
@@ -314,7 +314,7 @@ PROFILE_DIAG=r"""({league,team,season})=>{
      if(p.length===2){const k=identify(p[0]);if(k)read(k,p[1]);}
    }
  }
- const tableInfo=[];
+ const tableInfo=[]; let matchTabLinkCount=0;
  for(const table of scope.querySelectorAll('table')){
    if(!visible(table))continue;
    const h=table.querySelector('thead tr:last-child')||[...table.rows].find(r=>[...r.cells].some(c=>c.tagName==='TH'));
@@ -338,13 +338,15 @@ PROFILE_DIAG=r"""({league,team,season})=>{
    if(summarySection&&!playedSection&&dataRows.length===1&&validColumns(dataRows[0])){
      headers.forEach((k,i)=>{if(['played','goals','yellowCards','blueCards','redCards'].includes(k))read(k,dataRows[0].cells[i].innerText);});
    }
-   if(!playedSection)continue;
+   if(!playedSection&&!matchTab)continue;
    for(const row of dataRows){
      for(const link of row.querySelectorAll('a[href]')){
        let u;try{u=new URL(link.getAttribute('href'),document.baseURI)}catch{continue}
        const q=u.searchParams,mid=q.get('partido');
        if(u.protocol!=='https:'||!/^(www\.)?hoqueipatins\.fecapa\.cat$/.test(u.hostname)||!/^[1-9]\d*$/.test(mid||'')||q.get('liga')!==league)continue;
        if(q.has('s')&&q.get('s')!==season)continue;
+       if(matchTab)matchTabLinkCount++;
+       if(!playedSection)continue;
        const stats={};
        if(validColumns(row))headers.forEach((k,i)=>{
          const v=t(row.cells[i].innerText);
@@ -368,17 +370,15 @@ PROFILE_DIAG=r"""({league,team,season})=>{
      else unclassifiedLabels++;
    }
  }
- const out={ready:true,discoveredLabels,unclassifiedLabels,team:visible(hero.querySelector('.sidgad-player-team-name')),fields:{},matches:[...matches.values()],tableInfo,labelCounts,metaItems:hero.querySelectorAll('.sidgad-player-meta-item').length,roleTags:hero.querySelectorAll('.sidgad-player-tag-list>*').length,conflicts:0};
+ const out={ready:true,discoveredLabels,unclassifiedLabels,matchTab,matchTabLinkCount,team:visible(hero.querySelector('.sidgad-player-team-name')),fields:{},matches:[...matches.values()],tableInfo,labelCounts,metaItems:hero.querySelectorAll('.sidgad-player-meta-item').length,roleTags:hero.querySelectorAll('.sidgad-player-tag-list>*').length,conflicts:0};
  for(const [k,v] of bag){if(v.size===1)out.fields[k]=[...v][0];else out.conflicts++;}
  return out;
 }"""
 async def inspect_profile(ctx,league,team,season,pid):
     page=await ctx.new_page()
-    try:
-        await open_page(page,url(league,season,team,pid),'.sidgad-player-name-compact')
-        args={"league":league,"team":team,"season":season}
+    async def stable_capture(args):
         last=None;stable=0
-        for _ in range(16):
+        for _ in range(24):
             result=await page.evaluate(PROFILE_DIAG,args)
             if result.get("ready"):
                 signature=json.dumps(result,sort_keys=True)
@@ -386,6 +386,49 @@ async def inspect_profile(ctx,league,team,season,pid):
                 if stable>=3:return result
             await page.wait_for_timeout(650)
         return {"ready":False}
+    try:
+        await open_page(page,url(league,season,team,pid),'.sidgad-player-name-compact')
+        args={"league":league,"team":team,"season":season}
+        first=await stable_capture(args)
+        if not first.get("ready"):return first
+        first["matchTabStatus"]="not_found"
+        # Scope to the player overlay, not the league navigation or acta modal.
+        shell=page.locator(".sidgad-player-overlay-shell:visible").first
+        labels=re.compile(r"^\s*(?:Partits|Partidos|Matches)(?:\s*\(\d+\))?\s*$",re.I)
+        tab=None
+        for role in ("tab","button","link"):
+            candidates=shell.get_by_role(role,name=labels)
+            if await candidates.count()==1 and await candidates.first.is_visible():
+                tab=candidates.first;break
+        if tab is None:
+            candidates=shell.get_by_text(labels,exact=True)
+            visible=[x for x in await candidates.all() if await x.is_visible()]
+            if len(visible)==1:tab=visible[0]
+        if tab is None:return first
+        try:
+            await tab.click(timeout=10000)
+            # Wait for the newly selected panel to settle. Never assume a click
+            # alone proves that a history row represents a played match.
+            await page.wait_for_timeout(3500)
+            second=await stable_capture({**args,"matchTab":True})
+            if not second.get("ready"):
+                first["matchTabStatus"]="not_ready";return first
+            first["matchTabStatus"]="clicked"
+            first["matchTabTables"]=second["tableInfo"]
+            first["matchTabRows"]=sum(t["rows"] for t in second["tableInfo"])
+            # Capture exact observed match links, but require the explicit
+            # played-history label to promote them to confirmed participation.
+            first["matchTabLinksObserved"]=second["matchTabLinkCount"]
+            first["matches"]=second["matches"]
+            # Avoid overwriting stable profile fields with conflicting values.
+            for k,v in second["fields"].items():
+                if k not in first["fields"]:first["fields"][k]=v
+                elif first["fields"][k]!=v:first["fields"].pop(k,None);first["conflicts"]+=1
+            for k,v in second["discoveredLabels"].items():first["discoveredLabels"][k]=first["discoveredLabels"].get(k,0)+v
+            first["unclassifiedLabels"]+=second["unclassifiedLabels"]
+            first["conflicts"]+=second["conflicts"]
+        except Exception:first["matchTabStatus"]="click_failed"
+        return first
     except Exception:return {"ready":False}
     finally:await page.close()
 
@@ -501,6 +544,12 @@ async def collect(a,leagues,doc,report):
                             result=await inspect_profile(ctx,league,team,a.season,pid)
                             if not result.get("ready"):continue
                             lr["profilesReady"]+=1
+                            tab_status=lr.setdefault("matchTabStatuses",{})
+                            ts=result.get("matchTabStatus","unknown")
+                            tab_status[ts]=tab_status.get(ts,0)+1
+                            lr["matchTabRowsObserved"]=lr.get("matchTabRowsObserved",0)+result.get("matchTabRows",0)
+                            lr["matchTabLinksObserved"]=lr.get("matchTabLinksObserved",0)+result.get("matchTabLinksObserved",0)
+                            if "matchTabTables" in result and "matchTabTableProbe" not in lr:lr["matchTabTableProbe"]=result["matchTabTables"]
                             merge_profile(doc,league,team,pid,result)
                             for k in result["fields"]:pc[k]=pc.get(k,0)+1
                             if result["matches"]:pc["matches"]=pc.get("matches",0)+1
