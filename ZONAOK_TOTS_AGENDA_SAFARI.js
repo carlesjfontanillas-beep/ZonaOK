@@ -75,6 +75,22 @@ completion((() => {
           /^\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(u.pathname) ? u.href : '';
       } catch (_) {return '';}
     };
+    const clubLogos = Object.create(null);
+    const addClubLogo = (name, src) => {
+      const label = clean(name);
+      if (!label || !src) return;
+      try {
+        const u = new URL(src, location.href);
+        if (u.protocol !== 'https:' || u.hostname !== 'sidgad.cloud' ||
+            !/^\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(u.pathname)) return;
+        clubLogos[label] = u.href;
+      } catch (_) {}
+    };
+    // FECAPA associa explícitament l'escut amb el club a través de l'alt/title
+    // de les imatges logos_clubes. Conservem aquesta relació al mateix export.
+    for (const img of document.querySelectorAll('img[src]')) {
+      addClubLogo(img.getAttribute('alt') || img.getAttribute('title'), img.getAttribute('src'));
+    }
     const all = new Map(); let inspected=0,invalid=0,recognizedTables=0;
     const tables = [...document.querySelectorAll('table')];
     for (const table of tables) {
@@ -109,6 +125,8 @@ completion((() => {
           venue:venueIdx>=0 ? vals[venueIdx] : '',
           homeLogo:logo(cells[homeIdx]),awayLogo:logo(cells[awayIdx]),
           matchId:matchId(tr),...linkMeta(tr),status:''};
+        addClubLogo(home, row.homeLogo);
+        addClubLogo(away, row.awayLogo);
         const key=[iso,time,norm(row.competition),norm(home),norm(away)].join('|');
         const old=all.get(key);
         if (!old || (row.matchId&&!old.matchId) || (row.homeScore!==null&&old.homeScore===null)) all.set(key,row);
@@ -120,7 +138,7 @@ completion((() => {
     const rows=[...all.values()].sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));
     return JSON.stringify({schema:'zonaok-all-v1',kind:'agenda',season,source:'FECAPA-SAFARI',
       capturedAt:new Date().toISOString(),sourceUrl:location.href,
-      counts:{tables:tables.length,recognizedTables,inspected,invalid,exported:rows.length},rows});
+      counts:{tables:tables.length,recognizedTables,inspected,invalid,exported:rows.length},clubLogos,rows});
   } catch (error) {
     // Prefix inequívoc: una drecera no ha de desar un error com si fos JSON.
     return 'ERROR ZONAOK AGENDA TOTS: ' + (error?.message || String(error));
