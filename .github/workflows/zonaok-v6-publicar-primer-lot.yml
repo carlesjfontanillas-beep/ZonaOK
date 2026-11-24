@@ -1,0 +1,87 @@
+name: 'ZonaOK V6 - Publicar primera captura IDP verificada'
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/zonaok-v6-publicar-primer-lot.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: zonaok-tots-clubs
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recuperar captura V6 comprovada
+        uses: actions/download-artifact@v4
+        with:
+          name: zonaok-v6-prova-idp
+          run-id: 45372289619
+          github-token: \${{ github.token }}
+      - name: Comprovar IDP reals, duplicats i cobertura
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          diag=json.load(open('diagnostic-agenda-v6.json'))
+          cap=json.load(open('captura-agenda-v6.json'))
+          assert diag['version']==6
+          assert diag['counts']['withIDs']>=300
+          assert diag['counts']['genericAgendaRows']>10000
+          assert len(diag['checkedLeagues'])==3
+          assert all(x['foreignRows']==0 and x['withIDs']>0 for x in diag['checkedLeagues'])
+          ids=[(str(x['leagueId']),str(x['matchId'])) for x in cap['rows'] if x.get('matchId')]
+          assert len(ids)==len(set(ids))
+          print('IDP fiables verificats:',len(ids))
+          PY
+      - name: Fusionar i publicar conservant Agenda, resultats i actes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/zonaok_fecapa_unificat.py merge \
+              --mode agenda --capture captura-agenda-v6.json \
+              --output zonaok-tots-partits.json --compat --report fusio-v6.json
+            python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
+            python - <<'PY'
+          import json
+          d=json.load(open('zonaok-tots-partits.json'))
+          act=json.load(open('zonaok-actes.json'))
+          assert len(d['matches'])>=12000
+          assert len(act['fixtures'])>=1479
+          pairs={(str(x['league']),str(x['id'])) for x in act['fixtures']}
+          assert len(pairs)==len(act['fixtures'])
+          print('PUBLICABLE:',len(d['matches']),'partits;',len(pairs),'IDs d acta coneguts')
+          PY
+            git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json
+            if git diff --cached --quiet; then echo 'No hi ha canvis nous'; exit 0; fi
+            git commit -m 'ZonaOK V6: publicar partits i IDP verificats del primer lot'
+            if git push origin HEAD:main; then exit 0; fi
+            echo 'Dades noves a main: repetint fusio sobre darrer estat'
+            sleep 2
+          done
+          exit 1
+      - name: Resum de la fusió
+        if: always()
+        shell: bash
+        run: |
+          if [ -f fusio-v6.json ]; then cat fusio-v6.json; fi
