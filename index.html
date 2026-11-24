@@ -1416,30 +1416,32 @@ function renderHome(){
  }
  box.classList.remove('zok-home-no-favorites');
  const found=new Map();
- const teamFavorites=(state.teams||[]).filter(Boolean);
- const clubFavorites=(state.clubs||[]).filter(Boolean);
- // Equipos seleccionados tenen prioritat: no afegim altres partits dels clubs.
- if(teamFavorites.length){
-   for(let i=0;i<teamFavorites.length;i++){
-     for(const row of zonaokFavoriteTeamWeekRows(i))found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
+ const teamIds=Array.isArray(state.teams)?state.teams.map((id,index)=>({id,index})).filter(x=>typeof x.id==='string'&&normalize(x.id).startsWith('TEAM|')):[];
+ const clubFavorites=Array.isArray(state.clubs)?state.clubs.map((name,index)=>({name,index})).filter(x=>typeof x.name==='string'&&x.name.trim()):[];
+ // Els equips concrets seleccionats defineixen la portada; no s'hi barregen partits del club.
+ if(teamIds.length){
+   for(const {id} of teamIds){
+     const team=zonaokFavoriteTeamFromId(id,state);
+     for(const row of zonaokFavoriteTeamRows(team,{start:chosenWeek().start,end:chosenWeek().end}))
+       found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
    }
  }else{
-   for(let i=0;i<clubFavorites.length;i++){
-     for(const row of zonaokFavoriteClubRows(i))found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
+   for(const {name} of clubFavorites){
+     for(const row of zonaokFavoriteClubRows(state.clubs.indexOf(name)))
+       found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
    }
  }
  const rows=[...found.values()].sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));
  for(const row of rows)box.append(createCard(row,'live'));
  let pending=0;
- if(teamFavorites.length){
-   for(let i=0;i<teamFavorites.length;i++){
-     const team=zonaokFavoriteTeam(i);
-     if(team&&!zonaokFavoriteTeamWeekRows(i).length){box.append(favoritePendingCard((team.name||team.team)+' · '+team.category,'favteam'+(i+1)));pending++;}
+ if(teamIds.length){
+   for(const {id,index} of teamIds){
+     const team=zonaokFavoriteTeamFromId(id,state),weekRows=zonaokFavoriteTeamRows(team,{start:chosenWeek().start,end:chosenWeek().end});
+     if(team&&!weekRows.length){box.append(favoritePendingCard((team.name||team.team)+' · '+team.category,'favteam'+(index+1)));pending++;}
    }
  }else{
-   for(let i=0;i<clubFavorites.length;i++){
-     const club=zonaokFavoriteClub(i);
-     if(club&&!zonaokFavoriteClubRows(i).length){box.append(favoritePendingCard(club,'favclub'+(i+1)));pending++;}
+   for(const {name,index} of clubFavorites){
+     if(!zonaokFavoriteClubRows(index).length){box.append(favoritePendingCard(name,'favclub'+(index+1)));pending++;}
    }
  }
  if(!rows.length&&!pending)box.append(mk('div','empty','No hi ha partits importats dels teus favorits aquesta setmana.'));
@@ -1629,9 +1631,14 @@ function renderClassificationSection(box){
 }
 function zonaokFavoriteState(){try{return JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){return {}}}
 function zonaokFavoriteClub(i){return zonaokFavoriteState().clubs?.[i]||''}
-function zonaokFavoriteTeam(i){const s=zonaokFavoriteState(),id=s.teams?.[i]||'',p=id.split('|');return id?{id,team:p[1]||'',category:p.slice(2).join('|'),name:String(s.teamNames?.[id]||'').trim()}:null}
-function zonaokFavoriteRowsForTeam(i){const f=zonaokFavoriteTeam(i);if(!f)return [];const period=temporadaActual();return clubRows().filter(r=>r.iso>=period.inici&&r.iso<=period.fi&&normalize(r.competition)===f.category&&(normalize(r.home)===f.team||normalize(r.away)===f.team)).sort((a,b)=>(b.iso+' '+b.time).localeCompare(a.iso+' '+a.time))}
-function zonaokFavoriteClubRows(i){const name=normalize(zonaokFavoriteClub(i));if(!name)return [];const {start,end}=chosenWeek();return clubRows().filter(r=>r.iso>=start&&r.iso<=end&&[r.home,r.away].some(t=>{const n=normalize(t);if(name==='BARCA')return /^(?:BAR|BARCA|FC BARCELONA|FCBETERANS|FCBETRANS)(?: |$)/.test(n);if(name==='CP SANT CELONI')return /^(?:CP |C P |CLUB PATI )?SANT CELONI(?: |$)/.test(n);return n===name||n.startsWith(name+' ')})).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time))}
+function zonaokFavoriteTeamFromId(id,state=zonaokFavoriteState()){if(typeof id!=='string'||!id)return null;const p=id.split('|');return p.length>=3?{id,team:normalize(p[1]),category:normalize(p.slice(2).join('|')),name:String(state.teamNames?.[id]||'').trim()}:null}
+function zonaokFavoriteTeam(i){const state=zonaokFavoriteState();return zonaokFavoriteTeamFromId(state.teams?.[i]||'',state)}
+function zonaokFavoriteTeamMatches(row,f){if(!row||!f)return false;const comp=normalize(row.competition||row.category||'');const teams=[row.home,row.away].map(normalize);return comp===f.category&&teams.includes(f.team)}
+function zonaokFavoriteTeamRows(f,range){if(!f)return [];return clubRows().filter(r=>(!range||r.iso>=range.start&&r.iso<=range.end)&&zonaokFavoriteTeamMatches(r,f))}
+function zonaokFavoriteTeamWeekRows(i){const f=zonaokFavoriteTeam(i);const {start,end}=chosenWeek();return zonaokFavoriteTeamRows(f,{start,end}).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time))}
+function zonaokFavoriteRowsForTeam(i){const f=zonaokFavoriteTeam(i);const period=temporadaActual();return zonaokFavoriteTeamRows(f,{start:period.inici,end:period.fi}).sort((a,b)=>(b.iso+' '+b.time).localeCompare(a.iso+' '+a.time))}
+function zonaokFavoriteClubMatches(row,club){if(!row||!club)return false;const expected=normalize(club)==='BARCA'?'barca':normalize(club)==='CP SANT CELONI'?'celoni':'';return [row.home,row.away].some((team,side)=>{const slug=side===0?row.homeClub:row.awayClub;return expected?((slug&&slug===expected)||clubOf(team)===expected):normalize(team)===normalize(club)})}
+function zonaokFavoriteClubRows(i){const name=zonaokFavoriteClub(i);if(!name)return [];const {start,end}=chosenWeek();return clubRows().filter(r=>r.iso>=start&&r.iso<=end&&zonaokFavoriteClubMatches(r,name)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time))}
 function zonaokConfigureFavoriteNav(){const s=zonaokFavoriteState();const homeTitle=document.getElementById('home-favorites-title');if(homeTitle){const clubNames=(s.clubs||[]).slice(0,2);const teamNames=(s.teams||[]).slice(0,2).map(id=>String(s.teamNames?.[id]||id.split('|')[1]||'').trim()).filter(Boolean);homeTitle.textContent=clubNames.length?clubNames.join(' · '):teamNames.join(' · ')||'Els meus favorits';}for(let i=0;i<2;i++){const n=s.clubs?.[i]||'',k='club'+(i+1),t=document.querySelector('[data-fav-title="'+k+'"]'),ic=document.querySelector('[data-fav-icon="'+k+'"]');if(t)t.textContent=n||'Club favorit '+(i+1);if(ic){ic.replaceChildren();const logoMap={'BARCA':'https://sidgad.cloud/fecapa/images/logos_clubes/234.png','CH CALDES':'https://sidgad.cloud/fecapa/images/logos_clubes/237.png','CH CALDES RECAM LASER':'https://sidgad.cloud/fecapa/images/logos_clubes/237.png','CP SANT CELONI':'https://sidgad.cloud/fecapa/images/logos_clubes/281.png','FARNERS':'https://sidgad.cloud/fecapa/images/logos_clubes/310_5.png','HOQUEI CLUB RIPOLL':'https://sidgad.cloud/fecapa/images/logos_clubes/319_4.png'};const src=s.clubLogoUrls?.[n]||logoMap[normalize(n)]||'';if(src){const img=document.createElement('img');img.src=src;img.alt='';img.loading='lazy';img.decoding='async';ic.append(img)}}}for(let i=0;i<2;i++){const f=zonaokFavoriteTeam(i),k='team'+(i+1),t=document.querySelector('[data-fav-title="'+k+'"]'),ic=document.querySelector('[data-fav-icon="'+k+'"]'),label=f?(f.name||f.team)+' · '+f.category:'Equip favorit '+(i+1);if(t)t.textContent=label;if(ic){ic.replaceChildren();const player=document.createElement('span');player.className='nav-player-icon';player.setAttribute('aria-hidden','true');player.textContent='👤';ic.append(player);if(f){const initial=document.createElement('span');initial.className='nav-player-initial';initial.setAttribute('aria-hidden','true');initial.textContent=Array.from((f.name||f.team).trim())[0]?.toLocaleUpperCase('ca')||'';ic.append(initial)}}}}
 window.addEventListener('zonaok:favorites-updated',zonaokConfigureFavoriteNav);
 zonaokConfigureFavoriteNav();
