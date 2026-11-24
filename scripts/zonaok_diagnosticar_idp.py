@@ -66,6 +66,15 @@ async def inspect(page, league):
             if snap["visibleCards"] or (
                 seconds>=10 and len(snap["body"])>1800 and not snap["spinners"]):
                 break
+        item["calendarRows"]=await page.evaluate("""() => [...document.querySelectorAll('tr.sidgad-calendario-partido')].slice(0,4).map(tr=>({
+          text:(tr.innerText||'').slice(0,500),
+          html:tr.outerHTML.slice(0,10000),
+          attrs:Object.fromEntries([...tr.attributes].map(a=>[a.name,a.value])),
+          cells:[...tr.cells].map(td=>({cls:td.className,text:(td.innerText||'').slice(0,170),
+            links:[...td.querySelectorAll('a[href]')].map(a=>({href:a.href,text:a.innerText})),
+            attrs:Object.fromEntries([...td.attributes].map(a=>[a.name,a.value]))}))
+        }))""")
+        item["visibleCalendarRows"]=await page.locator("tr.sidgad-calendario-partido:visible").count()
         item["requests"]=responses
     except Exception as exc:
         item["errors"].append({"type":"exception","message":str(exc)[:450]})
