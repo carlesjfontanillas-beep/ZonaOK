@@ -23,7 +23,7 @@
     scope: document.getElementById('favorites-scope-toggle'),
     scopeNote: document.getElementById('favorites-scope-note')
   };
-  let catalog = {clubs: [], teams: [], categories: [], competitions: []};
+  let catalog = {clubs: [], teams: [], categories: [], competitions: [], clubLogos: {}};
   let selected = readSelection();
   let showAllOptions = false;
 
@@ -81,8 +81,7 @@
   function clubBaseName(value) {
     return clean(value).replace(/\s*-\s*[A-Z]$/i, '').replace(/\s+[A-Z]$/i, '').replace(/\s*-\s*$/i, '').trim();
   }
-  }
-  function buildCatalog(agenda, classifications) {
+  function buildCatalog(agenda, classifications, clubLogos = {}) {
     const teamRecords = new Map();
     const categories = [];
     const competitions = [];
@@ -151,7 +150,8 @@
       categories: sorted(categories),
       competitions: sorted(competitions),
       teamRecords: enrichedRecords,
-      agendaRows: agenda
+      agendaRows: agenda,
+      clubLogos: clubLogos && typeof clubLogos === 'object' ? clubLogos : {}
     };
     const clubsByName = new Map(catalog.clubs.map(club => [norm(club), club]));
     const clubAliases = new Map(), migratedClubs = [];
@@ -340,6 +340,18 @@
       return key;
     };
     let changed = false;
+    // El catàleg oficial de FECAPA conté l'associació club -> escut a les
+    // imatges amb alt/title. Prioritza aquesta relació abans de les files.
+    for (const [rawName, logo] of Object.entries(catalog.clubLogos || {})) {
+      if (!safeLogo(logo)) continue;
+      const key = clubKey(rawName);
+      const club = selected.clubs.find(name => clubKey(name) === key);
+      if (club && !selected.clubLogoUrls[club]) { selected.clubLogoUrls[club] = logo; changed = true; }
+      for (const record of catalog.teamRecords.filter(item => clubKey(item.club) === key)) {
+        if (!selected.clubLogoUrls[record.club]) { selected.clubLogoUrls[record.club] = logo; changed = true; }
+        if (!selected.teamLogoUrls[record.key]) { selected.teamLogoUrls[record.key] = logo; changed = true; }
+      }
+    }
     for (const row of catalog.agendaRows || []) for (const side of ['home','away']) {
       const team = String(row?.[side] || ''), logo = row?.[side+'Logo'] || '';
       if (!team || !safeLogo(logo)) continue;
@@ -365,7 +377,7 @@
         throw new Error('L’agenda total està buida o té un format incorrecte.');
       let standings = {};
       if (standingsResponse.ok) standings = await standingsResponse.json();
-      buildCatalog(packet.rows, standings);
+      buildCatalog(packet.rows, standings, packet.clubLogos || {});
       nodes.status.textContent = location.protocol === 'file:'
         ? 'Previsualització local: Safari pot separar les seleccions de Favorits i Inici.'
         : 'Clubs, equips i escuts carregats de l’agenda total FECAPA.';
