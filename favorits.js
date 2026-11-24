@@ -153,33 +153,39 @@
     })), teamNames: selected.teamNames || {}, clubLogoUrls: selected.clubLogoUrls || {}};
     render();
   }
-  function scopedOptions(key) {
+  function scopedOptions(key, matchingClubs = new Set()) {
     if (key === 'clubs') return catalog.clubs;
     if (showAllOptions) return catalog[key];
 
     let records = catalog.teamRecords;
+    const matches = selected.clubs.filter(club => matchingClubs.has(norm(club)));
+    let clubSearchScope = matches.length > 0;
+
     if (selected.clubs.length) {
-      const clubs = new Set(selected.clubs);
-      records = records.filter(record => clubs.has(record.club));
+      const allowed = new Set(clubSearchScope ? matches : selected.clubs);
+      records = records.filter(record => allowed.has(record.club));
+    } else if (matchingClubs.size) {
+      records = records.filter(record => matchingClubs.has(norm(record.club)));
+      clubSearchScope = records.length > 0;
     }
 
-    const selectedTeams = new Set(selected.teams);
-    const selectedCategories = new Set(selected.categories.map(norm));
-    const selectedCompetitions = new Set(selected.competitions.map(norm));
     if (key === 'teams') {
-      if (selectedCategories.size) records = records.filter(record => selectedCategories.has(norm(record.category)));
-      if (selectedCompetitions.size) records = records.filter(record => selectedCompetitions.has(norm(record.competition)));
       const available = new Set(records.map(record => record.key));
       return catalog.teams.filter(option => available.has(option.id));
     }
-    if (key === 'categories') {
-      if (selectedTeams.size) records = records.filter(record => selectedTeams.has(record.key));
-      if (selectedCompetitions.size) records = records.filter(record => selectedCompetitions.has(norm(record.competition)));
-      return sorted(records.map(record => record.category));
-    }
+    if (key === 'categories') return sorted(records.map(record => record.category));
     if (key === 'competitions') {
-      if (selectedTeams.size) records = records.filter(record => selectedTeams.has(record.key));
-      if (selectedCategories.size) records = records.filter(record => selectedCategories.has(norm(record.category)));
+      if (!clubSearchScope) {
+        const selectedTeams = new Set(selected.teams);
+        const selectedCategories = new Set(selected.categories.map(norm));
+        const selectedCompetitions = new Set(selected.competitions.map(norm));
+        if (selectedTeams.size || selectedCategories.size || selectedCompetitions.size) {
+          records = records.filter(record =>
+            selectedTeams.has(record.key) ||
+            selectedCategories.has(norm(record.category)) ||
+            selectedCompetitions.has(norm(record.competition)));
+        }
+      }
       return sorted(records.map(record => record.competition));
     }
     return catalog[key];
@@ -190,12 +196,24 @@
   function optionLabel(option) {
     return typeof option === 'string' ? option : option.label;
   }
+  function optionMatchesSearch(key, option, label, query, matchingClubs) {
+    if (!query || norm(label).includes(query)) return true;
+    if (!matchingClubs.size) return false;
+    const clubMatches = record => matchingClubs.has(norm(record.club));
+    if (key === 'teams') return matchingClubs.has(norm(option.club));
+    if (key === 'categories') return catalog.teamRecords.some(record =>
+      norm(record.category) === norm(option) && clubMatches(record));
+    if (key === 'competitions') return catalog.teamRecords.some(record =>
+      norm(record.competition) === norm(option) && clubMatches(record));
+    return false;
+  }
   function renderCount() {
     const count = GROUPS.reduce((total, [key]) => total + selected[key].length, 0);
     nodes.count.textContent = `${count} ${count === 1 ? 'seleccionat' : 'seleccionats'}`;
   }
   function render() {
     const query = norm(nodes.search.value);
+    const matchingClubs = new Set(query ? catalog.clubs.filter(club => norm(club).includes(query)).map(norm) : []);
     const hasClubScope = selected.clubs.length > 0;
     nodes.scope.hidden = !hasClubScope;
     nodes.scope.textContent = showAllOptions ? 'Limita a clubs marcats' : 'Mostra totes les opcions';
@@ -216,7 +234,7 @@
       const list = document.createElement('div');
       list.className = 'zok-favorite-list';
       const chosen = new Set(selected[key]);
-      const options = scopedOptions(key).sort((a, b) => {
+      const options = scopedOptions(key, matchingClubs).sort((a, b) => {
         const selectedFirst = Number(chosen.has(optionId(b))) - Number(chosen.has(optionId(a)));
         if (selectedFirst) return selectedFirst;
         if (key === 'teams') {
@@ -234,7 +252,7 @@
         const label = optionLabel(option);
         const row = document.createElement('label');
         row.className = 'zok-favorite-option';
-        row.hidden = Boolean(query && !norm(label).includes(query));
+        row.hidden = Boolean(query && !optionMatchesSearch(key, option, label, query, matchingClubs));
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = selected[key].includes(id);
@@ -334,6 +352,16 @@
   nodes.clear.addEventListener('click', () => {
     selected = emptySelection();
     save();
+    render();
+  });
+  window.addEventListener('pageshow', event => {
+    if (!event.persisted) return;
+    selected = readSelection();
+    render();
+  });
+  window.addEventListener('storage', event => {
+    if (event.key !== STORAGE_KEY && event.key !== null) return;
+    selected = readSelection();
     render();
   });
   load();
