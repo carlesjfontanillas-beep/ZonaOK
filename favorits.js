@@ -53,6 +53,12 @@
   function teamKey(team, category) {
     return ['team', team, category].map(norm).join('|');
   }
+  function shortTeamName(value) {
+    const name = norm(value);
+    const santCeloni = name.match(/^(?:CP )?SANT CELONI(?: ([A-D]))?$/) ||
+      name.match(/^CPSC(?: ([A-D]))?$/);
+    return santCeloni ? `CPSC${santCeloni[1] || ''}` : clean(value);
+  }
   function clubLabel(record) {
     const code = norm(record.clubCode);
     const team = norm(record.team);
@@ -128,7 +134,7 @@
       teams: enrichedRecords.sort((a, b) => a.team.localeCompare(b.team, 'ca', {sensitivity: 'base'}) ||
         a.category.localeCompare(b.category, 'ca', {sensitivity: 'base'})).map(record => ({
           id: record.key,
-          label: record.category ? `${record.team} · ${record.category}` : record.team,
+          label: record.category ? `${record.category} · ${shortTeamName(record.team)}` : shortTeamName(record.team),
           club: record.club
         })),
       categories: sorted(categories),
