@@ -337,6 +337,22 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
 .zok-quick-imports>p{margin:9px 0 0}
 @media(max-width:350px){.zok-quick-import-grid{grid-template-columns:1fr}.zok-quick-import-heading{align-items:flex-start;flex-direction:column;gap:2px}}
 </style>
+<style id="zonaok-favorites-toolbar-reflow">
+.zok-bottom-nav{display:flex!important;align-items:stretch!important;gap:7px!important}
+.zok-nav-scroll{flex:1 1 auto;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.zok-nav-scroll::-webkit-scrollbar{display:none}
+.zok-nav-scroll .navgrid{display:flex!important;grid-template-columns:none!important;gap:6px!important;width:max-content;min-width:100%;height:100%}
+.zok-nav-scroll .navbtn{flex:0 0 62px!important;width:62px!important;min-width:62px!important}
+.zok-nav-fixed{flex:0 0 auto;display:flex;align-items:stretch;gap:5px}
+.zok-nav-fixed .navbtn{flex:0 0 62px;width:62px;min-width:62px}
+.zok-nav-divider{align-self:stretch;width:1px;flex:0 0 1px;background:#9dbbd044;margin:0 1px}
+.zok-bottom-nav .navbtn strong{font-size:9px!important;line-height:1.08!important;white-space:normal!important;overflow-wrap:anywhere}
+.zok-bottom-nav .navbtn small{display:none!important}
+.zok-header-actions{display:flex;align-items:center;gap:8px}
+.zok-home-top{display:inline-flex;align-items:center;gap:5px;padding:9px 12px;border:1px solid #91b7d155;border-radius:13px;background:linear-gradient(145deg,#214d6d,#14344e);color:#fff;font:inherit;font-weight:800;white-space:nowrap;cursor:pointer}
+.zok-home-top:first-letter{color:#ffc17c}
+@media(max-width:430px){.zok-bottom-nav{gap:5px!important}.zok-nav-scroll .navgrid{gap:4px!important}.zok-nav-scroll .navbtn,.zok-nav-fixed .navbtn{flex-basis:54px!important;width:54px!important;min-width:54px!important}.zok-nav-divider{margin:0}.zok-bottom-nav .navbtn strong{font-size:8px!important}}
+</style>
 </head>
 <body>
 <main class="app">
@@ -345,7 +361,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
       <div class="brand">ZONA<span>OK</span></div>
       <div class="strap">ELS TEUS PARTITS &#xB7; EL TEU HOQUEI</div>
     </div>
-    <a class="zok-favorites-top" href="favorits.html?v=20261124-safari-sync" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a>
+    <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261124-safari-sync" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button></div>
   </header>
   <section class="hero">
     <div class="overline">AGENDA PERSONAL</div>
@@ -448,15 +464,12 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
   </section>
   
 </main>
-<nav class="bottom" aria-label="Set consultes">
-  <div class="bottom-title">CONSULTES R&#xC0;PIDES</div>
-  <div class="navgrid">
-    <button data-tab="favclub1" class="navbtn" aria-label="Club favorit 1" title="Club favorit 1"><span class="club-icon" data-fav-icon="club1"></span><strong data-fav-title="club1">Club favorit 1</strong><small>Setmana</small></button>
-    <button data-tab="favclub2" class="navbtn" aria-label="Club favorit 2" title="Club favorit 2"><span class="club-icon" data-fav-icon="club2"></span><strong data-fav-title="club2">Club favorit 2</strong><small>Setmana</small></button>
-    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>&#x25A5;</span><strong>Classificacions</strong><small id="zonaok-classificacions-count">Carregant…</small></button>
-    <button data-tab="favteam1" class="navbtn" aria-label="Equip favorit 1" title="Equip favorit 1"><span class="nav-name" data-fav-icon="team1">👤</span><strong data-fav-title="team1">Equip favorit 1</strong><small>Temporada</small></button>
-    <button data-tab="favteam2" class="navbtn" aria-label="Equip favorit 2" title="Equip favorit 2"><span class="nav-name" data-fav-icon="team2">👤</span><strong data-fav-title="team2">Equip favorit 2</strong><small>Temporada</small></button>
-    <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>&#x2302;</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
+<nav class="bottom zok-bottom-nav" aria-label="Consultes ràpides">
+  <div class="bottom-title">CONSULTES RÀPIDES</div>
+  <div class="zok-nav-scroll" aria-label="Clubs i equips favorits"><div class="navgrid" id="zok-nav-favorites"></div></div>
+  <span class="zok-nav-divider" aria-hidden="true"></span>
+  <div class="zok-nav-fixed">
+    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>▤</span><strong>Classificacions</strong><small id="zonaok-classificacions-count">Carregant…</small></button>
   </div>
 </nav>
 <dialog id="guide">
@@ -819,11 +832,12 @@ try {
     return {...row,scoreSource:validScore(row.homeScore)&&validScore(row.awayScore)?'Agenda':''};
   }
   function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;}
+  function favoriteLogoFor(name){let s={};try{s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){}const n=norm(name);if(isBarca(name))return 'https://sidgad.cloud/fecapa/images/logos_clubes/234.png';if(isCeloni(name))return 'https://sidgad.cloud/fecapa/images/logos_clubes/281.png';for(const [key,url] of Object.entries({...s.clubLogoUrls,...s.teamLogoUrls})){if(!url)continue;const k=norm(key);if(k&& (n===k||n.startsWith(k+' ')||k.startsWith(n+' ')))return url;}return '';}
+  window.ZonaOKFavoriteLogoFor=favoriteLogoFor;
   function teamSide(name){
     const side=el('div','side'),crest=el('div','crest');
-    let img='';const n=norm(name);
-    if(isBarca(name))img='https://sidgad.cloud/fecapa/images/logos_clubes/234.png';
-    if(isCeloni(name))img='https://sidgad.cloud/fecapa/images/logos_clubes/281.png';
+    let img=favoriteLogoFor(name);const n=norm(name);
+    
     if(img){const i=el('img');i.src=img;i.alt='Escut '+name;i.loading='lazy';i.onerror=()=>crest.replaceChildren(el('span','crest-fallback',name.slice(0,1)));crest.append(i)}
     else crest.append(el('span','crest-fallback',name.slice(0,1).toUpperCase()));
     side.append(crest,el('strong','',name));return side;
@@ -1128,7 +1142,7 @@ let store=load(), section='home', selectedMonday=restoreMonday(), showSeason=fal
 window.ZonaOKCurrentWeek=()=>selectedMonday;
 // V19: Inici i clubs tenen filtre SETMANAL; Magí i Ton sempre TEMPORADA.
 // La setmana seleccionada no pot modificar el filtre de les dues temporades.
-function isSeasonMenu(key){return key==='grupalevi'||key==='grupinfantil';}
+function isSeasonMenu(key){return key==='grupalevi'||key==='grupinfantil'||/^favteam\d+$/.test(key);}
 function isWeekMenu(key){return key==='home'||key==='barca'||key==='celoni';}
 function load(){return window.ZonaOKSafeStorage.read();}
 function save(){store=window.ZonaOKSafeStorage.commit(store);return true}
@@ -1374,7 +1388,7 @@ function dateStatus(r){const now=localDate();if(r.status)return r.status+' \u00B
 function createCard(r,id){const c=mk('article','match '+(LEAGUES[id]?.color||'gray'));
 const top=mk('div','match-top'),pill=mk('span','pill',r.competition||LEAGUES[id]?.name||'FECAPA'),tag=mk('span','tag',dateStatus(r));top.append(pill,tag);c.append(top);
 const dt=mk('div','match-date');dt.append(mk('strong','',r.time||'Hora pendent'),mk('small','',niceDate(r.iso)));c.append(dt);
-const teams=mk('div','teams');const side=(name,logo)=>{name=name==='BAR'?'BAR\u00C7A':name==='CPSC'?'CP SANT CELONI':name;const d=mk('div','side'),crest=mk('div','crest');if(safeImage(logo)){const img=mk('img');img.src=safeImage(logo);img.alt='Escut de '+name;img.loading='lazy';img.onerror=()=>{crest.replaceChildren(mk('span','crest-fallback','\u{1F3D2}'))};crest.append(img)}else crest.append(mk('span','crest-fallback',name?name.trim().charAt(0).toUpperCase():'\u{1F3D2}'));d.append(crest,mk('strong','',name||'Equip no identificat'));return d};
+const teams=mk('div','teams');const side=(name,logo)=>{name=name==='BAR'?'BAR\u00C7A':name==='CPSC'?'CP SANT CELONI':name;logo=logo||favoriteLogoFor(name);const d=mk('div','side'),crest=mk('div','crest');if(safeImage(logo)){const img=mk('img');img.src=safeImage(logo);img.alt='Escut de '+name;img.loading='lazy';img.onerror=()=>{crest.replaceChildren(mk('span','crest-fallback','\u{1F3D2}'))};crest.append(img)}else crest.append(mk('span','crest-fallback',name?name.trim().charAt(0).toUpperCase():'\u{1F3D2}'));d.append(crest,mk('strong','',name||'Equip no identificat'));return d};
 const mid=mk('div','middle');mid.append(mk('div','score',r.homeScore!==null&&r.awayScore!==null?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'));mid.append(mk('small','score-note',r.homeScore!==null?'Resultat':'Pendent'));if(scorePresent(r)){const actaMini=mk('button','zok-acta-chip','⌕ Acta');actaMini.type='button';actaMini.onclick=e=>{e.stopPropagation();openActaDialog(r,id)};mid.append(actaMini);}teams.append(side(r.home,r.homeLogo),mid,side(r.away,r.awayLogo));c.append(teams);
 const loc=mk('div','venue');loc.append(mk('strong','','\u{1F4CD} '+(r.venue||'Pista pendent de verificar a FECAPA')));if(!r.venue)loc.append(mk('div','', 'No s\u2019ha llegit cap pista per a aquest partit'));c.append(loc);
 const buttons=mk('div','match-actions');const cal=mk('button','','\u25A6 Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);const maps=mk('a','light',r.venue?'\u2197 Google Maps':'\u2197 Cercar pista');maps.href=r.venue?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue):BASE+'ag/';maps.target='_blank';maps.rel='noopener';const source=mk('a','light','FECAPA \u2197');source.href=exactActaLink(r,id)||(id==='live'?BASE:calendarUrl(id));source.target='_blank';source.rel='noopener';buttons.append(cal,maps,source);if(scorePresent(r)){const acta=mk('button','zok-acta-action','\u2315 Acta');acta.type='button';acta.onclick=()=>openActaDialog(r,id);acta.setAttribute('aria-label','Obrir l\u2019acta del partit sense sortir de ZonaOK');buttons.append(acta)}c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));if(scorePresent(r)){c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Obrir fitxa del partit '+r.home+' - '+r.away);c.addEventListener('click',e=>{if(e.target.closest?.('button,a,input,select,textarea'))return;openActaDialog(r,id)});c.addEventListener('keydown',e=>{if(e.target!==c||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();openActaDialog(r,id)})}return c}
@@ -1617,15 +1631,32 @@ function zonaokFavoriteTeamWeekRows(i){const f=zonaokFavoriteTeam(i);const {star
 function zonaokFavoriteRowsForTeam(i){const f=zonaokFavoriteTeam(i);const period=temporadaActual();return zonaokFavoriteTeamRows(f,{start:period.inici,end:period.fi}).sort((a,b)=>(b.iso+' '+b.time).localeCompare(a.iso+' '+a.time))}
 function zonaokFavoriteClubMatches(row,club){if(!row||!club)return false;const expected=normalize(club)==='BARCA'?'barca':normalize(club)==='CP SANT CELONI'?'celoni':'';return [row.home,row.away].some((team,side)=>{const slug=side===0?row.homeClub:row.awayClub;return expected?((slug&&slug===expected)||clubOf(team)===expected):normalize(team)===normalize(club)})}
 function zonaokFavoriteClubRows(i){const name=zonaokFavoriteClub(i);if(!name)return [];const {start,end}=chosenWeek();return clubRows().filter(r=>r.iso>=start&&r.iso<=end&&zonaokFavoriteClubMatches(r,name)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time))}
-function zonaokConfigureFavoriteNav(){const s=zonaokFavoriteState();const homeTitle=document.getElementById('home-favorites-title');if(homeTitle){const clubNames=(s.clubs||[]).slice(0,2);const teamNames=(s.teams||[]).slice(0,2).map(id=>String(s.teamNames?.[id]||id.split('|')[1]||'').trim()).filter(Boolean);homeTitle.textContent=clubNames.length?clubNames.join(' · '):teamNames.join(' · ')||'Els meus favorits';}for(let i=0;i<2;i++){const n=s.clubs?.[i]||'',k='club'+(i+1),t=document.querySelector('[data-fav-title="'+k+'"]'),ic=document.querySelector('[data-fav-icon="'+k+'"]');if(t)t.textContent=n||'Club favorit '+(i+1);if(ic){ic.replaceChildren();const logoMap={'BARCA':'https://sidgad.cloud/fecapa/images/logos_clubes/234.png','CH CALDES':'https://sidgad.cloud/fecapa/images/logos_clubes/237.png','CH CALDES RECAM LASER':'https://sidgad.cloud/fecapa/images/logos_clubes/237.png','CP SANT CELONI':'https://sidgad.cloud/fecapa/images/logos_clubes/281.png','FARNERS':'https://sidgad.cloud/fecapa/images/logos_clubes/310_5.png','HOQUEI CLUB RIPOLL':'https://sidgad.cloud/fecapa/images/logos_clubes/319_4.png'};const src=s.clubLogoUrls?.[n]||logoMap[normalize(n)]||'';if(src){const img=document.createElement('img');img.src=src;img.alt='';img.loading='lazy';img.decoding='async';ic.append(img)}}}for(let i=0;i<2;i++){const f=zonaokFavoriteTeam(i),k='team'+(i+1),t=document.querySelector('[data-fav-title="'+k+'"]'),ic=document.querySelector('[data-fav-icon="'+k+'"]'),label=f?(f.name||f.team)+' · '+f.category:'Equip favorit '+(i+1);if(t)t.textContent=label;if(ic){ic.replaceChildren();const player=document.createElement('span');player.className='nav-player-icon';player.setAttribute('aria-hidden','true');player.textContent='👤';ic.append(player);if(f){const initial=document.createElement('span');initial.className='nav-player-initial';initial.setAttribute('aria-hidden','true');initial.textContent=Array.from((f.name||f.team).trim())[0]?.toLocaleUpperCase('ca')||'';ic.append(initial)}}}}
+function zonaokConfigureFavoriteNav(){
+ const s=zonaokFavoriteState(),host=document.getElementById('zok-nav-favorites');
+ const homeTitle=document.getElementById('home-favorites-title');
+ if(homeTitle){const clubs=(s.clubs||[]),teams=(s.teams||[]).map(id=>{const f=zonaokFavoriteTeamFromId(id,s);return f?String(f.name||f.team):''}).filter(Boolean);homeTitle.textContent=clubs.length?clubs.join(' · '):teams.join(' · ')||'Els meus favorits';}
+ if(!host)return;
+ host.replaceChildren();
+ const add=(tab,label,sub,logo,player=false)=>{
+  const b=document.createElement('button');b.type='button';b.className='navbtn';b.dataset.tab=tab;b.title=label;b.setAttribute('aria-label',label);
+  const icon=document.createElement('span');
+  if(logo){icon.className='club-icon';const img=document.createElement('img');img.src=logo;img.alt='';img.loading='lazy';img.decoding='async';icon.append(img)}
+  else if(player){icon.className='nav-person';icon.textContent='👤'}
+  else {icon.className='nav-name';icon.textContent='☆'}
+  const strong=document.createElement('strong');strong.textContent=label;
+  const small=document.createElement('small');small.textContent=sub;
+  b.append(icon,strong,small);host.append(b);
+ };
+ (s.clubs||[]).forEach((name,i)=>add('favclub'+(i+1),name,'Setmana',favoriteLogoFor(name)));
+ (s.teams||[]).forEach((id,i)=>{const f=zonaokFavoriteTeamFromId(id,s);if(!f)return;const child=String(s.teamNames?.[id]||'').trim();add('favteam'+(i+1),child||((f.name||f.team)+' · '+f.category),child?'Temporada':f.category,'',true)});
+}
 window.addEventListener('zonaok:favorites-updated',zonaokConfigureFavoriteNav);
+window.addEventListener('pageshow',zonaokConfigureFavoriteNav);
+window.addEventListener('storage',e=>{if(e.key==='ZONAOK_FAVORITS_V1'||e.key===null)zonaokConfigureFavoriteNav()});
 zonaokConfigureFavoriteNav();
-const refreshFavoriteNavigation=()=>{zonaokConfigureFavoriteNav();renderHome();};
-window.addEventListener('pageshow',event=>{if(event.persisted)refreshFavoriteNavigation();});
-window.addEventListener('storage',event=>{if(event.key==='ZONAOK_FAVORITS_V1'||event.key===null)refreshFavoriteNavigation();});
-function renderSection(key){const section=SECTIONS[key]||({name:key==='favclub1'||key==='favclub2'?((zonaokFavoriteClub(key==='favclub1'?0:1)||'Club favorit')+' · Setmana'):key==='favteam1'||key==='favteam2'?(()=>{const f=zonaokFavoriteTeam(key==='favteam1'?0:1);return f?(f.name||f.team)+' · '+f.category:'Equip favorit'})():key,msg:'Partits del favorit',source:BASE,ids:[]});if(!section)return;const standingsFilters=$$('#standings-filters');if(standingsFilters)standingsFilters.hidden=key!=='classificacions';const classStatus=$$('#zonaok-classificacions-status');if(classStatus)classStatus.hidden=key!=='classificacions';weekText();const seasonToggle=$$('#season-toggle');if(seasonToggle){seasonToggle.hidden=['classificacions','barca','celoni','grupalevi','grupinfantil','favclub1','favclub2','favteam1','favteam2'].includes(key);seasonToggle.textContent=showSeason?'Veure setmana':'Tota la temporada';}$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;const box=$$('#results-list');box.replaceChildren();const {start,end}=chosenWeek();if(key==='classificacions'){renderClassificationSection(box);return;}
-if(key==='favteam1'||key==='favteam2'){
- const i=key==='favteam1'?0:1,fav=zonaokFavoriteTeam(i);
+function renderSection(key){const section=SECTIONS[key]||({name:/^favclub\d+$/.test(key)?((zonaokFavoriteClub(Number(key.replace('favclub',''))-1)||'Club favorit')+' · Setmana'):/^favteam\d+$/.test(key)?(()=>{const f=zonaokFavoriteTeam(Number(key.replace('favteam',''))-1);return f?(f.name||f.team)+' · '+f.category:'Equip favorit'})():key,msg:'Partits del favorit',source:BASE,ids:[]});if(!section)return;const standingsFilters=$$('#standings-filters');if(standingsFilters)standingsFilters.hidden=key!=='classificacions';const classStatus=$$('#zonaok-classificacions-status');if(classStatus)classStatus.hidden=key!=='classificacions';weekText();const seasonToggle=$$('#season-toggle');if(seasonToggle){seasonToggle.hidden=['classificacions','barca','celoni','grupalevi','grupinfantil'].includes(key)||/^favclub\d+$/.test(key)||/^favteam\d+$/.test(key);seasonToggle.textContent=showSeason?'Veure setmana':'Tota la temporada';}$$('#results-title').textContent=section.name;$$('#results-eyebrow').textContent='CONSULTA \u00B7 FECAPA';$$('#results-note').textContent=section.msg;const box=$$('#results-list');box.replaceChildren();const {start,end}=chosenWeek();if(key==='classificacions'){renderClassificationSection(box);return;}
+if(/^favteam\d+$/.test(key)){
+ const i=Number(key.replace('favteam',''))-1,fav=zonaokFavoriteTeam(i);
  const avui=localDate(),any=Number(avui.slice(0,4))-(Number(avui.slice(5,7))<7?1:0);
  const inici=any+'-07-01',fi=(any+1)+'-06-30',nom=any+'/'+(any+1);
  const rows=fav?clubRows().filter(r=>r&&r.iso>=inici&&r.iso<=fi&&
@@ -1638,8 +1669,8 @@ if(key==='favteam1'||key==='favteam2'){
  if(!rows.length)emptyResults(fav?'Cap partit importat d’aquest equip i categoria durant la temporada.':'Selecciona un equip a Favorits per omplir aquest accés.');
  return;
 }
-if(key==='favclub1'||key==='favclub2'){
- const i=key==='favclub1'?0:1,name=zonaokFavoriteClub(i),rows=zonaokFavoriteClubRows(i);
+if(/^favclub\d+$/.test(key)){
+ const i=Number(key.replace('favclub',''))-1,name=zonaokFavoriteClub(i),rows=zonaokFavoriteClubRows(i);
  $$('#results-title').textContent=(name||'Club favorit '+(i+1))+' · Setmana';
  $$('#results-note').textContent=rows.length+' partits del club aquesta setmana.';
  for(const r of rows)box.append(createCard(r,'live'));
@@ -2019,16 +2050,17 @@ window.ZonaOKRefreshSources=async function(){
        mode('import','import');
      }
    };
-   for(const b of document.querySelectorAll('.navbtn[data-tab]')){
-     b.addEventListener('click',()=>{
+   document.querySelector('.zok-bottom-nav')?.addEventListener('click',event=>{
+     const b=event.target.closest('.navbtn[data-tab]');
+     if(!b||b.id==='zok-nav-resultats-7dies')return;
        const tab=b.dataset.tab;
        mode(tab==='home'?'home':'detail',tab);
        // La drecera Magí / Ton mostra TOTA la temporada, no la setmana.
        // Fem servir el botó i la lògica originals de l'app, sense tocar JSON ni filtres.
        // V19: grupalevi i grupinfantil obren TOTA la temporada; sense clics artificials.
        // La setmana només filtra Inici, Barça i CP Sant Celoni.
-     });
-   }
+   });
+   document.querySelector('.zok-header-actions')?.addEventListener('click',event=>{const b=event.target.closest('[data-tab="home"]');if(b){event.preventDefault();mode('home','home')}});
    document.getElementById('close-results')?.addEventListener('click',()=>mode('home','home'));
    // En les pestanyes dels clubs deixem visible la barra de setmanes original.
    // Els seus botons prev/next i la persistència de setmana són del codi estable.
@@ -2222,7 +2254,7 @@ window.ZonaOKRefreshSources=async function(){
  window.ZonaOKPullRefresh=refresh;
 })();
 </script>
-  <script defer src="zonaok-resultats-7dies.js?v=20261123-r6"></script>
-  <script defer src="zonaok-golejadors.js?v=20261123-r2"></script>
+  <script defer src="zonaok-resultats-7dies.js?v=20261124-toolbar-crests"></script>
+  <script defer src="zonaok-golejadors.js?v=20261124-toolbar-crests"></script>
 </body>
 </html>
