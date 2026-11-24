@@ -1,0 +1,60 @@
+name: 'ZonaOK V6 - Verificar IDP reals (sense publicar)'
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/zonaok-calendari-v6-verificar.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zonaok-v6-smoke-test
+  cancel-in-progress: false
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instal·lar Playwright Chromium
+        run: |
+          python -m pip install 'playwright>=1.55,<2'
+          python -m playwright install --with-deps chromium
+      - name: Proves sense perdre partits o actes
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Capturar les primeres tres lligues oficials
+        shell: bash
+        run: |
+          xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \
+            --mode agenda --scope full --limit 3 --offset 0 \
+            --capture captura-agenda-v6.json --report diagnostic-agenda-v6.json
+      - name: Verificar IDP sense publicar dades
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('diagnostic-agenda-v6.json'))
+          print(json.dumps({'version':d.get('version'),'counts':d.get('counts'),
+            'checkedLeagues':d.get('checkedLeagues')},ensure_ascii=False,indent=2))
+          assert d['counts']['withIDs']>=50, 'No hi ha 50 IDP verificats'
+          assert d['counts']['verifiedLeagues']>=1, 'Cap calendari verificat'
+          rows=json.load(open('captura-agenda-v6.json'))['rows']
+          ids=[(r.get('leagueId'),r.get('matchId')) for r in rows if r.get('matchId')]
+          assert len(ids)==len(set(ids)), 'Hi ha IDP duplicats'
+          print(f'Validats {len(ids)} partits amb lliga+IDP.')
+          PY
+      - name: Desar diagnòstics (mai publicar)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zonaok-v6-prova-idp
+          if-no-files-found: ignore
+          path: |
+            diagnostic-agenda-v6.json
+            captura-agenda-v6.json
