@@ -189,7 +189,18 @@
       section.append(heading);
       const list = document.createElement('div');
       list.className = 'zok-favorite-list';
-      const options = scopedOptions(key);
+      const chosen = new Set(selected[key]);
+      const options = scopedOptions(key).sort((a, b) => {
+        const selectedFirst = Number(chosen.has(optionId(b))) - Number(chosen.has(optionId(a)));
+        if (selectedFirst) return selectedFirst;
+        if (key === 'teams') {
+          const clubA = typeof a === 'string' ? '' : a.club || '';
+          const clubB = typeof b === 'string' ? '' : b.club || '';
+          const byClub = clubA.localeCompare(clubB, 'ca', {sensitivity: 'base'});
+          if (byClub) return byClub;
+        }
+        return optionLabel(a).localeCompare(optionLabel(b), 'ca', {sensitivity: 'base'});
+      });
       const availableIds = new Set(options.map(optionId));
       amount.textContent = `${selected[key].filter(id => availableIds.has(id)).length} / ${options.length}`;
       for (const option of options) {
