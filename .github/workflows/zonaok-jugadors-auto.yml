@@ -1,0 +1,64 @@
+name: ZonaOK — JUGADORS TOTAL AUTO (esborrany)
+on:
+  push:
+    branches:
+      - esborrany/jugadors-total-auto
+    paths:
+      - scripts/zonaok_jugadors_auto.py
+      - tests/test_jugadors_auto.py
+      - .github/workflows/zonaok-jugadors-auto.yml
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
+permissions:
+  contents: read
+concurrency:
+  group: zonaok-jugadors-auto-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install playwright
+      - run: python -m playwright install --with-deps chromium
+      - name: Proves de fusió i persistència
+        run: python -m unittest discover -s tests -p test_jugadors_auto.py -v
+      - name: Importar plantilles FECAPA
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT" = "push" ]; then
+            python scripts/zonaok_jugadors_auto.py --only-seed --seed 4789:11173
+          else
+            python scripts/zonaok_jugadors_auto.py --inventory zonaok-classificacions.json --inventory zonaok-tots-agenda.json --seed 4789:11173
+          fi
+      - name: Xifrar candidat amb clau pública opcional
+        if: always()
+        env:
+          AGE_RECIPIENT: ${{ vars.ZONAOK_JUGADORS_AGE_RECIPIENT }}
+        run: |
+          if [ -f private/jugadors-master.json ] && [ -n "$AGE_RECIPIENT" ]; then
+            sudo apt-get update -qq
+            sudo apt-get install -y age
+            age -r "$AGE_RECIPIENT" -o jugadors-master.json.age private/jugadors-master.json
+          fi
+          rm -rf private
+      - name: Diagnòstic agregat
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jugadors-diagnostic
+          path: jugadors-diagnostic.json
+          if-no-files-found: warn
+      - name: Candidat xifrat (si configurat)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jugadors-master-xifrat
+          path: jugadors-master.json.age
+          if-no-files-found: ignore
