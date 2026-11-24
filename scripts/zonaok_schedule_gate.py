@@ -20,7 +20,13 @@ from zoneinfo import ZoneInfo
 MADRID = ZoneInfo("Europe/Madrid")
 DAILY_CRON = "2 6,7,18,19 * * *"
 AGENDA_CRONS = {"0 12 * * *", "0 13 * * *"}
-LIVE_CRON = "1-59/5 * * * *"
+LIVE_CRONS = {
+    "agenda": "1-59/5 * * * *",  # legacy accepted during stagger rollout
+    "directe": "2,7,12,17,22,27,32,37,42,47,52,57 * * * *",
+    "actes": "3,8,13,18,23,28,33,38,43,48,53,58 * * * *",
+    "classificacions": "4,9,14,19,24,29,34,39,44,49,54,59 * * * *",
+}
+LEGACY_LIVE_CRON = "1-59/5 * * * *"
 WINDOW = timedelta(minutes=150)
 FINAL_STATUS = re.compile(r"\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b", re.I)
 
@@ -110,7 +116,7 @@ def fixture_window_count(path: Path, now: datetime) -> int:
 def should_run(mode: str, cron: str, now: datetime, matches: Path) -> tuple[bool, str]:
     local = now.astimezone(MADRID)
     if mode == "agenda":
-        if cron == LIVE_CRON:
+        if cron in (LIVE_CRONS["agenda"], LEGACY_LIVE_CRON):
             count = pending_idp_count(matches, now)
             return (True, f"finished_without_idp:{count}") if count else (False, "no_finished_fixture_without_idp")
         expected = expected_local_hours(cron, now)
@@ -124,7 +130,7 @@ def should_run(mode: str, cron: str, now: datetime, matches: Path) -> tuple[bool
         if local.hour in expected:
             return True, "daily_rest_check"
         return False, "invalid_cet_cest_daily_slot"
-    if cron != LIVE_CRON:
+    if cron not in (LIVE_CRONS[mode], LEGACY_LIVE_CRON):
         return False, "unrecognized_schedule"
     in_window = fixture_window_count(matches, now)
     if mode in ("actes", "classificacions"):
