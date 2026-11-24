@@ -40,26 +40,39 @@
   const aliasCandidates = name => {
     const words = norm(name).split(' ').filter(Boolean);
     if (words.length < 2) return [];
-    const initials = words.map(word => word[0]).join('');
-    const candidates = [initials];
     const last = words[words.length - 1];
-    if (last.length >= 2 && last.length <= 4) {
+    const candidates = [words.map(word => word[0]).join('')];
+    if (last.length >= 2 && last.length <= 5) {
       candidates.push(words.slice(0, -1).map(word => word[0]).join('') + last);
       candidates.push(last);
     }
-    return [...new Set(candidates)].filter(value => value.length >= 2 && value.length <= 5);
+    return [...new Set(candidates)].filter(value => value.length >= 2 && value.length <= 6);
+  };
+  const aliasCompatible = (a, b) => {
+    if (norm(a) === norm(b)) return true;
+    const aa = norm(a).replace(/ /g, ''), bb = norm(b).replace(/ /g, '');
+    if (aa.length <= 6 && bb.length > 6) return aliasCandidates(b).includes(aa);
+    if (bb.length <= 6 && aa.length > 6) return aliasCandidates(a).includes(bb);
+    return false;
   };
   const setTeamAliases = rows => {
-    const names = new Set();
-    for (const row of rows) for (const name of [row.home, row.away]) {
-      const value = baseClubName(name);
-      if (value && norm(value).replace(/ /g, '').length > 5) names.add(value);
-    }
     const candidates = new Map();
-    for (const fullName of names) for (const alias of aliasCandidates(fullName)) {
-      const key = norm(alias).replace(/ /g, '');
-      if (!candidates.has(key)) candidates.set(key, new Set());
-      candidates.get(key).add(fullName);
+    for (const row of rows) {
+      if (!row?.iso || !row?.time) continue;
+      for (const other of rows) {
+        if (other === row || other.iso !== row.iso || other.time !== row.time ||
+            String(other.homeScore ?? '') !== String(row.homeScore ?? '') ||
+            String(other.awayScore ?? '') !== String(row.awayScore ?? '') ||
+            !aliasCompatible(row.home, other.home) || !aliasCompatible(row.away, other.away)) continue;
+        for (const side of ['home', 'away']) {
+          const short = String(row[side] || '');
+          const full = baseClubName(other[side]);
+          const shortKey = norm(short).replace(/ /g, '');
+          if (shortKey.length > 6 || norm(full).replace(/ /g, '').length <= 6) continue;
+          if (!candidates.has(shortKey)) candidates.set(shortKey, new Set());
+          candidates.get(shortKey).add(full);
+        }
+      }
     }
     teamAliases = new Map([...candidates].filter(([, values]) => values.size === 1)
       .map(([alias, values]) => [alias, [...values][0]]));
