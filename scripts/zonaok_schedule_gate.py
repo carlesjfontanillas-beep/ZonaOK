@@ -31,8 +31,7 @@ def scheduled_local_hour(cron: str, now: datetime) -> int | None:
     if cron == DAILY_CRON:
         # One expression represents four seasonal UTC slots.
         utc_hour = now.astimezone(ZoneInfo("UTC")).hour
-        minute = now.astimezone(ZoneInfo("UTC")).minute
-        if minute < 2 or minute > 4 or utc_hour not in (6, 7, 18, 19):
+        if utc_hour not in (6, 7, 18, 19):
             return None
     offset = now.astimezone(MADRID).utcoffset()
     if offset is None:
