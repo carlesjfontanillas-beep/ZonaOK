@@ -1,4 +1,4 @@
-/* Favorits ZonaOK · selector independent, alimentat pels JSON ja publicats. */
+/* Favorits ZonaOK · seleccions independents sobre els catàlegs ja publicats. */
 (() => {
   'use strict';
   const STORAGE_KEY = 'ZONAOK_FAVORITS_V1';
@@ -13,6 +13,7 @@
   const clean = value => String(value ?? '').trim().replace(/\s+/g, ' ');
   const sorted = values => [...new Set(values.map(clean).filter(Boolean))]
     .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
+  const emptySelection = () => Object.fromEntries(GROUPS.map(([key]) => [key, []]));
   const nodes = {
     status: document.getElementById('favorites-status'),
     count: document.getElementById('favorites-count'),
@@ -20,7 +21,7 @@
     search: document.getElementById('favorites-search'),
     clear: document.getElementById('favorites-clear')
   };
-  let catalog = Object.fromEntries(GROUPS.map(([key]) => [key, []]));
+  let catalog = {clubs: [], teams: [], categories: [], competitions: []};
   let selected = readSelection();
 
   function readSelection() {
@@ -29,7 +30,7 @@
       return Object.fromEntries(GROUPS.map(([key]) => [key,
         Array.isArray(value[key]) ? value[key].map(clean).filter(Boolean) : []]));
     } catch (_) {
-      return Object.fromEntries(GROUPS.map(([key]) => [key, []]));
+      return emptySelection();
     }
   }
   function save() {
@@ -41,54 +42,90 @@
     }
     renderCount();
   }
-  function clubName(team, variants) {
-    // Agrupa A/B/C només quan el catàleg confirma que comparteixen club.
-    const value = clean(team);
-    const suffix = value.match(/^(.*)\s+([A-Z])$/i);
-    if (!suffix) return value;
-    const prefix = norm(suffix[1]);
-    return variants.some(other => {
-      const candidate = clean(other).match(/^(.*)\s+([A-Z])$/i);
-      return candidate && norm(candidate[1]) === prefix && candidate[2].toUpperCase() !== suffix[2].toUpperCase();
-    }) ? suffix[1] : value;
-  }
   function categoryName(value) {
-    return clean(value).replace(/\b(OR|PLATA|BRONZE)\s+\d+\b/gi, '$1')
+    return clean(value)
+      .replace(/\s+(?:OR|PLATA|BRONZE)\s+\d+\b/gi, '')
       .replace(/\s+(?:GRUP|GRUPO)\s+[A-Z0-9]+\b/gi, '').trim();
   }
+  function teamKey(team, competition, leagueId) {
+    return ['team', team, competition, leagueId].map(norm).join('|');
+  }
+  function clubLabel(record, allTeams) {
+    const code = norm(record.clubCode);
+    if (code === 'CELONI') return 'CP SANT CELONI';
+    if (code === 'BARCA') return 'BARÇA';
+    const name = clean(record.team);
+    const suffix = name.match(/^(.*)\s+([A-Z])$/i);
+    if (!suffix) return name;
+    const prefix = norm(suffix[1]);
+    const hasSibling = allTeams.some(other => {
+      const candidate = clean(other.team).match(/^(.*)\s+([A-Z])$/i);
+      return candidate && norm(candidate[1]) === prefix &&
+        candidate[2].toUpperCase() !== suffix[2].toUpperCase();
+    });
+    return hasSibling ? suffix[1] : name;
+  }
   function buildCatalog(agenda, classifications) {
-    const teams = [];
+    const teamRecords = new Map();
     const categories = [];
     const competitions = [];
+    const addTeam = (team, competition, category, leagueId, clubCode) => {
+      team = clean(team);
+      if (!team) return;
+      competition = clean(competition);
+      category = clean(category) || categoryName(competition);
+      const key = teamKey(team, competition, leagueId);
+      const record = {key, team, competition, category, leagueId: clean(leagueId), clubCode: clean(clubCode)};
+      const previous = teamRecords.get(key);
+      teamRecords.set(key, previous ? {...previous, ...record, clubCode: record.clubCode || previous.clubCode} : record);
+      categories.push(category);
+      competitions.push(competition);
+    };
+
     for (const row of agenda) {
       if (!row || typeof row !== 'object') continue;
-      for (const field of ['home', 'away']) {
-        const team = clean(row[field]);
-        if (team) teams.push(team);
-      }
-      categories.push(row.category || row.categoria || categoryName(row.competition));
-      competitions.push(row.competition);
+      const competition = row.competition || row.category || row.categoria;
+      const category = row.category || row.categoria || categoryName(competition);
+      const leagueId = row.leagueId || row.league || '';
+      addTeam(row.home, competition, category, leagueId, row.homeClub);
+      addTeam(row.away, competition, category, leagueId, row.awayClub);
     }
+
     const entries = classifications && typeof classifications === 'object'
       ? Object.values(classifications.competitions || classifications.leagues || {}) : [];
     for (const item of entries) {
       if (!item || typeof item !== 'object') continue;
-      categories.push(categoryName(item.category || item.name));
-      competitions.push(item.competition || item.name);
+      const competition = item.competition || item.name;
+      const category = item.category || categoryName(competition);
       for (const row of Array.isArray(item.standings) ? item.standings : []) {
-        const team = clean(row && row.team);
-        if (team) teams.push(team);
+        addTeam(row && row.team, competition, category, item.leagueId || '', '');
       }
+      categories.push(category);
+      competitions.push(competition);
     }
+
+    const records = [...teamRecords.values()];
     catalog = {
-      clubs: sorted(teams.map(team => clubName(team, teams))),
-      teams: sorted(teams),
+      clubs: sorted(records.map(record => clubLabel(record, records))),
+      teams: records.sort((a, b) => a.team.localeCompare(b.team, 'ca', {sensitivity: 'base'}) ||
+        a.competition.localeCompare(b.competition, 'ca', {sensitivity: 'base'})).map(record => ({
+          id: record.key,
+          label: record.competition ? `${record.team} · ${record.competition}` : record.team
+        })),
       categories: sorted(categories),
       competitions: sorted(competitions)
     };
-    selected = Object.fromEntries(GROUPS.map(([key]) => [key,
-      selected[key].filter(value => catalog[key].includes(value))]));
+    selected = Object.fromEntries(GROUPS.map(([key]) => {
+      const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
+      return [key, selected[key].filter(value => allowed.has(value))];
+    }));
     render();
+  }
+  function optionId(option) {
+    return typeof option === 'string' ? option : option.id;
+  }
+  function optionLabel(option) {
+    return typeof option === 'string' ? option : option.label;
   }
   function renderCount() {
     const count = GROUPS.reduce((total, [key]) => total + selected[key].length, 0);
@@ -108,17 +145,19 @@
       section.append(heading);
       const list = document.createElement('div');
       list.className = 'zok-favorite-list';
-      for (const label of catalog[key]) {
+      for (const option of catalog[key]) {
+        const id = optionId(option);
+        const label = optionLabel(option);
         const row = document.createElement('label');
         row.className = 'zok-favorite-option';
         row.hidden = Boolean(query && !norm(label).includes(query));
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.checked = selected[key].includes(label);
+        checkbox.checked = selected[key].includes(id);
         checkbox.addEventListener('change', () => {
           selected[key] = checkbox.checked
-            ? [...selected[key], label]
-            : selected[key].filter(value => value !== label);
+            ? [...selected[key], id]
+            : selected[key].filter(value => value !== id);
           save();
           render();
         });
@@ -152,7 +191,7 @@
       if (standingsResponse.ok) standings = await standingsResponse.json();
       buildCatalog(packet.data.agenda.rows, standings);
       nodes.status.textContent = 'Dades carregades dels JSON publicats a ZonaOK.';
-    } catch (error) {
+    } catch (_) {
       nodes.status.textContent = 'No s’han pogut carregar els catàlegs. Comprova la connexió i torna-ho a provar.';
       nodes.groups.replaceChildren();
       const message = document.createElement('p');
@@ -163,7 +202,7 @@
   }
   nodes.search.addEventListener('input', render);
   nodes.clear.addEventListener('click', () => {
-    selected = Object.fromEntries(GROUPS.map(([key]) => [key, []]));
+    selected = emptySelection();
     save();
     render();
   });
