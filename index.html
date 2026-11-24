@@ -323,7 +323,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
   .zok-favorite-empty-card a{justify-self:start;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 13px;border-radius:11px;background:#ffbd78;color:#102c43;font-weight:800;text-decoration:none}
 </style>
 <script id="zok-favorites-first-visit">
-(()=>{try{const s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}');const any=(Array.isArray(s.clubs)&&s.clubs.some(Boolean))||(Array.isArray(s.teams)&&s.teams.some(Boolean));const key='ZONAOK_FAVORITS_ONBOARDING_V1';if(!any&&!localStorage.getItem(key)){localStorage.setItem(key,'1');location.replace('favorits.html?v=20261124-favcolors');}}catch(_){}})();
+(()=>{try{const s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}');const any=(Array.isArray(s.clubs)&&s.clubs.some(Boolean))||(Array.isArray(s.teams)&&s.teams.some(Boolean));const key='ZONAOK_FAVORITS_ONBOARDING_V1';if(!any&&!localStorage.getItem(key)){localStorage.setItem(key,'1');location.replace('favorits.html?v=20261124-fecapa-crest-map1');}}catch(_){}})();
 </script>
 
 <style id="zonaok-quick-imports">
@@ -361,7 +361,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
       <div class="brand">ZONA<span>OK</span></div>
       <div class="strap">ELS TEUS PARTITS &#xB7; EL TEU HOQUEI</div>
     </div>
-    <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261124-favcolors" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button></div>
+    <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261124-fecapa-crest-map1" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button></div>
   </header>
   <section class="hero">
     <div class="overline">AGENDA PERSONAL</div>
@@ -843,6 +843,11 @@ try {
       if(k&&(n===k||n.startsWith(k+' ')||k.startsWith(n+' ')))return url;
     }
     const target=typeof zonaokFavoriteClubKey==='function'?zonaokFavoriteClubKey(name):n;
+    for(const [club,url] of Object.entries(window.ZonaOKFullAgendaClubLogos||{})){
+      if(!url||!club)continue;
+      const key=typeof zonaokFavoriteClubKey==='function'?zonaokFavoriteClubKey(club):norm(club);
+      if(key===target)return url;
+    }
     for(const row of window.ZonaOKFullAgendaRows||[]){
       for(const side of ['home','away']){
         const team=row?.[side]||'',url=row?.[side+'Logo']||'';
@@ -2051,6 +2056,7 @@ async function loadShared(){
   if(packet?.schema!=='zonaok-all-v1'||packet?.kind!=='agenda'||!Array.isArray(packet.rows)||!packet.rows.length||packet.rows.length>30000)throw Error('L’agenda total no conté partits vàlids');
   const rows=packet.rows.map(parseRow);
   if(rows.some(r=>!r))throw Error('Hi ha partits incorrectes a l’agenda total');
+  window.ZonaOKFullAgendaClubLogos=packet.clubLogos&&typeof packet.clubLogos==='object'?packet.clubLogos:{}
   totalAgendaRows=rows.map(r=>({...r,homeClub:clubOf(r.home),awayClub:clubOf(r.away)}));
   window.ZonaOKFullAgendaRows=totalAgendaRows;
   store=load();
@@ -2061,7 +2067,7 @@ async function loadShared(){
   return true;
  }catch(error){
   console.warn('ZonaOK: no s’ha pogut carregar zonaok-tots-agenda.json',error);
-  totalAgendaRows=[];window.ZonaOKFullAgendaRows=[];
+  totalAgendaRows=[];window.ZonaOKFullAgendaRows=[];window.ZonaOKFullAgendaClubLogos={};
   store=load();store.agenda={season:'',capturedAt:'',rows:[],counts:{total:0}};store.live={rows:[]};
   render();return false;
  }
