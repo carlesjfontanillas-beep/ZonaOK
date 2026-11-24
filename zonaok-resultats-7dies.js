@@ -193,45 +193,13 @@
   }
 
   async function loadData() {
-    // Nou sistema independent de 2 JSONs: agenda completa + resultats de 7 dies.
-    // En directe MAI publica un catàleg de partits, només actualitza l’agenda.
-    try {
-      const [res, agendaRes] = await Promise.all([
-        fetch(`zonaok-tots-resultats-7dies.json?t=${Date.now()}`, {cache:'no-store'}),
-        fetch(`zonaok-tots-agenda.json?t=${Date.now()}`, {cache:'no-store'})
-      ]);
-      let agendaRows = [];
-      if (agendaRes.ok) {
-        try {
-          const agendaPacket = await agendaRes.json();
-          if (agendaPacket?.schema === 'zonaok-all-v1' && agendaPacket?.kind === 'agenda' &&
-              Array.isArray(agendaPacket.rows)) agendaRows = agendaPacket.rows;
-        } catch (_) { /* els resultats continuen disponibles sense el catàleg */ }
-      }
-      if (res.ok) {
-        const pack = await res.json();
-        if (pack?.schema === 'zonaok-all-v1' && pack?.kind === 'resultats-7dies' &&
-            Array.isArray(pack.rows) && (pack.rows.length > 0 || pack.agendaCount > 0)) {
-          publishedAt = pack.publishedAt || '';
-          return {__all:true, rows:pack.rows, agendaRows};
-        }
-      }
-    } catch (_) { /* encara no publicat; mantenim la V3 actual */ }
-    let remote = null;
-    try {
-      const response = await fetch(`zonaok-data.json?t=${Date.now()}`, {cache:'no-store'});
-      if (response.ok) {
-        const packet = await response.json();
-        if (packet?.version === 3 && Array.isArray(packet.data?.agenda?.rows)) {
-          remote = packet.data;
-          publishedAt = packet.publishedAt || packet.data.agenda?.capturedAt || '';
-        }
-      }
-    } catch (_) { /* desconnectat */ }
-    let memory = null;
-    try { memory = window.ZonaOKSafeStorage?.read?.() || null; } catch (_) {}
-    if (!remote && !Array.isArray(memory?.agenda?.rows)) throw new Error('No s’han pogut carregar els JSON publicats.');
-    return remote || memory;
+    const response = await fetch(`zonaok-tots-agenda.json?t=${Date.now()}`, {cache:'no-store'});
+    if (!response.ok) throw new Error('No s’ha pogut carregar l’agenda total.');
+    const packet = await response.json();
+    if (packet?.schema !== 'zonaok-all-v1' || packet?.kind !== 'agenda' || !Array.isArray(packet.rows) || !packet.rows.length)
+      throw new Error('L’agenda total és buida o no té el format esperat.');
+    publishedAt = packet.capturedAt || packet.publishedAt || '';
+    return {__all:true, rows:packet.rows, agendaRows:packet.rows};
   }
 
   // Enllaços d'acta independents de l'Agenda. No modifiquen marcadors ni filtres.
@@ -420,8 +388,7 @@
     status.textContent = 'Carregant dades de GitHub…';
     try {
       const data = await loadData();
-      matches = data.__all ? rowsInLastSevenDays(data.rows) : combinedAgenda(data);
-      matches = await enrichActes(matches);
+      matches = rowsInLastSevenDays(data.rows);
       setTeamAliases(matches, data.agendaRows || []);
       updateClubOptions();
       updateCategoryOptions();
