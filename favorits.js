@@ -150,7 +150,8 @@
         })),
       categories: sorted(categories),
       competitions: sorted(competitions),
-      teamRecords: enrichedRecords
+      teamRecords: enrichedRecords,
+      agendaRows: agenda
     };
     const clubsByName = new Map(catalog.clubs.map(club => [norm(club), club]));
     const clubAliases = new Map(), migratedClubs = [];
@@ -284,6 +285,7 @@
             : selected[key].filter(value => value !== id);
           save();
           render();
+          if (key === 'clubs' || key === 'teams') void discoverClubLogos();
         });
         const logoRecord = key === 'teams' ? catalog.teamRecords.find(record => record.key === id) : null;
         const logoUrl = key === 'clubs' ? selected.clubLogoUrls[id] : logoRecord ? (selected.teamLogoUrls[id] || selected.clubLogoUrls[logoRecord.club]) : '';
@@ -330,65 +332,50 @@
     renderCount();
   }
   async function discoverClubLogos() {
-    const chosen = catalog.teamRecords.filter(record =>
-      selected.clubs.includes(record.club) || selected.teams.includes(record.key) ||
-      selected.categories.includes(record.category) || selected.competitions.includes(record.competition));
-    const leagues = [...new Set(chosen.map(record => record.leagueId).filter(id => /^\d+$/.test(String(id))))].slice(0, 50);
-    let changed = false, cursor = 0;
-    async function readLeague(league) {
-      try {
-        const response = await fetch(`https://www.hoqueipatins.fecapa.cat/?liga=${encodeURIComponent(league)}&vista=plantillas`, {mode:'cors',cache:'no-store',signal:AbortSignal.timeout(10000)});
-        if (!response.ok) return;
-        const doc = new DOMParser().parseFromString(await response.text(),'text/html');
-        for (const image of doc.querySelectorAll('img[src*="logos_clubes/"]')) {
-          const url = new URL(image.getAttribute('src'), 'https://www.hoqueipatins.fecapa.cat/').href;
-          if (!/^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(url)) continue;
-          const alt = norm(image.alt || image.title || '');
-          if (!alt) continue;
-          const club = catalog.teamRecords.find(record => record.leagueId === league && [record.club,record.clubCode].some(value => {
-            const alias=norm(value);return alias && (alias===alt||alt.includes(alias)||alias.includes(alt));
-          }));
-          if (club && !selected.clubLogoUrls[club.club]) {
-            selected.clubLogoUrls[club.club]=url;changed=true;
-          }
-          for (const record of catalog.teamRecords.filter(record=>record.leagueId===league)) {
-            const aliases=[record.team,record.club,record.clubCode].map(norm).filter(Boolean);
-            if (aliases.some(alias=>alt===alias||alt.includes(alias)||alias.includes(alt))) {
-              if (!selected.teamLogoUrls[record.key]) {selected.teamLogoUrls[record.key]=url;changed=true;}
-              if (!selected.teamLogoUrls[record.team]) {selected.teamLogoUrls[record.team]=url;changed=true;}
-              if (!selected.clubLogoUrls[record.club]) {selected.clubLogoUrls[record.club]=url;changed=true;}
-            }
-          }
-        }
-      } catch (_) { /* La xarxa pot limitar la lectura de la plantilla des d'un altre domini. */ }
+    const safeLogo = value => /^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(String(value||''));
+    const clubKey = value => {
+      const key = norm(clubBaseName(value));
+      if (/\bSANT CELONI\b/.test(key)) return 'CP SANT CELONI';
+      if (/\b(BARCA|FC BARCELONA|FCBETERANS|FCBETRANS)\b/.test(key)) return 'BARÇA';
+      return key;
+    };
+    let changed = false;
+    for (const row of catalog.agendaRows || []) for (const side of ['home','away']) {
+      const team = String(row?.[side] || ''), logo = row?.[side+'Logo'] || '';
+      if (!team || !safeLogo(logo)) continue;
+      const key = clubKey(team);
+      const club = selected.clubs.find(name => clubKey(name) === key);
+      if (club && !selected.clubLogoUrls[club]) { selected.clubLogoUrls[club] = logo; changed = true; }
+      for (const record of catalog.teamRecords.filter(item => clubKey(item.team) === key)) {
+        if (!selected.teamLogoUrls[record.key]) { selected.teamLogoUrls[record.key] = logo; changed = true; }
+        if (!selected.clubLogoUrls[record.club]) { selected.clubLogoUrls[record.club] = logo; changed = true; }
+      }
     }
-    const worker = async()=>{while(cursor<leagues.length){const league=leagues[cursor++];await readLeague(league);}};
-    await Promise.all(Array.from({length:Math.min(4,leagues.length)},worker));
-    if(changed){save();window.dispatchEvent(new CustomEvent('zonaok:favorites-updated'));}
+    if (changed) { save(); window.dispatchEvent(new CustomEvent('zonaok:favorites-updated')); }
   }
   async function load() {
     try {
-      const [dataResponse, standingsResponse] = await Promise.all([
-        fetch(`zonaok-data.json?favorits=${Date.now()}`, {cache: 'no-store'}),
+      const [agendaResponse, standingsResponse] = await Promise.all([
+        fetch(`zonaok-tots-agenda.json?favorits=${Date.now()}`, {cache: 'no-store'}),
         fetch(`zonaok-classificacions.json?favorits=${Date.now()}`, {cache: 'no-store'})
       ]);
-      if (!dataResponse.ok) throw new Error(`Agenda: ${dataResponse.status}`);
-      const packet = await dataResponse.json();
-      if (packet.version !== 3 || !Array.isArray(packet.data?.agenda?.rows))
-        throw new Error('format d’agenda no reconegut');
+      if (!agendaResponse.ok) throw new Error(`Agenda total: ${agendaResponse.status}`);
+      const packet = await agendaResponse.json();
+      if (packet?.schema !== 'zonaok-all-v1' || packet?.kind !== 'agenda' || !Array.isArray(packet.rows) || !packet.rows.length)
+        throw new Error('L’agenda total està buida o té un format incorrecte.');
       let standings = {};
       if (standingsResponse.ok) standings = await standingsResponse.json();
-      buildCatalog(packet.data.agenda.rows, standings);
+      buildCatalog(packet.rows, standings);
       nodes.status.textContent = location.protocol === 'file:'
         ? 'Previsualització local: Safari pot separar les seleccions de Favorits i Inici.'
-        : 'Dades carregades dels JSON publicats a ZonaOK.';
+        : 'Clubs, equips i escuts carregats de l’agenda total FECAPA.';
       discoverClubLogos();
     } catch (_) {
-      nodes.status.textContent = 'No s’han pogut carregar els catàlegs. Comprova la connexió i torna-ho a provar.';
+      nodes.status.textContent = 'No s’ha pogut carregar l’agenda total. Revisa zonaok-tots-agenda.json i torna-ho a provar.';
       nodes.groups.replaceChildren();
       const message = document.createElement('p');
       message.className = 'empty';
-      message.textContent = 'Els favorits utilitzen zonaok-data.json i zonaok-classificacions.json.';
+      message.textContent = 'Els clubs, equips, partits i escuts es carreguen de zonaok-tots-agenda.json.';
       nodes.groups.append(message);
     }
   }
