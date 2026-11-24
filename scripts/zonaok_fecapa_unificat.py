@@ -178,67 +178,79 @@ JS_AGENDA = r"""() => {
   };
   const time=v=>{const m=C(v).match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);return m?m[1].padStart(2,'0')+':'+m[2]:'';};
   const score=v=>{const m=C(v).match(/(?:^|\s)(\d{1,3})\s*[-–:]\s*(\d{1,3})(?:\s|$)/);return m?[+m[1],+m[2]]:[null,null];};
-  const meta=tr=>{
-    const pairs=new Set(), looseIDs=new Set();
-    const inspect=raw=>{
-      raw=C(raw); if(!raw)return;
-      const part=raw.match(/(?:[?&]partido=|[?&]idp=|fecapa_gr_)(\d{4,10})(?:\b|_)/i);
-      if(part)looseIDs.add(part[1]);
-      // Do not infer the league from location.href: this can be a generic listing.
-      const league=raw.match(/[?&]liga=(\d{4,6})\b/i);
-      if(part&&league)pairs.add(league[1]+':'+part[1]);
-      try{
-        const u=new URL(raw,location.href);
-        if(u.protocol!=='https:'||!/^(?:www\.)?hoqueipatins\.fecapa\.cat$/i.test(u.hostname))return;
-        const li=u.searchParams.get('liga')||'',id=u.searchParams.get('partido')||'';
-        if(/^\d{4,6}$/.test(li)&&/^\d{4,10}$/.test(id))pairs.add(li+':'+id);
-      }catch(_){}
-    };
-    for(const node of [tr,...tr.querySelectorAll('[data-idp],[data-partido],[data-partido-id],[data-liga],[data-league-id],[onclick],a[href]')]){
-      const d=node.dataset||{};
-      const li=d.liga||d.leagueId||d.ligaId||'',id=d.idp||d.partido||d.partidoId||d.idPartido||d.matchId||'';
-      if(/^\d{4,10}$/.test(id))looseIDs.add(id);
-      if(/^\d{4,6}$/.test(li)&&/^\d{4,10}$/.test(id))pairs.add(li+':'+id);
-      for(const k of ['href','onclick','data-url','data-href','data-link'])inspect(node.getAttribute?.(k));
+  // La taula /ag/ té capçaleres amb colspan: "Local" i "Visitant"
+  // ocupen dues cel·les cadascun (logo buit + nom). Indexar les 7
+  // capçaleres com si fossin 7 <td> desplaça totes les dades.
+  const headerColumns=tr=>{
+    let start=0;
+    return [...tr.querySelectorAll(':scope > th, :scope > td')].map(h=>{
+      const span=Math.max(1,Number(h.colSpan)||1);
+      const item={header:N(txt(h)),start,end:start+span};start+=span;return item;
+    });
+  };
+  const rowColumns=tr=>{
+    const values=[];
+    for(const cell of tr.querySelectorAll(':scope > th, :scope > td')){
+      const span=Math.max(1,Number(cell.colSpan)||1);
+      values.push(cell);
+      // Les cel·les combinades del cos es repeteixen per cobrir l'índex visual.
+      for(let j=1;j<span;j++)values.push(cell);
     }
-    const [pair]=pairs;
-    if(pairs.size>1)return {matchId:'',leagueId:'',actaUrl:'',ambiguousId:true};
-    const leagueId=pair?pair.split(':')[0]:'', matchId=pair?pair.split(':')[1]:(looseIDs.size===1?[...looseIDs][0]:'');
-    return {matchId,leagueId,actaUrl:pair?'https://www.hoqueipatins.fecapa.cat/?liga='+leagueId+'&vista=calendar&partido='+matchId:'',ambiguousId:false};
+    return values;
   };
-  const logo=el=>{
-    const src=el?.querySelector('img[src]')?.getAttribute('src')||'';
-    try{const u=new URL(src,location.href);return u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&/^\/fecapa\/images\/logos_clubes\/\d+\.png$/i.test(u.pathname)?u.href:'';}catch(_){return '';}
+  const choose=(cells,header)=>{
+    if(!header)return '';
+    const contents=cells.slice(header.start,header.end).map(txt).filter(Boolean);
+    // En grups logo+nom, no prenem el <td> buit de la imatge.
+    return contents.length?contents[contents.length-1]:'';
   };
-  const rows=[];let recognized=0,examined=0,invalid=0;
+  const logo=(cells,header)=>{
+    if(!header)return '';
+    const src=cells.slice(header.start,header.end).map(x=>x?.querySelector('img[src]')?.getAttribute('src')).find(Boolean)||'';
+    try{const u=new URL(src,location.href);return u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&
+      /^\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.png$/i.test(u.pathname)?u.href:'';}catch(_){return '';}
+  };
+  // /ag/ és ÚNICAMENT la font d'horaris, equips, pista i marcadors.
+  // No es llegeixen IDP, lliga ni actes de cap URL, atribut o clic d'aquesta taula.
+  // Per fer-ho s'usen EXCLUSIVAMENT les vistes de calendari de competició.
+  const rows=[],sampleValidAttributes=[];
+  let recognized=0,examined=0,invalid=0,invalidDate=0,invalidTeams=0;
   for(const table of document.querySelectorAll('table')){
     const trs=[...table.querySelectorAll('tr')];
-    const head=table.querySelector('thead tr')||trs.find(t=>t.querySelector('th'));
+    const head=table.querySelector('thead tr')||trs.find(tr=>tr.querySelector('th'));
     if(!head)continue;
-    const headers=[...head.querySelectorAll('th,td')].map(x=>N(txt(x)));
-    const find=r=>headers.findIndex(x=>r.test(x));
-    const iDate=find(/^(DATA|DIA|DATE|FECHA)/),iTime=find(/^(HORA|HOUR)/);
-    const iHome=find(/(^| )(EQUIP LOCAL|EQUIPO LOCAL|LOCAL|CASA|HOME)( |$)/);
-    const iAway=find(/VISITANT|VISITANTE|VISITOR|AWAY/);
-    const iComp=find(/COMPET|CATEG|LLIGA|LIGA/),iScore=find(/RESULT|MARCADOR|SCORE/),iVenue=find(/PISTA|PAVELL|INSTAL|LLOC|SEU|PABELL/);
-    if(iHome<0||iAway<0)continue;
+    const h=headerColumns(head),find=re=>h.find(v=>re.test(v.header));
+    const date=find(/^(DATA|DIA|DATE|FECHA)/),hour=find(/^(HORA|HOUR)/);
+    const home=find(/(^| )(EQUIP LOCAL|EQUIPO LOCAL|LOCAL|CASA|HOME)( |$)/);
+    const away=find(/VISITANT|VISITANTE|VISITOR|AWAY/);
+    const comp=find(/COMPET|CATEG|LLIGA|LIGA/),result=find(/RESULT|MARCADOR|SCORE/);
+    const venue=find(/PISTA|PAVELL|INSTAL|LLOC|SEU|PABELL/);
+    if(!home||!away||!date||!hour)continue;
     recognized++;
     const group=txt(table.closest('.sidgad-liga-grupo,section')?.querySelector('h2,h3,.sidgad-liga-header-separador')||table.caption);
     for(const tr of trs.slice(trs.indexOf(head)+1)){
-      const cells=[...tr.querySelectorAll(':scope > th, :scope > td')];
-      if(!cells.length)continue;
+      const cells=rowColumns(tr);if(!cells.length)continue;
       examined++;
-      const vals=cells.map(txt),home=vals[iHome]||'',away=vals[iAway]||'';
-      const iso=isoDate(iDate>=0?vals[iDate]:vals.join(' '))||isoDate(vals.join(' '));
-      const hour=time(iTime>=0?vals[iTime]:vals.join(' '))||time(vals.join(' '));
-      if(!home||!away||N(home)===N(away)||!iso||!hour){invalid++;continue;}
-      const s=score(iScore>=0?vals[iScore]:txt(tr.querySelector('.sidgad-resultado-texto')));
-      rows.push({iso,time:hour,competition:iComp>=0?vals[iComp]:group,home,away,
-        homeScore:s[0],awayScore:s[1],venue:iVenue>=0?vals[iVenue]:'',
-        homeLogo:logo(cells[iHome]),awayLogo:logo(cells[iAway]),...meta(tr),status:''});
+      const homeName=choose(cells,home),awayName=choose(cells,away);
+      if(!homeName||!awayName||N(homeName)===N(awayName)){invalid++;invalidTeams++;continue;}
+      const iso=isoDate(choose(cells,date)),start=time(choose(cells,hour));
+      if(!iso||!start){invalid++;invalidDate++;continue;}
+      const s=score(choose(cells,result));
+      if(sampleValidAttributes.length<8)sampleValidAttributes.push({
+        iso,competition:choose(cells,comp)||group,
+        param_game:C(tr.getAttribute('param_game')).slice(0,120),
+        fecha:C(tr.getAttribute('fecha')).slice(0,80),
+        hasOnclick:tr.hasAttribute('onclick')
+      });
+      rows.push({iso,time:start,competition:choose(cells,comp)||group,
+        home:homeName,away:awayName,homeScore:s[0],awayScore:s[1],
+        venue:choose(cells,venue),homeLogo:logo(cells,home),awayLogo:logo(cells,away),
+        leagueId:'',matchId:'',actaUrl:'',status:''});
     }
   }
-  return {rows,counts:{tables:document.querySelectorAll('table').length,recognizedTables:recognized,examined,invalid,exported:rows.length}};
+  return {rows,counts:{tables:document.querySelectorAll('table').length,
+    recognizedTables:recognized,examined,invalid,invalidDate,invalidTeams,
+    exported:rows.length,withReliableIDs:0,sampleValidAttributes}};
 }"""
 
 JS_DIRECTE = r"""() => {
@@ -565,6 +577,9 @@ async def collect_agenda(ctx,args,diagnostic):
             await page.goto(AGENDA_URL,wait_until='domcontentloaded',timeout=40000)
             await page_ready(page,'table',19000)
             diagnostic.setdefault('domEvidence',{})['agenda'] = await page.evaluate(JS_DOM_DIAGNOSTIC)
+            # Inspecció no destructiva d'una fila existent (després de parsejar
+            # la taula es provarà un clic per veure si SIDGAD exposa liga+IDP).
+            # No convertim mai el valor param_game en IDP: és un token intern.
             # IDs de selectors i enllaços de l'Agenda REAL, no d'XHR genèrics.
             catalogue.update(await page.evaluate(JS_LEAGUES))
             await set_agenda_filters(page,diagnostic,args.scope)
@@ -581,6 +596,7 @@ async def collect_agenda(ctx,args,diagnostic):
                 if not await next_page(page):break
         except Exception as exc:
             errors.append('Agenda /ag/: '+str(exc)[:160])
+        # No fem clic ni busquem actes/IDP a /ag/. Només captura horaris.
         prev=load_unified(CANONICAL)
         ids=[lid for lid in catalogue if re.fullmatch(r'\d{4,6}',str(lid))]
         leagues,meta=select_league_batch(ids,args,prev,diagnostic)
@@ -601,12 +617,11 @@ async def collect_agenda(ctx,args,diagnostic):
                 if len(diagnostic.setdefault('domEvidence',{}).get('leagues',[])) < 5:
                     diagnostic['domEvidence'].setdefault('leagues',[]).append({
                         'leagueId':lid, **(await page.evaluate(JS_DOM_DIAGNOSTIC))})
-                # Table view is supported, but no row without BOTH IDs may
-                # inherit the requested league ID.
-                tabular=await page.evaluate(JS_AGENDA)
-                accepted,status=verified_league_rows(lid,data['rows'],tabular.get('rows',[]))
+                # IDs/actes provenen NOMÉS de les targetes del calendari de lliga.
+                # Mai no fem servir la taula de l'Agenda general com a substitut.
+                accepted,status=verified_league_rows(lid,data['rows'],[])
                 status.update({'leagueId':lid,'rows':len(accepted),'rawRows':data['count'],
-                               'tableRows':len(tabular.get('rows',[])),
+                               'tableRows':0,
                                'examined':data.get('examined',0),
                                'ambiguousIds':data.get('ambiguousIds',0),
                                'pageUrl':page.url})
@@ -624,6 +639,7 @@ async def collect_agenda(ctx,args,diagnostic):
         finalize_agenda_selection(meta,checked,prev.get('sources',{}).get('agenda',{}))
         rows=unique_rows(rows,'agenda')
         diagnostic['sourceUrl']=AGENDA_URL
+        diagnostic['idpSources']=['competicio-calendar']
         diagnostic['checkedLeagues']=checked
         diagnostic['warnings'].extend(errors)
         diagnostic['counts']={'agendaTables':sum(x.get('recognizedTables',0) for x in counts),
@@ -632,8 +648,15 @@ async def collect_agenda(ctx,args,diagnostic):
                               'validRows':len(rows),
                               'withIDs':sum(bool(r.get('matchId') and r.get('leagueId')) for r in rows),
                               'genericAgendaRows':sum(x.get('exported',0) for x in counts)}
-        diagnostic['coverage']='Els calendaris només compten com a verificats si cada fila identificada té liga+IDP propi i el DOM no barreja altres lligues. Pendents a selection.pendingLeagueIds.'
-        diagnostic['publishSafe']=not (args.scope=='full' and not meta['verifiedLeagues'])
+        diagnostic['coverage']='La taula /ag/ només aporta agenda; no s’hi busquen ni IDP ni actes. Les actes es busquen a calendaris de lliga.'
+        # A full schedule can be published independently of acta identification.
+        # IDP coverage is NOT a precondition to capture genuine /ag/ fixtures.
+        generic_count=sum(x.get('exported',0) for x in counts)
+        diagnostic['publishSafe']=bool(generic_count or meta['verifiedLeagues'])
+        diagnostic['agendaVerified']=bool(generic_count)
+        diagnostic['actaIdCoverageVerified']=bool(meta['verifiedLeagues'])
+        if generic_count and not meta['verifiedLeagues']:
+            diagnostic['warnings'].append('Agenda general llegida sense IDP (correcte). Les actes s’han de vincular des dels calendaris per lliga.')
         if not rows:
             diagnostic['errors'].append('Cap partit vàlid recuperat de /ag/ ni calendaris FECAPA')
             diagnostic['publishSafe']=False
@@ -759,7 +782,7 @@ async def collect_actes(ctx,args,diagnostic):
 async def collect(args):
     from playwright.async_api import async_playwright
     diagnostic={'mode':args.mode,'source':'FECAPA-PLAYWRIGHT','checkedAt':utc_now(),
-                'season':SEASON,'warnings':[],'errors':[], 'version':4,'scope':args.scope}
+                'season':SEASON,'warnings':[],'errors':[], 'version':5,'scope':args.scope}
     async with async_playwright() as p:
         browser,ctx=await chromium_context(p)
         try:
@@ -845,8 +868,11 @@ def merge_unified(packet,previous,mode):
     timestamp=check_when(packet.get('capturedAt'))
     incoming=packet.get('rows')
     if not isinstance(incoming,list):raise ValueError('Captura no reconeguda')
-    if mode=='agenda' and packet.get('scope')=='full' and packet.get('selection',{}).get('verifiedLeagues')==0:
-        raise ValueError('Cap lliga verificada amb liga + IDP: publicació bloquejada; revisar diagnostic-agenda-auto.json')
+    if mode=='agenda' and packet.get('scope')=='full' and not (
+        packet.get('counts',{}).get('genericAgendaRows',0)>0
+        or packet.get('selection',{}).get('verifiedLeagues',0)>0
+    ):
+        raise ValueError('Ni Agenda general amb partits ni calendaris de lliga verificats: publicació bloquejada')
     if not incoming and packet.get('scope')!='fast':raise ValueError('Captura buida en mode full: no publicar')
     if previous.get('schema')!='zonaok-partits-total-v1':raise ValueError('Esquema unificat desconegut')
     if previous.get('season')!=SEASON:raise ValueError('Temporada inesperada al JSON')
@@ -996,7 +1022,7 @@ def main():
         Path(args.report).write_text(json.dumps(diag,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         print(json.dumps(diag,ensure_ascii=False,indent=2))
         if args.mode=='agenda' and (not packet['rows'] or not diag.get('publishSafe',True)):
-            print('ERROR: Agenda sense partits verificats. Diagnòstic DESAT a '+args.report+'; no publicar.',file=sys.stderr)
+            print('ERROR: Agenda no publicable; revisar registres de liga+IDP. Diagnòstic DESAT a '+args.report,file=sys.stderr)
             return 2
         return 0
     packet=json.loads(Path(args.capture).read_text(encoding='utf-8'))
