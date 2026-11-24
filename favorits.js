@@ -45,33 +45,53 @@
     }
     renderCount();
   }
-  function categoryName(value) {
+  function competitionName(value) {
     return clean(value)
-      .replace(/\s+(?:OR|PLATA|BRONZE)\s+\d+\b/gi, '')
+      .replace(/\b(OR|PLATA|BRONZE)\s+\d+\b/gi, '$1')
       .replace(/\s+(?:GRUP|GRUPO)\s+[A-Z0-9]+\b/gi, '').trim();
   }
-  function teamKey(team, competition, leagueId) {
-    return ['team', team, competition, leagueId].map(norm).join('|');
+  function teamKey(team, category) {
+    return ['team', team, category].map(norm).join('|');
   }
   function clubLabel(record) {
     const code = norm(record.clubCode);
-    if (code === 'CELONI') return 'CP SANT CELONI';
-    if (code === 'BARCA') return 'BARÇA';
+    const team = norm(record.team);
+    // Reutilitza les equivalències que l'app aplica als noms FECAPA.
+    if (code === 'CELONI' || /^CPSC(?:[AB]| [AB])?$/.test(team) || /\bSANT CELONI\b/.test(team))
+      return 'CP SANT CELONI';
+    if (code === 'BARCA' || /^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETERANS|FCBETRANS)(?: [A-Z0-9]+)?$/.test(team))
+      return 'BARÇA';
     const name = clean(record.team);
-    // Segueix el patró de noms de clubs de ZonaOK: A/B/C/D final identifica equip.
+    // La lletra final A/B/C/D identifica un equip dins del club.
     return name.replace(/\s+[A-D]$/i, '');
   }
   function buildCatalog(agenda, classifications) {
     const teamRecords = new Map();
     const categories = [];
     const competitions = [];
-    const addTeam = (team, competition, category, leagueId, clubCode) => {
+    const entries = classifications && typeof classifications === 'object'
+      ? Object.values(classifications.competitions || classifications.leagues || {}) : [];
+    const classificationByKey = new Map();
+    const classificationByName = new Map();
+    for (const item of entries) {
+      if (!item || typeof item !== 'object') continue;
+      const exactName = clean(item.name || item.category || item.competition);
+      const league = clean(item.leagueId);
+      const descriptor = {category: exactName, competition: clean(item.competition) || competitionName(exactName)};
+      if (exactName) {
+        if (league) classificationByKey.set(`${norm(league)}|${norm(exactName)}`, descriptor);
+        const nameKey = norm(exactName);
+        if (!classificationByName.has(nameKey)) classificationByName.set(nameKey, descriptor);
+        else classificationByName.set(nameKey, null);
+      }
+    }
+    const addTeam = (team, category, competition, leagueId, clubCode) => {
       team = clean(team);
       if (!team) return;
-      competition = clean(competition);
-      category = clean(category) || categoryName(competition);
-      const key = teamKey(team, competition, leagueId);
-      const record = {key, team, competition, category, leagueId: clean(leagueId), clubCode: clean(clubCode)};
+      category = clean(category) || competitionName(competition);
+      competition = clean(competition) || competitionName(category);
+      const key = teamKey(team, category);
+      const record = {key, team, category, competition, leagueId: clean(leagueId), clubCode: clean(clubCode)};
       const previous = teamRecords.get(key);
       teamRecords.set(key, previous ? {...previous, ...record, clubCode: record.clubCode || previous.clubCode} : record);
       categories.push(category);
@@ -80,21 +100,22 @@
 
     for (const row of agenda) {
       if (!row || typeof row !== 'object') continue;
-      const competition = row.competition || row.category || row.categoria;
-      const category = row.category || row.categoria || categoryName(competition);
-      const leagueId = row.leagueId || row.league || '';
-      addTeam(row.home, competition, category, leagueId, row.homeClub);
-      addTeam(row.away, competition, category, leagueId, row.awayClub);
+      const exactName = clean(row.competition || row.category || row.categoria);
+      const leagueId = clean(row.leagueId || row.league || '');
+      const descriptor = classificationByKey.get(`${norm(leagueId)}|${norm(exactName)}`) ||
+        classificationByName.get(norm(exactName));
+      const category = descriptor?.category || exactName;
+      const competition = descriptor?.competition || competitionName(exactName);
+      addTeam(row.home, category, competition, leagueId, row.homeClub);
+      addTeam(row.away, category, competition, leagueId, row.awayClub);
     }
 
-    const entries = classifications && typeof classifications === 'object'
-      ? Object.values(classifications.competitions || classifications.leagues || {}) : [];
     for (const item of entries) {
       if (!item || typeof item !== 'object') continue;
-      const competition = item.competition || item.name;
-      const category = item.category || categoryName(competition);
+      const category = clean(item.name || item.category || item.competition);
+      const competition = clean(item.competition) || competitionName(category);
       for (const row of Array.isArray(item.standings) ? item.standings : []) {
-        addTeam(row && row.team, competition, category, item.leagueId || '', '');
+        addTeam(row && row.team, category, competition, item.leagueId || '', '');
       }
       categories.push(category);
       competitions.push(competition);
@@ -105,9 +126,9 @@
     catalog = {
       clubs: sorted(enrichedRecords.map(record => record.club)),
       teams: enrichedRecords.sort((a, b) => a.team.localeCompare(b.team, 'ca', {sensitivity: 'base'}) ||
-        a.competition.localeCompare(b.competition, 'ca', {sensitivity: 'base'})).map(record => ({
+        a.category.localeCompare(b.category, 'ca', {sensitivity: 'base'})).map(record => ({
           id: record.key,
-          label: record.competition ? `${record.team} · ${record.competition}` : record.team,
+          label: record.category ? `${record.team} · ${record.category}` : record.team,
           club: record.club
         })),
       categories: sorted(categories),
