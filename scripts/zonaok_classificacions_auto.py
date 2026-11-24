@@ -348,14 +348,35 @@ async def collect(args) -> dict:
         await discover.gather_network()
         await discover_page.close()
 
-        ids=sorted(discover.ids,key=lambda x:int(x))
+        # Evitar IDs que només han aparegut en respostes HTML/XHR antigues.
+        # Per a la temporada actual preferim el selector de /ag/, el JSON
+        # existent i les referències que ja tenim confirmades.
+        trust=lambda source: ('/ag/' in source and ('selector-competicio' in source or 'option-url' in source or
+                                                   ':enllac' in source)) or source in ('json-existent','referencia-coneguda')
+        active_ids=[lid for lid,sources in discover.ids.items() if any(trust(x) for x in sources)]
+        ids=sorted(active_ids,key=lambda x:int(x))
+        if len(ids)<20:
+            diag['warnings'].append('Menys de 20 IDs amb origen de catàleg actual; revisar cobertura')
         if len(ids)>MAX_DISCOVERED:
             diag["warnings"].append(f"{len(ids)} IDs possibles, límit de seguretat {MAX_DISCOVERED}")
             ids=ids[:MAX_DISCOVERED]
         diag["discovery"]=[{"leagueId":value,"sources":sorted(discover.ids[value])} for value in ids]
-        if args.limit:
-            priority=[v for v in SEEDS if v in ids]
-            ids=(priority+[v for v in ids if v not in priority])[:args.limit]
+        if args.scope=='full':
+            offset=args.offset
+            ids=ids[offset:offset+args.limit] if args.limit else ids[offset:]
+        else:
+            # Les lligues de la pantalla actual sempre s'actualitzen;
+            # la resta rota diàriament, sense alterar l'estructura del JSON.
+            known=list(dict.fromkeys(str(v.get('leagueId')) for v in existing_groups.values()
+                        if isinstance(v,dict) and str(v.get('leagueId')) in ids))
+            pinned=[v for v in SEEDS if v in known] or [v for v in SEEDS if v in ids]
+            pinned=pinned[:min(8,args.limit or 8)]
+            pool=[v for v in (known+[x for x in ids if x not in known]) if v not in pinned]
+            take=max(0,args.limit-len(pinned)) if args.limit else len(pool)
+            offset=(datetime.now(timezone.utc).date().toordinal()*max(take,1))%len(pool) if pool else 0
+            rotated=pool[offset:]+pool[:offset]
+            ids=pinned+rotated[:take]
+        diag['selection']={'scope':args.scope,'offset':offset,'selectedLeagueIds':ids}
 
         for ix,league in enumerate(ids,1):
             expected=sum(1 for value in existing_groups.values()
@@ -452,17 +473,29 @@ def merge_packet(capture: dict, existing: dict) -> tuple[dict,dict]:
         if previous_time and previous_time>=when:
             preserved += 1
             continue
-        output[key]={"name":clean(item.get("name"))[:100],
-                     "category":clean(item.get("category"))[:100],
-                     "competition":clean(item.get("competition"))[:100],
-                     "leagueId":str(item["leagueId"]),
-                     "capturedAt":packet["capturedAt"],"standingsAt":packet["capturedAt"],
-                     "url":clean(item.get("url"))[:500],
-                     "standings":rows}
+        # Ordenar pels llocs que indica FECAPA, no pels punts recalculats.
+        # Punts/PG/PJ/GF/GC/DIF i les sancions provenen de la taula oficial.
+        positions=[]
+        for r in rows:
+            pos=clean(r.get('pos'))
+            if not pos.isdigit():raise ValueError('Posició invàlida: '+key)
+            positions.append(int(pos))
+        if len(set(positions))!=len(positions):raise ValueError('Posició duplicada: '+key)
+        sorted_rows=sorted(rows,key=lambda r:int(r['pos']))
+        previous_meta=dict(prior) if isinstance(prior,dict) else {}
+        # La identitat del grup, la categoria i l'URL preexistents no canvien.
+        # Només afegim metadades que faltaven; equips i ordre sí s'actualitzen.
+        for field in ('name','category','competition','leagueId','url'):
+            if not clean(previous_meta.get(field)):
+                previous_meta[field]=clean(item.get(field))[:500]
+        output[key]={**previous_meta,
+                     "capturedAt":packet["capturedAt"],
+                     "standingsAt":packet["capturedAt"],
+                     "standings":sorted_rows}
         updated += 1
     # REGLE: mai eliminar claus que no hagin vingut al lot, encara que
     # una altra lliga contingui un grup amb el mateix nom.
-    result={"schema":"zonaok-classificacions-v2",
+    result={**existing,"schema":"zonaok-classificacions-v2",
             "capturedAt": packet["capturedAt"] if updated else existing.get("capturedAt",packet["capturedAt"]),
             "competitions":dict(sorted(output.items()))}
     stats={"updatedGroups":updated,"preservedNewer":preserved,
@@ -476,7 +509,9 @@ def main() -> int:
     sub=parser.add_subparsers(dest="cmd",required=True)
     a=sub.add_parser("collect",help="Captura DOM de classificacions amb Playwright, sense publicar")
     a.add_argument("--existing",default="zonaok-classificacions.json")
-    a.add_argument("--limit",type=int,default=3,help="0 per comprovar totes les lligues descobertes")
+    a.add_argument("--scope",choices=("fast","full"),default="fast")
+    a.add_argument("--offset",type=int,default=0,help="Només full: saltar les primeres N lligues")
+    a.add_argument("--limit",type=int,default=20,help="0 per comprovar totes les lligues descobertes")
     a.add_argument("--capture",default="captura-classificacions.json")
     a.add_argument("--report",default="diagnostic-classificacions.json")
     b=sub.add_parser("merge",help="Fusió conservadora de captura i classificacions existents")
@@ -486,7 +521,7 @@ def main() -> int:
     b.add_argument("--report",default="diagnostic-fusio.json")
     args=parser.parse_args()
     if args.cmd=="collect":
-        if args.limit<0:parser.error("--limit ha de ser >=0")
+        if args.limit<0 or args.offset<0:parser.error("--limit i --offset han de ser >=0")
         result=asyncio.run(collect(args))
         Path(args.capture).write_text(json.dumps(result["packet"],ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
         Path(args.report).write_text(json.dumps(result["diagnostic"],ensure_ascii=False,indent=2)+"\n",encoding="utf-8")

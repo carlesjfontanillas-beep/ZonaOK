@@ -15,6 +15,7 @@ import asyncio
 import json
 import re
 import sys
+import subprocess
 import unicodedata
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -27,6 +28,67 @@ AGENDA_URL = ROOT+'ag/'
 SEASON = '2026/2027'
 SEASON_FROM, SEASON_TO = '2026-07-01', '2027-06-30'
 VALID_HOSTS = {'www.hoqueipatins.fecapa.cat', 'hoqueipatins.fecapa.cat'}
+LOOKBACK_DAYS = 7
+DIRECTE_LOOKAHEAD_DAYS = 2
+FAVOURITE_LEAGUES = ('4789','4786','4784')
+
+
+def local_today():
+    return datetime.now(ZoneInfo('Europe/Madrid')).date()
+
+
+def recent_start():
+    return (local_today()-timedelta(days=LOOKBACK_DAYS)).isoformat()
+
+
+def in_recent_window(row):
+    return recent_start() <= clean(row.get('iso')) <= (local_today()+timedelta(days=DIRECTE_LOOKAHEAD_DAYS)).isoformat()
+
+
+def archived_complete(row):
+    # Només es congela un partit quan el marcador és numèric i l'acta
+    # ha estat verificada realment. Un simple enllaç NO és una acta.
+    return (clean(row.get('iso')) < recent_start() and score_tuple(row)
+            and row.get('actaState')=='available')
+
+
+def parse_integer(text, name):
+    try:
+        n=int(str(text))
+    except ValueError as exc:
+        raise ValueError(f'{name} ha de ser un enter') from exc
+    if n < 0:raise ValueError(f'{name} no pot ser negatiu')
+    return n
+
+
+def select_league_batch(ids, args, previous, diagnostic):
+    ids=sorted(set(ids),key=int)
+    if args.scope=='full':
+        offset=(int(previous.get('sources',{}).get('agenda',{}).get('nextFullOffset') or 0)
+                if args.offset=='auto' else parse_integer(args.offset,'offset'))
+        selected=ids[offset:offset+args.limit] if args.limit else ids[offset:]
+        cursor=min(len(ids),offset+len(selected))
+        meta={'scope':'full','offset':offset,'selectedLeagueIds':selected,'catalogueLeagues':len(ids),
+              'nextFullOffset':cursor,'fullCompleted':cursor>=len(ids)}
+    else:
+        open_ids={clean(r.get('leagueId')) for r in previous.get('matches',[])
+                  if clean(r.get('iso')) >= recent_start()}
+        active=[x for x in ids if x in open_ids]
+        other=[x for x in ids if x not in open_ids]
+        # Les lligues favorites sempre es revisen; la resta rota entre execucions.
+        pinned=[x for x in FAVOURITE_LEAGUES if x in ids]
+        pool=[x for x in active+other if x not in pinned]
+        offset=int(previous.get('sources',{}).get('agenda',{}).get('nextFastOffset') or 0)
+        if pool:offset%=len(pool)
+        take=max(0,args.limit-len(pinned)) if args.limit else len(pool)
+        selected=pinned+(pool[offset:offset+take] + pool[:max(0,offset+take-len(pool))]
+                         if pool and take else [])
+        next_offset=(offset+take)%len(pool) if pool else 0
+        meta={'scope':'fast','offset':offset,'selectedLeagueIds':selected,
+              'catalogueLeagues':len(ids),'nextFastOffset':next_offset,
+              'activeLeagues':len(active)}
+    diagnostic['selection']=meta
+    return selected,meta
 
 
 def clean(s):
@@ -306,7 +368,7 @@ async def page_ready(page,selector,ms=18000):
     await page.wait_for_timeout(1400)
 
 
-async def set_agenda_filters(page,diagnostic):
+async def set_agenda_filters(page,diagnostic,scope='full'):
     # Mai establim un filtre d'un club concret: només TOTAL/TODOS/TOTS.
     # Si el formulari del portal canvia, cal provar-lo: NO s'inventa cap opció.
     filters=[]
@@ -325,7 +387,7 @@ async def set_agenda_filters(page,diagnostic):
         for inp in await page.locator('input[type=date]').all():
             info=await inp.evaluate('e=>({name:(e.id+" "+e.name+" "+(e.getAttribute("placeholder")||"") ).toLowerCase()})')
             name=info['name']
-            value=SEASON_FROM if re.search('desde|from|inici|desde|start',name) else SEASON_TO if re.search('hasta|to|fi|end',name) else ''
+            value=(recent_start() if scope=='fast' else SEASON_FROM) if re.search('desde|from|inici|desde|start',name) else SEASON_TO if re.search('hasta|to|fi|end',name) else ''
             if value:
                 await inp.fill(value)
                 filters.append('date '+name+'='+value)
@@ -358,44 +420,66 @@ async def next_page(page):
 
 
 async def collect_agenda(ctx,args,diagnostic):
+    """Llegeix /ag/ i un lot de calendaris. A full, el cursor es desa
+    al JSON publicat; a fast, només guardem partits recents/futurs.
+    """
     page=await ctx.new_page();rows=[];counts=[];errors=[]
     try:
-        # 1. Agenda total /ag/; seleccionar tots clubs i data de temporada.
+        catalogue=set(league_ids_from_files())
         try:
             await page.goto(AGENDA_URL,wait_until='domcontentloaded',timeout=40000)
             await page_ready(page,'table',19000)
-            await set_agenda_filters(page,diagnostic)
+            # IDs de selectors i enllaços de l'Agenda REAL, no d'XHR genèrics.
+            catalogue.update(await page.evaluate(JS_LEAGUES))
+            await set_agenda_filters(page,diagnostic,args.scope)
+            catalogue.update(await page.evaluate(JS_LEAGUES))
             seen=set()
-            for ix in range(10):
+            for ix in range(args.pages):
                 data=await page.evaluate(JS_AGENDA)
                 signature=tuple(record_key(r) for r in data['rows'][:3])+(str(len(data['rows'])),)
                 if signature in seen:break
                 seen.add(signature)
-                rows.extend(data['rows']);counts.append(data['counts'])
+                chunk=data['rows']
+                if args.scope=='fast':chunk=[r for r in chunk if clean(r.get('iso'))>=recent_start()]
+                rows.extend(chunk);counts.append(data['counts'])
                 if not await next_page(page):break
-        except Exception as exc:errors.append('Agenda /ag/: '+str(exc)[:160])
-        # 2. Complementar amb calendaris de lligues conegudes (del JSON classificacions).
-        leagues=league_ids_from_files()
-        if args.limit:leagues=leagues[:args.limit]
+        except Exception as exc:
+            errors.append('Agenda /ag/: '+str(exc)[:160])
+        prev=load_unified(CANONICAL)
+        ids=[lid for lid in catalogue if re.fullmatch(r'\d{4,6}',str(lid))]
+        leagues,meta=select_league_batch(ids,args,prev,diagnostic)
         checked=[]
         for lid in leagues:
             try:
                 await page.goto(ROOT+f'?liga={lid}&vista=calendar',wait_until='domcontentloaded',timeout=22000)
                 await page.wait_for_timeout(900)
                 data=await page.evaluate(JS_CALENDAR,lid)
-                rows.extend(data['rows']);checked.append({'leagueId':lid,'rows':data['count']})
+                # Alguns calendaris FECAPA utilitzen taules en lloc de targetes SIDGAD.
+                # Reutilitzar el lector estricte de taules d'Agenda i atribuir
+                # la lliga només perquè l'URL consultat està verificada.
+                tabular=await page.evaluate(JS_AGENDA)
+                chunk=data['rows']+tabular.get('rows',[])
+                for x in chunk:
+                    if not x.get('leagueId'):x['leagueId']=lid
+                    if x.get('matchId') and not x.get('actaUrl'):
+                        x['actaUrl']=make_match_url(x['leagueId'],x['matchId'])
+                if args.scope=='fast':chunk=[r for r in chunk if clean(r.get('iso'))>=recent_start()]
+                rows.extend(chunk)
+                checked.append({'leagueId':lid,'rows':len(chunk),
+                                'rawRows':data['count'],'tableRows':len(tabular.get('rows',[]))})
             except Exception as exc:errors.append('Lliga '+lid+': '+str(exc)[:100])
         rows=unique_rows(rows,'agenda')
         diagnostic['sourceUrl']=AGENDA_URL
         diagnostic['checkedLeagues']=checked
         diagnostic['warnings'].extend(errors)
         diagnostic['counts']={'agendaTables':sum(x.get('recognizedTables',0) for x in counts),
-                              'checkedLeagues':len(checked),'validRows':len(rows)}
-        diagnostic['coverage']='parcial/no garantida; depèn dels filtres i calendaris visibles al DOM'
-        if not rows:raise ValueError('Cap partit vàlid recuperat de /ag/ ni calendaris FECAPA')
+                              'checkedLeagues':len(checked),'validRows':len(rows),
+                              'withIDs':sum(bool(r.get('matchId') and r.get('leagueId')) for r in rows)}
+        diagnostic['coverage']='Per lots; completar full fins fullCompleted=true. DOM FECAPA no garanteix cobertura absoluta.'
+        if not rows and not (args.scope=='fast'):
+            raise ValueError('Cap partit vàlid recuperat de /ag/ ni calendaris FECAPA')
         return rows
     finally:await page.close()
-
 
 async def collect_directe(ctx,args,diagnostic):
     page=await ctx.new_page()
@@ -423,9 +507,10 @@ async def collect_directe(ctx,args,diagnostic):
         diagnostic['warnings'].extend(data.get('errors',[]))
         diagnostic['seasonText']=data.get('seasonText','')
         rows=unique_rows(data.get('rows',[]),'directe')
+        if args.scope=='fast':rows=[r for r in rows if in_recent_window(r)]
         diagnostic['counts']['validRows']=len(rows)
         diagnostic['sourceUrl']=page.url
-        if not rows:raise ValueError('En directe sense partits vàlids o temporada 2026/27 no seleccionada')
+        if not rows and args.scope=='full':raise ValueError('En directe sense partits vàlids o temporada 2026/27 no seleccionada')
         return rows
     finally:await page.close()
 
@@ -446,15 +531,46 @@ def league_ids_from_files():
     return sorted((x for x in ids if re.fullmatch(r'\d{4,6}',x)),key=int)
 
 
-async def collect_actes(ctx,args,diagnostic):
-    """Comprovar progressivament les URLs construïdes a partir de (liga,IDP).
-    No confonem URL construïble amb acta publicada.
+def eligible_acta(row,scope,now=None):
+    """Pendent: reintentar menys sovint com més antic sigui; verificat: congelar.
+    El mode full permet una passada històrica, sense tornar a obrir les verificades.
     """
+    if not make_match_url(row.get('leagueId',''),row.get('matchId','')):return False
+    if not clean(row.get('iso')) or clean(row.get('iso'))>local_today().isoformat():return False
+    if archived_complete(row):return False
+    if scope=='full':return True
+    last=row.get('actaCheckedAt')
+    if not last:return True
+    try:delta=(now or datetime.now(timezone.utc))-check_when(last)
+    except ValueError:return True
+    if row.get('actaState')=='available':return delta>=timedelta(days=1)
+    cadence=timedelta(days=1 if clean(row.get('iso'))>=recent_start() else 7)
+    return delta>=cadence
+
+
+async def collect_actes(ctx,args,diagnostic):
     doc=load_unified(CANONICAL)
-    rows=[r for r in doc.get('matches',[]) if make_match_url(r.get('leagueId',''),r.get('matchId',''))]
-    # Pendents primer, després les més antigues. No revisem cada dia les tancades.
-    rows.sort(key=lambda r:(r.get('actaState')=='available',r.get('actaCheckedAt') or '',r.get('iso') or ''))
-    if args.limit:rows=rows[:args.limit]
+    all_rows=[r for r in doc.get('matches',[]) if eligible_acta(r,args.scope)]
+    if args.scope=='full':
+        # Cursor per clau estable; així no saltem files quan una acta
+        # passa a 'available' i desapareix de la cua pendent.
+        key=lambda r:(r.get('iso') or '',str(r.get('leagueId')),str(r.get('matchId')))
+        all_rows.sort(key=key)
+        last=doc.get('sources',{}).get('actes',{}).get('nextFullKey') or []
+        if args.offset=='auto' and len(last)==3:
+            offset=next((i for i,r in enumerate(all_rows) if key(r)>tuple(last)),len(all_rows))
+        elif args.offset=='auto':offset=0
+        else:offset=parse_integer(args.offset,'offset')
+        rows=all_rows[offset:offset+args.limit] if args.limit else all_rows[offset:]
+        completed=offset+len(rows)>=len(all_rows)
+        diagnostic['selection']={'scope':'full','offset':offset,'candidates':len(all_rows),
+            'nextFullOffset':min(len(all_rows),offset+len(rows)),
+            'nextFullKey':list(key(rows[-1])) if rows else last,
+            'fullCompleted':completed}
+    else:
+        all_rows.sort(key=lambda r:(r.get('actaCheckedAt') or '',r.get('iso') or ''))
+        rows=all_rows[:args.limit] if args.limit else all_rows
+        diagnostic['selection']={'scope':'fast','candidates':len(all_rows)}
     diag=[];out=[];page=await ctx.new_page()
     try:
         for i,row in enumerate(rows,1):
@@ -467,7 +583,6 @@ async def collect_actes(ctx,args,diagnostic):
                     urls:[...document.querySelectorAll('a[href],iframe[src]')].map(a=>a.href||a.src||''),
                     text:(document.querySelector('main,#sidgad-contenido,.sidgad-contenedor')?.innerText||'').slice(0,1500)
                 })""")
-                # Un 200 per si sol NO acredita que hi hagi acta disponible.
                 has_report=any(re.search(r'fecapa_gr_'+re.escape(mid)+r'_|/acta(?:/|\?|$)',x,re.I) for x in info['urls'])
                 if res and res.status==200 and has_report:item['actaState']='available'
                 diag.append({'liga':league,'idp':mid,'http':res.status if res else None,'estat':item['actaState']})
@@ -476,15 +591,16 @@ async def collect_actes(ctx,args,diagnostic):
             out.append(item)
             if i%10==0:print(f'Actes [{i}/{len(rows)}] revisades',flush=True)
     finally:await page.close()
-    diagnostic['counts']={'candidates':len(rows),'available':sum(x['actaState']=='available' for x in out),'pending':sum(x['actaState']!='available' for x in out)}
+    diagnostic['counts']={'candidates':len(all_rows),'checked':len(rows),
+                          'available':sum(x['actaState']=='available' for x in out),
+                          'pending':sum(x['actaState']!='available' for x in out)}
     diagnostic['checks']=diag
     return out
-
 
 async def collect(args):
     from playwright.async_api import async_playwright
     diagnostic={'mode':args.mode,'source':'FECAPA-PLAYWRIGHT','checkedAt':utc_now(),
-                'season':SEASON,'warnings':[],'errors':[], 'version':1}
+                'season':SEASON,'warnings':[],'errors':[], 'version':2,'scope':args.scope}
     async with async_playwright() as p:
         browser,ctx=await chromium_context(p)
         try:
@@ -496,8 +612,8 @@ async def collect(args):
     packet={'schema':'zonaok-captura-v1',
             'kind':args.mode,'season':SEASON,'source':'FECAPA-PLAYWRIGHT',
             'capturedAt':utc_now(), 'sourceUrl':diagnostic.get('sourceUrl',AGENDA_URL),
-            'counts':diagnostic.get('counts',{}),
-            'rows':rows}
+            'counts':diagnostic.get('counts',{}), 'scope':args.scope,
+            'selection':diagnostic.get('selection',{}), 'rows':rows}
     return packet,diagnostic
 
 
@@ -536,7 +652,7 @@ def canonicalize(r):
     row['leagueId']=clean(row.get('leagueId'))
     row['matchId']=clean(row.get('matchId'))
     if row['leagueId'] and row['matchId']:
-        row.setdefault('actaUrl',make_match_url(row['leagueId'],row['matchId']))
+        if not row.get('actaUrl'):row['actaUrl']=make_match_url(row['leagueId'],row['matchId'])
         row.setdefault('actaState','pending')
     return row
 
@@ -547,11 +663,21 @@ def match_index(rows,incoming,mode):
         exact=[i for i,r in enumerate(rows) if clean(r.get('leagueId'))==lid and clean(r.get('matchId'))==mid]
         if len(exact)==1:return exact[0]
         if len(exact)>1:return None
-    candidates=[i for i,r in enumerate(rows)
-                if same_fixture(r,incoming) and
-                (not mid or not r.get('matchId') or clean(r.get('matchId'))==mid) and
-                (not lid or not r.get('leagueId') or clean(r.get('leagueId'))==lid)]
-    return candidates[0] if len(candidates)==1 else None
+    def compatible_id(r):
+        return ((not mid or not r.get('matchId') or clean(r.get('matchId'))==mid) and
+                (not lid or not r.get('leagueId') or clean(r.get('leagueId'))==lid))
+    candidates=[i for i,r in enumerate(rows) if same_fixture(r,incoming) and compatible_id(r)]
+    if len(candidates)==1:return candidates[0]
+    if not candidates and (mid or lid):
+        # Lliga/calendari poden tenir noms diferents per a la mateixa categoria.
+        # L'única equivalència permesa sense nom de competició és un partit
+        # ÚNIC amb data/hora/equips exactament iguals i cap ID contradictori.
+        weak=[i for i,r in enumerate(rows) if compatible_id(r) and
+              r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
+              and norm(r.get('home'))==norm(incoming.get('home'))
+              and norm(r.get('away'))==norm(incoming.get('away'))]
+        if len(weak)==1:return weak[0]
+    return None
 
 
 def merge_unified(packet,previous,mode):
@@ -559,9 +685,13 @@ def merge_unified(packet,previous,mode):
         raise ValueError('Captura incompatible: no publicar')
     timestamp=check_when(packet.get('capturedAt'))
     incoming=packet.get('rows')
-    if not isinstance(incoming,list) or not incoming:raise ValueError('Captura buida: no publicar')
+    if not isinstance(incoming,list):raise ValueError('Captura no reconeguda')
+    if not incoming and packet.get('scope')!='fast':raise ValueError('Captura buida en mode full: no publicar')
     if previous.get('schema')!='zonaok-partits-total-v1':raise ValueError('Esquema unificat desconegut')
     if previous.get('season')!=SEASON:raise ValueError('Temporada inesperada al JSON')
+    if not incoming:
+        return previous,{'new':0,'updated':0,'unmatched':0,'unchanged':0,
+                         'ambiguousOrInvalid':0,'skipEmpty':True}
     rows=[canonicalize(r) for r in previous['matches']]
     counts={'new':0,'updated':0,'unmatched':0,'ambiguousOrInvalid':0,'unchanged':0}
     for raw in incoming:
@@ -586,27 +716,43 @@ def merge_unified(packet,previous,mode):
             if mode!='agenda':counts['unmatched']+=1;continue
             rows.append(canonicalize(r));counts['new']+=1;continue
         old=rows[idx]
+        if archived_complete(old):
+            counts['unchanged']+=1
+            continue
         prop='lastAgendaAt' if mode=='agenda' else 'lastDirecteAt'
         previous_time=old.get(prop)
         if previous_time and check_when(previous_time)>timestamp:counts['unchanged']+=1;continue
         if mode=='agenda':
             for field in ('iso','time','competition','home','away','venue','homeLogo','awayLogo','matchId','leagueId','round'):
                 if r.get(field) not in (None,''):old[field]=r[field]
-            if score_tuple(r) and not old.get('lastDirecteAt'):
+            if score_tuple(r) and not (old.get('lastDirecteAt') or old.get('directeUpdatedAt') or
+                                           norm(old.get('scoreSource')) in ('EN DIRECTE','DIRECTE')):
                 old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
-            if r.get('status') and not old.get('lastDirecteAt'):old['status']=r['status']
+                old['scoreSource']='Agenda';old['scoreUpdatedAt']=packet['capturedAt']
+            if r.get('status') and not (old.get('lastDirecteAt') or old.get('directeUpdatedAt')):
+                old['status']=r['status']
         else:
             # Marcadors només sobre partits coneguts i amb identificació inequívoca.
             for field in ('leagueId','matchId'):
                 if not old.get(field) and r.get(field):old[field]=r[field]
-            if score_tuple(r):old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
+            if score_tuple(r):
+                old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
+                old['scoreSource']='En directe';old['scoreUpdatedAt']=packet['capturedAt']
             if r.get('status'):old['status']=r['status']
+            old['directeUpdatedAt']=packet['capturedAt']
         old[prop]=packet['capturedAt']
         rows[idx]=canonicalize(old);counts['updated']+=1
     for i,row in enumerate(rows):rows[i]=canonicalize(row)
     rows.sort(key=lambda r:(r.get('iso',''),r.get('time',''),norm(r.get('competition')),norm(r.get('home'))))
-    sources=dict(previous.get('sources',{}));sources[mode]={'capturedAt':packet['capturedAt'],'mergedAt':utc_now(),**counts}
-    result={'schema':'zonaok-partits-total-v1','season':SEASON,'updatedAt':utc_now(),
+    sources=dict(previous.get('sources',{}))
+    prev_mode=dict(sources.get(mode,{}))
+    selection=packet.get('selection',{})
+    progress={k:selection[k] for k in ('nextFullOffset','nextFullKey','nextFastOffset','fullCompleted','catalogueLeagues')
+              if k in selection}
+    sources[mode]={**prev_mode,'capturedAt':packet['capturedAt'],'mergedAt':utc_now(),**counts,**progress}
+    # Full per lots: reiniciar només quan realment s'ha acabat el catàleg.
+    # El cursor viatja al JSON final, no a un fitxer de control extern.
+    result={**previous,'schema':'zonaok-partits-total-v1','season':SEASON,'updatedAt':utc_now(),
             'sources':sources,'matches':rows,'stats':{'total':len(rows),'withScores':sum(score_tuple(x) for x in rows),
                       'withActaLinks':sum(bool(x.get('actaUrl')) for x in rows),
                       'verifiedActes':sum(x.get('actaState')=='available' for x in rows)}}
@@ -656,14 +802,32 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     sub=parser.add_subparsers(dest='command',required=True)
     a=sub.add_parser('collect');a.add_argument('--mode',choices=['agenda','directe','actes'],required=True)
-    a.add_argument('--limit',type=int,default=10,help='Agenda: lligues; Actes: partits; Directe: ignorat. 0=totes.')
+    a.add_argument('--scope',choices=['fast','full'],default='fast',help='fast=actualitzacio rapida; full=històric per lots')
+    a.add_argument('--offset',default='auto',help='full: desplacament de lot, o auto (cursor guardat al JSON)')
+    a.add_argument('--pages',type=int,default=10,help='Nombre maxim de pagines de /ag/')
+    a.add_argument('--limit',type=int,default=20,help='Agenda: lligues; Actes: partits; Directe: ignorat. 0=totes.')
     a.add_argument('--capture',required=True);a.add_argument('--report',required=True)
+    v=sub.add_parser('validate',help='Verificar que no es perden partits davant del HEAD de GitHub')
+    v.add_argument('--output',default=str(CANONICAL))
     b=sub.add_parser('merge');b.add_argument('--mode',choices=['agenda','directe','actes'],required=True)
     b.add_argument('--capture',required=True);b.add_argument('--output',default=str(CANONICAL));b.add_argument('--report',required=True)
     b.add_argument('--compat',action='store_true',help='Generar miralls dels JSON que encara usa l’app')
     args=parser.parse_args()
+    if args.command=='validate':
+        new=load_unified(Path(args.output))
+        count=len(new['matches'])
+        try:
+            text=subprocess.check_output(['git','show',f'HEAD:{args.output}'],stderr=subprocess.DEVNULL)
+            old=json.loads(text)
+            if old.get('schema')!='zonaok-partits-total-v1':raise ValueError('HEAD: esquema desconegut')
+            if count<len(old.get('matches',[])):
+                raise ValueError(f'ERROR: {count} partits nous, {len(old["matches"])} antics: no publicar')
+        except subprocess.CalledProcessError:
+            pass   # Primera publicació sense JSON anterior.
+        print('Validació correcta: ',count,'partits conservats')
+        return 0
     if args.command=='collect':
-        if args.limit<0:parser.error('limit ha de ser >= 0')
+        if args.limit<0 or args.pages<1 or args.pages>100:parser.error('limit >= 0 i pages entre 1 i 100')
         packet,diag=asyncio.run(collect(args))
         Path(args.capture).write_text(json.dumps(packet,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         Path(args.report).write_text(json.dumps(diag,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
@@ -671,8 +835,9 @@ def main():
     packet=json.loads(Path(args.capture).read_text(encoding='utf-8'))
     previous=load_unified(Path(args.output))
     doc,diagnostic=merge_unified(packet,previous,args.mode)
-    Path(args.output).write_text(json.dumps(doc,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    if args.compat:diagnostic.update(write_compatibility(doc))
+    if not diagnostic.get('skipEmpty'):
+        Path(args.output).write_text(json.dumps(doc,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        if args.compat:diagnostic.update(write_compatibility(doc))
     Path(args.report).write_text(json.dumps(diagnostic,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(diagnostic,ensure_ascii=False,indent=2));return 0
 
