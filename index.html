@@ -396,6 +396,25 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
   body main.app > .hero > .zok-week-nav{gap:3px!important}
 }
 </style>
+<style id="zonaok-home-action-buttons-20261124">
+/* Inici: Acta i Calendari amb la mateixa geometria que Google Maps.
+   No es modifica cap fons, color, icona, acció ni cap altre menú. */
+#home-cards .match .match-actions > :is(.zok-acta-action,.zok-home-acta,.zok-calendar-btn){
+  box-sizing:border-box;
+  display:inline-flex;align-items:center;justify-content:center;
+  flex:1 1 0%;min-width:0;
+  height:auto!important;min-height:0!important;
+  padding:3px 6px!important;border-radius:11px!important;
+  border-width:1px!important;border-style:solid!important;border-color:transparent!important;
+  font-size:10px!important;font-weight:800;line-height:normal!important;
+  white-space:nowrap;text-align:center
+}
+/* Mateixa geometria que Maps si es recupera el renderitzador V5. */
+#home-cards .match.zok-v5:not(.zok-compact) .match-actions > :is(.zok-acta-action,.zok-home-acta,.zok-calendar-btn){
+  min-height:32px!important;padding:5px 6px!important;border-radius:10px!important;
+  line-height:1.1!important
+}
+</style>
 </head>
 <body>
 <main class="app">
