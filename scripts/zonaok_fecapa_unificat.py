@@ -64,12 +64,22 @@ def parse_integer(text, name):
 def select_league_batch(ids, args, previous, diagnostic):
     ids=sorted(set(ids),key=int)
     if args.scope=='full':
-        offset=(int(previous.get('sources',{}).get('agenda',{}).get('nextFullOffset') or 0)
-                if args.offset=='auto' else parse_integer(args.offset,'offset'))
-        selected=ids[offset:offset+args.limit] if args.limit else ids[offset:]
-        cursor=min(len(ids),offset+len(selected))
+        old_state=previous.get('sources',{}).get('agenda',{})
+        # The V2 cursor was advanced even for generic, unverified 532-row
+        # pages. Do not trust that historical cursor without V3 verification.
+        trustworthy='pendingLeagueIds' in old_state or 'verifiedLeagues' in old_state
+        offset=(int(old_state.get('nextFullOffset') or 0) if trustworthy else 0) if args.offset=='auto' else parse_integer(args.offset,'offset')
+        if offset>=len(ids) and args.offset=='auto':
+            pending=[x for x in old_state.get('pendingLeagueIds',[]) if x in ids]
+            selected=pending[:args.limit] if args.limit else pending
+            cursor=offset
+            retry_pending=True
+        else:
+            selected=ids[offset:offset+args.limit] if args.limit else ids[offset:]
+            cursor=min(len(ids),offset+len(selected))
+            retry_pending=False
         meta={'scope':'full','offset':offset,'selectedLeagueIds':selected,'catalogueLeagues':len(ids),
-              'nextFullOffset':cursor,'fullCompleted':cursor>=len(ids)}
+              'nextFullOffset':cursor,'fullCompleted':False,'retryPending':retry_pending}
     else:
         open_ids={clean(r.get('leagueId')) for r in previous.get('matches',[])
                   if clean(r.get('iso')) >= recent_start()}
@@ -298,8 +308,6 @@ JS_CALENDAR = r"""(league) => {
   const C=x=>String(x??'').replace(/\s+/g,' ').trim();
   const T=x=>C(x?.innerText||x?.textContent||'');
   const N=x=>C(x).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').trim();
-  const link=x=>{const a=x.querySelector('a[href*="partido="],a[href*="fecapa_gr_"]');return a?.href||'';};
-  const mid=x=>{for(const k of ['idp','partidoId','partitId'])if(/^\d{4,10}$/.test(x.dataset?.[k]||''))return x.dataset[k];const u=link(x);const m=u.match(/(?:partido=|fecapa_gr_)(\d{4,10})/);return m?m[1]:'';};
   const parsed=x=>{let m;const text=C(x);let iso='';
     if(m=text.match(/\b(20\d\d)-(\d\d)-(\d\d)\b/))iso=m[0];
     else if(m=text.match(/\b(\d{1,2})[\/.](\d{1,2})[\/.](20\d\d)\b/))iso=m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
@@ -307,20 +315,109 @@ JS_CALENDAR = r"""(league) => {
     const d=new Date(iso+'T12:00:00Z');return iso>='2026-07-01'&&iso<='2027-06-30'&&!Number.isNaN(+d)&&d.toISOString().slice(0,10)===iso?iso:'';};
   const clock=x=>{const m=C(x).match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);return m?m[1].padStart(2,'0')+':'+m[2]:'';};
   const score=x=>{const m=C(x).match(/\b(\d{1,3})\s*[-–:]\s*(\d{1,3})\b/);return m?[+m[1],+m[2]]:[null,null];};
-  const rows=[];
+  // IDs ONLY from the fixture element, never from the page's ?liga= route.
+  const idsFromFixture=el=>{
+    const pairs=new Set();
+    for(const node of [el,...el.querySelectorAll('[data-liga],[data-league-id],[data-idp],[data-partido-id]')]){
+      const ds=node.dataset||{};
+      const lid=ds.liga||ds.leagueId||ds.ligaId||'';
+      const mid=ds.idp||ds.partidoId||ds.partitId||ds.matchId||'';
+      if(/^\d{4,6}$/.test(lid)&&/^\d{4,10}$/.test(mid))pairs.add(lid+':'+mid);
+    }
+    for(const a of el.querySelectorAll('a[href]')){
+      try{
+        const u=new URL(a.getAttribute('href')||'',location.href);
+        if(u.protocol!=='https:'||!/^(?:www\.)?hoqueipatins\.fecapa\.cat$/i.test(u.hostname))continue;
+        const lid=u.searchParams.get('liga')||'',mid=u.searchParams.get('partido')||'';
+        if(/^\d{4,6}$/.test(lid)&&/^\d{4,10}$/.test(mid))pairs.add(lid+':'+mid);
+      }catch(_){}
+    }
+    if(pairs.size!==1)return {leagueId:'',matchId:'',ambiguous:pairs.size>1};
+    const [leagueId,matchId]=[...pairs][0].split(':');
+    return {leagueId,matchId,ambiguous:false};
+  };
+  const rows=[];let examined=0,invalid=0,ambiguousIds=0;
+  const leaguesFound=new Set();
   for(const el of document.querySelectorAll('.sidgad-partido-fila')){
+    examined++;
     const home=T(el.querySelector('.sidgad-local .sidgad-equipo-nombre'));
     const away=T(el.querySelector('.sidgad-visitante .sidgad-equipo-nombre'));
     const sub=T(el.querySelector('.sidgad-local .sidgad-equipo-sub'));
     const date=parsed(sub),time=clock(sub);
-    if(!home||!away||N(home)===N(away)||!date||!time)continue;
+    if(!home||!away||N(home)===N(away)||!date||!time){invalid++;continue;}
+    const meta=idsFromFixture(el);
+    if(meta.ambiguous)ambiguousIds++;
+    if(meta.leagueId)leaguesFound.add(meta.leagueId);
     const sco=score(T(el.querySelector('.sidgad-resultado-texto')));
     const comp=T(el.closest('.sidgad-liga-grupo')?.querySelector('.sidgad-liga-header-separador'))||T(document.querySelector('h1,h2'));
-    rows.push({iso:date,time,home,away,competition:comp,leagueId:league,matchId:mid(el),
+    rows.push({iso:date,time,home,away,competition:comp,leagueId:meta.leagueId,matchId:meta.matchId,
       homeScore:sco[0],awayScore:sco[1],actaUrl:'',status:T(el.querySelector('.sidgad-status-tag')),venue:''});
   }
-  return {rows,count:rows.length};
+  return {rows,count:rows.length,examined,invalid,ambiguousIds,leaguesFound:[...leaguesFound],requestedLeague:league};
 }"""
+
+
+def verified_league_rows(league_id, card_rows, table_rows):
+    """Fail-closed: accept a per-league match only with BOTH official IDs in
+    the fixture itself. A generic match list must never be relabelled with the
+    requested league merely because its page URL contains ?liga=... .
+
+    The result distinguishes safe rows from foreign or unlinked rows and
+    whether the returned DOM is actually scoped to the requested league.
+    """
+    seen_leagues=set()
+    accepted=[]
+    missing=foreign=0
+    for row in list(card_rows)+list(table_rows):
+        if not isinstance(row,dict):continue
+        lid=clean(row.get('leagueId'));mid=clean(row.get('matchId'))
+        if lid and re.fullmatch(r'\d{4,6}',lid):seen_leagues.add(lid)
+        if not mid or not lid:
+            missing+=1
+            continue
+        if lid!=str(league_id):
+            foreign+=1
+            continue
+        copied=dict(row)
+        if validate_row(copied,'agenda'):
+            if not copied.get('actaUrl'):
+                copied['actaUrl']=make_match_url(lid,mid)
+            accepted.append(copied)
+    # A generic multi-league listing may contain correct matches, but it is
+    # never proof that we have traversed the whole league calendar.
+    mixed=bool(seen_leagues-{str(league_id)}) or bool(foreign)
+    # A specific league has been fully verified only when EVERY extracted
+    # fixture can be identified; one tagged match among 532 generic rows is
+    # not a league-wide calendar.
+    verified=bool(accepted) and not mixed and not missing
+    status=('verified' if verified else 'mixed-league-list' if mixed
+            else 'partial-identifiers' if accepted else 'unverified')
+    return accepted,{'verified':verified,'withIDs':len(accepted),'withoutIDs':missing,
+                     'foreignRows':foreign,'seenLeagueIds':sorted(seen_leagues,key=int),
+                     'status':status}
+
+
+def finalize_agenda_selection(selection, checked, previous_sources):
+    """Persist a scan cursor AND a separate backlog of unverified leagues.
+
+    Scanning an ID is not the same as verifying a league. We can progress to
+    later IDs without silently claiming completeness, and retry unresolved
+    IDs after the initial catalogue scan.
+    """
+    verified={x['leagueId'] for x in checked if x.get('verified')}
+    attempted={x['leagueId'] for x in checked}
+    previous_pending={str(x) for x in previous_sources.get('pendingLeagueIds',[])
+                      if re.fullmatch(r'\d{4,6}',str(x))}
+    pending=(previous_pending-verified)|(attempted-verified)
+    selection['verifiedLeagueIds']=sorted(verified,key=int)
+    selection['failedLeagueIds']=sorted(attempted-verified,key=int)
+    selection['pendingLeagueIds']=sorted(pending,key=int)
+    selection['verifiedLeagues']=len(verified)
+    selection['unverifiedLeagues']=len(attempted-verified)
+    if selection.get('scope')=='full':
+        selection['fullCompleted']=(selection.get('nextFullOffset',0)>=selection.get('catalogueLeagues',0)
+                                     and not pending)
+    return selection
 
 def record_key(row):
     mid=clean(row.get('matchId'))
@@ -451,31 +548,50 @@ async def collect_agenda(ctx,args,diagnostic):
         checked=[]
         for lid in leagues:
             try:
-                await page.goto(ROOT+f'?liga={lid}&vista=calendar',wait_until='domcontentloaded',timeout=22000)
-                await page.wait_for_timeout(900)
+                await page.goto(ROOT+f'?liga={lid}&vista=calendar',wait_until='domcontentloaded',timeout=28000)
+                # Wait for official per-fixture match links, rather than the
+                # first generic table (often the same 532 rows on every page).
+                try:
+                    await page.wait_for_function('''lid => [...document.querySelectorAll('a[href*="partido="]')]
+                        .some(a=>{try{const u=new URL(a.href);return u.searchParams.get('liga')===lid
+                            && /^\\d{4,10}$/.test(u.searchParams.get('partido')||'')}catch(_){return false}})''',
+                        arg=lid,timeout=9000)
+                except Exception:
+                    await page.wait_for_timeout(900)
                 data=await page.evaluate(JS_CALENDAR,lid)
-                # Alguns calendaris FECAPA utilitzen taules en lloc de targetes SIDGAD.
-                # Reutilitzar el lector estricte de taules d'Agenda i atribuir
-                # la lliga només perquè l'URL consultat està verificada.
+                # Table view is supported, but no row without BOTH IDs may
+                # inherit the requested league ID.
                 tabular=await page.evaluate(JS_AGENDA)
-                chunk=data['rows']+tabular.get('rows',[])
-                for x in chunk:
-                    if not x.get('leagueId'):x['leagueId']=lid
-                    if x.get('matchId') and not x.get('actaUrl'):
-                        x['actaUrl']=make_match_url(x['leagueId'],x['matchId'])
-                if args.scope=='fast':chunk=[r for r in chunk if clean(r.get('iso'))>=recent_start()]
-                rows.extend(chunk)
-                checked.append({'leagueId':lid,'rows':len(chunk),
-                                'rawRows':data['count'],'tableRows':len(tabular.get('rows',[]))})
-            except Exception as exc:errors.append('Lliga '+lid+': '+str(exc)[:100])
+                accepted,status=verified_league_rows(lid,data['rows'],tabular.get('rows',[]))
+                status.update({'leagueId':lid,'rows':len(accepted),'rawRows':data['count'],
+                               'tableRows':len(tabular.get('rows',[])),
+                               'examined':data.get('examined',0),
+                               'ambiguousIds':data.get('ambiguousIds',0),
+                               'pageUrl':page.url})
+                if args.scope=='fast':accepted=[r for r in accepted if clean(r.get('iso'))>=recent_start()]
+                rows.extend(accepted)
+                checked.append(status)
+                if not status['verified']:
+                    diagnostic['warnings'].append(f'Lliga {lid}: no verificada ({status["status"]}); '+
+                        f'files {data["count"]}, amb IDs fiables {status["withIDs"]}, '+
+                        f'altres lligues {status["foreignRows"]}. No s\'atribueix cap fila genèrica.')
+            except Exception as exc:
+                errors.append('Lliga '+lid+': '+str(exc)[:100])
+                checked.append({'leagueId':lid,'verified':False,'rows':0,'rawRows':0,
+                                'tableRows':0,'status':'navigation-error','error':str(exc)[:160]})
+        finalize_agenda_selection(meta,checked,prev.get('sources',{}).get('agenda',{}))
         rows=unique_rows(rows,'agenda')
         diagnostic['sourceUrl']=AGENDA_URL
         diagnostic['checkedLeagues']=checked
         diagnostic['warnings'].extend(errors)
         diagnostic['counts']={'agendaTables':sum(x.get('recognizedTables',0) for x in counts),
-                              'checkedLeagues':len(checked),'validRows':len(rows),
-                              'withIDs':sum(bool(r.get('matchId') and r.get('leagueId')) for r in rows)}
-        diagnostic['coverage']='Per lots; completar full fins fullCompleted=true. DOM FECAPA no garanteix cobertura absoluta.'
+                              'checkedLeagues':len(checked),'verifiedLeagues':meta['verifiedLeagues'],
+                              'unverifiedLeagues':meta['unverifiedLeagues'],
+                              'validRows':len(rows),
+                              'withIDs':sum(bool(r.get('matchId') and r.get('leagueId')) for r in rows),
+                              'genericAgendaRows':sum(x.get('exported',0) for x in counts)}
+        diagnostic['coverage']='Els calendaris només compten com a verificats si cada fila identificada té liga+IDP propi i el DOM no barreja altres lligues. Pendents a selection.pendingLeagueIds.'
+        diagnostic['publishSafe']=not (args.scope=='full' and not meta['verifiedLeagues'])
         if not rows and not (args.scope=='fast'):
             raise ValueError('Cap partit vàlid recuperat de /ag/ ni calendaris FECAPA')
         return rows
@@ -600,7 +716,7 @@ async def collect_actes(ctx,args,diagnostic):
 async def collect(args):
     from playwright.async_api import async_playwright
     diagnostic={'mode':args.mode,'source':'FECAPA-PLAYWRIGHT','checkedAt':utc_now(),
-                'season':SEASON,'warnings':[],'errors':[], 'version':2,'scope':args.scope}
+                'season':SEASON,'warnings':[],'errors':[], 'version':3,'scope':args.scope}
     async with async_playwright() as p:
         browser,ctx=await chromium_context(p)
         try:
@@ -686,6 +802,8 @@ def merge_unified(packet,previous,mode):
     timestamp=check_when(packet.get('capturedAt'))
     incoming=packet.get('rows')
     if not isinstance(incoming,list):raise ValueError('Captura no reconeguda')
+    if mode=='agenda' and packet.get('scope')=='full' and packet.get('selection',{}).get('verifiedLeagues')==0:
+        raise ValueError('Cap lliga verificada amb liga + IDP: publicació bloquejada; revisar diagnostic-agenda-auto.json')
     if not incoming and packet.get('scope')!='fast':raise ValueError('Captura buida en mode full: no publicar')
     if previous.get('schema')!='zonaok-partits-total-v1':raise ValueError('Esquema unificat desconegut')
     if previous.get('season')!=SEASON:raise ValueError('Temporada inesperada al JSON')
@@ -747,7 +865,9 @@ def merge_unified(packet,previous,mode):
     sources=dict(previous.get('sources',{}))
     prev_mode=dict(sources.get(mode,{}))
     selection=packet.get('selection',{})
-    progress={k:selection[k] for k in ('nextFullOffset','nextFullKey','nextFastOffset','fullCompleted','catalogueLeagues')
+    progress={k:selection[k] for k in ('nextFullOffset','nextFullKey','nextFastOffset','fullCompleted',
+                                       'catalogueLeagues','pendingLeagueIds','verifiedLeagueIds',
+                                       'failedLeagueIds','verifiedLeagues','unverifiedLeagues')
               if k in selection}
     sources[mode]={**prev_mode,'capturedAt':packet['capturedAt'],'mergedAt':utc_now(),**counts,**progress}
     # Full per lots: reiniciar només quan realment s'ha acabat el catàleg.
@@ -831,7 +951,11 @@ def main():
         packet,diag=asyncio.run(collect(args))
         Path(args.capture).write_text(json.dumps(packet,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         Path(args.report).write_text(json.dumps(diag,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-        print(json.dumps(diag,ensure_ascii=False,indent=2));return 0
+        print(json.dumps(diag,ensure_ascii=False,indent=2))
+        if args.mode=='agenda' and args.scope=='full' and not diag.get('publishSafe',True):
+            print('ERROR: cap lliga verificada. Captura i diagnòstic desats; no publicar.',file=sys.stderr)
+            return 2
+        return 0
     packet=json.loads(Path(args.capture).read_text(encoding='utf-8'))
     previous=load_unified(Path(args.output))
     doc,diagnostic=merge_unified(packet,previous,args.mode)
