@@ -868,14 +868,21 @@ try {
     const stored=String(state.teamLeagueIds?.[fav?.id]||'');if(/^\d+$/.test(stored))return stored;
     return String(window.ZonaOKLookupTeamLeague?.(fav?.id)||'');
   }
+  let favoriteStatsDialog;
   function openFavoriteFecapaDialog(title,params,options={}){
     const kind=options.pending?'player':String(params?.vista||'')==='clasificaciones'?'standings':String(params?.vista||'')==='estadisticas'?(params?.jugador?'player':'goals'):'standings';
-    if(typeof window.ZonaOKOpenFavoriteStats==='function'){
-      const league=String(params?.liga||'');
-      const stats=params?.jugador?('https://www.hoqueipatins.fecapa.cat/?liga='+encodeURIComponent(league)+'&vista=estadisticas&jugador='+encodeURIComponent(params.jugador)+'&s='+encodeURIComponent(params.s||'41')):'';
-      const name=String(title).replace(/^(?:CLASSIFICACIÓ|GOLEJADORS|JUGADOR) · /,'');
-      window.ZonaOKOpenFavoriteStats(kind,{league,name,stats:stats||('https://www.hoqueipatins.fecapa.cat/?liga='+encodeURIComponent(league)+'&vista=estadisticas'),pending:options.pending||''});
+    const league=String(params?.liga||''),name=String(title).replace(/^(?:CLASSIFICACIÓ|GOLEJADORS|JUGADOR) · /,'');
+    const stats=params?.jugador?('https://www.hoqueipatins.fecapa.cat/?liga='+encodeURIComponent(league)+'&vista=estadisticas&jugador='+encodeURIComponent(params.jugador)+'&s='+encodeURIComponent(params.s||'41')):'';
+    const source={league,name,stats:stats||('https://www.hoqueipatins.fecapa.cat/?liga='+encodeURIComponent(league)+'&vista=estadisticas'),pending:options.pending||''};
+    if(typeof window.ZonaOKOpenFavoriteStats==='function'){window.ZonaOKOpenFavoriteStats(kind,source);return}
+    if(!favoriteStatsDialog){
+      const style=document.createElement('style');style.textContent='.zok-fav-stats-dialog[open]{display:flex;flex-direction:column}.zok-fav-stats-dialog{position:fixed;inset:0;margin:auto;width:min(96vw,1000px);height:min(92dvh,900px);padding:0;overflow:hidden;border:1px solid #34536d;border-radius:18px;background:#f4f7fa;color:#082238;box-shadow:0 20px 70px #000a}.zok-fav-stats-dialog::backdrop{background:#03172bdd}.zok-fav-stats-head,.zok-fav-stats-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:#061f38;color:#fff}.zok-fav-stats-title{font-weight:800}.zok-fav-stats-close{border:0;background:transparent;color:#fff;font-size:24px}.zok-fav-stats-subtitle{padding:10px 14px;background:#e3eaf0;font-weight:700}.zok-fav-stats-frame{width:100%;flex:1;min-height:0;border:0;background:#fff}.zok-fav-stats-hint{flex:1;margin:0;font-size:13px}.zok-fav-stats-link{padding:10px 14px;border-radius:9px;background:#8f224c;color:#fff;text-decoration:none;font-weight:800}@media(max-width:600px){.zok-fav-stats-dialog{width:96vw;height:94dvh}}';document.head.append(style);
+      const d=document.createElement('dialog');d.className='zok-fav-stats-dialog';const h=document.createElement('div'),head=document.createElement('strong'),close=document.createElement('button'),sub=document.createElement('div'),frame=document.createElement('iframe'),foot=document.createElement('div'),hint=document.createElement('p'),link=document.createElement('a');
+      h.className='zok-fav-stats-head';head.className='zok-fav-stats-title';close.className='zok-fav-stats-close';close.type='button';close.textContent='×';close.addEventListener('click',()=>d.close());h.append(head,close);sub.className='zok-fav-stats-subtitle';frame.className='zok-fav-stats-frame';frame.setAttribute('sandbox','allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');foot.className='zok-fav-stats-foot';hint.className='zok-fav-stats-hint';link.className='zok-fav-stats-link';link.target='_blank';link.rel='noopener';link.textContent='Obrir a FECAPA ↗';foot.append(hint,link);d.append(h,sub,frame,foot);d.addEventListener('close',()=>frame.removeAttribute('src'));document.body.append(d);favoriteStatsDialog={d,head,sub,frame,hint,link}
     }
+    const x=favoriteStatsDialog,displayTitle=kind==='standings'?'Classificació':kind==='goals'?'Golejadors':'Jugador';
+    const url=kind==='standings'?'https://www.hoqueipatins.fecapa.cat/?liga='+encodeURIComponent(league)+'&vista=clasificaciones':source.stats;
+    x.head.textContent=displayTitle.toLocaleUpperCase('ca')+' · FECAPA';x.sub.textContent=displayTitle+' · '+name;x.link.href=url;x.hint.textContent=source.pending||'Si FECAPA no mostra la taula, pots obrir-la directament.';x.frame.hidden=!!source.pending;x.frame.style.display=source.pending?'none':'';if(source.pending)x.frame.removeAttribute('src');else x.frame.src=url;x.d.showModal();
   }
   function appendFavoriteTeamActions(key,box){
     const state=(()=>{try{return JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){return {}}})();
@@ -883,6 +890,7 @@ try {
     const fav=parts.length>=3?{id,team:norm(parts[1]),category:norm(parts.slice(2).join('|')),name:String(state.teamNames?.[id]||'').trim()}:null;if(!fav)return;
     const league=favoriteTeamLeague(fav);
     const playerId=String(state.playerIds?.[fav.id]||'').trim(),playerName=String(fav.name||'').trim()||'Jugador';
+    if(!document.getElementById('zok-team-quick-style')){const style=document.createElement('style');style.id='zok-team-quick-style';style.textContent='.zok-team-quick-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 10px}.zok-team-quick-actions button{display:flex;align-items:center;justify-content:center;gap:5px;min-width:0;min-height:42px;padding:8px 5px;border:1px solid #315875;border-radius:12px;background:#173a57;color:#f2f8ff;font:inherit;font-size:12px;font-weight:800;line-height:1.15}.zok-team-quick-actions button:focus-visible{outline:2px solid #ffb66f;outline-offset:2px}';document.head.append(style)}
     const actions=el('div','zok-team-quick-actions');
     const add=(label,icon,run)=>{const b=el('button','',icon+' '+label);b.type='button';b.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();run()});actions.append(b)};
     add('Classificació','🏆',()=>league?openFavoriteFecapaDialog('CLASSIFICACIÓ · '+fav.category,{liga:league,vista:'clasificaciones'}):openFavoriteFecapaDialog('CLASSIFICACIÓ · '+fav.category,{}, {pending:'No s’ha pogut identificar la lliga FECAPA d’aquest equip.'}));
@@ -2316,6 +2324,6 @@ window.ZonaOKRefreshSources=async function(){
 })();
 </script>
   <script defer src="zonaok-resultats-7dies.js?v=20261124-favcolors"></script>
-  <script defer src="zonaok-golejadors.js?v=20261124-stats-dialog"></script>
+  <script defer src="zonaok-golejadors.js?v=20261124-stats-fallback"></script>
 </body>
 </html>
