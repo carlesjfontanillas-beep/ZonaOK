@@ -76,14 +76,14 @@
     const variants = new Map();
     const labels = [...records.map(r => r.team), ...Object.keys(logos || {})];
     for (const label of labels) {
-      const m = clean(label).match(/^(.*?)(?:\\s*-\\s*|\\s+)([A-Z])$/i);
+      const m = clean(label).match(/^(.*?)(?:\s*-\s*|\s+)([A-Z])$/i);
       if (!m) continue;
       const prefix = clean(m[1]), set = variants.get(norm(prefix)) || new Set();
       set.add(m[2].toUpperCase()); variants.set(norm(prefix), set);
     }
     const verifiedBases = new Map();
     for (const label of labels) {
-      const m = clean(label).match(/^(.*?)(?:\\s*-\\s*|\\s+)([A-Z])$/i);
+      const m = clean(label).match(/^(.*?)(?:\s*-\s*|\s+)([A-Z])$/i);
       if (!m) continue;
       const prefix = clean(m[1]);
       const url = Object.entries(logos || {}).find(([name]) => norm(name) === norm(label))?.[1];
@@ -93,9 +93,9 @@
     }
     return record => {
       const team = clean(record.team), code = norm(record.clubCode), key = norm(team);
-      if (code === 'CELONI' || /\\bSANT CELONI\\b/.test(key)) return 'CP SANT CELONI';
+      if (code === 'CELONI' || /\bSANT CELONI\b/.test(key)) return 'CP SANT CELONI';
       if (code === 'BARCA' || /^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETERANS|FCBETRANS)(?: [A-Z0-9]+)?$/.test(key)) return 'BARÇA';
-      const m = team.match(/^(.*?)(?:\\s*-\\s*|\\s+)([A-Z])$/i);
+      const m = team.match(/^(.*?)(?:\s*-\s*|\s+)([A-Z])$/i);
       if (m && verifiedBases.has(norm(m[1]))) return verifiedBases.get(norm(m[1]));
       return team;
     };
