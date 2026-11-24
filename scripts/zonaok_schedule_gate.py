@@ -21,7 +21,7 @@ MADRID = ZoneInfo("Europe/Madrid")
 DAILY_CRON = "2 6,7,18,19 * * *"
 AGENDA_CRONS = {"0 12 * * *", "0 13 * * *"}
 LIVE_CRONS = {
-    "agenda": "1-59/5 * * * *",  # legacy accepted during stagger rollout
+    "agenda": "1,6,11,16,21,26,31,36,41,46,51,56 * * * *",
     "directe": "2,7,12,17,22,27,32,37,42,47,52,57 * * * *",
     "actes": "3,8,13,18,23,28,33,38,43,48,53,58 * * * *",
     "classificacions": "4,9,14,19,24,29,34,39,44,49,54,59 * * * *",
