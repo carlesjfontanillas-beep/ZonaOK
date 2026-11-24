@@ -1,6 +1,6 @@
 /*
- * ZonaOK — Resultats dels darrers 7 dies · V7 · TOTS ELS CLUBS + TARGETES COMPACTES + ACTES TOTAL (21/11/2026)
- * Instal·lació: <script defer src="zonaok-resultats-7dies.js?v=20261122-actes-total-r7"></script>
+ * ZonaOK — Resultats dels darrers 7 dies · V8 · NOMS COMPLETS DELS CLUBS + TARGETES COMPACTES + ACTES TOTAL (24/11/2026)
+ * Instal·lació: <script defer src="zonaok-resultats-7dies.js?v=20261124-club-names-r8"></script>
  * al final de <body> d'index.html, després dels scripts existents.
  *
  * Font principal: zonaok-data.json / data.agenda.rows. Els scoreUpdates i live
@@ -34,10 +34,45 @@
     return '';
   };
   const baseClubName = name => String(name || '').trim().replace(/\s+[A-D]$/i, '').trim();
+  // Les sigles de resultats es poden mostrar amb el nom complet d'Agenda quan
+  // una altra fila del mateix paquet n'aporta una equivalència inequívoca.
+  let teamAliases = new Map();
+  const aliasCandidates = name => {
+    const words = norm(name).split(' ').filter(Boolean);
+    if (words.length < 2) return [];
+    const initials = words.map(word => word[0]).join('');
+    const candidates = [initials];
+    const last = words[words.length - 1];
+    if (last.length >= 2 && last.length <= 4) {
+      candidates.push(words.slice(0, -1).map(word => word[0]).join('') + last);
+      candidates.push(last);
+    }
+    return [...new Set(candidates)].filter(value => value.length >= 2 && value.length <= 5);
+  };
+  const setTeamAliases = rows => {
+    const names = new Set();
+    for (const row of rows) for (const name of [row.home, row.away]) {
+      const value = baseClubName(name);
+      if (value && norm(value).replace(/ /g, '').length > 5) names.add(value);
+    }
+    const candidates = new Map();
+    for (const fullName of names) for (const alias of aliasCandidates(fullName)) {
+      const key = norm(alias).replace(/ /g, '');
+      if (!candidates.has(key)) candidates.set(key, new Set());
+      candidates.get(key).add(fullName);
+    }
+    teamAliases = new Map([...candidates].filter(([, values]) => values.size === 1)
+      .map(([alias, values]) => [alias, [...values][0]]));
+  };
+  const displayTeamName = name => {
+    const base = baseClubName(name);
+    const key = norm(base).replace(/ /g, '');
+    return teamAliases.get(key) || base;
+  };
   const teamKey = (name, logo) => {
     const known = clubOf(name);
     if (known) return known;
-    const base = norm(baseClubName(name));
+    const base = norm(displayTeamName(name));
     if (base) return 'team:' + base;
     const match = String(logo || '').match(/^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/(\d+)\.png$/);
     return match ? 'logo:' + match[1] : 'team:' + norm(name);
@@ -45,7 +80,7 @@
   const teamLabel = (name, key) => {
     if (key === 'barca') return 'Barça';
     if (key === 'celoni') return 'CP Sant Celoni';
-    return baseClubName(name);
+    return displayTeamName(name);
   };
   const canonical = name => {
     const raw = norm(name);
@@ -213,7 +248,7 @@
       image.onerror = () => crest.replaceChildren(make('span', 'crest-fallback', name.charAt(0)));
       crest.append(image);
     } else crest.append(make('span', 'crest-fallback', String(name).charAt(0).toUpperCase()));
-    team.append(crest, make('strong', '', name));
+    team.append(crest, make('strong', '', displayTeamName(name)));
     return team;
   }
 
@@ -353,6 +388,7 @@
     try {
       const data = await loadData();
       matches = data.__all ? rowsInLastSevenDays(data.rows) : combinedAgenda(data);
+      setTeamAliases(matches);
       matches = await enrichActes(matches);
       updateClubOptions();
       updateCategoryOptions();
