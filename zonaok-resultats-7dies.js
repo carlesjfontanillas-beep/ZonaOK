@@ -89,10 +89,10 @@
     if (contextual?.size === 1) return [...contextual][0];
     return teamAliases.get(key) || base;
   };
-  const teamKey = (name, logo) => {
+  const teamKey = (name, logo, row, side) => {
     const known = clubOf(name);
     if (known) return known;
-    const base = norm(displayTeamName(name));
+    const base = norm(displayTeamName(name, row, side));
     if (base) return 'team:' + base;
     const match = String(logo || '').match(/^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/(\d+)\.png$/);
     return match ? 'logo:' + match[1] : 'team:' + norm(name);
@@ -345,7 +345,7 @@
   function updateClubOptions() {
     const clubs = new Map();
     for (const r of matches) for (const [name, logo] of [[r.home,r.homeLogo],[r.away,r.awayLogo]]) {
-      const k=teamKey(name,logo);
+      const k=teamKey(name,logo,r,name===r.home?'home':'away');
       if (!clubs.has(k)) clubs.set(k,teamLabel(name,k,r,name===r.home?'home':'away'));
     }
     const options = [...clubs.entries()].sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})).map(([,label])=>label);
@@ -366,8 +366,8 @@
     const selectedClub = clubFilter.value;
     const selectedCompetition = competitionFilter.value;
     const categories = [...new Set(matches.filter(r => (!selectedClub ||
-      queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo),r,'home'),selectedClub) ||
-      queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo),r,'away'),selectedClub)) &&
+      queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo,r,'home'),r,'home'),selectedClub) ||
+      queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo,r,'away'),r,'away'),selectedClub)) &&
       queryMatches(competitionGroup(r.competition),selectedCompetition))
       .map(r => String(r.competition || 'Categoria no informada')))]
       .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
