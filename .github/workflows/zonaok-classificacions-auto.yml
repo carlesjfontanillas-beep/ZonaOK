@@ -26,15 +26,15 @@ on:
         required: true
         type: boolean
         default: false
-  # Activar NOMES quan la prova amb limit=0 sigui satisfactoria.
-  # schedule:
-  #   - cron: '20 4 * * *'
+  schedule:
+    - cron: '*/5 * * * *'
+    - cron: '2 6,7,18,19 * * *'
 
 permissions:
   contents: write
 
 concurrency:
-  group: zonaok-v27-classificacions-resultats
+  group: zonaok-tots-clubs
   cancel-in-progress: false
 
 jobs:
@@ -54,7 +54,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Decidir si toca importar segons l'horari Europe/Madrid
+        id: schedule_gate
+        if: ${{ github.event_name == 'schedule' }}
+        env:
+          GITHUB_EVENT_SCHEDULE: ${{ github.event.schedule }}
+        run: python scripts/zonaok_schedule_gate.py --mode classificacions
+
       - name: Instal·lar navegador Chromium
+        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -62,10 +70,12 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Proves de regressio de classificacions i partits
+        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         run: python -m unittest discover -s tests -p 'test_*.py' -v
 
       - name: Navegar per FECAPA i capturar les classificacions (V2 rapida/completa)
+        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         env:
           LIMIT: ${{ github.event_name == 'schedule' && '20' || inputs.limit }}
           SCOPE: ${{ github.event_name == 'schedule' && 'fast' || inputs.scope }}
@@ -125,7 +135,7 @@ jobs:
           retention-days: 14
 
       - name: Fusionar i publicar (només amb publish=true)
-        if: ${{ (github.event_name == 'schedule') || (inputs.publish == true) }}
+        if: ${{ ((github.event_name == 'schedule') || (inputs.publish == true)) && (github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true') }}
         shell: bash
         run: |
           set -euo pipefail
