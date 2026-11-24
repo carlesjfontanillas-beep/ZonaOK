@@ -31,6 +31,8 @@ VALID_HOSTS = {'www.hoqueipatins.fecapa.cat', 'hoqueipatins.fecapa.cat'}
 LOOKBACK_DAYS = 7
 DIRECTE_LOOKAHEAD_DAYS = 2
 FAVOURITE_LEAGUES = ('4789','4786','4784')
+# Mateix màxim que admet el lector d'index.html. Permet tota la temporada.
+MAX_LEGACY_ACTA_FIXTURES = 20000
 
 
 def local_today():
@@ -961,8 +963,8 @@ def write_compatibility(doc):
           not re.search(r'EN JOC|EN DIRECTE|PLAYING|LIVE|IN PROGRESS',clean(r.get('status')),re.I)]
     results={**base,'kind':'resultats-7dies','agendaCount':len(rows),'rows':done}
     Path('zonaok-tots-resultats-7dies.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    # Exportació compatible amb index.html fins que l'app passi al JSON únic.
-    # Per seguretat, si supera el límit de 1200 no toquem l'antic fitxer.
+    # Mirall compatible amb index.html (l'aplicació admet fins a 20.000 fitxes).
+    # El JSON unificat continua sent la font completa, sense límit de 1.200.
     fixtures=[]
     for r in rows:
         if not (check_iso(r.get('iso')) and check_time(r.get('time')) and r.get('home') and r.get('away')):continue
@@ -981,7 +983,7 @@ def write_compatibility(doc):
                 fixtures=list(by_id.values())
             else:return {'legacyActes':'Esquema antic desconegut; conservat'}
         except (ValueError,KeyError):return {'legacyActes':'Fitxer antic malformat; conservat'}
-    if len(fixtures)>1200:return {'legacyActes':f'Conservat: {len(fixtures)} supera límit de 1200'}
+    if len(fixtures)>MAX_LEGACY_ACTA_FIXTURES:return {'legacyActes':f'Conservat: {len(fixtures)} supera límit de {MAX_LEGACY_ACTA_FIXTURES}'}
     prior.write_text(json.dumps({'version':1,'generatedAt':now,'source':'FECAPA-PLAYWRIGHT',
                                  'fixtures':fixtures},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     return {'legacyActes':len(fixtures),'resultsLast7Days':len(done)}
