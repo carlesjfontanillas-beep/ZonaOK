@@ -1002,7 +1002,9 @@ try {
     const actions=el('div','match-actions');
     const map=el('a','light','↗ Google Maps');map.href=mapsURL(r.venue||((r.home||'')+' '+(r.away||'')));map.target='_blank';map.rel='noopener noreferrer';
     map.setAttribute('aria-label','Obrir Google Maps per al partit '+r.home+' contra '+r.away);actions.append(map);
-    if((r.actaUrl||validScore(r.homeScore)&&validScore(r.awayScore))&&!compact){
+    if(r.actaUrl&&compact){
+      const link=el('a','light','⌕ Acta');link.href=r.actaUrl;link.target='_blank';link.rel='noopener';actions.append(link);actions.classList.add('zok-has-acta');
+    }else if(!compact&&(r.actaUrl||validScore(r.homeScore)&&validScore(r.awayScore))){
       if(validScore(r.homeScore)&&validScore(r.awayScore)){
         const acta=el('button','zok-home-acta','⌕ Acta');acta.type='button';acta.setAttribute('aria-label','Obrir acta de '+r.home+' contra '+r.away);
         acta.addEventListener('click',ev=>{ev.stopPropagation();window.ZonaOKActes?.open(r,inferLeague(r));});actions.append(acta);
@@ -1174,6 +1176,9 @@ try {
       .match.zok-v5:not(.zok-compact) .match-actions .zok-acta-action,.match.zok-v5:not(.zok-compact) .match-actions .zok-home-acta{background:var(--accent);color:#fff;border:0}
       .match.zok-v5:not(.zok-compact) .match-actions .zok-calendar-btn{background:#061d33;color:#fff;border:0;min-height:36px;padding:7px 8px;font-size:12px;white-space:normal}
       .match.zok-v5:not(.zok-compact) .match-actions>*:disabled{opacity:.55}
+      #home-cards .match.zok-v5:not(.zok-compact) .match-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+      #home-cards .match.zok-v5:not(.zok-compact) .match-actions.zok-has-acta{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+      #home-cards .match.zok-v5:not(.zok-compact) .match-actions>*{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:32px!important;padding:5px 6px!important;text-align:center!important}
       /* Pista a l'esquerra, calendari petit a la dreta (sense segona fila). */
       .match.zok-v5:not(.zok-compact) .venue{display:flex!important;align-items:center;justify-content:space-between;gap:10px;flex-wrap:nowrap}
       .match.zok-v5:not(.zok-compact) .venue .zok-map-link,
