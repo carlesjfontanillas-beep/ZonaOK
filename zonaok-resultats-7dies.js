@@ -39,13 +39,17 @@
   let teamAliases = new Map();
   let rowTeamAliases = new WeakMap();
   const aliasCandidates = name => {
-    const words = norm(name).split(' ').filter(Boolean);
-    if (words.length < 2) return [];
-    const last = words[words.length - 1];
-    const candidates = [words.map(word => word[0]).join('')];
-    if (last.length >= 2 && last.length <= 5) {
-      candidates.push(words.slice(0, -1).map(word => word[0]).join('') + last);
-      candidates.push(last);
+    const variants = [String(name || '').trim(), baseClubName(name)];
+    const candidates = [];
+    for (const variant of new Set(variants)) {
+      const words = norm(variant).split(' ').filter(Boolean);
+      if (words.length < 2) continue;
+      const last = words[words.length - 1];
+      candidates.push(words.map(word => word[0]).join(''));
+      if (last.length >= 2 && last.length <= 5) {
+        candidates.push(words.slice(0, -1).map(word => word[0]).join('') + last);
+        candidates.push(last);
+      }
     }
     return [...new Set(candidates)].filter(value => value.length >= 2 && value.length <= 6);
   };
@@ -68,7 +72,7 @@
             !aliasCompatible(row.home, other.home) || !aliasCompatible(row.away, other.away)) continue;
         for (const side of ['home', 'away']) {
           const short = String(row[side] || '');
-          const full = baseClubName(other[side]);
+          const full = String(other[side] || '').trim();
           const shortKey = norm(short).replace(/ /g, '');
           if (shortKey.length > 6 || norm(full).replace(/ /g, '').length <= 6) continue;
           if (!perRow[side]) perRow[side] = new Set();
@@ -82,17 +86,18 @@
     teamAliases = new Map([...candidates].filter(([, values]) => values.size === 1)
       .map(([alias, values]) => [alias, [...values][0]]));
   };
+  // El nom del partit conserva el sufix oficial; només els filtres el treuen.
   const displayTeamName = (name, row, side) => {
-    const base = baseClubName(name);
-    const key = norm(base).replace(/ /g, '');
+    const full = String(name || '').trim();
+    const key = norm(full).replace(/ /g, '');
     const contextual = row && rowTeamAliases.get(row)?.[side];
     if (contextual?.size === 1) return [...contextual][0];
-    return teamAliases.get(key) || base;
+    return teamAliases.get(key) || full;
   };
   const teamKey = (name, logo, row, side) => {
     const known = clubOf(name);
     if (known) return known;
-    const base = norm(displayTeamName(name, row, side));
+    const base = norm(baseClubName(displayTeamName(name, row, side)));
     if (base) return 'team:' + base;
     const match = String(logo || '').match(/^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/(\d+)\.png$/);
     return match ? 'logo:' + match[1] : 'team:' + norm(name);
@@ -100,7 +105,7 @@
   const teamLabel = (name, key, row, side) => {
     if (key === 'barca') return 'Barça';
     if (key === 'celoni') return 'CP Sant Celoni';
-    return displayTeamName(name, row, side);
+    return baseClubName(displayTeamName(name, row, side));
   };
   const canonical = name => {
     const raw = norm(name);
