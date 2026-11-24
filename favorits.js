@@ -57,9 +57,8 @@
     renderCount();
   }
   function competitionName(value) {
-    return clean(value)
-      .replace(/\b(OR|PLATA|BRONZE)\s+\d+\b/gi, '$1')
-      .replace(/\s+(?:GRUP|GRUPO)\s+[A-Z0-9]+\b/gi, '').trim();
+    // Preserva els nivells i grups que formen part del nom FECAPA.
+    return clean(value);
   }
   function teamKey(team, category) {
     return ['team', team, category].map(norm).join('|');
@@ -68,18 +67,38 @@
     const name = norm(value);
     return clean(value);
   }
-  function clubLabel(record) {
-    const code = norm(record.clubCode);
-    const team = norm(record.team);
-    // Reutilitza les equivalències que l'app aplica als noms FECAPA.
-    if (code === 'CELONI' || /^CPSC(?:[AB]| [AB])?$/.test(team) || /\bSANT CELONI\b/.test(team))
-      return 'CP SANT CELONI';
-    if (code === 'BARCA' || /^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETERANS|FCBETRANS)(?: [A-Z0-9]+)?$/.test(team))
-      return 'BARÇA';
-    return clubBaseName(record.team);
-  }
-  function clubBaseName(value) {
-    return clean(value).replace(/\s*-\s*[A-Z]$/i, '').replace(/\s+[A-Z]$/i, '').replace(/\s*-\s*$/i, '').trim();
+  function makeClubResolver(records, logos) {
+    const logoNames = new Map();
+    for (const [name, url] of Object.entries(logos || {})) {
+      const names = logoNames.get(url) || [];
+      names.push(clean(name)); logoNames.set(url, names);
+    }
+    const variants = new Map();
+    const labels = [...records.map(r => r.team), ...Object.keys(logos || {})];
+    for (const label of labels) {
+      const m = clean(label).match(/^(.*?)(?:\\s*-\\s*|\\s+)([A-Z])$/i);
+      if (!m) continue;
+      const prefix = clean(m[1]), set = variants.get(norm(prefix)) || new Set();
+      set.add(m[2].toUpperCase()); variants.set(norm(prefix), set);
+    }
+    const verifiedBases = new Map();
+    for (const label of labels) {
+      const m = clean(label).match(/^(.*?)(?:\\s*-\\s*|\\s+)([A-Z])$/i);
+      if (!m) continue;
+      const prefix = clean(m[1]);
+      const url = Object.entries(logos || {}).find(([name]) => norm(name) === norm(label))?.[1];
+      const exactBase = url && (logoNames.get(url) || []).find(name => norm(name) === norm(prefix));
+      if (exactBase || (variants.get(norm(prefix))?.size || 0) >= 2)
+        verifiedBases.set(norm(prefix), exactBase || prefix);
+    }
+    return record => {
+      const team = clean(record.team), code = norm(record.clubCode), key = norm(team);
+      if (code === 'CELONI' || /\\bSANT CELONI\\b/.test(key)) return 'CP SANT CELONI';
+      if (code === 'BARCA' || /^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETERANS|FCBETRANS)(?: [A-Z0-9]+)?$/.test(key)) return 'BARÇA';
+      const m = team.match(/^(.*?)(?:\\s*-\\s*|\\s+)([A-Z])$/i);
+      if (m && verifiedBases.has(norm(m[1]))) return verifiedBases.get(norm(m[1]));
+      return team;
+    };
   }
   function buildCatalog(agenda, classifications, clubLogos = {}) {
     const teamRecords = new Map();
@@ -93,7 +112,7 @@
       if (!item || typeof item !== 'object') continue;
       const exactName = clean(item.name || item.category || item.competition);
       const league = clean(item.leagueId);
-      const descriptor = {category: exactName, competition: clean(item.competition) || competitionName(exactName)};
+      const descriptor = {category: exactName, competition: clean(item.competition) || exactName};
       if (exactName) {
         if (league) classificationByKey.set(`${norm(league)}|${norm(exactName)}`, descriptor);
         const nameKey = norm(exactName);
@@ -121,7 +140,7 @@
       const descriptor = classificationByKey.get(`${norm(leagueId)}|${norm(exactName)}`) ||
         classificationByName.get(norm(exactName));
       const category = descriptor?.category || exactName;
-      const competition = descriptor?.competition || competitionName(exactName);
+      const competition = descriptor?.competition || exactName;
       addTeam(row.home, category, competition, leagueId, row.homeClub);
       addTeam(row.away, category, competition, leagueId, row.awayClub);
     }
@@ -129,7 +148,7 @@
     for (const item of entries) {
       if (!item || typeof item !== 'object') continue;
       const category = clean(item.name || item.category || item.competition);
-      const competition = clean(item.competition) || competitionName(category);
+      const competition = clean(item.competition) || category;
       for (const row of Array.isArray(item.standings) ? item.standings : []) {
         addTeam(row && row.team, category, competition, item.leagueId || '', '');
       }
@@ -138,7 +157,7 @@
     }
 
     const records = [...teamRecords.values()];
-    const enrichedRecords = records.map(record => ({...record, club: clubLabel(record)}));
+    const resolveClub = makeClubResolver(records, clubLogos);\n    const enrichedRecords = records.map(record => ({...record, club: resolveClub(record)}));
     catalog = {
       clubs: sorted(enrichedRecords.map(record => record.club)),
       teams: enrichedRecords.sort((a, b) => a.team.localeCompare(b.team, 'ca', {sensitivity: 'base'}) ||
