@@ -78,9 +78,10 @@
       return 'CP SANT CELONI';
     if (code === 'BARCA' || /^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETERANS|FCBETRANS)(?: [A-Z0-9]+)?$/.test(team))
       return 'BARÇA';
-    const name = clean(record.team);
-    // La lletra final A/B/C/D identifica un equip dins del club.
-    return name.replace(/\s+[A-D]$/i, '');
+    return clubBaseName(record.team);
+  }
+  function clubBaseName(value) {
+    return clean(value).replace(/\s*-\s*[A-Z]$/i, '').replace(/\s+[A-Z]$/i, '').replace(/\s*-\s*$/i, '').trim();
   }
   function buildCatalog(agenda, classifications) {
     const teamRecords = new Map();
@@ -152,10 +153,27 @@
       competitions: sorted(competitions),
       teamRecords: enrichedRecords
     };
+    const clubsByName = new Map(catalog.clubs.map(club => [norm(club), club]));
+    const clubAliases = new Map(), migratedClubs = [];
+    for (const oldClub of selected.clubs || []) {
+      const canonical = clubsByName.get(norm(clubBaseName(oldClub))) || clubsByName.get(norm(oldClub));
+      if (canonical) { clubAliases.set(oldClub, canonical); migratedClubs.push(canonical); }
+    }
+    const migrateClubMap = source => {
+      const result = {...(source || {})};
+      for (const [oldClub, canonical] of clubAliases) {
+        if (oldClub === canonical) continue;
+        if (!result[canonical] && result[oldClub]) result[canonical] = result[oldClub];
+        delete result[oldClub];
+      }
+      return result;
+    };
     selected = {...Object.fromEntries(GROUPS.map(([key]) => {
       const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
-      return [key, selected[key].filter(value => allowed.has(value))];
-    })), teamNames: selected.teamNames || {}, clubLogoUrls: selected.clubLogoUrls || {}, teamLogoUrls: selected.teamLogoUrls || {}, clubColors: selected.clubColors || {}, teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
+      const values = key === 'clubs' ? [...new Set(migratedClubs)] : selected[key];
+      return [key, values.filter(value => allowed.has(value))];
+    })), teamNames: selected.teamNames || {}, clubLogoUrls: migrateClubMap(selected.clubLogoUrls), teamLogoUrls: selected.teamLogoUrls || {}, clubColors: migrateClubMap(selected.clubColors), teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
+    save();
     render();
   }
   function scopedOptions(key, matchingClubs = new Set()) {
