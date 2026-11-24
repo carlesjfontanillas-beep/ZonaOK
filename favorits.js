@@ -67,11 +67,29 @@
     const name = norm(value);
     return clean(value);
   }
+  // FECAPA crest identifiers, with display names verified against the published crest catalog.
+  const CLUB_NAMES_BY_CREST = {"231":"CLUB HOQUEI ARENYS DE MAR","233":"UNIÓ ESPORTIVA HOQUEI BARBERÀ","234":"BARÇA","235":"CLUB TENNIS BARCINO","236":"CHP BIGUES I RIELLS","237":"CH CALDES RECAM LÀSER","239":"CAPELLADES HC","240":"ASSOCIACIÓ ESPORTIVA CASP","242":"CLUB HOQUEI CASTELLET","243":"CLUB PATÍ CENTELLES","244":"CERDANYOLA CLUB D´HOQUEI","248":"CE CORNELLÀ","250":"CLUB PATÍ FOLGUEROLES","253":"JESUS MARIA I JOSEP","255":"CE LA SALLE BONANOVA","259":"MARTINELIA CLUB PATÍ MANLLEU","260":"CLUB PATÍ MANRESA","263":"CLUB HOQUEI MATARÓ","269":"CE NOIA","270":"CLUB ESPORTIU OLESA PATÍ","275":"CLUB HOQUEI PRAT","278":"CLUB HOQUEI RIPOLLET","279":"CLUB PATÍ RIUDEBITLLES","280":"CLUB PATÍ RODA","281":"CP SANT CELONI","282":"PHC SANT CUGAT","283":"CLUB HOQUEI PATINS SANT FELIU","287":"HF SANT JOSEP SANT SADURNÍ","289":"CLUB PATÍ SANT RAMON","295":"CLUB PATÍ TARADELL","296":"HOQUEI PATINS TONA","300":"CLUB PATÍ VIC","301":"CLUB PATÍ VILAFRANCA","302":"CLUB PATÍ VILANOVA","304":"CLUB PATÍ VOLTREGÀ","307":"CLUB PATÍ BREDA","308":"CP CALDES DE MALAVELLA","309":"FOMENT DEPORTIU CASSANENC","311":"GEIEG","315":"CLUB HOQUEI OLOT","316":"CLUB HOQUEI PALAFRUGELL","317":"CLUB PATÍ RIBES DE FRESER","321":"CLUB HOQUEI PATINS AMPOSTA","322":"CLUB PATÍ CALAFELL","323":"CAMBRILS CLUB HOQUEI","324":"HOQUEI CASAL L´ESPLUGA","326":"CLUB PATI FLIX","332":"CLUB D´ESPORTS VENDRELL","333":"HOQUEI CLUB ALPICAT","334":"CLUB HOQUEI VILA-SECA","335":"CLUB PATÍ BELL-LLOC","338":"CLUB HOQUEI JUNEDA","339":"LLEIDA LLISTA BLAVA","393":"TRANSLOP ALCAÑIZ CLUB PATÍN","398":"CPI LA SAGRERA","425":"TÀRREGA HOQUEI PATINS CLUB","443":"CLUB HOQUEI CLARET","464":"HOQUEI BANYOLES","474":"IGUALADA FEMENÍ HCP","475":"CEH SABADELL","477":"CLUB HOQUEI LES FRANQUESES","493":"HOQUEI CLUB VALLS","520":"CLUB HOQUEI PATINS MARTORELL","521":"CP SUBUR SITGES","551":"SFERIC","572":"SD ESPANYOL","657":"CLUB HOQUEI MOLINS DE REI","665":"CP FRAGA","724":"CE SAGRERENC","727":"SE LA SALLE BONANOVA","232_1":"CE ARENYS DE MUNT","337_2":"CLUB HOQUEI CADÍ","312_1":"GIRONA CLUB HOQUEI","241_2":"HOQUEI CLUB CASTELLAR","319_4":"HOQUEI CLUB RIPOLL","252_1":"IGUALADA HC","392_1":"CLUB PATÍ TORRELLES","341_1":"CLUB PATÍ VILA-SANA","318_1":"HOQUEI CLUB SALT","271_1":"HC PALAU PLEGAMANS","692_2":"PATÍ VIC","428_1":"ANDORRA HOQUEI CLUB","298_1":"CE TORRELAVIT","303_1":"CLUB HOQUEI VILASSAR","310_5":"CLUB HOQUEI FARNERS","360_1":"CLUB PATÍ CUBELLES","246_1":"CP CONGRÉS","267_3":"CLUB PATÍ MONJOS","330_4":"CP RIUDOMS","297_1":"CLUB PATI TORDERA","292_1":"HOQUEI CLUB SENTMENAT","313_1":"CLUB HOQUEI LLORET","251_1":"UNIÓ ESPORTIVA D’HORTA","517_1":"CLUB PATÍ BLANES ATLÈTIC","261_1":"FUTBOL CLUB MARTINENC","288_1":"HC SANT JUST","266_1":"MOLLET HC","328_2":"REUS DEPORTIU","320_1":"SHUM","518_1":"CH FIGUERES","340_1":"CLUB HOQUEI MOLLERUSSA","291_3":"CLUB HOQUEI SANTA PERPÈTUA","314_1":"CLUB PATÍ JONQUERENC","262_2":"CLUB PATÍ MASQUEFA","258_1":"CLUB PATÍ MALGRAT ABADEN","290_1":"HOQUEI CLUB MONTBUI","329_1":"CN REUS PLOMS","638_1":"CEH OLÍMPIC REUS","254_7":"UNIÓ ESPORTIVA LA GARRIGA","268_1":"CLUB HOQUEI NAVARCLES","286_1":"CHP SANT JOSEP DE BADALONA","575_1":"CP CORBERA","277_2":"RIBES CLUB PATI","325_1":"CLUB HOQUEI MONTBLANC","553_3":"CLUB HOQUEI SANT JORDI","285_1":"MARISTES SANT JOAN","612_1":"CP MONTESQUIU","274_1":"HOQUEI CLUB PIERA","238_2":"CLUB HOQUEI CANET","276_1":"CLUB HOQUEI PREMIÀ"};
+  const crestId = url => String(url || '').match(/\/(\d+(?:_\d+)?)\.(?:png|gif)$/i)?.[1] || '';
+  const isVenue = name => /^(?:PAVELLO|POLIESPORTIU|PISTA\s+\d|MUNICIPAL D ESPORTS)/.test(norm(name));
+  // Unidentified short codes remain in team records, never masquerade as separate clubs.
+  const isUnknownCode = name => /^[A-Z0-9]{2,5}$/.test(clean(name));
   function makeClubResolver(records, logos) {
     const logoNames = new Map();
+    const nameToCrest = new Map();
+    const canonicalByCrest = new Map();
     for (const [name, url] of Object.entries(logos || {})) {
       const names = logoNames.get(url) || [];
       names.push(clean(name)); logoNames.set(url, names);
+      const id = crestId(url);
+      if (id) nameToCrest.set(norm(name), id);
+    }
+    for (const [url, names] of logoNames) {
+      const id = crestId(url);
+      if (!id) continue;
+      const preferred = CLUB_NAMES_BY_CREST[id];
+      const candidates = names.filter(name => !isUnknownCode(name) && !/(?:\\s*-\\s*|\\s+)[A-Z]$/.test(norm(name)));
+      const canonical = (preferred && names.find(name => norm(name) === norm(preferred))) || candidates.sort((a,b)=>a.length-b.length || a.localeCompare(b,'ca'))[0] || names[0];
+      if (canonical) canonicalByCrest.set(id, preferred && norm(canonical) === norm(preferred) ? preferred : canonical);
     }
     const variants = new Map();
     const labels = [...records.map(r => r.team), ...Object.keys(logos || {})];
@@ -95,9 +113,15 @@
       const team = clean(record.team), code = norm(record.clubCode), key = norm(team);
       if (code === 'CELONI' || /^CPSC(?:[AB]| [AB])?$/.test(key) || /\bSANT CELONI\b/.test(key)) return 'CP SANT CELONI';
       if (code === 'BARCA' || /^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETERANS|FCBETRANS)(?: [A-Z0-9]+)?$/.test(key)) return 'BARÇA';
+      if (isVenue(team)) return '';
+      const exact = canonicalByCrest.get(nameToCrest.get(key));
+      if (exact) return exact;
       const m = team.match(/^(.*?)(?:\s*-\s*|\s+)([A-Z])$/i);
-      if (m && verifiedBases.has(norm(m[1]))) return verifiedBases.get(norm(m[1]));
-      return team;
+      if (m && verifiedBases.has(norm(m[1]))) {
+        const base = verifiedBases.get(norm(m[1]));
+        return canonicalByCrest.get(nameToCrest.get(norm(base))) || base;
+      }
+      return isUnknownCode(team) ? '' : team;
     };
   }
   function buildCatalog(agenda, classifications, clubLogos = {}) {
@@ -122,7 +146,7 @@
     }
     const addTeam = (team, category, competition, leagueId, clubCode) => {
       team = clean(team);
-      if (!team) return;
+      if (!team || isVenue(team)) return;
       category = clean(category) || competitionName(competition);
       competition = clean(competition) || competitionName(category);
       const key = teamKey(team, category);
@@ -177,7 +201,7 @@
     // Use the same verified club grouping for saved favorites and crests.
     catalog.clubNameLookup = new Map(clubsByName);
     for (const record of enrichedRecords) {
-      if (!catalog.clubNameLookup.has(norm(record.team))) catalog.clubNameLookup.set(norm(record.team), record.club);
+      if (record.club && !catalog.clubNameLookup.has(norm(record.team))) catalog.clubNameLookup.set(norm(record.team), record.club);
     }
     for (const name of Object.keys(clubLogos || {})) {
       const canonical = clubsByName.get(norm(resolveClub({team: name})));
@@ -199,6 +223,10 @@
       return result;
     };
     const migratedLogoMap = migrateClubMap(selected.clubLogoUrls);
+    for (const [name,url] of Object.entries(clubLogos || {})) {
+      const canonical = catalog.clubNameLookup.get(norm(name));
+      if (canonical && migratedClubs.includes(canonical) && crestId(url)) migratedLogoMap[canonical] = url;
+    }
     const favoriteClubSet = new Set(migratedClubs);
     const favoriteClubLogos = Object.fromEntries(Object.entries(migratedLogoMap).filter(([club]) => favoriteClubSet.has(club)));
     selected = {...Object.fromEntries(GROUPS.map(([key]) => {
@@ -256,6 +284,7 @@
     if (!query || norm(label).includes(query)) return true;
     if (!matchingClubs.size) return false;
     const clubMatches = record => matchingClubs.has(norm(record.club));
+    if (key === 'clubs') return matchingClubs.has(norm(option));
     if (key === 'teams') return matchingClubs.has(norm(option.club));
     if (key === 'categories') return catalog.teamRecords.some(record =>
       norm(record.category) === norm(option) && clubMatches(record));
@@ -270,6 +299,7 @@
   function render() {
     const query = norm(nodes.search.value);
     const matchingClubs = new Set(query ? catalog.clubs.filter(club => norm(club).includes(query)).map(norm) : []);
+    if (query) for (const [alias,club] of catalog.clubNameLookup) if (alias.includes(query)) matchingClubs.add(norm(club));
     const hasClubScope = selected.clubs.some(club => catalog.clubs.includes(club));
     nodes.scope.hidden = !hasClubScope;
     nodes.scope.textContent = showAllOptions ? 'Limita a clubs marcats' : 'Mostra totes les opcions';
