@@ -1395,12 +1395,11 @@ function renderHome(){
  }
  box.classList.remove('zok-home-no-favorites');
  const found=new Map();
- const teamIds=Array.isArray(state.teams)?state.teams.map((id,index)=>({id,index})).filter(x=>typeof x.id==='string'&&x.id.toUpperCase().startsWith('TEAM|')):[];
+ const teamFavorites=Array.isArray(state.teams)?state.teams.map((id,index)=>({team:zonaokFavoriteTeamFromId(id,state),index})).filter(x=>x.team):[];
  const clubFavorites=Array.isArray(state.clubs)?state.clubs.map((name,index)=>({name,index})).filter(x=>typeof x.name==='string'&&x.name.trim()):[];
  // Els equips concrets seleccionats defineixen la portada; no s'hi barregen partits del club.
- if(teamIds.length){
-   for(const {id} of teamIds){
-     const team=zonaokFavoriteTeamFromId(id,state);
+ if(teamFavorites.length){
+   for(const {team} of teamFavorites){
      for(const row of zonaokFavoriteTeamRows(team,{start:chosenWeek().start,end:chosenWeek().end}))
        found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
    }
@@ -1413,9 +1412,9 @@ function renderHome(){
  const rows=[...found.values()].sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));
  for(const row of rows)box.append(createCard(row,'live'));
  let pending=0;
- if(teamIds.length){
-   for(const {id,index} of teamIds){
-     const team=zonaokFavoriteTeamFromId(id,state),weekRows=zonaokFavoriteTeamRows(team,{start:chosenWeek().start,end:chosenWeek().end});
+ if(teamFavorites.length){
+   for(const {team,index} of teamFavorites){
+     const weekRows=zonaokFavoriteTeamRows(team,{start:chosenWeek().start,end:chosenWeek().end});
      if(team&&!weekRows.length){box.append(favoritePendingCard((team.name||team.team)+' · '+team.category,'favteam'+(index+1)));pending++;}
    }
  }else{
