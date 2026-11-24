@@ -1647,7 +1647,7 @@ function zonaokConfigureFavoriteNav(){
   const small=document.createElement('small');small.textContent=sub;
   b.append(icon,strong,small);host.append(b);
  };
- (s.clubs||[]).forEach((name,i)=>add('favclub'+(i+1),name,'Setmana',favoriteLogoFor(name)));
+ (s.clubs||[]).forEach((name,i)=>add('favclub'+(i+1),name,'Setmana',window.ZonaOKFavoriteLogoFor?.(name)||''));
  (s.teams||[]).forEach((id,i)=>{const f=zonaokFavoriteTeamFromId(id,s);if(!f)return;const child=String(s.teamNames?.[id]||'').trim();add('favteam'+(i+1),child||((f.name||f.team)+' · '+f.category),child?'Temporada':f.category,'',true)});
 }
 window.addEventListener('zonaok:favorites-updated',zonaokConfigureFavoriteNav);
