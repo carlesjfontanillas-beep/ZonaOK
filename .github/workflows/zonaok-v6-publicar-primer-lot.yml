@@ -32,7 +32,7 @@ jobs:
         with:
           name: zonaok-v6-prova-idp
           run-id: 45372289619
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
       - name: Comprovar IDP reals, duplicats i cobertura
         shell: bash
         run: |
