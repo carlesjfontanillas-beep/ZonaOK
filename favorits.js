@@ -172,7 +172,7 @@
       const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
       const values = key === 'clubs' ? [...new Set(migratedClubs)] : selected[key];
       return [key, values.filter(value => allowed.has(value))];
-    })), teamNames: selected.teamNames || {}, clubLogoUrls: migrateClubMap(selected.clubLogoUrls), teamLogoUrls: selected.teamLogoUrls || {}, clubColors: migrateClubMap(selected.clubColors), teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
+    })), teamNames: selected.teamNames || {}, clubLogoUrls: migrateClubMap(selected.clubLogoUrls), teamLogoUrls: {}, clubColors: migrateClubMap(selected.clubColors), teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
     save();
     render();
   }
@@ -285,10 +285,9 @@
             : selected[key].filter(value => value !== id);
           save();
           render();
-          if (key === 'clubs' || key === 'teams') void discoverClubLogos();
+          if (key === 'clubs') void discoverClubLogos();
         });
-        const logoRecord = key === 'teams' ? catalog.teamRecords.find(record => record.key === id) : null;
-        const logoUrl = key === 'clubs' ? selected.clubLogoUrls[id] : logoRecord ? (selected.teamLogoUrls[id] || selected.clubLogoUrls[logoRecord.club]) : '';
+        const logoUrl = key === 'clubs' ? selected.clubLogoUrls[id] : '';
         if (logoUrl && /^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(logoUrl)) {
           const crest = document.createElement('img'); crest.className='zok-favorite-option-crest';
           crest.src=logoUrl; crest.alt=''; crest.loading='lazy'; crest.decoding='async';
@@ -339,28 +338,32 @@
       if (/\b(BARCA|FC BARCELONA|FCBETERANS|FCBETRANS)\b/.test(key)) return 'BARÇA';
       return key;
     };
+    const missing = new Map(selected.clubs
+      .filter(club => !selected.clubLogoUrls[club])
+      .map(club => [clubKey(club), club]));
+    if (!missing.size) return;
     let changed = false;
-    // El catàleg oficial de FECAPA conté l'associació club -> escut a les
-    // imatges amb alt/title. Prioritza aquesta relació abans de les files.
+    // Només desem els escuts dels clubs que l'usuari ha triat.
     for (const [rawName, logo] of Object.entries(catalog.clubLogos || {})) {
-      if (!safeLogo(logo)) continue;
-      const key = clubKey(rawName);
-      const club = selected.clubs.find(name => clubKey(name) === key);
-      if (club && !selected.clubLogoUrls[club]) { selected.clubLogoUrls[club] = logo; changed = true; }
-      for (const record of catalog.teamRecords.filter(item => clubKey(item.club) === key)) {
-        if (!selected.clubLogoUrls[record.club]) { selected.clubLogoUrls[record.club] = logo; changed = true; }
-        if (!selected.teamLogoUrls[record.key]) { selected.teamLogoUrls[record.key] = logo; changed = true; }
-      }
+      const club = missing.get(clubKey(rawName));
+      if (!club || !safeLogo(logo)) continue;
+      selected.clubLogoUrls[club] = logo;
+      missing.delete(clubKey(rawName));
+      changed = true;
+      if (!missing.size) break;
     }
-    for (const row of catalog.agendaRows || []) for (const side of ['home','away']) {
-      const team = String(row?.[side] || ''), logo = row?.[side+'Logo'] || '';
-      if (!team || !safeLogo(logo)) continue;
-      const key = clubKey(team);
-      const club = selected.clubs.find(name => clubKey(name) === key);
-      if (club && !selected.clubLogoUrls[club]) { selected.clubLogoUrls[club] = logo; changed = true; }
-      for (const record of catalog.teamRecords.filter(item => clubKey(item.team) === key)) {
-        if (!selected.teamLogoUrls[record.key]) { selected.teamLogoUrls[record.key] = logo; changed = true; }
-        if (!selected.clubLogoUrls[record.club]) { selected.clubLogoUrls[record.club] = logo; changed = true; }
+    // Fallback de l'agenda per als clubs que no surtin al catàleg de logos.
+    if (missing.size) {
+      for (const row of catalog.agendaRows || []) {
+        for (const side of ['home', 'away']) {
+          const club = missing.get(clubKey(row?.[side] || ''));
+          const logo = row?.[side + 'Logo'] || '';
+          if (!club || !safeLogo(logo)) continue;
+          selected.clubLogoUrls[club] = logo;
+          missing.delete(clubKey(row[side]));
+          changed = true;
+        }
+        if (!missing.size) break;
       }
     }
     if (changed) { save(); window.dispatchEvent(new CustomEvent('zonaok:favorites-updated')); }
