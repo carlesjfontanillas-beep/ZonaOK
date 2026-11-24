@@ -27,3 +27,7 @@
 .zok-favorites-actions [hidden]{display:none!important}
 .zok-favorites-scope-note{grid-column:1/-1;margin:0;color:#a9c3d7;font-size:11px;line-height:1.45}
 @media(max-width:380px){.zok-favorites-actions{flex-direction:column}.zok-favorites-scope-note{grid-column:auto}}
+
+.zok-favorite-option{display:flex;align-items:center;gap:12px}
+.zok-favorite-option-crest{flex:0 0 34px;width:34px;height:34px;object-fit:contain;border-radius:8px;background:#fff;padding:3px;box-sizing:border-box}
+.zok-favorite-option input{flex:0 0 auto}
