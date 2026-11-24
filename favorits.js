@@ -23,7 +23,7 @@
     scope: document.getElementById('favorites-scope-toggle'),
     scopeNote: document.getElementById('favorites-scope-note')
   };
-  let catalog = {clubs: [], teams: [], categories: [], competitions: [], clubLogos: {}};
+  let catalog = {clubs: [], teams: [], categories: [], competitions: [], teamRecords: [], agendaRows: [], clubLogos: {}, clubNameLookup: new Map()};
   let selected = readSelection();
   let showAllOptions = false;
 
@@ -93,7 +93,7 @@
     }
     return record => {
       const team = clean(record.team), code = norm(record.clubCode), key = norm(team);
-      if (code === 'CELONI' || /\bSANT CELONI\b/.test(key)) return 'CP SANT CELONI';
+      if (code === 'CELONI' || /^CPSC(?:[AB]| [AB])?$/.test(key) || /\bSANT CELONI\b/.test(key)) return 'CP SANT CELONI';
       if (code === 'BARCA' || /^(?:BAR|BARCA|FC BARCELONA|F C BARCELONA|FCBETERANS|FCBETRANS)(?: [A-Z0-9]+)?$/.test(key)) return 'BARÇA';
       const m = team.match(/^(.*?)(?:\s*-\s*|\s+)([A-Z])$/i);
       if (m && verifiedBases.has(norm(m[1]))) return verifiedBases.get(norm(m[1]));
@@ -174,10 +174,20 @@
       clubLogos: clubLogos && typeof clubLogos === 'object' ? clubLogos : {}
     };
     const clubsByName = new Map(catalog.clubs.map(club => [norm(club), club]));
+    // Use the same verified club grouping for saved favorites and crests.
+    catalog.clubNameLookup = new Map(clubsByName);
+    for (const record of enrichedRecords) {
+      if (!catalog.clubNameLookup.has(norm(record.team))) catalog.clubNameLookup.set(norm(record.team), record.club);
+    }
+    for (const name of Object.keys(clubLogos || {})) {
+      const canonical = clubsByName.get(norm(resolveClub({team: name})));
+      if (canonical && !catalog.clubNameLookup.has(norm(name))) catalog.clubNameLookup.set(norm(name), canonical);
+    }
     const clubAliases = new Map(), migratedClubs = [];
     for (const oldClub of selected.clubs || []) {
-      const canonical = clubsByName.get(norm(clubBaseName(oldClub))) || clubsByName.get(norm(oldClub));
+      const canonical = catalog.clubNameLookup.get(norm(oldClub)) || clubsByName.get(norm(resolveClub({team: oldClub})));
       if (canonical) { clubAliases.set(oldClub, canonical); migratedClubs.push(canonical); }
+      else migratedClubs.push(oldClub);
     }
     const migrateClubMap = source => {
       const result = {...(source || {})};
@@ -192,9 +202,8 @@
     const favoriteClubSet = new Set(migratedClubs);
     const favoriteClubLogos = Object.fromEntries(Object.entries(migratedLogoMap).filter(([club]) => favoriteClubSet.has(club)));
     selected = {...Object.fromEntries(GROUPS.map(([key]) => {
-      const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
       const values = key === 'clubs' ? [...new Set(migratedClubs)] : selected[key];
-      return [key, values.filter(value => allowed.has(value))];
+      return [key, values];
     })), teamNames: selected.teamNames || {}, clubLogoUrls: favoriteClubLogos, teamLogoUrls: {}, clubColors: migrateClubMap(selected.clubColors), teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
     save();
     render();
@@ -204,11 +213,12 @@
     if (showAllOptions) return catalog[key];
 
     let records = catalog.teamRecords;
-    const matches = selected.clubs.filter(club => matchingClubs.has(norm(club)));
+    const activeClubs = selected.clubs.filter(club => catalog.clubs.includes(club));
+    const matches = activeClubs.filter(club => matchingClubs.has(norm(club)));
     let clubSearchScope = matches.length > 0;
 
-    if (selected.clubs.length) {
-      const allowed = new Set(clubSearchScope ? matches : selected.clubs);
+    if (activeClubs.length) {
+      const allowed = new Set(clubSearchScope ? matches : activeClubs);
       records = records.filter(record => allowed.has(record.club));
     } else if (matchingClubs.size) {
       records = records.filter(record => matchingClubs.has(norm(record.club)));
@@ -260,7 +270,7 @@
   function render() {
     const query = norm(nodes.search.value);
     const matchingClubs = new Set(query ? catalog.clubs.filter(club => norm(club).includes(query)).map(norm) : []);
-    const hasClubScope = selected.clubs.length > 0;
+    const hasClubScope = selected.clubs.some(club => catalog.clubs.includes(club));
     nodes.scope.hidden = !hasClubScope;
     nodes.scope.textContent = showAllOptions ? 'Limita a clubs marcats' : 'Mostra totes les opcions';
     nodes.scopeNote.textContent = hasClubScope && !showAllOptions
@@ -357,10 +367,7 @@
   async function discoverClubLogos() {
     const safeLogo = value => /^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(String(value||''));
     const clubKey = value => {
-      const key = norm(clubBaseName(value));
-      if (/\bSANT CELONI\b/.test(key)) return 'CP SANT CELONI';
-      if (/\b(BARCA|FC BARCELONA|FCBETERANS|FCBETRANS)\b/.test(key)) return 'BARÇA';
-      return key;
+      return norm(catalog.clubNameLookup.get(norm(value)) || value);
     };
     const missing = new Map(selected.clubs
       .filter(club => !selected.clubLogoUrls[club])
@@ -396,20 +403,24 @@
     try {
       const [agendaResponse, standingsResponse] = await Promise.all([
         fetch(`zonaok-tots-agenda.json?favorits=${Date.now()}`, {cache: 'no-store'}),
-        fetch(`zonaok-classificacions.json?favorits=${Date.now()}`, {cache: 'no-store'})
+        fetch(`zonaok-classificacions.json?favorits=${Date.now()}`, {cache: 'no-store'}).catch(() => null)
       ]);
       if (!agendaResponse.ok) throw new Error(`Agenda total: ${agendaResponse.status}`);
       const packet = await agendaResponse.json();
       if (packet?.schema !== 'zonaok-all-v1' || packet?.kind !== 'agenda' || !Array.isArray(packet.rows) || !packet.rows.length)
         throw new Error('L’agenda total està buida o té un format incorrecte.');
       let standings = {};
-      if (standingsResponse.ok) standings = await standingsResponse.json();
+      if (standingsResponse?.ok) {
+        try { standings = await standingsResponse.json(); }
+        catch (error) { console.warn('Favorits: classificacions no disponibles', error); }
+      }
       buildCatalog(packet.rows, standings, packet.clubLogos || {});
       nodes.status.textContent = location.protocol === 'file:'
         ? 'Previsualització local: Safari pot separar les seleccions de Favorits i Inici.'
         : 'Clubs, equips i escuts carregats de l’agenda total FECAPA.';
       discoverClubLogos();
-    } catch (_) {
+    } catch (error) {
+      console.error('Favorits: error carregant catàleg', error);
       nodes.status.textContent = 'No s’ha pogut carregar l’agenda total. Revisa zonaok-tots-agenda.json i torna-ho a provar.';
       nodes.groups.replaceChildren();
       const message = document.createElement('p');
