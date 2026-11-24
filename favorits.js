@@ -157,7 +157,8 @@
     }
 
     const records = [...teamRecords.values()];
-    const resolveClub = makeClubResolver(records, clubLogos);\n    const enrichedRecords = records.map(record => ({...record, club: resolveClub(record)}));
+    const resolveClub = makeClubResolver(records, clubLogos);
+    const enrichedRecords = records.map(record => ({...record, club: resolveClub(record)}));
     catalog = {
       clubs: sorted(enrichedRecords.map(record => record.club)),
       teams: enrichedRecords.sort((a, b) => a.team.localeCompare(b.team, 'ca', {sensitivity: 'base'}) ||
