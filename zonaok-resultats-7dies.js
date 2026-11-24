@@ -198,14 +198,14 @@
     try {
       const [res, agendaRes] = await Promise.all([
         fetch(`zonaok-tots-resultats-7dies.json?t=${Date.now()}`, {cache:'no-store'}),
-        fetch(`zonaok-data.json?t=${Date.now()}`, {cache:'no-store'})
+        fetch(`zonaok-tots-agenda.json?t=${Date.now()}`, {cache:'no-store'})
       ]);
       let agendaRows = [];
       if (agendaRes.ok) {
         try {
           const agendaPacket = await agendaRes.json();
-          if (agendaPacket?.version === 3 && Array.isArray(agendaPacket.data?.agenda?.rows))
-            agendaRows = agendaPacket.data.agenda.rows;
+          if (agendaPacket?.schema === 'zonaok-all-v1' && agendaPacket?.kind === 'agenda' &&
+              Array.isArray(agendaPacket.rows)) agendaRows = agendaPacket.rows;
         } catch (_) { /* els resultats continuen disponibles sense el catàleg */ }
       }
       if (res.ok) {
@@ -346,7 +346,9 @@
     const clubs = new Map();
     for (const r of matches) for (const [name, logo] of [[r.home,r.homeLogo],[r.away,r.awayLogo]]) {
       const k=teamKey(name,logo,r,name===r.home?'home':'away');
-      if (!clubs.has(k)) clubs.set(k,teamLabel(name,k,r,name===r.home?'home':'away'));
+      const label = teamLabel(name,k,r,name===r.home?'home':'away');
+      const isUnresolvedCode = /^[A-Z0-9]{2,6}$/.test(norm(label)) && !clubOf(label);
+      if (!isUnresolvedCode && !clubs.has(k)) clubs.set(k,label);
     }
     const options = [...clubs.entries()].sort((a,b)=>a[1].localeCompare(b[1],'ca',{sensitivity:'base'})).map(([,label])=>label);
     setSuggestions(clubFilter, options);
