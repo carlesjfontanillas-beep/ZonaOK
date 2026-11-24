@@ -1,89 +1,92 @@
 #!/usr/bin/env python3
-"""Diagnòstic Playwright no destructiu de les targetes del calendari FECAPA."""
+"""Inspecció no destructiva de la càrrega de calendaris FECAPA. Cap publicació."""
 import asyncio
 import json
 import re
 from datetime import datetime, timezone
 from playwright.async_api import async_playwright
 
-BASE = "https://www.hoqueipatins.fecapa.cat/"
-LEAGUES = ("4789", "4786", "4774")
+ROOT="https://www.hoqueipatins.fecapa.cat/"
+LEAGUES=("4789","4786","4774")
+JS=r"""() => {
+  const T=e=>String(e?.innerText||e?.textContent||'').replace(/\s+/g,' ').trim();
+  const vis=e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();
+    return s.display!=='none'&&s.visibility!=='hidden'&&r.width>1&&r.height>1};
+  const els=[...document.querySelectorAll('button,a,[class*="calendar"],[class*="calend"],[class*="partido"],[class*="jornada"],[id*="calend"],[id*="partido"]')];
+  const candidates=els.filter(vis).filter(e=>/partido|jornada|calend|equip|partit|result/i.test(
+    String(e.className||'')+' '+e.id+' '+T(e).slice(0,60))).slice(0,40);
+  const spinner=[...document.querySelectorAll('*')].filter(e=>e.children.length<3&&vis(e)&&
+    /^CARREGANT$|^CARGANDO$|^LOADING$/i.test(T(e))).slice(0,8);
+  return {
+    title:document.title,url:location.href,ready:document.readyState,
+    body:(document.body?.innerText||'').slice(0,7000),
+    spinners:spinner.map(e=>({html:e.parentElement?.outerHTML.slice(0,1300),id:e.id,cls:e.className})),
+    totalCards:document.querySelectorAll('.sidgad-partido-fila').length,
+    visibleCards:[...document.querySelectorAll('.sidgad-partido-fila')].filter(vis).slice(0,15).map(e=>({
+      text:T(e).slice(0,250),html:e.outerHTML.slice(0,1000)
+    })),
+    visibleCandidates:candidates.map(e=>({tag:e.tagName,id:e.id,cls:String(e.className||'').slice(0,150),
+      text:T(e).slice(0,190),html:e.outerHTML.slice(0,540)})),
+    officialAnchors:[...document.querySelectorAll('a[href]')].filter(a=>/partido=|idp=|fecapa_gr_/i.test(a.href))
+      .slice(0,20).map(e=>({href:e.href,visible:vis(e),text:T(e).slice(0,90)})),
+    scriptSrc:[...document.querySelectorAll('script[src]')].map(x=>x.src).slice(0,35)
+  };
+}""";
 
-async def inspect(page, lid):
-    report={"leagueId":lid,"url":BASE+f"?liga={lid}&vista=calendar","cards":0,"clicks":[]}
-    events=[]
-    page.on("framenavigated", lambda fr: events.append({"type":"frame", "url":fr.url[:350]}) if fr==page.main_frame else None)
-    page.on("popup", lambda p: events.append({"type":"popup","url":p.url[:350]}))
-    page.on("response", lambda r: events.append({"type":"response","url":r.url[:350],"status":r.status})
-            if re.search(r"partido=|idp=|fecapa_gr_|(?:/acta|/report)",r.url,re.I) and len(events)<60 else None)
+async def inspect(page, league):
+    item={"leagueId":league,"url":ROOT+f"?liga={league}&vista=calendar",
+          "samples":[],"requests":[],"errors":[],"status":None}
+    responses=[]
+    def response(r):
+        u=r.url
+        if len(responses)>=250:return
+        if re.search(r"hoqueipatins|sidgad",u,re.I):
+            responses.append({"status":r.status,"type":r.request.resource_type,"url":u[:350]})
+    def failed(r):
+        if len(item["errors"])<35:
+            item["errors"].append({"type":"requestfailed","url":r.url[:320],"error":r.failure})
+    page.on("response",response)
+    page.on("requestfailed",failed)
+    page.on("pageerror",lambda err: item["errors"].append({"type":"pageerror","message":str(err)[:450]}) if len(item["errors"])<35 else None)
+    page.on("console",lambda msg: item["errors"].append({"type":"console","message":msg.text[:450]})
+            if msg.type=="error" and len(item["errors"])<35 else None)
     try:
-        await page.goto(report["url"], wait_until="domcontentloaded",timeout=45000)
-        await page.wait_for_timeout(1500)
-        report["surface"]=await page.evaluate("""() => {
-          const visible=e=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};
-          const matchish=[...document.querySelectorAll('[class*="calendar"],[class*="calend"],[class*="partido"],[class*="match"]')];
-          return {
-            title:document.title,url:location.href,body:(document.body?.innerText||'').slice(0,7500),
-            totalMatchish:matchish.length,
-            visibleMatchish:matchish.filter(visible).slice(0,45).map(e=>({tag:e.tagName,cls:String(e.className).slice(0,180),id:e.id,
-                text:(e.innerText||'').slice(0,320),html:e.outerHTML.slice(0,550)})),
-            allButtons:[...document.querySelectorAll('button')].filter(visible).slice(0,35).map(e=>({text:(e.innerText||'').slice(0,120),cls:e.className})),
-            officialAnchors:[...document.querySelectorAll('a[href]')].filter(a=>/partido=|idp=|fecapa_gr_|calendar/i.test(a.href)).slice(0,40).map(a=>({href:a.href,text:(a.innerText||'').slice(0,70),visible:visible(a)}))
-          };
-        }""")
-        buttons=page.locator(".sidgad-partido-fila:visible")
-        report["cards"]=await buttons.count()
-        for index in range(min(3,report["cards"])):
-            item={"index":index,"beforeUrl":page.url}
-            btn=buttons.nth(index)
-            try:
-                item["before"]=await btn.evaluate("""el=>({
-                    html:el.outerHTML.slice(0,1300),
-                    text:(el.innerText||'').slice(0,280),
-                    attributes:Object.fromEntries([...el.attributes].map(a=>[a.name,a.value]))
-                })""")
-                before=len(events)
-                await btn.click(timeout=8000)
-                await page.wait_for_timeout(900)
-                item["afterUrl"]=page.url
-                item["after"]=await page.evaluate("""() => ({
-                    modal:[...document.querySelectorAll('[role=dialog],dialog,.modal,.sidgad-modal,#sidgad-modal,.sidgad-ficha-partido')]
-                      .filter(e=>{const s=getComputedStyle(e);return s.display!=='none'&&s.visibility!=='hidden'})
-                      .slice(0,5).map(e=>({id:e.id,cls:e.className,text:(e.innerText||'').slice(0,700),html:e.outerHTML.slice(0,2300)})),
-                    matchAnchors:[...document.querySelectorAll('a[href]')]
-                      .filter(a=>/partido=|idp=|fecapa_gr_|acta/i.test(a.href)).slice(0,15).map(a=>({text:a.innerText.slice(0,100),href:a.href})),
-                    matchFrames:[...document.querySelectorAll('iframe[src]')].map(f=>f.src).slice(0,8)
-                })""")
-                item["networkEvents"]=events[before:before+20]
-            except Exception as exc:
-                item["error"]=str(exc)[:350]
-            report["clicks"].append(item)
-            # Independent page state for each investigated card
-            if index+1<min(3,report["cards"]):
-                await page.goto(report["url"],wait_until="domcontentloaded",timeout=45000)
-                await page.wait_for_timeout(300)
-                buttons=page.locator(".sidgad-partido-fila:visible")
+        result=await page.goto(item["url"],wait_until="domcontentloaded",timeout=45000)
+        item["status"]=result.status if result else None
+        last=0
+        for seconds in (2,10,25,42):
+            await page.wait_for_timeout((seconds-last)*1000)
+            last=seconds
+            snap=await page.evaluate(JS)
+            item["samples"].append({"seconds":seconds,"surface":snap})
+            print(f"Lliga {league} després de {seconds}s: visibles={len(snap['visibleCards'])}, "+
+                  f"totals={snap['totalCards']}, carregant={len(snap['spinners'])}, "+
+                  f"candidats={len(snap['visibleCandidates'])}",flush=True)
+            # If calendar finally reveals fixture components, that's useful; no need to wait more.
+            if snap["visibleCards"] or (
+                seconds>=10 and len(snap["body"])>1800 and not snap["spinners"]):
+                break
+        item["requests"]=responses
     except Exception as exc:
-        report["error"]=str(exc)[:350]
-    return report
+        item["errors"].append({"type":"exception","message":str(exc)[:450]})
+    return item
 
 async def main():
-    output={"checkedAt":datetime.now(timezone.utc).isoformat(),"kind":"diagnostic-only","leagues":[]}
+    d={"checkedAt":datetime.now(timezone.utc).isoformat(),"kind":"wait-and-network-diagnostic-only","leagues":[]}
     async with async_playwright() as p:
         browser=await p.chromium.launch(headless=False,args=["--no-sandbox"])
         context=await browser.new_context(locale="ca-ES",timezone_id="Europe/Madrid")
         try:
-            for lid in LEAGUES:
+            for league in LEAGUES:
                 page=await context.new_page()
-                output["leagues"].append(await inspect(page,lid))
+                d["leagues"].append(await inspect(page,league))
                 await page.close()
         finally:
-            await context.close();await browser.close()
+            await context.close()
+            await browser.close()
     with open("diagnostic-calendar-click-idp.json","w",encoding="utf-8") as f:
-        json.dump(output,f,ensure_ascii=False,indent=2)
-    for league in output["leagues"]:
-        print(f"Lliga {league['leagueId']}: {league.get('cards')} targetes; "+", ".join(
-            f"clic {x['index']}: URL {x.get('afterUrl','error')}" for x in league.get('clicks',[])),flush=True)
+        json.dump(d,f,ensure_ascii=False,indent=2)
+    print("Diagnòstic escrit (cap JSON productiu modificat)",flush=True)
 
 if __name__=="__main__":
     asyncio.run(main())
