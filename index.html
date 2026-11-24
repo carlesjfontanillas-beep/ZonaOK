@@ -1391,20 +1391,31 @@ function renderHome(){
  }
  box.classList.remove('zok-home-no-favorites');
  const found=new Map();
- for(let i=0;i<2;i++){
-   for(const row of zonaokFavoriteClubRows(i))found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
-   for(const row of zonaokFavoriteTeamWeekRows(i))found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
+ const teamFavorites=(state.teams||[]).filter(Boolean);
+ const clubFavorites=(state.clubs||[]).filter(Boolean);
+ // Equipos seleccionados tenen prioritat: no afegim altres partits dels clubs.
+ if(teamFavorites.length){
+   for(let i=0;i<teamFavorites.length;i++){
+     for(const row of zonaokFavoriteTeamWeekRows(i))found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
+   }
+ }else{
+   for(let i=0;i<clubFavorites.length;i++){
+     for(const row of zonaokFavoriteClubRows(i))found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
+   }
  }
  const rows=[...found.values()].sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));
  for(const row of rows)box.append(createCard(row,'live'));
  let pending=0;
- for(let i=0;i<2;i++){
-   const team=zonaokFavoriteTeam(i);
-   if(team&&!zonaokFavoriteTeamWeekRows(i).length){box.append(favoritePendingCard((team.name||team.team)+' · '+team.category,'favteam'+(i+1)));pending++;}
- }
- for(let i=0;i<2;i++){
-   const club=zonaokFavoriteClub(i);
-   if(club&&!zonaokFavoriteClubRows(i).length){box.append(favoritePendingCard(club,'favclub'+(i+1)));pending++;}
+ if(teamFavorites.length){
+   for(let i=0;i<teamFavorites.length;i++){
+     const team=zonaokFavoriteTeam(i);
+     if(team&&!zonaokFavoriteTeamWeekRows(i).length){box.append(favoritePendingCard((team.name||team.team)+' · '+team.category,'favteam'+(i+1)));pending++;}
+   }
+ }else{
+   for(let i=0;i<clubFavorites.length;i++){
+     const club=zonaokFavoriteClub(i);
+     if(club&&!zonaokFavoriteClubRows(i).length){box.append(favoritePendingCard(club,'favclub'+(i+1)));pending++;}
+   }
  }
  if(!rows.length&&!pending)box.append(mk('div','empty','No hi ha partits importats dels teus favorits aquesta setmana.'));
  $$('#home-count').textContent=rows.length+' partits';
