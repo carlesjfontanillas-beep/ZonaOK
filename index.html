@@ -947,26 +947,6 @@ try {
   }
   const selectedMonday=()=>typeof window.ZonaOKCurrentWeek==='function'?window.ZonaOKCurrentWeek():monday();
   const byWeek=(rows)=>{const start=selectedMonday(),end=plus(start,6);return rows.filter(r=>r.iso>=start&&r.iso<=end).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time));};
-  const favoriteDefs=[
-    {name:'Bar\u00E7a Alev\u00ED',f:r=>(isBarca(r.home)||isBarca(r.away))&&norm(r.competition)==='ALEVI OR 3'},
-    {name:'Sant Celoni Infantil B',f:r=>(isCeloni(r.home)||isCeloni(r.away))&&norm(r.competition)==='INFANTIL OR 10'},
-    {name:'Sant Celoni Juvenil B',f:r=>(isCeloni(r.home)||isCeloni(r.away))&&norm(r.competition)==='JUVENIL OR 6'}
-  ];
-  function drawHome(rows){
-    const root=$('#home-cards');if(!root)return;
-    const sig=selectedMonday()+'|'+JSON.stringify(rows.map(r=>[rowKey(r),r.homeScore,r.awayScore,r.venue]));
-    if(root.dataset.zokV5Sig===sig&&root.querySelector('[data-zok-v5]'))return;
-    root.dataset.zokV5Sig=sig;
-    const frag=document.createDocumentFragment();let count=0;
-    const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Madrid',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
-    const now=['year','month','day'].map(t=>parts.find(p=>p.type===t).value).join('-');
-    for(const def of favoriteDefs){
-      const candidates=rows.filter(def.f),next=candidates.find(r=>r.iso>=now)||candidates[candidates.length-1];
-      if(next){frag.append(card(next,false));count++}
-      else{const note=el('div','empty');note.dataset.zokV5='1';note.append(el('strong','',def.name+' \u00B7 Sense partit importat aquesta setmana'));frag.append(note)}
-    }
-    root.replaceChildren(frag);if($('#home-count'))$('#home-count').textContent=count+' partits';
-  }
   function activeTab(){const button=$('.navbtn.active');return button?.dataset.tab||($('#results-section')?.classList.contains('hide')?'home':'');}
   // V18: escuts Barça/Celoni = setmana. Magí/Ton = temporada (V10.5).
   function drawList(tab,rows,store){
@@ -1074,8 +1054,7 @@ try {
     scheduled=false;
     const store=read(),list=store.agenda?.rows||[];
     if(!list.length)return; // Sense agenda, app.js segueix funcionant.
-    const week=byWeek(list).map(r=>resolved(r,store));
-    drawHome(week); // Inici = setmana; no modificar aquest comportament.
+    // renderHome() de l’app llegeix els favorits guardats i pinta la portada.
     const tab=activeTab();
     // MAI passar la llista setmanal a Magi/Ton: la font son totes les files.
     const all=list.map(r=>resolved(r,store));
