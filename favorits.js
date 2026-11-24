@@ -13,7 +13,7 @@
   const clean = value => String(value ?? '').trim().replace(/\s+/g, ' ');
   const sorted = values => [...new Set(values.map(clean).filter(Boolean))]
     .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
-  const emptySelection = () => ({...Object.fromEntries(GROUPS.map(([key]) => [key, []])), teamNames: {}, clubLogoUrls: {}, teamLogoUrls: {}});
+  const emptySelection = () => ({...Object.fromEntries(GROUPS.map(([key]) => [key, []])), teamNames: {}, clubLogoUrls: {}, teamLogoUrls: {}, clubColors: {}, teamColors: {}, teamLeagueIds: {}, playerIds: {}});
   const nodes = {
     status: document.getElementById('favorites-status'),
     count: document.getElementById('favorites-count'),
@@ -34,7 +34,11 @@
         Array.isArray(value[key]) ? value[key].map(clean).filter(Boolean) : []])),
         teamNames: value.teamNames && typeof value.teamNames === 'object' ? value.teamNames : {},
         clubLogoUrls: value.clubLogoUrls && typeof value.clubLogoUrls === 'object' ? value.clubLogoUrls : {},
-        teamLogoUrls: value.teamLogoUrls && typeof value.teamLogoUrls === 'object' ? value.teamLogoUrls : {}};
+        teamLogoUrls: value.teamLogoUrls && typeof value.teamLogoUrls === 'object' ? value.teamLogoUrls : {},
+        clubColors: value.clubColors && typeof value.clubColors === 'object' ? value.clubColors : {},
+        teamColors: value.teamColors && typeof value.teamColors === 'object' ? value.teamColors : {},
+        teamLeagueIds: value.teamLeagueIds && typeof value.teamLeagueIds === 'object' ? value.teamLeagueIds : {},
+        playerIds: value.playerIds && typeof value.playerIds === 'object' ? value.playerIds : {}};
     } catch (_) {
       return emptySelection();
     }
@@ -151,7 +155,7 @@
     selected = {...Object.fromEntries(GROUPS.map(([key]) => {
       const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
       return [key, selected[key].filter(value => allowed.has(value))];
-    })), teamNames: selected.teamNames || {}, clubLogoUrls: selected.clubLogoUrls || {}, teamLogoUrls: selected.teamLogoUrls || {}};
+    })), teamNames: selected.teamNames || {}, clubLogoUrls: selected.clubLogoUrls || {}, teamLogoUrls: selected.teamLogoUrls || {}, clubColors: selected.clubColors || {}, teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
     render();
   }
   function scopedOptions(key, matchingClubs = new Set()) {
@@ -264,7 +268,7 @@
           save();
           render();
         });
-        const logoRecord = key === 'teams' ? catalog.teamRecords.find(record => record.id === id) : null;
+        const logoRecord = key === 'teams' ? catalog.teamRecords.find(record => record.key === id) : null;
         const logoUrl = key === 'clubs' ? selected.clubLogoUrls[id] : logoRecord ? (selected.teamLogoUrls[id] || selected.clubLogoUrls[logoRecord.club]) : '';
         if (logoUrl && /^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(logoUrl)) {
           const crest = document.createElement('img'); crest.className='zok-favorite-option-crest';
@@ -272,8 +276,19 @@
           crest.onerror=()=>crest.remove(); row.append(crest);
         }
         const text = document.createElement('span');
+        text.className='zok-favorite-option-label';
         text.textContent = label;
         row.append(checkbox, text);
+        if (checkbox.checked && (key === 'clubs' || key === 'teams')) {
+          const colors = key === 'clubs' ? selected.clubColors : selected.teamColors;
+          const picker = document.createElement('input');
+          picker.type='color'; picker.className='zok-favorite-color';
+          picker.value=/^#[0-9a-f]{6}$/i.test(colors[id]||'')?colors[id]:'#dce8f1';
+          picker.setAttribute('aria-label','Color de '+label);
+          picker.title='Color de '+label;
+          picker.addEventListener('input',()=>{colors[id]=picker.value;save();window.dispatchEvent(new CustomEvent('zonaok:favorites-updated'))});
+          row.append(picker);
+        }
         if (key === 'teams' && checkbox.checked) {
           const name = document.createElement('input');
           name.type = 'text'; name.className = 'zok-favorite-child-name';
@@ -299,7 +314,7 @@
   }
   async function discoverClubLogos() {
     const chosen = catalog.teamRecords.filter(record =>
-      selected.clubs.includes(record.club) || selected.teams.includes(record.id) ||
+      selected.clubs.includes(record.club) || selected.teams.includes(record.key) ||
       selected.categories.includes(record.category) || selected.competitions.includes(record.competition));
     const leagues = [...new Set(chosen.map(record => record.leagueId).filter(id => /^\d+$/.test(String(id))))].slice(0, 50);
     let changed = false, cursor = 0;
@@ -322,7 +337,7 @@
           for (const record of chosen.filter(record=>record.leagueId===league)) {
             const aliases=[record.team,record.club,record.clubCode].map(norm).filter(Boolean);
             if (aliases.some(alias=>alt===alias||alt.includes(alias)||alias.includes(alt))) {
-              if (!selected.teamLogoUrls[record.id]) {selected.teamLogoUrls[record.id]=url;changed=true;}
+              if (!selected.teamLogoUrls[record.key]) {selected.teamLogoUrls[record.key]=url;changed=true;}
               if (!selected.teamLogoUrls[record.team]) {selected.teamLogoUrls[record.team]=url;changed=true;}
               if (!selected.clubLogoUrls[record.club]) {selected.clubLogoUrls[record.club]=url;changed=true;}
             }
