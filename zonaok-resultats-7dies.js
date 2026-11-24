@@ -358,7 +358,8 @@
   }
 
   function install() {
-    const grid = document.querySelector('.bottom .navgrid');
+    const grid = document.querySelector('.zok-nav-fixed') || document.querySelector('.bottom .navgrid');
+    const bottomNav = document.querySelector('.zok-bottom-nav') || grid;
     const main = document.querySelector('main.app');
     if (!grid || !main || document.getElementById(ID)) return;
     const stylesheet = make('style');
@@ -440,14 +441,14 @@
       }
     `;
     document.head.append(stylesheet);
+    const toolbarStyle=make('style');toolbarStyle.textContent="\n.bottom.zok-bottom-nav{display:flex!important;align-items:stretch!important;gap:7px!important}\n.zok-nav-scroll{flex:1 1 auto!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important}\n.zok-nav-scroll .navgrid{display:flex!important;grid-template-columns:none!important;gap:6px!important;width:max-content!important;min-width:100%!important}\n.zok-nav-scroll .navbtn{flex:0 0 62px!important;width:62px!important;min-width:62px!important}\n.zok-nav-fixed{flex:0 0 auto!important;display:flex!important;gap:5px!important}\n.zok-nav-fixed .navbtn{flex:0 0 62px!important;width:62px!important;min-width:62px!important}\n.zok-nav-divider{width:1px!important;flex:0 0 1px!important;align-self:stretch!important;background:#9dbbd044!important;margin:0 1px!important}\n.bottom.zok-bottom-nav .navbtn strong{font-size:9px!important;line-height:1.08!important;white-space:normal!important;overflow-wrap:anywhere!important}\n.bottom.zok-bottom-nav .navbtn small{display:none!important}\n@media(max-width:430px){.bottom.zok-bottom-nav{gap:5px!important}.zok-nav-scroll .navgrid{gap:4px!important}.zok-nav-scroll .navbtn,.zok-nav-fixed .navbtn{flex-basis:54px!important;width:54px!important;min-width:54px!important}.bottom.zok-bottom-nav .navbtn strong{font-size:8px!important}}\n";document.head.append(toolbarStyle);
 
     navButton = make('button', 'navbtn');
     navButton.type = 'button';
     navButton.id = NAV_ID;
     navButton.setAttribute('aria-label', 'Resultats dels darrers set dies');
     navButton.append(make('span', '', '🏁'), make('strong', '', 'Resultats'), make('small', '', 'Últims 7 dies'));
-    const home = grid.querySelector('[data-tab="home"]');
-    grid.insertBefore(navButton, home || null);
+    grid.append(navButton);
 
     panel = make('section', 'section');
     panel.id = ID;
@@ -488,7 +489,7 @@
       event.stopImmediatePropagation();
       void openResults();
     });
-    grid.addEventListener('click', event => {
+    bottomNav.addEventListener('click', event => {
       const other = event.target.closest('.navbtn');
       if (other && other !== navButton) {
         document.body.classList.remove('zok-recent-mode');

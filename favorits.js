@@ -13,7 +13,7 @@
   const clean = value => String(value ?? '').trim().replace(/\s+/g, ' ');
   const sorted = values => [...new Set(values.map(clean).filter(Boolean))]
     .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
-  const emptySelection = () => ({...Object.fromEntries(GROUPS.map(([key]) => [key, []])), teamNames: {}, clubLogoUrls: {}});
+  const emptySelection = () => ({...Object.fromEntries(GROUPS.map(([key]) => [key, []])), teamNames: {}, clubLogoUrls: {}, teamLogoUrls: {}});
   const nodes = {
     status: document.getElementById('favorites-status'),
     count: document.getElementById('favorites-count'),
@@ -33,7 +33,8 @@
       return {...Object.fromEntries(GROUPS.map(([key]) => [key,
         Array.isArray(value[key]) ? value[key].map(clean).filter(Boolean) : []])),
         teamNames: value.teamNames && typeof value.teamNames === 'object' ? value.teamNames : {},
-        clubLogoUrls: value.clubLogoUrls && typeof value.clubLogoUrls === 'object' ? value.clubLogoUrls : {}};
+        clubLogoUrls: value.clubLogoUrls && typeof value.clubLogoUrls === 'object' ? value.clubLogoUrls : {},
+        teamLogoUrls: value.teamLogoUrls && typeof value.teamLogoUrls === 'object' ? value.teamLogoUrls : {}};
     } catch (_) {
       return emptySelection();
     }
@@ -150,7 +151,7 @@
     selected = {...Object.fromEntries(GROUPS.map(([key]) => {
       const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
       return [key, selected[key].filter(value => allowed.has(value))];
-    })), teamNames: selected.teamNames || {}, clubLogoUrls: selected.clubLogoUrls || {}};
+    })), teamNames: selected.teamNames || {}, clubLogoUrls: selected.clubLogoUrls || {}, teamLogoUrls: selected.teamLogoUrls || {}};
     render();
   }
   function scopedOptions(key, matchingClubs = new Set()) {
@@ -263,6 +264,13 @@
           save();
           render();
         });
+        const logoRecord = key === 'teams' ? catalog.teamRecords.find(record => record.id === id) : null;
+        const logoUrl = key === 'clubs' ? selected.clubLogoUrls[id] : logoRecord ? (selected.teamLogoUrls[id] || selected.clubLogoUrls[logoRecord.club]) : '';
+        if (logoUrl && /^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(logoUrl)) {
+          const crest = document.createElement('img'); crest.className='zok-favorite-option-crest';
+          crest.src=logoUrl; crest.alt=''; crest.loading='lazy'; crest.decoding='async';
+          crest.onerror=()=>crest.remove(); row.append(crest);
+        }
         const text = document.createElement('span');
         text.textContent = label;
         row.append(checkbox, text);
@@ -290,33 +298,41 @@
     renderCount();
   }
   async function discoverClubLogos() {
-    for (const club of selected.clubs.slice(0, 2)) {
-      if (selected.clubLogoUrls[club]) continue;
-      const records = catalog.teamRecords.filter(record => record.club === club && /^\d+$/.test(record.leagueId));
-      const league = records[0]?.leagueId;
-      if (!league) continue;
+    const chosen = catalog.teamRecords.filter(record =>
+      selected.clubs.includes(record.club) || selected.teams.includes(record.id) ||
+      selected.categories.includes(record.category) || selected.competitions.includes(record.competition));
+    const leagues = [...new Set(chosen.map(record => record.leagueId).filter(id => /^\d+$/.test(String(id))))].slice(0, 50);
+    let changed = false, cursor = 0;
+    async function readLeague(league) {
       try {
-        const response = await fetch(`https://www.hoqueipatins.fecapa.cat/?liga=${encodeURIComponent(league)}&vista=plantillas`, {mode: 'cors', cache: 'no-store'});
-        if (!response.ok) continue;
-        const doc = new DOMParser().parseFromString(await response.text(), 'text/html');
-        const aliases = records.map(record => norm(record.team)).filter(Boolean);
-        const match = [...doc.querySelectorAll('img[src*="logos_clubes/"]')].find(image => aliases.some(alias => {
+        const response = await fetch(`https://www.hoqueipatins.fecapa.cat/?liga=${encodeURIComponent(league)}&vista=plantillas`, {mode:'cors',cache:'no-store',signal:AbortSignal.timeout(10000)});
+        if (!response.ok) return;
+        const doc = new DOMParser().parseFromString(await response.text(),'text/html');
+        for (const image of doc.querySelectorAll('img[src*="logos_clubes/"]')) {
+          const url = new URL(image.getAttribute('src'), 'https://www.hoqueipatins.fecapa.cat/').href;
+          if (!/^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(url)) continue;
           const alt = norm(image.alt || image.title || '');
-          return alt && (alt === alias || alt.startsWith(alias + ' ') || alias.startsWith(alt + ' '));
-        }));
-        if (match) {
-          const url = new URL(match.getAttribute('src'), 'https://www.hoqueipatins.fecapa.cat/').href;
-          const parsed = new URL(url);
-          if (parsed.hostname === 'sidgad.cloud' && /\/logos_clubes\/\d+\.png$/.test(parsed.pathname)) {
-            selected.clubLogoUrls[club] = url;
-            save();
-            window.dispatchEvent(new CustomEvent('zonaok:favorites-updated'));
+          if (!alt) continue;
+          const club = catalog.teamRecords.find(record => record.leagueId === league && [record.club,record.clubCode].some(value => {
+            const alias=norm(value);return alias && (alias===alt||alt.includes(alias)||alias.includes(alt));
+          }));
+          if (club && selected.clubs.includes(club.club) && !selected.clubLogoUrls[club.club]) {
+            selected.clubLogoUrls[club.club]=url;changed=true;
+          }
+          for (const record of chosen.filter(record=>record.leagueId===league)) {
+            const aliases=[record.team,record.club,record.clubCode].map(norm).filter(Boolean);
+            if (aliases.some(alias=>alt===alias||alt.includes(alias)||alias.includes(alt))) {
+              if (!selected.teamLogoUrls[record.id]) {selected.teamLogoUrls[record.id]=url;changed=true;}
+              if (!selected.teamLogoUrls[record.team]) {selected.teamLogoUrls[record.team]=url;changed=true;}
+              if (!selected.clubLogoUrls[record.club]) {selected.clubLogoUrls[record.club]=url;changed=true;}
+            }
           }
         }
-      } catch (_) {
-        // Si FECAPA no permet la lectura entre dominis, l'app conserva els escuts coneguts.
-      }
+      } catch (_) { /* La xarxa pot limitar la lectura de la plantilla des d'un altre domini. */ }
     }
+    const worker = async()=>{while(cursor<leagues.length){const league=leagues[cursor++];await readLeague(league);}};
+    await Promise.all(Array.from({length:Math.min(4,leagues.length)},worker));
+    if(changed){save();window.dispatchEvent(new CustomEvent('zonaok:favorites-updated'));}
   }
   async function load() {
     try {
