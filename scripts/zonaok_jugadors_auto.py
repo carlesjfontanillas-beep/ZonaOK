@@ -43,6 +43,45 @@ def merge(d,league,team,rows,label,stamp):
         m.update(lastSeenAt=stamp,profileUrl=url(league,d["seasonId"],team,pid))
         seen.add(key)
     return len(seen)
+def verify_master(d):
+    from jsonschema import Draft202012Validator
+    schema_path=Path(__file__).resolve().parents[1]/"schemas"/"jugadors-master.schema.json"
+    schema=json.loads(schema_path.read_text(encoding="utf-8"))
+    # Do not print ValidationError, which could contain a player's personal data.
+    if not Draft202012Validator(schema).is_valid(d):raise ValueError("schema_invalid")
+    for key,p in d["players"].items():
+        if key!=p["playerId"]:raise ValueError("player_key_invalid")
+    referenced=set()
+    for key,m in d["memberships"].items():
+        expected="|".join([m["seasonId"],m["leagueId"],m["teamFilterId"],m["playerId"]])
+        if key!=expected or m["seasonId"]!=d["seasonId"] or m["playerId"] not in d["players"]:raise ValueError("membership_invalid")
+        if m["profileUrl"]!=url(m["leagueId"],m["seasonId"],m["teamFilterId"],m["playerId"]):raise ValueError("profile_url_invalid")
+        referenced.add(m["playerId"])
+    if referenced!=set(d["players"]):raise ValueError("unlinked_player")
+    return True
+def persistence_probe(d):
+    import copy
+    verify_master(d)
+    with tempfile.TemporaryDirectory(prefix="zonaok-private-") as tmp:
+        target=Path(tmp)/"jugadors-master.json"
+        save(target,d)
+        first=load(target,d["seasonId"])
+        verify_master(first)
+        if first!=d:raise ValueError("roundtrip_mismatch")
+        # Exercise another merge using observed rows, preserving all memberships.
+        second=copy.deepcopy(first)
+        for m in first["memberships"].values():
+            p=first["players"][m["playerId"]]
+            r={"id":m["playerId"],"name":p["name"],"league":m["leagueId"],"team":m["teamFilterId"],"season":m["seasonId"],"teamName":m.get("teamName"),"clubId":m.get("clubId"),"sports":m.get("sports",{})}
+            merge(second,m["leagueId"],m["teamFilterId"],[r],m.get("teamName"),m["lastSeenAt"])
+        verify_master(second)
+        if len(second["players"])!=len(first["players"]) or len(second["memberships"])!=len(first["memberships"]):raise ValueError("duplicate_after_reimport")
+        save(target,second)
+        reread=load(target,d["seasonId"])
+        verify_master(reread)
+        if reread!=second:raise ValueError("second_roundtrip_mismatch")
+        return {"schemaValid":True,"roundTrip":True,"reimportNoDuplicates":True,"playersSavedAndReloaded":len(first["players"]),"membershipsSavedAndReloaded":len(first["memberships"]),"jsonBytes":target.stat().st_size,"retention":"temporary_only_deleted"}
+
 def inventory(paths):
     ids=set()
     for p in paths:
@@ -270,7 +309,7 @@ async def collect(a,leagues,doc,report):
         finally:await ctx.close();await browser.close()
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--max-teams",type=int);p.add_argument("--inspect-profiles",action="store_true");p.add_argument("--diagnostic-only",action="store_true");p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
+    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--max-teams",type=int);p.add_argument("--inspect-profiles",action="store_true");p.add_argument("--diagnostic-only",action="store_true");p.add_argument("--test-persistence",action="store_true");p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
     a=p.parse_args()
     if not numeric(a.season) or any(not numeric(x) for x in a.league) or any(not re.fullmatch(r"[1-9]\d*:[1-9]\d*",x) for x in a.seed):p.error("IDs invàlids")
     a.seed=[tuple(s.split(":")) for s in a.seed]
@@ -299,10 +338,18 @@ def main():
     report["teamsObserved"]=sum(x["teamsObserved"] for x in report["leagues"])
     report["leaguesObserved"]=sum(x["teamsObserved"]>0 for x in report["leagues"])
     report["privateDataSaved"]=bool(n and not a.diagnostic_only)
-    if n and not a.diagnostic_only:
-        doc.update(updatedAt=now(),coverageVerified=False);save(a.output,doc)
+    if n:
+        doc.update(updatedAt=now(),coverageVerified=False)
+        if a.test_persistence:
+            try:report["persistenceTest"]=persistence_probe(doc)
+            except Exception as e:
+                report["persistenceTest"]={"schemaValid":False,"errorType":type(e).__name__}
+                report["status"]="persistence_failed"
+        if not a.diagnostic_only and report["status"]!="persistence_failed":
+            verify_master(doc);save(a.output,doc)
+    report["privateDataSaved"]=bool(n and not a.diagnostic_only and report["status"]!="persistence_failed")
     save(a.report,report)
     print(json.dumps({k:v for k,v in report.items() if k!="leagues"}))
     if a.only_seed or a.max_teams: print(json.dumps({"diagnostics":report["leagues"]},ensure_ascii=False))
-    return 0 if n else 2
+    return 0 if n and not report.get("fatalError") and report["status"]!="persistence_failed" else 2
 if __name__=="__main__":raise SystemExit(main())
