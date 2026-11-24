@@ -300,8 +300,6 @@ JS_CLUB_LOGOS = r"""() => {
 
 
 JS_DIRECTE = r"""() => {
-
-JS_DIRECTE = r"""() => {
   const C=x=>String(x??'').replace(/\s+/g,' ').trim(),T=x=>C(x?.innerText||x?.textContent||'');
   const N=x=>C(x).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').trim();
   const root=document.querySelector('#sidgad-seccion-partidos');
