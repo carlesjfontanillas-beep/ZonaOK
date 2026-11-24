@@ -281,6 +281,26 @@ JS_AGENDA = r"""() => {
     exported:rows.length,withReliableIDs:0,sampleValidAttributes}};
 }"""
 
+JS_CLUB_LOGOS = r"""() => {
+  const C=x=>String(x??'').replace(/\s+/g,' ').trim();
+  const out=Object.create(null);
+  for(const img of document.querySelectorAll('img[src]')){
+    const name=C(img.getAttribute('alt')||img.getAttribute('title')||'');
+    const src=img.getAttribute('src')||'';
+    if(!name||!src)continue;
+    try{
+      const u=new URL(src,location.href);
+      if(u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&
+         /^\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(u.pathname))
+        out[name]=u.href;
+    }catch(_){}
+  }
+  return out;
+}"""
+
+
+JS_DIRECTE = r"""() => {
+
 JS_DIRECTE = r"""() => {
   const C=x=>String(x??'').replace(/\s+/g,' ').trim(),T=x=>C(x?.innerText||x?.textContent||'');
   const N=x=>C(x).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').trim();
@@ -643,6 +663,14 @@ async def collect_agenda(ctx,args,diagnostic):
     page=await ctx.new_page();rows=[];counts=[];errors=[];club_logos={}
     try:
         catalogue=set(league_ids_from_files())
+        # Els escuts i els noms s'extreuen del catàleg oficial FECAPA,
+        # tal com apareixen associats a la pàgina de competicions.
+        try:
+            await page.goto(ROOT,wait_until='domcontentloaded',timeout=30000)
+            await page_ready(page,'img[src*="logos_clubes"]',12000)
+            club_logos.update(await page.evaluate(JS_CLUB_LOGOS))
+        except Exception as exc:
+            diagnostic['warnings'].append('Catàleg d’escuts FECAPA no disponible: '+str(exc)[:120])
         try:
             await page.goto(AGENDA_URL,wait_until='domcontentloaded',timeout=40000)
             await page_ready(page,'table',19000)
