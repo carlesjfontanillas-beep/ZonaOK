@@ -386,48 +386,63 @@ async def inspect_profile(ctx,league,team,season,pid):
                 if stable>=3:return result
             await page.wait_for_timeout(650)
         return {"ready":False}
+    async def exact_control(shell,pattern):
+        for role in ("tab","button","link","radio","option"):
+            visible=[x for x in await shell.get_by_role(role,name=pattern).all() if await x.is_visible()]
+            if len(visible)==1:return visible[0]
+        visible=[x for x in await shell.get_by_text(pattern,exact=True).all() if await x.is_visible()]
+        return visible[0] if len(visible)==1 else None
+    async def change_view(shell,pattern,args,allow_select=False):
+        try:
+            if allow_select:
+                for sel in await shell.locator("select:visible").all():
+                    options=await sel.locator("option").all()
+                    matching=[o for o in options if pattern.fullmatch((await o.inner_text()).strip())]
+                    if len(matching)==1:
+                        label=(await matching[0].inner_text()).strip()
+                        await sel.select_option(label=label,timeout=10000)
+                        await page.wait_for_timeout(3500)
+                        result=await stable_capture(args)
+                        return ("selected" if result.get("ready") else "not_ready"),result
+            control=await exact_control(shell,pattern)
+            if control is None:return "not_found",{}
+            await control.click(timeout=10000)
+            await page.wait_for_timeout(3500)
+            result=await stable_capture(args)
+            return ("clicked" if result.get("ready") else "not_ready"),result
+        except Exception:return "click_failed",{}
+    def report_view(status,result):
+        return {"status":status,"tables":result.get("tableInfo",[]),"labels":result.get("discoveredLabels",{}),"fields":sorted(result.get("fields",{})),"rows":sum(t["rows"] for t in result.get("tableInfo",[])),"matchLinks":result.get("matchTabLinkCount",0)}
     try:
         await open_page(page,url(league,season,team,pid),'.sidgad-player-name-compact')
         args={"league":league,"team":team,"season":season}
         first=await stable_capture(args)
         if not first.get("ready"):return first
-        first["matchTabStatus"]="not_found"
-        # Scope to the player overlay, not the league navigation or acta modal.
         shell=page.locator(".sidgad-player-overlay-shell:visible").first
-        labels=re.compile(r"^\s*(?:Partits|Partidos|Matches)(?:\s*\(\d+\))?\s*$",re.I)
-        tab=None
-        for role in ("tab","button","link"):
-            candidates=shell.get_by_role(role,name=labels)
-            if await candidates.count()==1 and await candidates.first.is_visible():
-                tab=candidates.first;break
-        if tab is None:
-            candidates=shell.get_by_text(labels,exact=True)
-            visible=[x for x in await candidates.all() if await x.is_visible()]
-            if len(visible)==1:tab=visible[0]
-        if tab is None:return first
-        try:
-            await tab.click(timeout=10000)
-            # Wait for the newly selected panel to settle. Never assume a click
-            # alone proves that a history row represents a played match.
-            await page.wait_for_timeout(3500)
-            second=await stable_capture({**args,"matchTab":True})
-            if not second.get("ready"):
-                first["matchTabStatus"]="not_ready";return first
-            first["matchTabStatus"]="clicked"
-            first["matchTabTables"]=second["tableInfo"]
-            first["matchTabRows"]=sum(t["rows"] for t in second["tableInfo"])
-            # Capture exact observed match links, but require the explicit
-            # played-history label to promote them to confirmed participation.
-            first["matchTabLinksObserved"]=second["matchTabLinkCount"]
-            first["matches"]=second["matches"]
-            # Avoid overwriting stable profile fields with conflicting values.
-            for k,v in second["fields"].items():
-                if k not in first["fields"]:first["fields"][k]=v
-                elif first["fields"][k]!=v:first["fields"].pop(k,None);first["conflicts"]+=1
-            for k,v in second["discoveredLabels"].items():first["discoveredLabels"][k]=first["discoveredLabels"].get(k,0)+v
-            first["unclassifiedLabels"]+=second["unclassifiedLabels"]
-            first["conflicts"]+=second["conflicts"]
-        except Exception:first["matchTabStatus"]="click_failed"
+        views={}
+        summary=re.compile(r"^\s*(?:Resum|Resumen|Summary)\s*$",re.I)
+        games=re.compile(r"^\s*(?:Partits|Partidos|Matches)(?:\s*\(\d+\))?\s*$",re.I)
+        all_comp=re.compile(r"^\s*(?:Totes les competicions|Todas las competiciones|All competitions)\s*$",re.I)
+        status,res=await change_view(shell,summary,args)
+        views["summary"]=report_view(status,res)
+        if res.get("ready"):
+            first=res
+        status,res=await change_view(shell,games,{**args,"matchTab":True})
+        views["matches"]=report_view(status,res)
+        first["matchTabStatus"]=status
+        if res.get("ready"):
+            first["matchTabTables"]=res["tableInfo"]
+            first["matchTabRows"]=sum(t["rows"] for t in res["tableInfo"])
+            first["matchTabLinksObserved"]=res["matchTabLinkCount"]
+            first["matches"]=res["matches"]
+            # Do not mix match-view totals into a competition summary.
+        if status in {"clicked","selected"}:
+            status,res=await change_view(shell,all_comp,{**args,"matchTab":True},allow_select=True)
+        else:status,res="matches_unavailable",{}
+        views["allCompetitions"]=report_view(status,res)
+        # All-competition results remain discovery only until each row's
+        # league/team scope and participation can be established.
+        first["profileViews"]=views
         return first
     except Exception:return {"ready":False}
     finally:await page.close()
@@ -544,6 +559,14 @@ async def collect(a,leagues,doc,report):
                             result=await inspect_profile(ctx,league,team,a.season,pid)
                             if not result.get("ready"):continue
                             lr["profilesReady"]+=1
+                            pv=lr.setdefault("profileViewCoverage",{})
+                            for view,info in result.get("profileViews",{}).items():
+                                dst=pv.setdefault(view,{"statuses":{},"fields":{},"labels":{},"rows":0,"matchLinks":0})
+                                st=info["status"];dst["statuses"][st]=dst["statuses"].get(st,0)+1
+                                dst["rows"]+=info["rows"];dst["matchLinks"]+=info["matchLinks"]
+                                for k in info["fields"]:dst["fields"][k]=dst["fields"].get(k,0)+1
+                                for k,v in info["labels"].items():dst["labels"][k]=dst["labels"].get(k,0)+v
+                                if "tableProbe" not in dst and info["tables"]:dst["tableProbe"]=info["tables"]
                             tab_status=lr.setdefault("matchTabStatuses",{})
                             ts=result.get("matchTabStatus","unknown")
                             tab_status[ts]=tab_status.get(ts,0)+1
