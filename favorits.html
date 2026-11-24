@@ -19,13 +19,17 @@
   <section class="hero zok-favorites-hero">
     <div class="overline">EL TEU ESPAI</div>
     <h1>Els meus favorits</h1>
-    <p>Pots combinar clubs, equips, categories i competicions. Per exemple, marca CP Sant Celoni i també un equip concret com CP Sant Celoni B · Infantil OR 10.</p>
+    <p>Marca un club per limitar els equips, categories i competicions a les opcions on participa. Les seleccions continuen sent acumulables: pots marcar CP Sant Celoni i també CP Sant Celoni B · Infantil OR 10.</p>
   </section>
   <section class="keyline" aria-live="polite"><span id="favorites-status">Carregant dades de ZonaOK…</span><span id="favorites-count">0 seleccionats</span></section>
   <section class="section zok-favorites-controls">
     <label for="favorites-search">Cerca a la llista</label>
     <input id="favorites-search" type="search" placeholder="Escriu per filtrar…" autocomplete="off">
-    <button id="favorites-clear" type="button" class="secondary">Esborra les seleccions</button>
+    <div class="zok-favorites-actions">
+      <button id="favorites-scope-toggle" type="button" class="secondary" hidden>Mostra totes les opcions</button>
+      <button id="favorites-clear" type="button" class="secondary">Esborra les seleccions</button>
+    </div>
+    <p id="favorites-scope-note" class="zok-favorites-scope-note" role="status" aria-live="polite"></p>
   </section>
   <div id="favorites-groups" class="zok-favorites-groups" aria-live="polite"></div>
   <p class="footer">Les seleccions es desen en aquest navegador. No cal crear cap compte.</p>
