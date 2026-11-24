@@ -832,7 +832,27 @@ try {
     return {...row,scoreSource:validScore(row.homeScore)&&validScore(row.awayScore)?'Agenda':''};
   }
   function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;}
-  function favoriteLogoFor(name){let s={};try{s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){}const n=norm(name);if(isBarca(name))return 'https://sidgad.cloud/fecapa/images/logos_clubes/234.png';if(isCeloni(name))return 'https://sidgad.cloud/fecapa/images/logos_clubes/281.png';for(const [key,url] of Object.entries({...s.clubLogoUrls,...s.teamLogoUrls})){if(!url)continue;const k=norm(key);if(k&&(n===k||n.startsWith(k+' ')||k.startsWith(n+' ')))return url;}return '';}
+  function favoriteLogoFor(name){
+    let s={};try{s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){}
+    if(isBarca(name))return 'https://sidgad.cloud/fecapa/images/logos_clubes/234.png';
+    if(isCeloni(name))return 'https://sidgad.cloud/fecapa/images/logos_clubes/281.png';
+    const n=norm(name);
+    for(const [key,url] of Object.entries({...s.clubLogoUrls,...s.teamLogoUrls})){
+      if(!url)continue;
+      const k=norm(key);
+      if(k&&(n===k||n.startsWith(k+' ')||k.startsWith(n+' ')))return url;
+    }
+    const target=typeof zonaokFavoriteClubKey==='function'?zonaokFavoriteClubKey(name):n;
+    for(const row of window.ZonaOKFullAgendaRows||[]){
+      for(const side of ['home','away']){
+        const team=row?.[side]||'',url=row?.[side+'Logo']||'';
+        if(!url||!team)continue;
+        const key=typeof zonaokFavoriteClubKey==='function'?zonaokFavoriteClubKey(team):norm(team);
+        if(key===target)return url;
+      }
+    }
+    return '';
+  }
   window.ZonaOKFavoriteLogoFor=favoriteLogoFor;
   function favoriteTint(value){
     const hex=String(value||'').match(/^#([0-9a-f]{6})$/i)?.[1];if(!hex)return '';
@@ -1707,6 +1727,7 @@ function zonaokConfigureFavoriteNav(){
  (s.teams||[]).forEach((id,i)=>{const f=zonaokFavoriteTeamFromId(id,s);if(!f)return;const child=String(s.teamNames?.[id]||'').trim(),playerName=child||String(f.name||f.team).trim(),initial=Array.from(playerName)[0]?.toLocaleUpperCase('ca')||'';add('favteam'+(i+1),playerName||((f.name||f.team)+' · '+f.category),child?'Temporada':f.category,'',true,initial)});
 }
 window.addEventListener('zonaok:favorites-updated',zonaokConfigureFavoriteNav);
+window.addEventListener('zonaok:agenda-loaded',zonaokConfigureFavoriteNav);
 window.addEventListener('pageshow',zonaokConfigureFavoriteNav);
 window.addEventListener('storage',e=>{if(e.key==='ZONAOK_FAVORITS_V1'||e.key===null)zonaokConfigureFavoriteNav()});
 zonaokConfigureFavoriteNav();
@@ -2035,6 +2056,7 @@ async function loadShared(){
   store=load();
   store.agenda={...(store.agenda||{}),season:packet.season||'',capturedAt:packet.capturedAt||'',rows:totalAgendaRows,counts:{...(packet.counts||{}),total:totalAgendaRows.length}};
   store.live={rows:[]};
+  window.dispatchEvent(new CustomEvent('zonaok:agenda-loaded'));
   render();
   return true;
  }catch(error){
