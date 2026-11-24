@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/zonaok-diagnosticar-idp.yml'
+      - 'scripts/zonaok_diagnosticar_idp.py'
 
 permissions:
   contents: read
