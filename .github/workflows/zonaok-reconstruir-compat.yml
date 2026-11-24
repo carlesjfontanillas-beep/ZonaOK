@@ -1,0 +1,76 @@
+name: 'ZonaOK - Reconstruir actes des del JSON unificat'
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/zonaok-reconstruir-compat.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zonaok-tots-clubs
+  cancel-in-progress: false
+
+jobs:
+  reconstruir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Comprovar que el mirall d'actes no perd fitxes
+        shell: bash
+        run: python -m unittest discover -s tests -p 'test_actes_compat_large.py' -v
+      - name: Regenerar i publicar nomes el mirall d'actes
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.zonaok_fecapa_unificat import load_unified, write_compatibility, CANONICAL
+          source = load_unified(CANONICAL)
+          oldfile = Path('zonaok-actes.json')
+          old = json.loads(oldfile.read_text(encoding='utf-8')) if oldfile.exists() else {'fixtures': []}
+          old_ids = {(str(x['league']), str(x['id'])) for x in old.get('fixtures', [])}
+          count = len(source['matches'])
+          if count < 1000:
+              raise SystemExit(f'Blocatge: el JSON unificat nomes conte {count} partits')
+          report = write_compatibility(source)
+          new = json.loads(oldfile.read_text(encoding='utf-8'))
+          new_ids = {(str(x['league']), str(x['id'])) for x in new.get('fixtures', [])}
+          if not old_ids <= new_ids:
+              raise SystemExit('Blocatge: el nou mirall perd fitxes d actes existents')
+          if not isinstance(report.get('legacyActes'), int) or len(new_ids) != len(new.get('fixtures', [])):
+              raise SystemExit('Blocatge: mirall massa gran, invalid o amb IDs duplicats')
+          print(f"AGENDA {count} partits; actes antigues {len(old_ids)}; actes publicables {len(new_ids)}")
+          PY
+            git add zonaok-actes.json
+            if git diff --cached --quiet; then
+              echo 'El mirall d actes ja esta actualitzat'
+              exit 0
+            fi
+            git commit -m 'ZonaOK: reconstruir index d actes complet des del JSON unificat'
+            if git push origin HEAD:main; then
+              echo 'Mirall d actes publicat'
+              exit 0
+            fi
+            echo 'Actualitzacio concurrent; tornar a fusionar'
+            sleep 2
+          done
+          echo 'No s ha pogut publicar el mirall d actes' >&2
+          exit 1
