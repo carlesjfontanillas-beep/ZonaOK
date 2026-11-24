@@ -177,6 +177,19 @@ JS_AGENDA = r"""() => {
   const C=x=>String(x??'').replace(/\s+/g,' ').trim();
   const N=x=>C(x).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,' ').trim();
   const txt=x=>C(x?.innerText||x?.textContent||'');
+  const clubLogos=Object.create(null);
+  const addClubLogo=(name,src)=>{
+    const label=C(name);if(!label||!src)return;
+    try{
+      const u=new URL(src,location.href);
+      if(u.protocol!=='https:'||u.hostname!=='sidgad.cloud'||
+         !/^\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(u.pathname))return;
+      clubLogos[label]=u.href;
+    }catch(_){}
+  };
+  // FECAPA relaciona els escuts amb els noms complets als atributs alt/title.
+  for(const img of document.querySelectorAll('img[src]'))
+    addClubLogo(img.getAttribute('alt')||img.getAttribute('title'),img.getAttribute('src'));
   const isoDate=v=>{
     v=C(v); let m, iso='';
     if(m=v.match(/\b(20\d{2})-(\d\d)-(\d\d)\b/))iso=m[0];
@@ -221,7 +234,7 @@ JS_AGENDA = r"""() => {
     if(!header)return '';
     const src=cells.slice(header.start,header.end).map(x=>x?.querySelector('img[src]')?.getAttribute('src')).find(Boolean)||'';
     try{const u=new URL(src,location.href);return u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&
-      /^\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.png$/i.test(u.pathname)?u.href:'';}catch(_){return '';}
+      /^\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(u.pathname)?u.href:'';}catch(_){return '';}
   };
   // /ag/ és ÚNICAMENT la font d'horaris, equips, pista i marcadors.
   // No es llegeixen IDP, lliga ni actes de cap URL, atribut o clic d'aquesta taula.
@@ -255,13 +268,15 @@ JS_AGENDA = r"""() => {
         fecha:C(tr.getAttribute('fecha')).slice(0,80),
         hasOnclick:tr.hasAttribute('onclick')
       });
+      const homeLogo=logo(cells,home),awayLogo=logo(cells,away);
+      addClubLogo(homeName,homeLogo);addClubLogo(awayName,awayLogo);
       rows.push({iso,time:start,competition:choose(cells,comp)||group,
         home:homeName,away:awayName,homeScore:s[0],awayScore:s[1],
-        venue:choose(cells,venue),homeLogo:logo(cells,home),awayLogo:logo(cells,away),
+        venue:choose(cells,venue),homeLogo,awayLogo,
         leagueId:'',matchId:'',actaUrl:'',status:''});
     }
   }
-  return {rows,counts:{tables:document.querySelectorAll('table').length,
+  return {rows,clubLogos,counts:{tables:document.querySelectorAll('table').length,
     recognizedTables:recognized,examined,invalid,invalidDate,invalidTeams,
     exported:rows.length,withReliableIDs:0,sampleValidAttributes}};
 }"""
@@ -625,7 +640,7 @@ async def collect_agenda(ctx,args,diagnostic):
     """Llegeix /ag/ i un lot de calendaris. A full, el cursor es desa
     al JSON publicat; a fast, només guardem partits recents/futurs.
     """
-    page=await ctx.new_page();rows=[];counts=[];errors=[]
+    page=await ctx.new_page();rows=[];counts=[];errors=[];club_logos={}
     try:
         catalogue=set(league_ids_from_files())
         try:
@@ -647,7 +662,7 @@ async def collect_agenda(ctx,args,diagnostic):
                 seen.add(signature)
                 chunk=data['rows']
                 if args.scope=='fast':chunk=[r for r in chunk if clean(r.get('iso'))>=recent_start()]
-                rows.extend(chunk);counts.append(data['counts'])
+                club_logos.update(data.get('clubLogos',{}));rows.extend(chunk);counts.append(data['counts'])
                 if not await next_page(page):break
         except Exception as exc:
             errors.append('Agenda /ag/: '+str(exc)[:160])
@@ -687,7 +702,8 @@ async def collect_agenda(ctx,args,diagnostic):
         finalize_agenda_selection(meta,checked,prev.get('sources',{}).get('agenda',{}))
         rows=unique_rows(rows,'agenda')
         diagnostic['sourceUrl']=AGENDA_URL
-        diagnostic['idpSources']=['competicio-calendar']
+        diagnostic['clubLogos']=club_logos
+        diagnostic['idpSources=['competicio-calendar']
         diagnostic['checkedLeagues']=checked
         diagnostic['warnings'].extend(errors)
         diagnostic['counts']={'agendaTables':sum(x.get('recognizedTables',0) for x in counts),
@@ -843,6 +859,7 @@ async def collect(args):
             'kind':args.mode,'season':SEASON,'source':'FECAPA-PLAYWRIGHT',
             'capturedAt':utc_now(), 'sourceUrl':diagnostic.get('sourceUrl',AGENDA_URL),
             'counts':diagnostic.get('counts',{}), 'scope':args.scope,
+            'clubLogos':diagnostic.get('clubLogos',{}),
             'selection':diagnostic.get('selection',{}), 'rows':rows}
     return packet,diagnostic
 
@@ -989,8 +1006,15 @@ def merge_unified(packet,previous,mode):
     sources[mode]={**prev_mode,'capturedAt':packet['capturedAt'],'mergedAt':utc_now(),**counts,**progress}
     # Full per lots: reiniciar només quan realment s'ha acabat el catàleg.
     # El cursor viatja al JSON final, no a un fitxer de control extern.
+    club_logos=dict(previous.get('clubLogos') or {})
+    raw_logos=packet.get('clubLogos')
+    if isinstance(raw_logos,dict):
+        for name,url in raw_logos.items():
+            if (clean(name) and isinstance(url,str) and
+                re.fullmatch(r'https://sidgad\.cloud/fecapa/images/logos_clubes/\d+(?:_\d+)?\.(?:png|gif)',url,re.I)):
+                club_logos[clean(name)]=url
     result={**previous,'schema':'zonaok-partits-total-v1','season':SEASON,'updatedAt':utc_now(),
-            'sources':sources,'matches':rows,'stats':{'total':len(rows),'withScores':sum(score_tuple(x) for x in rows),
+            'sources':sources,'matches':rows,'clubLogos':club_logos,'stats':{'total':len(rows),'withScores':sum(score_tuple(x) for x in rows),
                       'withActaLinks':sum(bool(x.get('actaUrl')) for x in rows),
                       'verifiedActes':sum(x.get('actaState')=='available' for x in rows)}}
     return result,counts
@@ -1000,7 +1024,7 @@ def write_compatibility(doc):
     """Miralls temporals: l'app antiga encara llegeix JSON separats."""
     rows=doc['matches'];now=utc_now()
     base={'schema':'zonaok-all-v1','season':SEASON,'publishedAt':now,'source':'FECAPA-PLAYWRIGHT'}
-    agenda={**base,'kind':'agenda','rows':rows,'capturedAt':now}
+    agenda={**base,'kind':'agenda','rows':rows,'capturedAt':now,'clubLogos':doc.get('clubLogos',{})}
     Path('zonaok-tots-agenda.json').write_text(json.dumps(agenda,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     today_local=datetime.now(ZoneInfo('Europe/Madrid'))
     cutoff=(today_local-timedelta(days=7)).strftime('%Y-%m-%d')
