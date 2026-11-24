@@ -198,7 +198,7 @@ class TestAgendaReaderFailClosed(unittest.TestCase):
         old=old_document(fixture())
         incoming=packet('agenda',[{**fixture(),'leagueId':'','matchId':''}],scope='full')
         incoming['selection']={'verifiedLeagues':0,'pendingLeagueIds':['4789']}
-        with self.assertRaisesRegex(ValueError,'Cap lliga verificada'):
+        with self.assertRaisesRegex(ValueError,'Ni Agenda general amb partits ni calendaris de lliga verificats'):
             m.merge_unified(incoming,old,'agenda')
 
     def test_v2_unverified_cursor_is_reset_when_using_auto_offset(self):
