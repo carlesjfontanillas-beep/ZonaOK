@@ -37,7 +37,9 @@ def merge(d,league,team,rows,label,stamp):
         p["lastSeenAt"]=stamp;p["nameVariants"]=sorted(set(p["nameVariants"]+[p["name"],name]))
         key="|".join([d["seasonId"],league,team,pid])
         m=d["memberships"].setdefault(key,{"playerId":pid,"leagueId":league,"teamFilterId":team,"seasonId":d["seasonId"],"teamName":None,"teamId":None,"clubId":None,"clubName":None,"firstSeenAt":stamp})
-        if label: m["teamName"]=label
+        if r.get("teamName") or label: m["teamName"]=r.get("teamName") or label
+        if numeric(r.get("clubId")): m["clubId"]=r["clubId"]
+        if isinstance(r.get("sports"),dict): m["sports"]=r["sports"]
         m.update(lastSeenAt=stamp,profileUrl=url(league,d["seasonId"],team,pid))
         seen.add(key)
     return len(seen)
@@ -81,7 +83,24 @@ EXTRACT=r"""({league,team,season})=>{
   links++;
   const name=t(a.innerText);
   if(!/\p{L}/u.test(name)||/^(ver|veure|perfil|ficha|fitxa|estad[ií]sticas|estad[ií]stiques|detalles|detalls)$/i.test(name)){missing++;continue}
-  out.set(id,{id,name,league,team,season});
+  const row=a.closest('tr'), table=row?.closest('table'), sports={};
+  const norm=x=>t(x).normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/[.:\s]+/g,' ').trim();
+  const fields={dorsal:'number',numero:'number',num:'number',pj:'played','partits jugats':'played','partidos jugados':'played',g:'goals',gols:'goals',goles:'goals',ta:'yellowCards',tr:'redCards',tb:'blueCards','targetes grogues':'yellowCards','tarjetas amarillas':'yellowCards','targetes vermelles':'redCards','tarjetas rojas':'redCards','targetes blaves':'blueCards','tarjetas azules':'blueCards'};
+  if(row&&table){
+    const h=table.querySelector('thead tr:last-child')||[...table.rows].find(r=>[...r.cells].some(c=>c.tagName==='TH'));
+    if(h&&h.cells.length===row.cells.length&&[...h.cells,...row.cells].every(c=>c.colSpan===1&&c.rowSpan===1)){
+      [...h.cells].forEach((c,i)=>{
+        const field=fields[norm(c.innerText)]||fields[norm(c.title)];
+        const v=t(row.cells[i].innerText);
+        if(field&&/^\d{1,5}$/.test(v))sports[field]=Number(v);
+      });
+    }
+  }
+  const sel=[...document.querySelectorAll('.sidgad-liga-team-selector .sidgad-team-selector-item[data-team-id]')].find(x=>x.getAttribute('data-team-id')===team);
+  const teamName=t(sel?.getAttribute('data-team-name')||sel?.querySelector('.sidgad-team-selector-name')?.textContent);
+  const logo=sel?.querySelector('img[src]');let clubId=null;
+  if(logo){try{const u=new URL(logo.getAttribute('src'),document.baseURI),m=u.pathname.match(/^\/fecapa\/images\/logos_clubes\/(\d+)\.png$/i);if(u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&m)clubId=m[1]}catch{}}
+  out.set(id,{id,name,league,team,season,sports,teamName,clubId});
  }
  const birthLabel=[...document.querySelectorAll('th,label,dt')].some(e=>/nacimiento|naixement|fecha de nacimiento|data de naixement/i.test(e.textContent||''));
  return {rows:[...out.values()],links,missing,birthLabel};
@@ -203,7 +222,7 @@ async def collect(a,leagues,doc,report):
         finally:await ctx.close();await browser.close()
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--max-teams",type=int);p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
+    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--max-teams",type=int);p.add_argument("--diagnostic-only",action="store_true");p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
     a=p.parse_args()
     if not numeric(a.season) or any(not numeric(x) for x in a.league) or any(not re.fullmatch(r"[1-9]\d*:[1-9]\d*",x) for x in a.seed):p.error("IDs invàlids")
     a.seed=[tuple(s.split(":")) for s in a.seed]
@@ -218,7 +237,22 @@ def main():
     except Exception as e:report["fatalError"]=type(e).__name__
     n=sum(x["membershipsObserved"] for x in report["leagues"])
     report.update(status="candidate_only" if n else "no_verified_rows",observedMemberships=n,playersInCandidate=len(doc["players"]),membershipsInCandidate=len(doc["memberships"]))
-    if n:doc.update(updatedAt=now(),coverageVerified=False);save(a.output,doc)
+    from collections import Counter, defaultdict
+    coverage=Counter()
+    linked=defaultdict(list)
+    for m in doc["memberships"].values():
+        linked[m["playerId"]].append(m)
+        for k in ("teamName","teamId","clubId","clubName","profileUrl"):
+            if m.get(k):coverage[k]+=1
+        for k in m.get("sports",{}):coverage["sports."+k]+=1
+    report["fieldCoverage"]={"playerId":len(doc["players"]),"name":sum(bool(p.get("name")) for p in doc["players"].values()),"leagueId":len(doc["memberships"]),"teamFilterId":len(doc["memberships"]),"seasonId":len(doc["memberships"]),**dict(coverage)}
+    report["multiMembershipPlayers"]=sum(len(v)>1 for v in linked.values())
+    report["multiClubPlayersVerifiedByLogo"]=sum(len({m["clubId"] for m in v if m.get("clubId")})>1 for v in linked.values())
+    report["teamsObserved"]=sum(x["teamsObserved"] for x in report["leagues"])
+    report["leaguesObserved"]=sum(x["teamsObserved"]>0 for x in report["leagues"])
+    report["privateDataSaved"]=bool(n and not a.diagnostic_only)
+    if n and not a.diagnostic_only:
+        doc.update(updatedAt=now(),coverageVerified=False);save(a.output,doc)
     save(a.report,report)
     print(json.dumps({k:v for k,v in report.items() if k!="leagues"}))
     if a.only_seed or a.max_teams: print(json.dumps({"diagnostics":report["leagues"]},ensure_ascii=False))

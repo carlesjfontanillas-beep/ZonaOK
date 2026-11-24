@@ -33,21 +33,10 @@ jobs:
           EVENT: ${{ github.event_name }}
         run: |
           if [ "$EVENT" = "push" ]; then
-            xvfb-run -a python scripts/zonaok_jugadors_auto.py --league 4789 --seed 4789:11173 --max-teams 4
+            xvfb-run -a python scripts/zonaok_jugadors_auto.py --league 4774 --league 4775 --league 4786 --league 4789 --league 4804 --seed 4789:11173 --max-teams 3 --diagnostic-only
           else
-            xvfb-run -a python scripts/zonaok_jugadors_auto.py --inventory zonaok-classificacions.json --inventory zonaok-tots-agenda.json --seed 4789:11173
+            xvfb-run -a python scripts/zonaok_jugadors_auto.py --inventory zonaok-classificacions.json --inventory zonaok-tots-agenda.json --seed 4789:11173 --diagnostic-only
           fi
-      - name: Xifrar candidat amb clau pública opcional
-        if: always()
-        env:
-          AGE_RECIPIENT: ${{ vars.ZONAOK_JUGADORS_AGE_RECIPIENT }}
-        run: |
-          if [ -f private/jugadors-master.json ] && [ -n "$AGE_RECIPIENT" ]; then
-            sudo apt-get update -qq
-            sudo apt-get install -y age
-            age -r "$AGE_RECIPIENT" -o jugadors-master.json.age private/jugadors-master.json
-          fi
-          rm -rf private
       - name: Diagnòstic agregat
         if: always()
         uses: actions/upload-artifact@v4
@@ -55,10 +44,3 @@ jobs:
           name: jugadors-diagnostic
           path: jugadors-diagnostic.json
           if-no-files-found: warn
-      - name: Candidat xifrat (si configurat)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: jugadors-master-xifrat
-          path: jugadors-master.json.age
-          if-no-files-found: ignore
