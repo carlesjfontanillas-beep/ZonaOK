@@ -315,6 +315,16 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
   body.zok-ui-detail .hero .zok-week-help,body.zok-ui-home .hero .zok-week-help{display:none!important}
 }
 </style>
+<style id="zok-favorite-empty-state">
+  #home-cards.zok-home-no-favorites{grid-template-columns:1fr;gap:12px}
+  .zok-favorite-empty-card{display:grid;gap:9px;padding:19px 21px;border:1px solid #dce5ec;border-radius:19px;background:#fff;color:#19324a;box-shadow:0 9px 24px #0002}
+  .zok-favorite-empty-card h3{margin:0;color:#173751;font-size:16px;line-height:1.25}
+  .zok-favorite-empty-card p{margin:0;color:#52677a;font-size:13px;line-height:1.55}
+  .zok-favorite-empty-card a{justify-self:start;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 13px;border-radius:11px;background:#ffbd78;color:#102c43;font-weight:800;text-decoration:none}
+</style>
+<script id="zok-favorites-first-visit">
+(()=>{try{const s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}');const any=(Array.isArray(s.clubs)&&s.clubs.some(Boolean))||(Array.isArray(s.teams)&&s.teams.some(Boolean));const key='ZONAOK_FAVORITS_ONBOARDING_V1';if(!any&&!localStorage.getItem(key)){localStorage.setItem(key,'1');location.replace('favorits.html');}}catch(_){}})();
+</script>
 </head>
 <body>
 <main class="app">
@@ -1365,8 +1375,21 @@ const loc=mk('div','venue');loc.append(mk('strong','','\u{1F4CD} '+(r.venue||'Pi
 const buttons=mk('div','match-actions');const cal=mk('button','','\u25A6 Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);const maps=mk('a','light',r.venue?'\u2197 Google Maps':'\u2197 Cercar pista');maps.href=r.venue?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue):BASE+'ag/';maps.target='_blank';maps.rel='noopener';const source=mk('a','light','FECAPA \u2197');source.href=exactActaLink(r,id)||(id==='live'?BASE:calendarUrl(id));source.target='_blank';source.rel='noopener';buttons.append(cal,maps,source);if(scorePresent(r)){const acta=mk('button','zok-acta-action','\u2315 Acta');acta.type='button';acta.onclick=()=>openActaDialog(r,id);acta.setAttribute('aria-label','Obrir l\u2019acta del partit sense sortir de ZonaOK');buttons.append(acta)}c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));if(scorePresent(r)){c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Obrir fitxa del partit '+r.home+' - '+r.away);c.addEventListener('click',e=>{if(e.target.closest?.('button,a,input,select,textarea'))return;openActaDialog(r,id)});c.addEventListener('keydown',e=>{if(e.target!==c||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();openActaDialog(r,id)})}return c}
 function zonaokFavoriteTeamWeekRows(i){const f=zonaokFavoriteTeam(i);if(!f)return [];const {start,end}=chosenWeek();return clubRows().filter(r=>r.iso>=start&&r.iso<=end&&normalize(r.competition)===f.category&&(normalize(r.home)===f.team||normalize(r.away)===f.team)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time))}
 function favoritePendingCard(title,buttonKey){const card=mk('div','empty zok-favorite-pending');card.append(mk('strong','',title+' · Resultats pendents'));card.append(mk('div','', 'No s’ha identificat cap partit importat d’aquest favorit aquesta setmana.'));const button=mk('button','secondary','Resultats');button.type='button';button.addEventListener('click',()=>selectSection(buttonKey));card.append(button);return card}
+function favoriteHelpCard(title,message){const card=mk('article','zok-favorite-empty-card');card.append(mk('h3','',title),mk('p','',message));const link=mk('a','','Configura Favorits');link.href='favorits.html';card.append(link);return card}
 function renderHome(){
- const box=$$('#home-cards');box.replaceChildren();const state=zonaokFavoriteState(),found=new Map();
+ const box=$$('#home-cards');box.replaceChildren();const state=zonaokFavoriteState();
+ const hasClubs=(state.clubs||[]).some(Boolean),hasTeams=(state.teams||[]).some(Boolean);
+ if(!hasClubs&&!hasTeams){
+   box.classList.add('zok-home-no-favorites');
+   box.append(
+     favoriteHelpCard('Encara no has triat cap club','Selecciona fins a dos clubs per veure aquí els partits de cada setmana.'),
+     favoriteHelpCard('Segueix un equip concret','Pots afegir equips favorits per consultar-ne tota la temporada, a més dels teus clubs.')
+   );
+   $$('#home-count').textContent='0 partits';
+   return;
+ }
+ box.classList.remove('zok-home-no-favorites');
+ const found=new Map();
  for(let i=0;i<2;i++){
    for(const row of zonaokFavoriteClubRows(i))found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
    for(const row of zonaokFavoriteTeamWeekRows(i))found.set([row.iso,row.time,normalize(row.home),normalize(row.away)].join('|'),row);
@@ -1382,10 +1405,7 @@ function renderHome(){
    const club=zonaokFavoriteClub(i);
    if(club&&!zonaokFavoriteClubRows(i).length){box.append(favoritePendingCard(club,'favclub'+(i+1)));pending++;}
  }
- if(!rows.length&&!pending){
-   const hasFavorites=(state.clubs||[]).length||(state.teams||[]).length;
-   box.append(mk('div','empty',hasFavorites?'No hi ha partits importats dels teus favorits aquesta setmana.':'Tria clubs o equips a Favorits per veure’n els resultats aquí.'));
- }
+ if(!rows.length&&!pending)box.append(mk('div','empty','No hi ha partits importats dels teus favorits aquesta setmana.'));
  $$('#home-count').textContent=rows.length+' partits';
 }
 function emptyResults(message){const v=mk('div','empty');v.append(mk('div','',message));$('#results-list').append(v)}

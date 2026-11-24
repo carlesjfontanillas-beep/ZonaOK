@@ -40,8 +40,12 @@
   }
   function save() {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(selected));
-      nodes.status.textContent = 'Seleccions desades en aquest navegador.';
+      const serialized = JSON.stringify(selected);
+      localStorage.setItem(STORAGE_KEY, serialized);
+      if (localStorage.getItem(STORAGE_KEY) !== serialized) throw new Error('Storage verification failed');
+      nodes.status.textContent = location.protocol === 'file:'
+        ? 'Desades a la previsualització local. Safari pot no compartir-les amb Inici; prova l’adreça web de ZonaOK.'
+        : 'Seleccions desades en aquest navegador.';
     } catch (_) {
       nodes.status.textContent = 'No s’han pogut desar les seleccions en aquest navegador.';
     }
@@ -150,12 +154,34 @@
     render();
   }
   function scopedOptions(key) {
-    if (key === 'clubs' || showAllOptions || !selected.clubs.length) return catalog[key];
-    const clubs = new Set(selected.clubs);
-    const records = catalog.teamRecords.filter(record => clubs.has(record.club));
-    if (key === 'teams') return catalog.teams.filter(option => clubs.has(option.club));
-    if (key === 'categories') return sorted(records.map(record => record.category));
-    if (key === 'competitions') return sorted(records.map(record => record.competition));
+    if (key === 'clubs') return catalog.clubs;
+    if (showAllOptions) return catalog[key];
+
+    let records = catalog.teamRecords;
+    if (selected.clubs.length) {
+      const clubs = new Set(selected.clubs);
+      records = records.filter(record => clubs.has(record.club));
+    }
+
+    const selectedTeams = new Set(selected.teams);
+    const selectedCategories = new Set(selected.categories.map(norm));
+    const selectedCompetitions = new Set(selected.competitions.map(norm));
+    if (key === 'teams') {
+      if (selectedCategories.size) records = records.filter(record => selectedCategories.has(norm(record.category)));
+      if (selectedCompetitions.size) records = records.filter(record => selectedCompetitions.has(norm(record.competition)));
+      const available = new Set(records.map(record => record.key));
+      return catalog.teams.filter(option => available.has(option.id));
+    }
+    if (key === 'categories') {
+      if (selectedTeams.size) records = records.filter(record => selectedTeams.has(record.key));
+      if (selectedCompetitions.size) records = records.filter(record => selectedCompetitions.has(norm(record.competition)));
+      return sorted(records.map(record => record.category));
+    }
+    if (key === 'competitions') {
+      if (selectedTeams.size) records = records.filter(record => selectedTeams.has(record.key));
+      if (selectedCategories.size) records = records.filter(record => selectedCategories.has(norm(record.category)));
+      return sorted(records.map(record => record.competition));
+    }
     return catalog[key];
   }
   function optionId(option) {
@@ -189,7 +215,18 @@
       section.append(heading);
       const list = document.createElement('div');
       list.className = 'zok-favorite-list';
-      const options = scopedOptions(key);
+      const chosen = new Set(selected[key]);
+      const options = scopedOptions(key).sort((a, b) => {
+        const selectedFirst = Number(chosen.has(optionId(b))) - Number(chosen.has(optionId(a)));
+        if (selectedFirst) return selectedFirst;
+        if (key === 'teams') {
+          const clubA = typeof a === 'string' ? '' : a.club || '';
+          const clubB = typeof b === 'string' ? '' : b.club || '';
+          const byClub = clubA.localeCompare(clubB, 'ca', {sensitivity: 'base'});
+          if (byClub) return byClub;
+        }
+        return optionLabel(a).localeCompare(optionLabel(b), 'ca', {sensitivity: 'base'});
+      });
       const availableIds = new Set(options.map(optionId));
       amount.textContent = `${selected[key].filter(id => availableIds.has(id)).length} / ${options.length}`;
       for (const option of options) {
@@ -276,7 +313,9 @@
       let standings = {};
       if (standingsResponse.ok) standings = await standingsResponse.json();
       buildCatalog(packet.data.agenda.rows, standings);
-      nodes.status.textContent = 'Dades carregades dels JSON publicats a ZonaOK.';
+      nodes.status.textContent = location.protocol === 'file:'
+        ? 'Previsualització local: Safari pot separar les seleccions de Favorits i Inici.'
+        : 'Dades carregades dels JSON publicats a ZonaOK.';
       discoverClubLogos();
     } catch (_) {
       nodes.status.textContent = 'No s’han pogut carregar els catàlegs. Comprova la connexió i torna-ho a provar.';
