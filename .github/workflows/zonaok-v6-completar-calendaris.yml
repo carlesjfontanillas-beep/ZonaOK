@@ -1,0 +1,117 @@
+name: 'ZonaOK V6 - Completar tots els calendaris i IDP'
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/zonaok-v6-completar-calendaris.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zonaok-tots-clubs
+  cancel-in-progress: false
+
+jobs:
+  completar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preparar Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install 'playwright>=1.55,<2'
+          python -m playwright install --with-deps chromium
+      - name: Proves conservadores abans de la importació
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Llegir lligues per lots, conservant Agenda i tots els IDP
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p diagnostic-v6-lots
+          git fetch origin main
+          git reset --hard origin/main
+          for batch in $(seq 1 15); do
+            echo "---- Lot V6 $batch ----"
+            xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \
+              --mode agenda --scope full --offset auto --limit 20 \
+              --capture captura-agenda-v6-lot.json \
+              --report "diagnostic-v6-lots/lot-$batch.json"
+            python scripts/zonaok_fecapa_unificat.py merge \
+              --mode agenda --capture captura-agenda-v6-lot.json \
+              --output zonaok-tots-partits.json --compat \
+              --report "diagnostic-v6-lots/fusio-$batch.json"
+            python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
+            python - <<'PY'
+          import json
+          d=json.load(open('zonaok-tots-partits.json'))
+          s=d['sources']['agenda']
+          print('Total partits:',len(d['matches']),'Cursor:',s.get('nextFullOffset'),
+                'de',s.get('catalogueLeagues'),'Pendents IDP:',len(s.get('pendingLeagueIds',[])))
+          PY
+            if python - <<'PY'
+          import json,sys
+          d=json.load(open('zonaok-tots-partits.json'))
+          s=d['sources']['agenda']
+          sys.exit(0 if int(s.get('nextFullOffset',0))>=int(s.get('catalogueLeagues',999999)) else 1)
+          PY
+            then
+              echo "Catàleg recorregut; alguns IDP de partits futurs poden continuar pendents"
+              break
+            fi
+          done
+      - name: Validar conservació i absència de duplicats abans de publicar
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,subprocess
+          old=json.loads(subprocess.check_output(['git','show','HEAD:zonaok-tots-partits.json']))
+          d=json.load(open('zonaok-tots-partits.json'))
+          a=json.load(open('zonaok-actes.json'))
+          oldrows=old['matches'];newrows=d['matches']
+          if not len(oldrows)<=len(newrows)<=len(oldrows)+1500:
+              raise SystemExit(f'Bloqueig de publicació: variació anòmala de partits {len(oldrows)} -> {len(newrows)}')
+          old_ids={(str(r['leagueId']),str(r['matchId'])) for r in oldrows if r.get('leagueId') and r.get('matchId')}
+          new_ids=[(str(r['leagueId']),str(r['matchId'])) for r in newrows if r.get('leagueId') and r.get('matchId')]
+          if not old_ids<=set(new_ids):raise SystemExit('Bloqueig: IDs antics desapareguts')
+          if len(new_ids)!=len(set(new_ids)):raise SystemExit('Bloqueig: IDP duplicats al JSON unificat')
+          if len(a.get('fixtures',[]))<1551:raise SystemExit('Bloqueig: actes anteriors perdudes')
+          s=d['sources']['agenda']
+          if int(s.get('nextFullOffset',0))<int(s.get('catalogueLeagues',999999)):
+              raise SystemExit('Bloqueig: no s han recorregut totes les lligues')
+          print('VALIDACIÓ: partits',len(oldrows),'->',len(newrows),
+                'IDP',len(old_ids),'->',len(new_ids),'actes',len(a['fixtures']))
+          print('Lligues amb IDP parcial:',len(s.get('pendingLeagueIds',[])))
+          PY
+      - name: Publicar dades verificades
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json
+          if git diff --cached --quiet; then
+            echo 'No hi ha dades noves'
+          else
+            git commit -m 'ZonaOK V6: completar calendaris i enllaços IDP verificats'
+            git push origin HEAD:main
+          fi
+      - name: Desar resums de cada lot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zonaok-v6-lots-calendaris
+          if-no-files-found: ignore
+          path: diagnostic-v6-lots/
