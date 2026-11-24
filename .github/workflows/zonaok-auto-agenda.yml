@@ -22,11 +22,12 @@ on:
         type: string
         default: 'auto'
       publish:
-        description: 'Publicar les dades verificades? Desmarcat en les primeres proves.'
+        description: 'Publicar les dades verificades un cop validades.'
         required: true
         type: boolean
-        default: false
+        default: true
   schedule:
+    - cron: '1-59/5 * * * *'
     - cron: '0 12 * * *'
     - cron: '0 13 * * *'
 
@@ -73,9 +74,9 @@ jobs:
         if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         env:
-          LIMIT: ${{ github.event_name == 'schedule' && '0' || inputs.limit }}
-          SCOPE: ${{ github.event_name == 'schedule' && 'full' || inputs.scope }}
-          OFFSET: ${{ github.event_name == 'schedule' && '0' || inputs.offset }}
+          LIMIT: ${{ github.event_name == 'schedule' && github.event.schedule == '1-59/5 * * * *' && '20' || (github.event_name == 'schedule' && '0' || inputs.limit) }}
+          SCOPE: ${{ github.event_name == 'schedule' && github.event.schedule == '1-59/5 * * * *' && 'fast' || (github.event_name == 'schedule' && 'full' || inputs.scope) }}
+          OFFSET: ${{ github.event_name == 'schedule' && github.event.schedule == '1-59/5 * * * *' && 'auto' || (github.event_name == 'schedule' && '0' || inputs.offset) }}
         run: |
           set -euo pipefail
           xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \

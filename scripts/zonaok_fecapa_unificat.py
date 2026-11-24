@@ -87,8 +87,19 @@ def select_league_batch(ids, args, previous, diagnostic):
                   if clean(r.get('iso')) >= recent_start()}
         active=[x for x in ids if x in open_ids]
         other=[x for x in ids if x not in open_ids]
-        # Les lligues favorites sempre es revisen; la resta rota entre execucions.
-        pinned=[x for x in FAVOURITE_LEAGUES if x in ids]
+        # Els finals sense IDP són els pendents prioritaris: tornar a llegir
+        # aquestes lligues permet descobrir l'ID només al calendari oficial.
+        pending_idp={}
+        for row in previous.get('matches',[]):
+            if not isinstance(row,dict):continue
+            lid=clean(row.get('leagueId'))
+            status=clean(row.get('status'))
+            is_final=bool(re.search(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',status,re.I))
+            if (lid in ids and not clean(row.get('matchId')) and score_tuple(row)
+                    and is_final and clean(row.get('iso'))<=local_today().isoformat()):
+                pending_idp[lid]=max(clean(row.get('iso')),pending_idp.get(lid,''))
+        idp_priority=[lid for lid,_ in sorted(pending_idp.items(),key=lambda item:item[1],reverse=True)]
+        pinned=idp_priority+[x for x in FAVOURITE_LEAGUES if x in ids and x not in idp_priority]
         pool=[x for x in active+other if x not in pinned]
         offset=int(previous.get('sources',{}).get('agenda',{}).get('nextFastOffset') or 0)
         if pool:offset%=len(pool)

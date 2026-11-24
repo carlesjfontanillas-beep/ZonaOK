@@ -22,12 +22,12 @@ on:
         type: string
         default: 'auto'
       publish:
-        description: 'Publicar les dades verificades? Desmarcat en les primeres proves.'
+        description: 'Publicar les dades verificades un cop validades.'
         required: true
         type: boolean
-        default: false
+        default: true
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '1-59/5 * * * *'
     - cron: '2 6,7,18,19 * * *'
 
 permissions:

@@ -22,13 +22,12 @@ on:
         type: string
         default: '0'
       publish:
-        description: 'Publicar al JSON? DESACTIVAT per defecte; primer verificar el diagnostic'
+        description: 'Publicar les dades verificades un cop validades.'
         required: true
         type: boolean
-        default: false
+        default: true
   schedule:
-    - cron: '*/5 * * * *'
-    - cron: '2 6,7,18,19 * * *'
+    - cron: '1-59/5 * * * *'
 
 permissions:
   contents: write

@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """Gate temporal dels workflows FECAPA ZonaOK.
 
-Les expressions de GitHub Actions són UTC. Aquest helper valida les dues
-expressions de temporada (CET/CEST) i només obre consultes de partit dins
-d'una finestra calculada a partir de l'hora de partit guardada a l'Agenda.
-No infereix que un partit estigui en joc ni que una acta existeixi.
+Les expressions de GitHub Actions són UTC. Aquest helper valida CET/CEST,
+obre lectures de partit dins la finestra horària indicada a l'Agenda, i només
+tracta un resultat com a final quan FECAPA n'aporta un estat final explícit.
+La manca d'IDP deixa el partit pendent; no prova que l'acta existeixi.
 """
 from __future__ import annotations
 
 import argparse
 import json
 import os
+import re
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -19,8 +20,9 @@ from zoneinfo import ZoneInfo
 MADRID = ZoneInfo("Europe/Madrid")
 DAILY_CRON = "2 6,7,18,19 * * *"
 AGENDA_CRONS = {"0 12 * * *", "0 13 * * *"}
-LIVE_CRON = "*/5 * * * *"
+LIVE_CRON = "1-59/5 * * * *"
 WINDOW = timedelta(minutes=150)
+FINAL_STATUS = re.compile(r"\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b", re.I)
 
 
 def scheduled_local_hour(cron: str, now: datetime) -> int | None:
@@ -29,7 +31,6 @@ def scheduled_local_hour(cron: str, now: datetime) -> int | None:
         return None
     utc_hour = {"0 12 * * *": 12, "0 13 * * *": 13}.get(cron)
     if cron == DAILY_CRON:
-        # One expression represents four seasonal UTC slots.
         utc_hour = now.astimezone(ZoneInfo("UTC")).hour
         if utc_hour not in (6, 7, 18, 19):
             return None
@@ -51,16 +52,49 @@ def expected_local_hours(cron: str, now: datetime) -> set[int]:
     return {8, 20} if hour in (8, 20) else set()
 
 
-def fixture_window_count(path: Path, now: datetime) -> int:
+def read_matches(path: Path) -> list[dict]:
     try:
         doc = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
-        return 0
+        return []
     matches = doc.get("matches", []) if isinstance(doc, dict) else []
+    return [row for row in matches if isinstance(row, dict)] if isinstance(matches, list) else []
+
+
+def has_idp(row: dict) -> bool:
+    return bool(str(row.get("matchId") or row.get("idp") or row.get("id") or "").strip())
+
+
+def has_score(row: dict) -> bool:
+    values = (row.get("homeScore"), row.get("awayScore"))
+    return all(isinstance(value, int) and not isinstance(value, bool) for value in values)
+
+
+def finished_with_score(row: dict, local_date: str) -> bool:
+    if str(row.get("iso") or "") > local_date or not has_score(row):
+        return False
+    return bool(FINAL_STATUS.search(str(row.get("status") or "")))
+
+
+def pending_acta_count(path: Path, now: datetime) -> int:
+    today = now.astimezone(MADRID).date().isoformat()
+    return sum(1 for row in read_matches(path)
+               if finished_with_score(row, today)
+               and (not has_idp(row) or row.get("actaState") != "available"))
+
+
+def pending_idp_count(path: Path, now: datetime) -> int:
+    today = now.astimezone(MADRID).date().isoformat()
+    return sum(1 for row in read_matches(path)
+               if finished_with_score(row, today) and not has_idp(row)
+               and re.fullmatch(r"\d{4,6}", str(row.get("leagueId") or "")))
+
+
+def fixture_window_count(path: Path, now: datetime) -> int:
     count = 0
     local_now = now.astimezone(MADRID)
-    for row in matches if isinstance(matches, list) else []:
-        if not isinstance(row, dict):
+    for row in read_matches(path):
+        if FINAL_STATUS.search(str(row.get("status") or "")):
             continue
         try:
             start = datetime.strptime(
@@ -76,21 +110,30 @@ def fixture_window_count(path: Path, now: datetime) -> int:
 def should_run(mode: str, cron: str, now: datetime, matches: Path) -> tuple[bool, str]:
     local = now.astimezone(MADRID)
     if mode == "agenda":
+        if cron == LIVE_CRON:
+            count = pending_idp_count(matches, now)
+            return (True, f"finished_without_idp:{count}") if count else (False, "no_finished_fixture_without_idp")
         expected = expected_local_hours(cron, now)
         if local.hour == 14 and 14 in expected:
             return True, "daily_agenda_14_madrid"
         return False, "not_the_14_madrid_slot"
     if cron == DAILY_CRON:
+        if mode != "directe":
+            return False, "daily_rest_check_only_for_directe"
         expected = expected_local_hours(cron, now)
         if local.hour in expected:
             return True, "daily_rest_check"
         return False, "invalid_cet_cest_daily_slot"
     if cron != LIVE_CRON:
         return False, "unrecognized_schedule"
-    count = fixture_window_count(matches, now)
-    if count:
-        return True, f"scheduled_match_window:{count}"
-    return False, "no_fixture_in_scheduled_time_window"
+    in_window = fixture_window_count(matches, now)
+    if mode in ("actes", "classificacions"):
+        pending = pending_acta_count(matches, now)
+        if pending:
+            return True, f"finished_pending_acta:{pending}"
+    if in_window:
+        return True, f"scheduled_match_window:{in_window}"
+    return False, "no_fixture_window_or_pending_acta"
 
 
 def main() -> int:
