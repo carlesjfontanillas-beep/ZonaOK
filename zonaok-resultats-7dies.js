@@ -56,16 +56,15 @@
     if (bb.length <= 6 && aa.length > 6) return aliasCandidates(a).includes(bb);
     return false;
   };
-  const setTeamAliases = rows => {
+  const setTeamAliases = (rows, references = []) => {
     const candidates = new Map();
+    const sources = [...rows, ...references];
     rowTeamAliases = new WeakMap();
     for (const row of rows) {
       if (!row?.iso || !row?.time) continue;
       const perRow = {};
-      for (const other of rows) {
-        if (other === row || other.iso !== row.iso || other.time !== row.time ||
-            String(other.homeScore ?? '') !== String(row.homeScore ?? '') ||
-            String(other.awayScore ?? '') !== String(row.awayScore ?? '') ||
+      for (const other of sources) {
+        if (other === row || other.iso !== row.iso || String(other.time || '').padStart(5, '0') !== String(row.time || '').padStart(5, '0') ||
             !aliasCompatible(row.home, other.home) || !aliasCompatible(row.away, other.away)) continue;
         for (const side of ['home', 'away']) {
           const short = String(row[side] || '');
@@ -197,13 +196,24 @@
     // Nou sistema independent de 2 JSONs: agenda completa + resultats de 7 dies.
     // En directe MAI publica un catàleg de partits, només actualitza l’agenda.
     try {
-      const res = await fetch(`zonaok-tots-resultats-7dies.json?t=${Date.now()}`, {cache:'no-store'});
+      const [res, agendaRes] = await Promise.all([
+        fetch(`zonaok-tots-resultats-7dies.json?t=${Date.now()}`, {cache:'no-store'}),
+        fetch(`zonaok-data.json?t=${Date.now()}`, {cache:'no-store'})
+      ]);
+      let agendaRows = [];
+      if (agendaRes.ok) {
+        try {
+          const agendaPacket = await agendaRes.json();
+          if (agendaPacket?.version === 3 && Array.isArray(agendaPacket.data?.agenda?.rows))
+            agendaRows = agendaPacket.data.agenda.rows;
+        } catch (_) { /* els resultats continuen disponibles sense el catàleg */ }
+      }
       if (res.ok) {
         const pack = await res.json();
         if (pack?.schema === 'zonaok-all-v1' && pack?.kind === 'resultats-7dies' &&
             Array.isArray(pack.rows) && (pack.rows.length > 0 || pack.agendaCount > 0)) {
           publishedAt = pack.publishedAt || '';
-          return {__all:true, rows:pack.rows};
+          return {__all:true, rows:pack.rows, agendaRows};
         }
       }
     } catch (_) { /* encara no publicat; mantenim la V3 actual */ }
@@ -410,7 +420,7 @@
       const data = await loadData();
       matches = data.__all ? rowsInLastSevenDays(data.rows) : combinedAgenda(data);
       matches = await enrichActes(matches);
-      setTeamAliases(matches);
+      setTeamAliases(matches, data.agendaRows || []);
       updateClubOptions();
       updateCategoryOptions();
       updateCompetitionOptions();
