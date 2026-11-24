@@ -26,9 +26,9 @@ on:
         required: true
         type: boolean
         default: false
-  # Programacio desactivada fins a validar les captures reals.
-  # schedule:
-  #   - cron: '15 5 * * *'
+  schedule:
+    - cron: '0 12 * * *'
+    - cron: '0 13 * * *'
 
 permissions:
   contents: write
@@ -51,27 +51,38 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Decidir si toca importar segons l'horari Europe/Madrid
+        id: schedule_gate
+        if: ${{ github.event_name == 'schedule' }}
+        env:
+          GITHUB_EVENT_SCHEDULE: ${{ github.event.schedule }}
+        run: python scripts/zonaok_schedule_gate.py --mode agenda
+
       - name: Instal·lar Playwright + Chromium
+        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install 'playwright>=1.55,<2'
           python -m playwright install --with-deps chromium
       - name: Proves de fusió conservadora
+        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         run: python -m unittest discover -s tests -p 'test_*.py' -v
       - name: Capturar agenda a FECAPA amb navegador real
+        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         env:
-          LIMIT: ${{ github.event_name == 'schedule' && '20' || inputs.limit }}
-          SCOPE: ${{ github.event_name == 'schedule' && 'fast' || inputs.scope }}
-          OFFSET: ${{ github.event_name == 'schedule' && 'auto' || inputs.offset }}
+          LIMIT: ${{ github.event_name == 'schedule' && '0' || inputs.limit }}
+          SCOPE: ${{ github.event_name == 'schedule' && 'full' || inputs.scope }}
+          OFFSET: ${{ github.event_name == 'schedule' && '0' || inputs.offset }}
         run: |
           set -euo pipefail
           xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \
             --mode agenda --scope "${SCOPE:-fast}" --offset "${OFFSET:-auto}" --limit "${LIMIT:-20}" \
             --capture captura-agenda-auto.json --report diagnostic-agenda-auto.json
       - name: Fusionar JSON únic i generar fitxers compatibles
+        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -79,7 +90,7 @@ jobs:
             --mode agenda --capture captura-agenda-auto.json \
             --output zonaok-tots-partits.json --compat --report fusio-agenda-auto.json
       - name: Publicar només si l'usuari ho activa
-        if: ${{ inputs.publish == true || github.event_name == 'schedule' }}
+        if: ${{ (inputs.publish == true || github.event_name == 'schedule') && (github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true') }}
         shell: bash
         run: |
           set -euo pipefail
