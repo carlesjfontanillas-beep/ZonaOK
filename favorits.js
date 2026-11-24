@@ -154,12 +154,34 @@
     render();
   }
   function scopedOptions(key) {
-    if (key === 'clubs' || showAllOptions || !selected.clubs.length) return catalog[key];
-    const clubs = new Set(selected.clubs);
-    const records = catalog.teamRecords.filter(record => clubs.has(record.club));
-    if (key === 'teams') return catalog.teams.filter(option => clubs.has(option.club));
-    if (key === 'categories') return sorted(records.map(record => record.category));
-    if (key === 'competitions') return sorted(records.map(record => record.competition));
+    if (key === 'clubs') return catalog.clubs;
+    if (showAllOptions) return catalog[key];
+
+    let records = catalog.teamRecords;
+    if (selected.clubs.length) {
+      const clubs = new Set(selected.clubs);
+      records = records.filter(record => clubs.has(record.club));
+    }
+
+    const selectedTeams = new Set(selected.teams);
+    const selectedCategories = new Set(selected.categories.map(norm));
+    const selectedCompetitions = new Set(selected.competitions.map(norm));
+    if (key === 'teams') {
+      if (selectedCategories.size) records = records.filter(record => selectedCategories.has(norm(record.category)));
+      if (selectedCompetitions.size) records = records.filter(record => selectedCompetitions.has(norm(record.competition)));
+      const available = new Set(records.map(record => record.key));
+      return catalog.teams.filter(option => available.has(option.id));
+    }
+    if (key === 'categories') {
+      if (selectedTeams.size) records = records.filter(record => selectedTeams.has(record.key));
+      if (selectedCompetitions.size) records = records.filter(record => selectedCompetitions.has(norm(record.competition)));
+      return sorted(records.map(record => record.category));
+    }
+    if (key === 'competitions') {
+      if (selectedTeams.size) records = records.filter(record => selectedTeams.has(record.key));
+      if (selectedCategories.size) records = records.filter(record => selectedCategories.has(norm(record.category)));
+      return sorted(records.map(record => record.competition));
+    }
     return catalog[key];
   }
   function optionId(option) {
