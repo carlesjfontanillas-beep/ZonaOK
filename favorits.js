@@ -13,7 +13,7 @@
   const clean = value => String(value ?? '').trim().replace(/\s+/g, ' ');
   const sorted = values => [...new Set(values.map(clean).filter(Boolean))]
     .sort((a, b) => a.localeCompare(b, 'ca', {sensitivity: 'base'}));
-  const emptySelection = () => Object.fromEntries(GROUPS.map(([key]) => [key, []]));
+  const emptySelection = () => ({...Object.fromEntries(GROUPS.map(([key]) => [key, []])), teamNames: {}});
   const nodes = {
     status: document.getElementById('favorites-status'),
     count: document.getElementById('favorites-count'),
@@ -30,8 +30,9 @@
   function readSelection() {
     try {
       const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      return Object.fromEntries(GROUPS.map(([key]) => [key,
-        Array.isArray(value[key]) ? value[key].map(clean).filter(Boolean) : []]));
+      return {...Object.fromEntries(GROUPS.map(([key]) => [key,
+        Array.isArray(value[key]) ? value[key].map(clean).filter(Boolean) : []])),
+        teamNames: value.teamNames && typeof value.teamNames === 'object' ? value.teamNames : {}};
     } catch (_) {
       return emptySelection();
     }
@@ -141,10 +142,10 @@
       competitions: sorted(competitions),
       teamRecords: enrichedRecords
     };
-    selected = Object.fromEntries(GROUPS.map(([key]) => {
+    selected = {...Object.fromEntries(GROUPS.map(([key]) => {
       const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
       return [key, selected[key].filter(value => allowed.has(value))];
-    }));
+    })), teamNames: selected.teamNames || {}};
     render();
   }
   function scopedOptions(key) {
@@ -209,6 +210,16 @@
         const text = document.createElement('span');
         text.textContent = label;
         row.append(checkbox, text);
+        if (key === 'teams' && checkbox.checked) {
+          const name = document.createElement('input');
+          name.type = 'text'; name.className = 'zok-favorite-child-name';
+          name.maxLength = 32; name.autocomplete = 'given-name';
+          name.placeholder = 'Nom del fill o la filla';
+          name.setAttribute('aria-label', `Nom personalitzat per a ${label}`);
+          name.value = clean(selected.teamNames[id] || '');
+          name.addEventListener('input', () => { selected.teamNames[id] = name.value.slice(0, 32); save(); });
+          row.append(name);
+        }
         list.append(row);
       }
       if (!catalog[key].length) {
