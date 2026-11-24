@@ -17,3 +17,8 @@
 .zok-favorite-option[hidden]{display:none}
 .zok-favorite-empty{margin:0;padding:16px;color:#bed3e3;font-size:12px;line-height:1.55}
 @media(max-width:380px){.zok-favorites-controls{grid-template-columns:minmax(0,1fr)}.zok-favorites-controls label{grid-column:auto}.zok-favorites-controls button{width:100%}}
+.zok-favorites-actions{display:flex;gap:8px;min-width:0}
+.zok-favorites-actions button{flex:1;min-width:0;padding:10px 8px;font-size:11px}
+.zok-favorites-actions [hidden]{display:none!important}
+.zok-favorites-scope-note{grid-column:1/-1;margin:0;color:#a9c3d7;font-size:11px;line-height:1.45}
+@media(max-width:380px){.zok-favorites-actions{flex-direction:column}.zok-favorites-scope-note{grid-column:auto}}
