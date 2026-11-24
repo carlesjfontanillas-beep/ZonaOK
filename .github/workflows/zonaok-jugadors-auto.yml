@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python -m pip install playwright
+      - run: python -m pip install 'playwright>=1.55,<2'
       - run: python -m playwright install --with-deps chromium
       - name: Proves de fusió i persistència
         run: python -m unittest discover -s tests -p test_jugadors_auto.py -v
@@ -33,7 +33,7 @@ jobs:
           EVENT: ${{ github.event_name }}
         run: |
           if [ "$EVENT" = "push" ]; then
-            xvfb-run -a python scripts/zonaok_jugadors_auto.py --only-seed --seed 4789:11173
+            xvfb-run -a python scripts/zonaok_jugadors_auto.py --league 4789 --seed 4789:11173 --max-teams 4
           else
             xvfb-run -a python scripts/zonaok_jugadors_auto.py --inventory zonaok-classificacions.json --inventory zonaok-tots-agenda.json --seed 4789:11173
           fi

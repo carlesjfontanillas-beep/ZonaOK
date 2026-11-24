@@ -4,6 +4,7 @@ import argparse, asyncio, json, re, os, tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode, urlparse, parse_qs
+from zonaok_fecapa_unificat import chromium_context
 
 BASE="https://www.hoqueipatins.fecapa.cat/"
 SCHEMA="zonaok-jugadors-v1"
@@ -58,6 +59,11 @@ DISCOVER=r"""({league,season})=>{
   const q=u.searchParams;
   if(u.protocol==='https:'&&/^(www\.)?hoqueipatins\.fecapa\.cat$/.test(u.hostname)&&q.get('vista')==='plantillas'&&q.get('liga')===league&&!q.has('jugador')&&(!q.has('s')||q.get('s')===season))add(q.get('filtro'),a.innerText);
  }
+ // V3 confirmed these actual SIDGAD selector items. Each candidate
+ // still requires a roster profile link matching its league and filter.
+ for(const item of document.querySelectorAll('.sidgad-liga-team-selector .sidgad-team-selector-item[data-team-id]')){
+   add(item.getAttribute('data-team-id'),item.getAttribute('data-team-name')||item.querySelector('.sidgad-team-selector-name')?.textContent);
+ }
  for(const s of document.querySelectorAll('select[name="filtro"],select#filtro')){
   if(!s.getClientRects().length)continue;
   for(const o of s.options)if(!o.disabled)add(o.value,o.textContent);
@@ -67,7 +73,7 @@ DISCOVER=r"""({league,season})=>{
 EXTRACT=r"""({league,team,season})=>{
  const out=new Map(), t=x=>(x||'').replace(/\s+/g,' ').trim();
  let links=0,missing=0;
- for(const a of document.querySelectorAll('a[href]')){
+ for(const a of document.querySelectorAll('.sidgad-plantillas a.sidgad-player-link[href]')){
   if(!a.getClientRects().length)continue;
   let u;try{u=new URL(a.getAttribute('href'),document.baseURI)}catch{continue}
   const q=u.searchParams,id=q.get('jugador');
@@ -121,59 +127,83 @@ async def open_page(page,target,selector):
 async def collect(a,leagues,doc,report):
     from playwright.async_api import async_playwright
     async with async_playwright() as pw:
-        browser=await pw.chromium.launch(headless=False,args=["--no-sandbox"])
+        browser,ctx=await chromium_context(pw)
         try:
-            page=await browser.new_page(locale="ca-ES",timezone_id="Europe/Madrid",viewport={"width":1420,"height":960})
-            network={}
-            def on_response(resp):
-                try:
-                    u=urlparse(resp.url)
-                    if resp.request.resource_type not in ("xhr","fetch","script","document"):return
-                    if u.hostname not in ("www.hoqueipatins.fecapa.cat","hoqueipatins.fecapa.cat","sidgad.cloud","sidgad.es","www.sidgad.es"):return
-                    key=f"{u.hostname}|{resp.request.resource_type}|{resp.status}"
-                    if resp.request.resource_type=="script" and resp.status>=400:
-                        asset=u.path.rsplit("/",1)[-1]
-                        if re.fullmatch(r"[A-Za-z][A-Za-z0-9_.-]{0,100}\.js",asset):key+="|"+asset
-                    network[key]=network.get(key,0)+1
-                except Exception:pass
-            page.on("response",on_response)
             for league in leagues:
-                lr={"leagueId":league,"filters":0,"teamsObserved":0,"links":0,"missingNames":0,"membershipsObserved":0,"errors":0,"birthLabelTeams":0}
+                lr={"leagueId":league,"filters":0,"teamsSelected":0,"teamsObserved":0,"links":0,"missingNames":0,"membershipsObserved":0,"errors":0,"birthLabelTeams":0,"attempts":0}
                 report["leagues"].append(lr)
-                filters={f:None for l,f in a.seed if l==league}
+                seeds=[f for l,f in a.seed if l==league]
+                filters={f:None for f in seeds}
                 if not a.only_seed:
+                    page=await ctx.new_page()
                     try:
-                        await open_page(page,url(league,a.season),'a[href*="filtro="]:visible,select[name="filtro"]:visible,select#filtro:visible')
-                        for t in await page.evaluate(DISCOVER,{"league":league,"season":a.season}):filters[t["id"]]=t["label"] or filters.get(t["id"])
-                    except Exception:lr["errors"]+=1
+                        await open_page(page,url(league,a.season,seeds[0] if seeds else None),'.sidgad-liga-team-selector .sidgad-team-selector-item[data-team-id]')
+                        previous=None;stable=0;found=[]
+                        for _ in range(24):
+                            found=await page.evaluate(DISCOVER,{"league":league,"season":a.season})
+                            sig=tuple(sorted(x["id"] for x in found))
+                            stable=stable+1 if sig and sig==previous else 1
+                            previous=sig
+                            if sig and stable>=3:break
+                            await page.wait_for_timeout(650)
+                        for t in found:filters[t["id"]]=t["label"] or filters.get(t["id"])
+                        lr["discoveredFilters"]=len(found)
+                        lr["seedInSelector"]=any(x["id"] in seeds for x in found) if seeds else None
+                    except Exception as e:
+                        lr["errors"]+=1;lr["discoveryError"]=type(e).__name__
+                    finally:await page.close()
                 lr["filters"]=len(filters)
                 if not filters:lr["errors"]+=1
-                for team,label in sorted(filters.items(),key=lambda x:int(x[0])):
-                    network.clear()
-                    stage="navigation"
-                    try:
-                        await open_page(page,url(league,a.season,team),'a[href*="jugador="]:visible')
-                        stage="extract"
-                        args={"league":league,"team":team,"season":a.season}
-                        first=await page.evaluate(EXTRACT,args)
-                        await page.wait_for_timeout(1200)
-                        data=await page.evaluate(EXTRACT,args)
-                        if first["links"]!=data["links"]:
-                            await page.wait_for_timeout(1500);data=await page.evaluate(EXTRACT,args)
-                        n=merge(doc,league,team,data["rows"],label,now())
-                        lr["links"]+=data["links"];lr["missingNames"]+=data["missing"];lr["birthLabelTeams"]+=int(data["birthLabel"])
-                        lr["membershipsObserved"]+=n;lr["teamsObserved"]+=int(n>0);lr["errors"]+=int(n==0)
-                    except Exception as e:
-                        lr["errors"]+=1
-                        lr["lastError"]={"stage":stage,"type":type(e).__name__,"code":str(e) if str(e) in {"context","HTTP_403","HTTP_404","HTTP_500","HTTP_none"} else None}
-                    if a.only_seed or lr["teamsObserved"]==0:
-                        lr["pageDiagnostic"]=await diagnostic(page)
-                        lr["networkSummary"]=dict(network)
-                    await page.wait_for_timeout(1000)
-        finally:await browser.close()
+                ordered=seeds+[f for f in sorted(filters,key=int) if f not in seeds]
+                if a.max_teams:ordered=ordered[:a.max_teams]
+                lr["teamsSelected"]=len(ordered)
+                for team in ordered:
+                    accepted=None
+                    for attempt in range(1,4):
+                        lr["attempts"]+=1
+                        page=await ctx.new_page()
+                        network={}
+                        def on_response(resp):
+                            try:
+                                u=urlparse(resp.url)
+                                if resp.request.resource_type not in ("xhr","fetch","script","document"):return
+                                if u.hostname not in ("www.hoqueipatins.fecapa.cat","hoqueipatins.fecapa.cat","sidgad.cloud","sidgad.es","www.sidgad.es"):return
+                                key=f"{u.hostname}|{resp.request.resource_type}|{resp.status}"
+                                network[key]=network.get(key,0)+1
+                            except Exception:pass
+                        page.on("response",on_response)
+                        stage="navigation"
+                        try:
+                            await open_page(page,url(league,a.season,team),'.sidgad-plantillas a.sidgad-player-link[href]')
+                            stage="extract"
+                            args={"league":league,"team":team,"season":a.season}
+                            signature=None;stable=0
+                            for _ in range(24):
+                                data=await page.evaluate(EXTRACT,args)
+                                sig=tuple(sorted((r["id"],r["name"]) for r in data["rows"]))
+                                stable=stable+1 if sig and sig==signature else 1
+                                signature=sig
+                                if sig and stable>=3 and data["missing"]==0:
+                                    accepted=data;break
+                                await page.wait_for_timeout(650)
+                        except Exception as e:
+                            lr["lastError"]={"stage":stage,"type":type(e).__name__}
+                        finally:
+                            if not accepted and attempt==3:
+                                lr["pageDiagnostic"]=await diagnostic(page)
+                                lr["networkSummary"]=dict(network)
+                            await page.close()
+                        if accepted:break
+                        await asyncio.sleep(attempt)
+                    if not accepted:lr["errors"]+=1;continue
+                    n=merge(doc,league,team,accepted["rows"],filters[team],now())
+                    lr["links"]+=accepted["links"];lr["missingNames"]+=accepted["missing"];lr["birthLabelTeams"]+=int(accepted["birthLabel"])
+                    lr["membershipsObserved"]+=n;lr["teamsObserved"]+=int(n>0);lr["errors"]+=int(n==0)
+                    await asyncio.sleep(1)
+        finally:await ctx.close();await browser.close()
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
+    p.add_argument("--inventory",action="append",default=[]);p.add_argument("--league",action="append",default=[]);p.add_argument("--seed",action="append",default=[]);p.add_argument("--only-seed",action="store_true");p.add_argument("--season",default="41");p.add_argument("--max-leagues",type=int);p.add_argument("--max-teams",type=int);p.add_argument("--previous");p.add_argument("--output",default="private/jugadors-master.json");p.add_argument("--report",default="jugadors-diagnostic.json")
     a=p.parse_args()
     if not numeric(a.season) or any(not numeric(x) for x in a.league) or any(not re.fullmatch(r"[1-9]\d*:[1-9]\d*",x) for x in a.seed):p.error("IDs invàlids")
     a.seed=[tuple(s.split(":")) for s in a.seed]
@@ -191,6 +221,6 @@ def main():
     if n:doc.update(updatedAt=now(),coverageVerified=False);save(a.output,doc)
     save(a.report,report)
     print(json.dumps({k:v for k,v in report.items() if k!="leagues"}))
-    if a.only_seed: print(json.dumps({"diagnostics":report["leagues"]},ensure_ascii=False))
+    if a.only_seed or a.max_teams: print(json.dumps({"diagnostics":report["leagues"]},ensure_ascii=False))
     return 0 if n else 2
 if __name__=="__main__":raise SystemExit(main())
