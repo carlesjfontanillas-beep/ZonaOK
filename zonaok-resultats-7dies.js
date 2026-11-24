@@ -89,6 +89,8 @@
   // El nom del partit conserva el sufix oficial; només els filtres el treuen.
   const displayTeamName = (name, row, side) => {
     const full = String(name || '').trim();
+    const stateName = window.ZonaOKStateTeamName?.(full, row, side);
+    if (stateName !== undefined && stateName !== null) return stateName;
     const key = norm(full).replace(/ /g, '');
     const contextual = row && rowTeamAliases.get(row)?.[side];
     if (contextual?.size === 1) return [...contextual][0];
