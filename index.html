@@ -279,6 +279,16 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
   margin: 0;
 }
 </style>
+<style id="zonaok-single-row-favorites-nav">
+  .navgrid{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important}
+  .navbtn{min-width:0!important;min-height:58px!important;padding:5px 1px!important;gap:3px!important}
+  .navbtn strong{max-width:100%;font-size:clamp(8px,2.2vw,10px)!important;line-height:1.1!important;overflow-wrap:anywhere}
+  .navbtn small{display:none!important}
+  .bottom-title{margin-bottom:5px}
+  .zok-favorites-top{display:flex;align-items:center;gap:7px;align-self:center;padding:9px 12px;border:1px solid #91b7d155;border-radius:13px;background:linear-gradient(145deg,#214d6d,#14344e);color:#fff;text-decoration:none;white-space:nowrap}
+  .zok-favorites-top span{font-size:22px;line-height:1;color:#ffc17c}
+  .zok-favorites-top strong{font-size:12px}
+</style>
 </head>
 <body>
 <main class="app">
@@ -287,7 +297,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
       <div class="brand">ZONA<span>OK</span></div>
       <div class="strap">ELS TEUS PARTITS &#xB7; EL TEU HOQUEI</div>
     </div>
-    <div class="emblem" aria-hidden="true">&#x1F3D2;</div>
+    <a class="zok-favorites-top" href="favorits.html" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a>
   </header>
   <section class="hero">
     <div class="overline">AGENDA PERSONAL</div>
@@ -387,7 +397,6 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
     <button data-tab="favteam1" class="navbtn" aria-label="Equip favorit 1" title="Equip favorit 1"><span class="nav-name" data-fav-icon="team1">👤</span><strong data-fav-title="team1">Equip favorit 1</strong><small>Temporada</small></button>
     <button data-tab="favteam2" class="navbtn" aria-label="Equip favorit 2" title="Equip favorit 2"><span class="nav-name" data-fav-icon="team2">👤</span><strong data-fav-title="team2">Equip favorit 2</strong><small>Temporada</small></button>
     <button data-tab="home" class="navbtn" aria-label="Inici" title="Inici"><span>&#x2302;</span><strong>ZonaOK Inici</strong><small>Equips preferits</small></button>
-    <a href="favorits.html" class="navbtn" style="text-decoration:none" aria-label="Favorits" title="Favorits"><span>☆</span><strong>Favorits</strong><small>Els teus equips</small></a>
   </div>
 </nav>
 <dialog id="guide">
