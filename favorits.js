@@ -366,7 +366,7 @@
         if (!missing.size) break;
       }
     }
-    if (changed) { save(); window.dispatchEvent(new CustomEvent('zonaok:favorites-updated')); }
+    if (changed) { save(); render(); window.dispatchEvent(new CustomEvent('zonaok:favorites-updated')); }
   }
   async function load() {
     try {
