@@ -168,11 +168,14 @@
       }
       return result;
     };
+    const migratedLogoMap = migrateClubMap(selected.clubLogoUrls);
+    const favoriteClubSet = new Set(migratedClubs);
+    const favoriteClubLogos = Object.fromEntries(Object.entries(migratedLogoMap).filter(([club]) => favoriteClubSet.has(club)));
     selected = {...Object.fromEntries(GROUPS.map(([key]) => {
       const allowed = new Set(catalog[key].map(option => typeof option === 'string' ? option : option.id));
       const values = key === 'clubs' ? [...new Set(migratedClubs)] : selected[key];
       return [key, values.filter(value => allowed.has(value))];
-    })), teamNames: selected.teamNames || {}, clubLogoUrls: migrateClubMap(selected.clubLogoUrls), teamLogoUrls: {}, clubColors: migrateClubMap(selected.clubColors), teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
+    })), teamNames: selected.teamNames || {}, clubLogoUrls: favoriteClubLogos, teamLogoUrls: {}, clubColors: migrateClubMap(selected.clubColors), teamColors: selected.teamColors || {}, teamLeagueIds: {...(selected.teamLeagueIds||{}), ...Object.fromEntries(selected.teams.map(id=>{const record=catalog.teamRecords.find(item=>item.key===id);return [id,record?.leagueId||'']}))}, playerIds: selected.playerIds || {}};
     save();
     render();
   }
@@ -283,6 +286,7 @@
           selected[key] = checkbox.checked
             ? [...selected[key], id]
             : selected[key].filter(value => value !== id);
+          if (key === 'clubs' && !checkbox.checked) delete selected.clubLogoUrls[id];
           save();
           render();
           if (key === 'clubs') void discoverClubLogos();
