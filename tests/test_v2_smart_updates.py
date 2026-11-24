@@ -70,7 +70,7 @@ class TestSmartSync(unittest.TestCase):
         with self.assertRaises(ValueError):m.merge_unified(packet('agenda',[],scope='full'),old_document(fixture()),'agenda')
     def test_full_agenda_cursor_advances_in_batches(self):
         from types import SimpleNamespace
-        d={'sources':{'agenda':{'nextFullOffset':20}},'matches':[]}
+        d={'sources':{'agenda':{'nextFullOffset':20,'verifiedLeagues':20,'pendingLeagueIds':[]}},'matches':[]}
         diag={}
         ids=[str(x) for x in range(4774,4860)]
         got,meta=m.select_league_batch(ids,SimpleNamespace(scope='full',offset='auto',limit=20),d,diag)
@@ -135,3 +135,85 @@ class TestReconciliation(unittest.TestCase):
         incoming={**fixture(),'homeScore':0,'awayScore':0}
         doc,_=m.merge_unified(packet('agenda',[incoming]),old_document(old),'agenda')
         self.assertEqual((doc['matches'][0]['homeScore'],doc['matches'][0]['awayScore']),(6,1))
+
+
+class TestAgendaReaderFailClosed(unittest.TestCase):
+    """Regression: same generic 532 rows on every ?liga= URL."""
+
+    def test_generic_532_rows_never_inherit_requested_league(self):
+        general = [{**fixture(), 'leagueId':'', 'matchId':''} for _ in range(532)]
+        verified, stats = m.verified_league_rows('4789', [], general)
+        self.assertEqual(verified, [])
+        self.assertEqual(stats['withoutIDs'], 532)
+        self.assertFalse(stats['verified'])
+
+    def test_mismatched_league_is_never_attributed_to_requested(self):
+        unrelated={**fixture(), 'leagueId':'4775','matchId':'147550'}
+        rows,stats=m.verified_league_rows('4789',[unrelated],[])
+        self.assertEqual(rows, [])
+        self.assertEqual(stats['foreignRows'],1)
+        self.assertFalse(stats['verified'])
+
+    def test_per_fixture_official_ids_are_accepted(self):
+        known=fixture()
+        rows,stats=m.verified_league_rows('4789',[known],[])
+        self.assertTrue(stats['verified'])
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]['actaUrl'],m.make_match_url('4789','151001'))
+
+    def test_mixed_league_dom_can_harvest_good_rows_but_not_certify_completeness(self):
+        known=fixture()
+        other={**known,'leagueId':'4786','matchId':'151999'}
+        rows,stats=m.verified_league_rows('4789',[known,other],[])
+        self.assertEqual(len(rows),1)
+        self.assertFalse(stats['verified'])
+        self.assertEqual(stats['status'],'mixed-league-list')
+
+    def test_unverified_leagues_stay_in_backlog_and_full_never_completes(self):
+        selection={'scope':'full','nextFullOffset':3,'catalogueLeagues':3}
+        checked=[{'leagueId':'4784','verified':True},
+                 {'leagueId':'4786','verified':False},
+                 {'leagueId':'4789','verified':False}]
+        got=m.finalize_agenda_selection(selection,checked,{})
+        self.assertEqual(got['pendingLeagueIds'],['4786','4789'])
+        self.assertFalse(got['fullCompleted'])
+
+    def test_verified_retries_clear_pending_and_finish(self):
+        selection={'scope':'full','nextFullOffset':3,'catalogueLeagues':3}
+        checked=[{'leagueId':'4786','verified':True},
+                 {'leagueId':'4789','verified':True}]
+        got=m.finalize_agenda_selection(selection,checked,{'pendingLeagueIds':['4786','4789']})
+        self.assertEqual(got['pendingLeagueIds'],[])
+        self.assertTrue(got['fullCompleted'])
+
+    def test_full_auto_retries_pending_after_scan(self):
+        from types import SimpleNamespace
+        prev={'sources':{'agenda':{'nextFullOffset':3,'pendingLeagueIds':['4786','4789']}},'matches':[]}
+        args=SimpleNamespace(scope='full',offset='auto',limit=2)
+        picked,meta=m.select_league_batch(['4784','4786','4789'],args,prev,{})
+        self.assertEqual(picked,['4786','4789'])
+        self.assertTrue(meta['retryPending'])
+
+    def test_full_capture_without_verified_league_is_rejected_before_publication(self):
+        old=old_document(fixture())
+        incoming=packet('agenda',[{**fixture(),'leagueId':'','matchId':''}],scope='full')
+        incoming['selection']={'verifiedLeagues':0,'pendingLeagueIds':['4789']}
+        with self.assertRaisesRegex(ValueError,'Cap lliga verificada'):
+            m.merge_unified(incoming,old,'agenda')
+
+    def test_v2_unverified_cursor_is_reset_when_using_auto_offset(self):
+        from types import SimpleNamespace
+        old={'sources':{'agenda':{'nextFullOffset':50}},'matches':[]}
+        args=SimpleNamespace(scope='full',offset='auto',limit=25)
+        ids=[str(x) for x in range(4774,4880)]
+        selected,meta=m.select_league_batch(ids,args,old,{})
+        self.assertEqual(meta['offset'],0)
+        self.assertEqual(selected[0],'4774')
+
+    def test_one_tagged_match_in_generic_532_is_not_full_league(self):
+        tagged=fixture()
+        generic=[{**fixture(), 'leagueId':'', 'matchId':''} for _ in range(531)]
+        good,stats=m.verified_league_rows('4789',[tagged],generic)
+        self.assertEqual(len(good),1)
+        self.assertFalse(stats['verified'])
+        self.assertEqual(stats['status'],'partial-identifiers')
