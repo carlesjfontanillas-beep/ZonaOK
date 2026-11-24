@@ -1779,7 +1779,7 @@ async function loadActesJSON(){
     const response=await fetch('zonaok-actes.json?t='+Date.now(),{cache:'no-store'});
     if(!response.ok)return;
     const packet=await response.json();
-    if(packet.version!==1||!Array.isArray(packet.fixtures)||packet.fixtures.length>1200)return;
+    if(packet.version!==1||!Array.isArray(packet.fixtures)||packet.fixtures.length>20000)return;
     const current=load();current.actaIndex=current.actaIndex||{};
     let changes=0;
     for(const f of packet.fixtures){
