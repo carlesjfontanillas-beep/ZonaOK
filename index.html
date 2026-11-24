@@ -2228,7 +2228,7 @@ $$('#export-shared').onclick=downloadShared;
 $$('#publish-shared').onclick=()=>window.open('https://github.com/carlesjfontanillas-beep/ZonaOK/upload/main','_blank','noopener');
 $$('#reload-shared').onclick=()=>window.ZonaOKRefreshSources?.();
 $$('#guide-button').onclick=()=>$$('#guide').showModal();$$('#guide-close').onclick=()=>$$('#guide').close();$$('#clear-button').onclick=()=>window.ZonaOKRefreshSources?.();$$('#refresh-home').onclick=()=>selectSection('home');$$('#close-results').onclick=()=>selectSection('home');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>selectSection(b.dataset.tab));
-for(const id of ['standing-club-filter','standing-category-filter','standing-competition-filter'])$(('#'+id)).addEventListener('input',()=>{if(section==='classificacions')renderSection('classificacions')});
+for(const id of ['standing-club-filter','standing-category-filter','standing-competition-filter'])document.getElementById(id)?.addEventListener('input',()=>{if(section==='classificacions')renderSection('classificacions')});
 $$('#week-prev').onclick=()=>changeWeek(-1);
 $$('#week-next').onclick=()=>changeWeek(1);
 $$('#week-today').onclick=resetWeek;
