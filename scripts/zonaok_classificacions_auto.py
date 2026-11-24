@@ -17,7 +17,8 @@ import json
 import re
 import sys
 import unicodedata
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from urllib.parse import parse_qs, urlencode, urlparse
 
@@ -365,12 +366,42 @@ async def collect(args) -> dict:
             offset=args.offset
             ids=ids[offset:offset+args.limit] if args.limit else ids[offset:]
         else:
-            # Les lligues de la pantalla actual sempre s'actualitzen;
-            # la resta rota diàriament, sense alterar l'estructura del JSON.
+            # Prioritize scheduled match windows and scored finals with an
+            # unverified acta (including fixtures still missing an IDP).
             known=list(dict.fromkeys(str(v.get('leagueId')) for v in existing_groups.values()
                         if isinstance(v,dict) and str(v.get('leagueId')) in ids))
-            pinned=[v for v in SEEDS if v in known] or [v for v in SEEDS if v in ids]
-            pinned=pinned[:min(8,args.limit or 8)]
+            priority=[]
+            canonical=Path("zonaok-tots-partits.json")
+            madrid=ZoneInfo("Europe/Madrid")
+            now_local=datetime.now(madrid)
+            if canonical.exists():
+                try:
+                    fixtures=json.loads(canonical.read_text(encoding="utf-8")).get("matches",[])
+                except (ValueError,OSError,AttributeError):
+                    fixtures=[]
+                for row in fixtures if isinstance(fixtures,list) else []:
+                    if not isinstance(row,dict):continue
+                    league=str(row.get("leagueId") or "")
+                    if league not in ids:continue
+                    try:
+                        kickoff=datetime.strptime(
+                            f"{row.get('iso','')} {row.get('time','')}",
+                            "%Y-%m-%d %H:%M").replace(tzinfo=madrid)
+                    except (TypeError,ValueError):
+                        kickoff=None
+                    in_window=bool(kickoff and timedelta(0)<=now_local-kickoff<=timedelta(minutes=150))
+                    has_score=row.get("homeScore") is not None and row.get("awayScore") is not None
+                    pending_final=(has_score and str(row.get("iso",""))<=now_local.date().isoformat()
+                                   and row.get("actaState")!="available")
+                    if (in_window or pending_final) and league not in priority:
+                        priority.append(league)
+            seed_base=known or ids
+            preferred=priority+[v for v in SEEDS if v in seed_base and v not in priority]
+            if not priority and not any(v in known for v in SEEDS):
+                preferred=[v for v in SEEDS if v in ids]
+            pinned=list(dict.fromkeys(preferred))
+            if args.limit:
+                pinned=pinned[:args.limit]
             pool=[v for v in (known+[x for x in ids if x not in known]) if v not in pinned]
             take=max(0,args.limit-len(pinned)) if args.limit else len(pool)
             offset=(datetime.now(timezone.utc).date().toordinal()*max(take,1))%len(pool) if pool else 0
