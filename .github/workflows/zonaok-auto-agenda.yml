@@ -27,7 +27,7 @@ on:
         type: boolean
         default: true
   schedule:
-    - cron: '1-59/5 * * * *'
+    - cron: '1,6,11,16,21,26,31,36,41,46,51,56 * * * *'
     - cron: '0 12 * * *'
     - cron: '0 13 * * *'
 
@@ -74,7 +74,7 @@ jobs:
         if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         env:
-          LIMIT: ${{ github.event_name == 'schedule' && github.event.schedule == '1-59/5 * * * *' && '20' || (github.event_name == 'schedule' && '0' || inputs.limit) }}
+          LIMIT: ${{ github.event_name == 'schedule' && github.event.schedule == '1,6,11,16,21,26,31,36,41,46,51,56 * * * *' && '20' || (github.event_name == 'schedule' && '0' || inputs.limit) }}
           SCOPE: ${{ github.event_name == 'schedule' && github.event.schedule == '1-59/5 * * * *' && 'fast' || (github.event_name == 'schedule' && 'full' || inputs.scope) }}
           OFFSET: ${{ github.event_name == 'schedule' && github.event.schedule == '1-59/5 * * * *' && 'auto' || (github.event_name == 'schedule' && '0' || inputs.offset) }}
         run: |
