@@ -370,7 +370,8 @@ async def collect(args) -> dict:
             # unverified acta (including fixtures still missing an IDP).
             known=list(dict.fromkeys(str(v.get('leagueId')) for v in existing_groups.values()
                         if isinstance(v,dict) and str(v.get('leagueId')) in ids))
-            priority=[]
+            live_priority=[]
+            pending_dates={}
             canonical=Path("zonaok-tots-partits.json")
             madrid=ZoneInfo("Europe/Madrid")
             now_local=datetime.now(madrid)
@@ -393,8 +394,14 @@ async def collect(args) -> dict:
                     has_score=row.get("homeScore") is not None and row.get("awayScore") is not None
                     pending_final=(has_score and str(row.get("iso",""))<=now_local.date().isoformat()
                                    and row.get("actaState")!="available")
-                    if (in_window or pending_final) and league not in priority:
-                        priority.append(league)
+                    if in_window and league not in live_priority:
+                        live_priority.append(league)
+                    elif pending_final:
+                        pending_dates[league]=max(str(row.get("iso","")),pending_dates.get(league,""))
+            priority=live_priority+[
+                league for league,_ in sorted(pending_dates.items(),key=lambda item:item[1],reverse=True)
+                if league not in live_priority
+            ]
             seed_base=known or ids
             preferred=priority+[v for v in SEEDS if v in seed_base and v not in priority]
             if not priority and not any(v in known for v in SEEDS):
