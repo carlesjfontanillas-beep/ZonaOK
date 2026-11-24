@@ -2214,15 +2214,18 @@ async function loadShared(){
   store=load();
   store.agenda={...(store.agenda||{}),season:packet.season||'',capturedAt:packet.capturedAt||'',rows:totalAgendaRows,counts:{...(packet.counts||{}),total:totalAgendaRows.length}};
   store.live={rows:[]};
-  window.dispatchEvent(new CustomEvent('zonaok:agenda-loaded'));
-  render();
-  return true;
+  // Conservar Agenda en la memòria de la pestanya abans de tornar a llegir l'estat.
+  // No s'escriu res a localStorage ni als JSON de GitHub.
+  store=window.ZonaOKSafeStorage.replace(store);
+  window.ZonaOKAgendaError='';
  }catch(error){
   console.warn('ZonaOK: no s’ha pogut carregar zonaok-tots-agenda.json',error);
-  totalAgendaRows=[];window.ZonaOKFullAgendaRows=[];window.ZonaOKFullAgendaClubLogos={};
-  store=load();store.agenda={season:'',capturedAt:'',rows:[],counts:{total:0}};store.live={rows:[]};
-  render();return false;
+  window.ZonaOKAgendaError=error?.message||String(error);
+  // Una descàrrega fallida no pot esborrar l'última Agenda vàlida.
+  return false;
  }
+ window.dispatchEvent(new CustomEvent('zonaok:agenda-loaded'));
+ return true;
 }
 $$('#export-shared').onclick=downloadShared;
 $$('#publish-shared').onclick=()=>window.open('https://github.com/carlesjfontanillas-beep/ZonaOK/upload/main','_blank','noopener');
@@ -2246,6 +2249,10 @@ window.ZonaOKRefreshSources=async function(){
      // Ordre estricte: Agenda es carrega abans d'Actes, sense cap escriptura concurrent.
      const agenda=await loadShared();
      store=load();render();
+     if(!agenda){
+       const label=document.getElementById('data-age');
+       if(label)label.textContent=(totalAgendaRows.length?'No s’ha pogut actualitzar · Dades anteriors conservades':'Error carregant l’Agenda: '+(window.ZonaOKAgendaError||'connexió'));
+     }
      return Boolean(agenda);
    })();
    try{return await pendingRefresh}finally{pendingRefresh=null}
