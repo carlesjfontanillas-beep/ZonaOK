@@ -303,6 +303,32 @@
                 "actaUrl": {
                   "type": "string",
                   "pattern": "^https://www\\.hoqueipatins\\.fecapa\\.cat/\\?"
+                },
+                "stats": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "number": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "goals": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "yellowCards": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "blueCards": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "redCards": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
                 }
               }
             }

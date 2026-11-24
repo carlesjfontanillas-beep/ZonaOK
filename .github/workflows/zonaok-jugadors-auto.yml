@@ -36,7 +36,7 @@ jobs:
           EVENT: ${{ github.event_name }}
         run: |
           if [ "$EVENT" = "push" ]; then
-            xvfb-run -a python scripts/zonaok_jugadors_auto.py --league 4774 --league 4775 --league 4789 --seed 4789:11173 --max-teams 2 --inspect-profiles --profiles-per-team 3 --diagnostic-only --test-persistence
+            xvfb-run -a python scripts/zonaok_jugadors_auto.py --league 4774 --league 4775 --league 4786 --league 4789 --league 4804 --seed 4789:11173 --seed 4786:12597 --max-teams 2 --inspect-profiles --profiles-per-team 4 --diagnostic-only --test-persistence
           else
             xvfb-run -a python scripts/zonaok_jugadors_auto.py --inventory zonaok-classificacions.json --inventory zonaok-tots-agenda.json --seed 4789:11173 --diagnostic-only --test-persistence
           fi

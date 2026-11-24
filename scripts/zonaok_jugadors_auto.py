@@ -199,7 +199,9 @@ EXTRACT=r"""({league,team,season})=>{
         const safeLabels=/^(nom|nombre|jugador|jugadora|dorsal|numero|num|n|pj|pg|pe|pp|g|gl|gol|gols|goles|gf|gc|p|pts|pt|ta|tr|tb|tg|tv|min|mj|mp|pos|posicio|posicion|partits jugats|partidos jugados|targetes grogues|targetes vermelles|targetes blaves|tarjetas amarillas|tarjetas rojas|tarjetas azules)$/;
         const key=safeLabels.test(label)?label:safeLabels.test(title)?title:'other';
         headerCounts[key]=(headerCounts[key]||0)+1;
-        const field=fields[label]||fields[title];
+        const extras=[c.getAttribute('aria-label'),...Array.from(c.querySelectorAll('[title],[aria-label],img[alt]')).flatMap(e=>[e.title,e.getAttribute('aria-label'),e.getAttribute('alt')])].map(norm).filter(Boolean);
+        const known=[...new Set([fields[label],fields[title],...extras.map(x=>fields[x])].filter(Boolean))];
+        const field=known.length===1?known[0]:null;
         const v=t(row.cells[i].innerText);
         if(field&&/^\d{1,5}$/.test(v))sports[field]=Number(v);
       });
@@ -316,15 +318,25 @@ PROFILE_DIAG=r"""({league,team,season})=>{
  for(const table of scope.querySelectorAll('table')){
    if(!visible(table))continue;
    const h=table.querySelector('thead tr:last-child')||[...table.rows].find(r=>[...r.cells].some(c=>c.tagName==='TH'));
-   const headers=h?[...h.cells].map(c=>identify(c.innerText)||identify(c.title)||identify(c.getAttribute('aria-label'))||identify(c.querySelector('[title]')?.title)||'other'):[];
+   const headerKey=c=>{
+     const candidates=[c.innerText,c.title,c.getAttribute('aria-label'),...Array.from(c.querySelectorAll('[title],[aria-label],img[alt]')).flatMap(e=>[e.title,e.getAttribute('aria-label'),e.getAttribute('alt')])];
+     const keys=[...new Set(candidates.map(identify).filter(Boolean))];
+     return keys.length===1?keys[0]:'other';
+   };
+   const headers=h?[...h.cells].map(headerKey):[];
    const dataRows=[...table.rows].filter(r=>r!==h&&[...r.cells].some(c=>c.tagName==='TD')&&visible(r));
    tableInfo.push({columns:headers,rows:dataRows.length});
    // Only an explicitly labelled player history, not a general team calendar.
    let section=table.parentElement;
-   let playedSection=false;
+   let playedSection=false, summarySection=false;
    for(let i=0;section&&section!==scope&&i<4;i++,section=section.parentElement){
      const heading=section.querySelector(':scope > h2,:scope > h3,:scope > h4,:scope > .sidgad-ficha-subtitulo');
      if(heading&&/^(?:partits jugats|partidos jugados|historial de partits jugats|historial de partidos jugados)(?:\s*\(\d+\))?$/.test(norm(heading.innerText)))playedSection=true;
+     if(heading&&/^(?:estadistiques individuals|estadisticas individuales|resum estadistic|resumen estadistico|totals|totales)$/.test(norm(heading.innerText)))summarySection=true;
+   }
+   const validColumns=row=>h&&headers.length===row.cells.length&&[...h.cells,...row.cells].every(c=>c.colSpan===1&&c.rowSpan===1);
+   if(summarySection&&!playedSection&&dataRows.length===1&&validColumns(dataRows[0])){
+     headers.forEach((k,i)=>{if(['played','goals','yellowCards','blueCards','redCards'].includes(k))read(k,dataRows[0].cells[i].innerText);});
    }
    if(!playedSection)continue;
    for(const row of dataRows){
@@ -333,11 +345,30 @@ PROFILE_DIAG=r"""({league,team,season})=>{
        const q=u.searchParams,mid=q.get('partido');
        if(u.protocol!=='https:'||!/^(www\.)?hoqueipatins\.fecapa\.cat$/.test(u.hostname)||!/^[1-9]\d*$/.test(mid||'')||q.get('liga')!==league)continue;
        if(q.has('s')&&q.get('s')!==season)continue;
-       matches.set(mid,{matchId:mid,leagueId:league,source:'FECAPA:fitxa_partits_jugats'});
+       const stats={};
+       if(validColumns(row))headers.forEach((k,i)=>{
+         const v=t(row.cells[i].innerText);
+         if(['number','goals','yellowCards','blueCards','redCards'].includes(k)&&/^\d{1,4}$/.test(v))stats[k]=Number(v);
+       });
+       const existing=matches.get(mid);
+       if(!existing)matches.set(mid,{matchId:mid,leagueId:league,source:'FECAPA:fitxa_partits_jugats',stats});
+       else if(JSON.stringify(existing.stats)!==JSON.stringify(stats))existing.stats={};
      }
    }
  }
- const out={ready:true,team:visible(hero.querySelector('.sidgad-player-team-name')),fields:{},matches:[...matches.values()],tableInfo,labelCounts,metaItems:hero.querySelectorAll('.sidgad-player-meta-item').length,roleTags:hero.querySelectorAll('.sidgad-player-tag-list>*').length,conflicts:0};
+ // Report only allowlisted field labels and structural counts, never personal values.
+ const vocabulary=/^(?:dorsal|numero|num|posicio|posicion|porter|portero|portera|jugador|jugadora|naixement|nacimiento|any de naixement|ano de nacimiento|data de naixement|fecha de nacimiento|pj|g|gol|gols|goles|ta|tr|tb|tg|tv|min|minuts|minutos|titular|suplent|suplente|partits|partidos|resultat|resultado|local|visitant|visitante|competicio|competicion|equip|equipo|jornada|data|fecha|temporada|estadistiques|estadisticas|penal|penals|penaltis|faltes|faltas|assistencies|asistencias|aturades|paradas|gols encaixats|goles encajados|gols a favor|goles a favor|partits jugats|partidos jugados|targetes grogues|targetes blaves|targetes vermelles|tarjetas amarillas|tarjetas azules|tarjetas rojas)$/;
+ const discoveredLabels={};let unclassifiedLabels=0;
+ for(const e of [...hero.querySelectorAll('.sidgad-player-meta-item>*'),...scope.querySelectorAll('th,h2,h3,h4,dt,label,[role="tab"]')]){
+   if(!visible(e))continue;
+   for(const v of [e.innerText,e.title,e.getAttribute('aria-label'),...Array.from(e.querySelectorAll('[title],[aria-label],img[alt]')).flatMap(x=>[x.title,x.getAttribute('aria-label'),x.getAttribute('alt')])]){
+     const k=norm(v).replace(/[:.]+$/,'').trim();
+     if(!k)continue;
+     if(vocabulary.test(k))discoveredLabels[k]=(discoveredLabels[k]||0)+1;
+     else unclassifiedLabels++;
+   }
+ }
+ const out={ready:true,discoveredLabels,unclassifiedLabels,team:visible(hero.querySelector('.sidgad-player-team-name')),fields:{},matches:[...matches.values()],tableInfo,labelCounts,metaItems:hero.querySelectorAll('.sidgad-player-meta-item').length,roleTags:hero.querySelectorAll('.sidgad-player-tag-list>*').length,conflicts:0};
  for(const [k,v] of bag){if(v.size===1)out.fields[k]=[...v][0];else out.conflicts++;}
  return out;
 }"""
@@ -377,6 +408,8 @@ def merge_profile(doc,league,team,pid,result):
     for x in result.get("matches",[]):
         if numeric(x.get("matchId")) and x.get("leagueId")==league and x.get("source")=="FECAPA:fitxa_partits_jugats":
             matches[x["matchId"]]={"matchId":x["matchId"],"leagueId":league,"source":x["source"],"actaUrl":BASE+"?"+urlencode({"liga":league,"vista":"calendar","partido":x["matchId"]})}
+            stats={k:v for k,v in x.get("stats",{}).items() if k in {"number","goals","yellowCards","blueCards","redCards"} and type(v) is int and v>=0}
+            if stats:matches[x["matchId"]]["stats"]=stats
     if matches:m["matches"]=list(matches.values())
     m["profileCheckedAt"]=now()
 
@@ -473,6 +506,12 @@ async def collect(a,leagues,doc,report):
                             if result["matches"]:pc["matches"]=pc.get("matches",0)+1
                             lr["profileMatchesObserved"]=lr.get("profileMatchesObserved",0)+len(result["matches"])
                             lr["profileConflicts"]=lr.get("profileConflicts",0)+result["conflicts"]
+                            labels=lr.setdefault("profileDiscoveredLabels",{})
+                            for k,v in result["discoveredLabels"].items():labels[k]=labels.get(k,0)+v
+                            lr["profileUnclassifiedLabels"]=lr.get("profileUnclassifiedLabels",0)+result["unclassifiedLabels"]
+                            mc=lr.setdefault("matchStatFieldCoverage",{})
+                            for x in result["matches"]:
+                                for k in x.get("stats",{}):mc[k]=mc.get(k,0)+1
                             # Only schema shape and counts, never individual values.
                             if "profileFieldProbe" not in lr:lr["profileFieldProbe"]={k:result[k] for k in ("tableInfo","labelCounts","metaItems","roleTags")}
                             await asyncio.sleep(1)
