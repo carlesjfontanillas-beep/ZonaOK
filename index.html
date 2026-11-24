@@ -702,6 +702,342 @@ try {
   global.ZonaOKSafeStorage=Object.freeze({read,replace,setSection,setClassifications,mergeState,mergeRows,commit});
 })(window);
 </script>
+<script id="zonaok-state-team-names-20261124">
+/* Noms per a presentació, temporada 2026/27. Font auxiliar de noms: hoquei.info/hs/rfep/2026-2027/ (fitxes d'equip i calendaris Plata Norte/Sur). Els partits/resultats continuen sent FECAPA. CHM: data, rival i local/visitant; si no coincideix, no s'inventa el club. */
+window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
+  const norm=s=>String(s??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^A-Za-z0-9]+/g," ").trim().toUpperCase();
+  const codes=(v,m)=>{const k=norm(v).replace(/ /g,"");return Object.keys(m).find(c=>c===k||norm(m[c]).replace(/ /g,"")===k)||k;};
+  return function(name,row,side){
+    if(!row)return null;
+    const comp=norm(row.competition||row.category);
+    const map=table[comp];
+    if(!map)return null;
+    const date=String(row.iso||"").slice(0,10);
+    if(date<"2026-07-01"||date>"2027-06-30")return null;
+    const key=norm(name).replace(/ /g,"");
+    if(Object.prototype.hasOwnProperty.call(map,key))return map[key];
+    if(comp==="OK LIGA PLATA SUR"&&key==="CHM"){
+      const chosen=side==="home"||side==="away"?side:(norm(row.home)===norm(name)&&norm(row.away)!==norm(name)?"home":norm(row.away)===norm(name)&&norm(row.home)!==norm(name)?"away":"");
+      const home=codes(row.home,map),away=codes(row.away,map);
+      const found=fixtures.filter(f=>f[0]===date&&f[1]===home&&f[2]===away&&f[4]===chosen);
+      return found.length===1?found[0][3]:"Equip pendent d’identificar";
+    }
+    return null;
+  };
+})({
+  "OK LIGA PLATA NORTE": {
+    "ACO": "AC Ordes",
+    "BAR": "Barça Atlètic",
+    "CDM": "CDM Hockey Patines",
+    "CHO": "CH Olot",
+    "CHVS": "CH Vila-seca",
+    "CON": "CP Congrés",
+    "CPT": "CP Tordera",
+    "DOM": "AA Dominicos",
+    "GEG": "GEiEG",
+    "LUB": "Escola Lubiáns",
+    "OVR": "Oviedo Roller HC",
+    "PHSC": "PHC Sant Cugat",
+    "RCJ": "RC Jolaseta",
+    "REUS": "Reus Deportiu B"
+  },
+  "OK LIGA PLATA SUR": {
+    "CCH": "Cerdanyola CH",
+    "CEV": "CE Vendrell",
+    "CHP": "CH Palafrugell",
+    "CPA": "CP Alcobendas",
+    "CPM": "CP Manlleu",
+    "CPV": "CP Vilanova",
+    "ESP": "SD Espanyol",
+    "HCSJ": "HC Sant Just",
+    "IHC": "Igualada HC",
+    "NOIA": "CE Noia B",
+    "SHA": "Sporting Hoquei Alcoi",
+    "VIC": "CP Vic"
+  }
+},[
+  [
+    "2026-09-26",
+    "CPM",
+    "CHM",
+    "CH Mollerussa",
+    "away"
+  ],
+  [
+    "2026-09-26",
+    "CHP",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2026-10-10",
+    "IHC",
+    "CHM",
+    "CH Mollerussa",
+    "away"
+  ],
+  [
+    "2026-10-10",
+    "HCSJ",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2026-10-12",
+    "CHM",
+    "NOIA",
+    "CH Mataró",
+    "home"
+  ],
+  [
+    "2026-10-13",
+    "CHM",
+    "CPV",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2026-10-16",
+    "CHM",
+    "CEV",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2026-10-17",
+    "CHM",
+    "CPM",
+    "CH Mataró",
+    "home"
+  ],
+  [
+    "2026-10-24",
+    "CPV",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2026-10-25",
+    "SHA",
+    "CHM",
+    "CH Mollerussa",
+    "away"
+  ],
+  [
+    "2026-10-30",
+    "CHM",
+    "CCH",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2026-10-31",
+    "CHM",
+    "IHC",
+    "CH Mataró",
+    "home"
+  ],
+  [
+    "2026-11-14",
+    "CPA",
+    "CHM",
+    "CH Mollerussa",
+    "away"
+  ],
+  [
+    "2026-11-14",
+    "CEV",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2026-11-21",
+    "CHM",
+    "CHP",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2026-11-21",
+    "CHM",
+    "SHA",
+    "CH Mataró",
+    "home"
+  ],
+  [
+    "2026-11-28",
+    "CHM",
+    "ESP",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2026-11-28",
+    "CCH",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2026-12-12",
+    "VIC",
+    "CHM",
+    "CH Mollerussa",
+    "away"
+  ],
+  [
+    "2026-12-12",
+    "CHM",
+    "CPA",
+    "CH Mataró",
+    "home"
+  ],
+  [
+    "2026-12-19",
+    "CHM",
+    "CHM",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2026-12-19",
+    "CHM",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2027-01-09",
+    "CHM",
+    "ESP",
+    "CH Mataró",
+    "home"
+  ],
+  [
+    "2027-01-10",
+    "NOIA",
+    "CHM",
+    "CH Mollerussa",
+    "away"
+  ],
+  [
+    "2027-01-16",
+    "CHM",
+    "HCSJ",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2027-01-16",
+    "VIC",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2027-01-23",
+    "CHM",
+    "CPM",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2027-01-23",
+    "CHM",
+    "CHP",
+    "CH Mataró",
+    "home"
+  ],
+  [
+    "2027-01-30",
+    "CPV",
+    "CHM",
+    "CH Mollerussa",
+    "away"
+  ],
+  [
+    "2027-01-31",
+    "NOIA",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2027-02-06",
+    "CHM",
+    "IHC",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2027-02-06",
+    "CHM",
+    "HCSJ",
+    "CH Mataró",
+    "home"
+  ],
+  [
+    "2027-02-13",
+    "CEV",
+    "CHM",
+    "CH Mollerussa",
+    "away"
+  ],
+  [
+    "2027-02-13",
+    "CPM",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2027-02-20",
+    "CHM",
+    "SHA",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2027-02-20",
+    "CHM",
+    "CPV",
+    "CH Mataró",
+    "home"
+  ],
+  [
+    "2027-02-27",
+    "CCH",
+    "CHM",
+    "CH Mollerussa",
+    "away"
+  ],
+  [
+    "2027-02-27",
+    "IHC",
+    "CHM",
+    "CH Mataró",
+    "away"
+  ],
+  [
+    "2027-03-06",
+    "CHM",
+    "CPA",
+    "CH Mollerussa",
+    "home"
+  ],
+  [
+    "2027-03-06",
+    "CHM",
+    "CEV",
+    "CH Mataró",
+    "home"
+  ]
+]);
+</script>
 <script data-zonaok-locked="V19" data-source="zonaok-sync-v5.js" data-fix="RESULTATS-V22">
 /* ZonaOK V15 · V10.5 restaurada, actes afegides \u2014 Agenda com a font de partits, En directe nomes com a font de marcadors.
    Carregar ABANS d'app.js. Conserva V2 (classificacions) i les dades existents.
@@ -1035,13 +1371,14 @@ try {
     box.append(actions);
   }
   window.ZonaOKAppendFavoriteTeamActions=appendFavoriteTeamActions;
-  function teamSide(name){
+  function teamSide(name,row,sideKey){
+    const label=window.ZonaOKStateTeamName?.(name,row,sideKey)??name;
     const side=el('div','side'),crest=el('div','crest');
     let img=favoriteLogoFor(name);const n=norm(name);
     
     if(img){const i=el('img');i.src=img;i.alt='Escut '+name;i.loading='lazy';i.onerror=()=>crest.replaceChildren(el('span','crest-fallback',name.slice(0,1)));crest.append(i)}
     else crest.append(el('span','crest-fallback',name.slice(0,1).toUpperCase()));
-    side.append(crest,el('strong','',name));return side;
+    side.append(crest,el('strong','',label));return side;
   }
   // Dates i hores de FECAPA estan en hora local Europe/Madrid.
   // El fitxer ICS usa UTC real: evita desfasaments a l'estiu i a l'hivern.
@@ -1129,7 +1466,7 @@ try {
       c.addEventListener('click',ev=>{if(ev.target.closest?.('button,a,input,select,textarea'))return;window.ZonaOKActes?.open(r,inferLeague(r));});
       c.addEventListener('keydown',ev=>{if(ev.target!==c||(ev.key!=='Enter'&&ev.key!==' '))return;ev.preventDefault();window.ZonaOKActes?.open(r,inferLeague(r));});
     }
-    teams.append(teamSide(r.home),middle,teamSide(r.away));c.append(teams);
+    teams.append(teamSide(r.home,r,'home'),middle,teamSide(r.away,r,'away'));c.append(teams);
     if(!compact){
       const venue=el('div','venue');
       venue.append(el('strong','','\uD83D\uDCCD '+(r.venue||'Pista no indicada a Agenda')));
@@ -1591,7 +1928,7 @@ function createCard(r,id){const c=mk('article','match '+(LEAGUES[id]?.color||'gr
 const top=mk('div','match-top'),pill=mk('span','pill',r.competition||LEAGUES[id]?.name||'FECAPA'),tag=mk('span','tag',dateStatus(r));top.append(pill,tag);c.append(top);
 const dt=mk('div','match-date');dt.append(mk('strong','',r.time||'Hora pendent'),mk('small','',niceDate(r.iso)));c.append(dt);
 const teams=mk('div','teams');const side=(name,logo)=>{name=name==='BAR'?'BAR\u00C7A':name==='CPSC'?'CP SANT CELONI':name;logo=logo||window.ZonaOKFavoriteLogoFor?.(name)||'';const d=mk('div','side'),crest=mk('div','crest');if(safeImage(logo)){const img=mk('img');img.src=safeImage(logo);img.alt='Escut de '+name;img.loading='lazy';img.onerror=()=>{crest.replaceChildren(mk('span','crest-fallback','\u{1F3D2}'))};crest.append(img)}else crest.append(mk('span','crest-fallback',name?name.trim().charAt(0).toUpperCase():'\u{1F3D2}'));d.append(crest,mk('strong','',name||'Equip no identificat'));return d};
-const mid=mk('div','middle');mid.append(mk('div','score',r.homeScore!==null&&r.awayScore!==null?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'));mid.append(mk('small','score-note',r.homeScore!==null?'Resultat':'Pendent'));teams.append(side(r.home,r.homeLogo),mid,side(r.away,r.awayLogo));c.append(teams);
+const mid=mk('div','middle');mid.append(mk('div','score',r.homeScore!==null&&r.awayScore!==null?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'));mid.append(mk('small','score-note',r.homeScore!==null?'Resultat':'Pendent'));teams.append(side(window.ZonaOKStateTeamName?.(r.home,r,'home')??r.home,r.homeLogo),mid,side(window.ZonaOKStateTeamName?.(r.away,r,'away')??r.away,r.awayLogo));c.append(teams);
 const loc=mk('div','venue');loc.append(mk('strong','','\u{1F4CD} '+(r.venue||'Pista pendent de verificar a FECAPA')));if(!r.venue)loc.append(mk('div','', 'No s\u2019ha llegit cap pista per a aquest partit'));c.append(loc);
 const buttons=mk('div','match-actions');const maps=mk('a','light','↗ Google Maps');maps.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue||((r.home||'')+' '+(r.away||'')));maps.target='_blank';maps.rel='noopener';buttons.append(maps);if(scorePresent(r)||r.actaUrl){const acta=mk('button','zok-acta-action','⌕ Acta');acta.type='button';acta.onclick=()=>openActaDialog(r,id);acta.setAttribute('aria-label','Obrir l’acta del partit sense sortir de ZonaOK');buttons.append(acta);buttons.classList.add('zok-has-acta')}const cal=mk('button','zok-calendar-btn','▦ Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);buttons.append(cal);c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));if(scorePresent(r)){c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Obrir fitxa del partit '+r.home+' - '+r.away);c.addEventListener('click',e=>{if(e.target.closest?.('button,a,input,select,textarea'))return;openActaDialog(r,id)});c.addEventListener('keydown',e=>{if(e.target!==c||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();openActaDialog(r,id)})}return c}
 function zonaokFavoriteTeamWeekRows(i){const f=zonaokFavoriteTeam(i);if(!f)return [];const {start,end}=chosenWeek();return clubRows().filter(r=>r.iso>=start&&r.iso<=end&&normalize(r.competition)===f.category&&(normalize(r.home)===f.team||normalize(r.away)===f.team)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time))}
@@ -2498,7 +2835,7 @@ window.ZonaOKRefreshSources=async function(){
  window.ZonaOKPullRefresh=refresh;
 })();
 </script>
-  <script defer src="zonaok-resultats-7dies.js?v=20261124-suffix-groups-r15"></script>
+  <script defer src="zonaok-resultats-7dies.js?v=20261124-state-team-names-r16"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
 </body>
 </html>
