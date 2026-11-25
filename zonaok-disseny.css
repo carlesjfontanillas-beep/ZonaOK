@@ -70,4 +70,25 @@ body main.app > .zok-home-heading{display:none}
 body.zok-ui-home:not(.zok-recent-mode) main.app > .zok-home-heading{display:block;margin:10px 0 9px}
 body main.app .zok-home-heading .section-head{align-items:center;margin:0}
 body main.app .zok-home-heading #home-favorites-title{font-size:var(--zok-ui-title)!important;color:var(--zok-ui-gold)!important;text-transform:uppercase}
-body.zok-ui-home main.app > .hero{margin-top:0!important}
+body.zok-ui-home main.app > #zok-week-hero{margin-top:0!important}
+
+/* Mateixa geometria de selector que Classificacions, sense alterar les accions. */
+body main.app .zok-scope-switch,body main.app #zok-resultats-7dies .zok-scope-switch{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ grid-column:1/-1;gap:7px!important;margin:8px 0 10px!important;width:100%;box-sizing:border-box
+}
+body main.app .zok-scope-switch button,body main.app #zok-resultats-7dies .zok-scope-switch button{
+ display:flex!important;align-items:center;justify-content:center;text-align:center;box-sizing:border-box;
+ width:100%;min-width:0;height:38px!important;min-height:38px!important;
+ padding:7px 5px!important;border:1px solid #7597b0!important;border-radius:11px!important;
+ background:#183d5b!important;color:#fff!important;font:inherit;font-size:13px!important;font-weight:750!important;
+ line-height:1.15;cursor:pointer
+}
+body main.app .zok-scope-switch button[aria-pressed="true"],body main.app #zok-resultats-7dies .zok-scope-switch button[aria-pressed="true"]{
+ background:var(--zok-ui-gold)!important;color:#10283c!important;border-color:var(--zok-ui-gold)!important
+}
+body main.app .zok-scope-switch button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+body main.app #standings-filters{margin-top:0}
+body main.app #standings-filters .zok-scope-switch{margin-bottom:0!important}
+body.zok-ui-detail #results-section > #zok-week-hero{margin:8px 0 10px!important}
+body main.app #jp-search-panel .section-head .overline{color:#ecf5ff}

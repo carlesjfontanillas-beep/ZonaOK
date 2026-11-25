@@ -540,13 +540,13 @@
     filterRow.append(clubLabel, categoryLabel, competitionLabel);
     content = make('div', 'cards');
     status = make('p', 'zok-recent-stamp', '');
-    const tabs=make('div','zok-period-tabs');tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Període dels partits');
+    const tabs=make('div','zok-period-tabs zok-scope-switch');tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Període dels partits');
     pastButton=make('button','','Darrers 7 dies');upcomingButton=make('button','','Pròximament');
     for(const button of [pastButton,upcomingButton])button.type='button';
     pastButton.onclick=()=>selectPeriod('past');upcomingButton.onclick=()=>selectPeriod('upcoming');
     tabs.append(pastButton,upcomingButton);
     periodNote=make('p','zok-recent-period');
-    panel.append(header, filterRow,tabs,periodNote,status,content);
+    panel.append(header,tabs,filterRow,periodNote,status,content);
     selectPeriod('past');
     const footer = main.querySelector('.footer');
     main.insertBefore(panel, footer || null);

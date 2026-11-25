@@ -36,6 +36,14 @@ with sync_playwright() as p:
     page.locator('#week-next').click()
     assert page.locator('#home-favorites-title').is_visible()
     page.locator('#week-today').click()
+    # Clubs i equips: títol abans del selector, sense duplicar els controls.
+    for tab in ('favclub1','favclub2','favteam1','favteam2'):
+        page.locator('.bottom [data-tab="'+tab+'"]').evaluate('(el)=>el.click()')
+        page.wait_for_function("""()=>{const t=document.querySelector('#results-title'),w=document.querySelector('#zok-week-hero');return w.parentElement.id==='results-section' && t.getBoundingClientRect().bottom<w.getBoundingClientRect().top && w.getBoundingClientRect().height>0}""")
+        assert page.locator('#week-next').count()==1
+        assert page.locator('#results-list .match, #results-list .empty').count()>0
+    page.locator('.zok-home-top').click()
+    assert page.locator('main.app > #zok-week-hero').count()==1
     # Classificacions: navegar i verificar els grups exactes dels favorits.
     page.evaluate('async()=>await window.ZonaOKReloadClassificacions()')
     page.evaluate("window.ZonaOKSelectSection('classificacions')")
@@ -52,6 +60,22 @@ with sync_playwright() as p:
     assert page.locator('#results-list .standings').count()==2
     assert page.locator('#standing-favorites').get_attribute('aria-pressed')=='true'
     assert not errors,errors
+    # Comparar les tres botoneres amb el mateix navegador i mida.
+    page.locator('.bottom [data-tab="classificacions"]').evaluate('(el)=>el.click()')
+    def geometry(selector):
+        return page.locator(selector).evaluate_all("""els=>els.map(e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return [Math.round(r.width),Math.round(r.height),s.fontSize,s.fontWeight,s.borderRadius,s.backgroundColor,s.color]})""")
+    expected=geometry('#standing-favorites, #standing-all')
+    page.locator('#zok-nav-resultats-7dies').evaluate('(el)=>el.click()')
+    page.wait_for_selector('#zok-resultats-7dies .zok-scope-switch')
+    assert geometry('#zok-resultats-7dies .zok-scope-switch button')==expected
+    page.locator('#zok-resultats-7dies .zok-scope-switch button').nth(1).click()
+    assert page.locator('#zok-resultats-7dies .zok-scope-switch button').nth(1).get_attribute('aria-pressed')=='true'
+    page.goto(url+'/jugadors.html',wait_until='domcontentloaded')
+    page.wait_for_selector('#jp-search-panel .zok-scope-switch')
+    assert geometry('#jp-favs, #jp-all')==expected
+    assert page.locator('#jp-search-panel .overline').inner_text()=='CONSULTA · FECAPA'
+    page.locator('#jp-all').click()
+    assert page.locator('#jp-all').get_attribute('aria-pressed')=='true'
     # Totes les pàgines: capçalera fixa, una sola línia i títol principal daurat.
     for filename,selector in [('index.html','#home-favorites-title'),('jugadors.html','#jp-search-panel h2'),('favorits.html','.zok-page-heading h1'),('notificacions.html','.zok-page-heading h1')]:
         page.goto(url+'/'+filename,wait_until='domcontentloaded')

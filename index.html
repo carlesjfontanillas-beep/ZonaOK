@@ -376,27 +376,27 @@ main.app > .mast #refresh-home{
 main.app > .mast #refresh-home::after{content:none!important}
 main.app > .mast #refresh-home:hover{background:#214969;color:#fff}
 /* Actualitzacions: mateix accés visible també a Resultats. */
-body main.app > .hero,
-body:is(.zok-ui-home,.zok-ui-detail,.zok-ui-import) main.app > .hero{
+body main.app #zok-week-hero,
+body:is(.zok-ui-home,.zok-ui-detail,.zok-ui-import) main.app #zok-week-hero{
   display:flex!important;align-items:center!important;gap:0!important;
   padding:4px 6px!important;margin:2px 0 0!important;
   border:1px solid #719cba66!important;border-radius:12px!important;
   background:linear-gradient(135deg,#18415e,#102e48)!important;
   box-shadow:none!important;overflow:visible!important
 }
-main.app > .hero::before,main.app > .hero > .overline,
-main.app > .hero > h1,main.app > .hero > .rink,
-main.app > .hero > .zok-week-help{display:none!important}
-body main.app > .hero > .zok-week-nav{
+main.app #zok-week-hero::before,main.app #zok-week-hero > .overline,
+main.app #zok-week-hero > h1,main.app #zok-week-hero > .rink,
+main.app #zok-week-hero > .zok-week-help{display:none!important}
+body main.app #zok-week-hero > .zok-week-nav{
   display:flex;flex:1 1 auto!important;min-width:0!important;width:100%!important;
   margin:0!important;gap:5px!important;align-items:center
 }
-body main.app > .hero > .zok-week-nav > .week{
+body main.app #zok-week-hero > .zok-week-nav > .week{
   min-width:0!important;flex:1 1 auto!important;line-height:1.2!important;
   font-size:clamp(12px,3.8vw,16px)!important;
   white-space:normal!important;overflow-wrap:normal!important;text-align:center
 }
-body.zok-ui-detail:is([data-zok-ui-tab="grupalevi"],[data-zok-ui-tab="grupinfantil"],[data-zok-ui-tab="classificacions"]) main.app > .hero{display:none!important}
+body.zok-ui-detail:is([data-zok-ui-tab="grupalevi"],[data-zok-ui-tab="grupinfantil"],[data-zok-ui-tab="classificacions"]) main.app #zok-week-hero{display:none!important}
 body.zok-ui-home main.app > .keyline{
   display:flex;justify-content:center;align-items:center;
   margin:4px 2px 5px!important;font-size:10px;line-height:1.3;text-align:center
@@ -404,7 +404,7 @@ body.zok-ui-home main.app > .keyline{
 body.zok-ui-home main.app > .keyline > #data-label{display:none}
 @media(max-width:360px){
   main.app > .mast > .zok-header-actions{gap:3px}
-  body main.app > .hero > .zok-week-nav{gap:3px!important}
+  body main.app #zok-week-hero > .zok-week-nav{gap:3px!important}
 }
 </style>
 <style id="zonaok-home-action-buttons-20261124">
@@ -430,7 +430,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
 <script src="zonaok-nav-shared.js?v=20261125-color-icona1"></script>
 <script src="zonaok-standing-scope.js?v=20261126-favorits2"></script>
 <link rel="stylesheet" href="zonaok-push-header.css?v=20261125-push6-page">
-<link rel="stylesheet" href="zonaok-disseny.css?v=20261126-inici1">
+<link rel="stylesheet" href="zonaok-disseny.css?v=20261126-botoneres1">
 <script defer src="zonaok-disseny.js?v=20261126-disseny1"></script>
 </head>
 <body>
@@ -448,7 +448,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
       <span class="section-tag" id="home-count">0 partits</span>
     </div>
   </section>
-  <section class="hero">
+  <section class="hero" id="zok-week-hero">
     <div class="overline">AGENDA PERSONAL</div>
     <h1>Els meus partits<br>de la setmana</h1>
     <div class="zok-week-nav" aria-label="Canviar setmana">
@@ -490,7 +490,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
     <p id="results-note" class="helper"></p>
     <p id="results-read-at" class="helper zok-read-at" hidden></p>
     <div id="standings-filters" class="zok-standing-filters" hidden>
-      <div class="zok-standing-scope" role="group" aria-label="Àmbit de les classificacions"><button type="button" id="standing-favorites" aria-pressed="true">★ Equips favorits</button><button type="button" id="standing-all" aria-pressed="false">Totes</button></div>
+      <div class="zok-standing-scope zok-scope-switch" role="group" aria-label="Àmbit de les classificacions"><button type="button" id="standing-favorites" aria-pressed="true">★ Equips favorits</button><button type="button" id="standing-all" aria-pressed="false">Totes</button></div>
       <label for="standing-club-filter">Club<input type="search" id="standing-club-filter" placeholder="Tots els clubs" aria-label="Filtra la classificació per club" autocomplete="off" spellcheck="false"></label>
       <label for="standing-category-filter">Categoria<input type="search" id="standing-category-filter" placeholder="Totes les categories" aria-label="Filtra la classificació per categoria" autocomplete="off" spellcheck="false"></label>
       <label for="standing-competition-filter">Competició<input type="search" id="standing-competition-filter" placeholder="Totes les competicions" aria-label="Filtra la classificació per competició" autocomplete="off" spellcheck="false"></label>
@@ -2586,7 +2586,13 @@ window.ZonaOKRefreshMatches=window.ZonaOKRefreshSources=async function(){
    home.classList.add('zok-ui-home-section');
    imp.classList.add('zok-ui-import-section');
    const classes=['zok-ui-home','zok-ui-detail','zok-ui-import'];
+   const weekHero=document.getElementById('zok-week-hero'),homeHeading=document.querySelector('.zok-home-heading'),detailHeading=results.querySelector('.section-head');
    function mode(state,tab){
+     // Un únic selector, amb els mateixos botons i listeners en tots els menús.
+     if(weekHero&&homeHeading&&detailHeading){
+       const anchor=state==='detail'&&tab!=='classificacions'?detailHeading:homeHeading;
+       if(anchor.nextElementSibling!==weekHero)anchor.after(weekHero);
+     }
      document.body.classList.remove(...classes);
      document.body.classList.add('zok-ui-'+state);
      document.body.dataset.zokUiTab=tab||state;
@@ -2749,7 +2755,7 @@ window.ZonaOKRefreshMatches=window.ZonaOKRefreshSources=async function(){
 })();
 </script>
 <script defer src="zonaok-gestos.js?v=20261125-relectura1"></script>
-  <script defer src="zonaok-resultats-7dies.js?v=20261125-gestos1"></script>
+  <script defer src="zonaok-resultats-7dies.js?v=20261126-botoneres1"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
   <script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script>
   <link rel="stylesheet" href="zonaok-actualitzacions.css?v=20261125-dashboard1">
