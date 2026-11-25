@@ -372,12 +372,17 @@
           row.append(picker);
         }
         if (key === 'teams' && checkbox.checked) {
-          const pickerHost=document.createElement('div');
-          pickerHost.className='zok-jp-team-picker';
-          pickerHost.dataset.teamId=id;
-          pickerHost.dataset.teamLabel=label;
-          pickerHost.dataset.originalName=clean(selected.teamNames[id]||'');
-          row.append(pickerHost);
+          if(!window.ZonaOKJugadors?.loaded){
+          const name = document.createElement('input');
+          name.type = 'text'; name.className = 'zok-favorite-child-name';
+          name.maxLength = 32; name.autocomplete = 'given-name';
+          name.placeholder = 'Nom del fill o la filla';
+          name.setAttribute('aria-label', `Nom personalitzat per a ${label}`);
+          name.value = clean(selected.teamNames[id] || '');
+          name.addEventListener('input', () => { selected.teamNames[id] = name.value.slice(0, 32); save(); });
+          row.append(name);
+          }
+          const pickerHost=document.createElement('div');pickerHost.className='zok-jp-team-picker';pickerHost.dataset.teamId=id;pickerHost.dataset.teamLabel=label;pickerHost.dataset.originalName=clean(selected.teamNames[id]||'');row.append(pickerHost);
         }
         list.append(row);
       }
@@ -478,5 +483,7 @@
     selected = readSelection();
     render();
   });
+  window.addEventListener('zonaok:jugadors-loaded',render);
+  window.addEventListener('zonaok:jugador-equip',e=>{const {teamId,playerId,name}=e.detail||{};if(!selected.teams.includes(teamId))return;if(playerId){selected.playerIds[teamId]=playerId;selected.teamNames[teamId]=String(name).slice(0,80)}else{delete selected.playerIds[teamId];delete selected.teamNames[teamId]}save();render()});
   load();
 })();
