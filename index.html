@@ -1917,7 +1917,7 @@ function renderHome(){
  for(const row of rows)box.append(createCard(row,'live'));
  $$('#home-count').textContent=rows.length+' partits';
 }
-function emptyResults(message){const v=mk('div','empty');v.append(mk('div','',message));$('#results-list').append(v)}
+function emptyResults(message){const v=mk('div','empty');v.append(mk('div','',message));document.getElementById('results-list').append(v)}
 const SECTIONS={celoni:{name:'CP Sant Celoni \u00B7 Setmana',source:BASE,ids:['4786','4784'],msg:'Partits del CP Sant Celoni presents al llistat En directe. La llista pot ser parcial; FECAPA no hi distingeix sempre A/B ni el grup.'},barca:{name:'Bar\u00E7a \u00B7 Setmana',source:BASE,ids:['4789'],msg:'Partits del Bar\u00E7a presents al llistat En directe. Mostrem la categoria publicada i l\u2019hora de la lectura; la llista pot ser parcial.'},classificacions:{name:'Classificacions',source:calendarUrl('4789','clasificaciones'),ids:['4789','4786','4784'],msg:'Classificacions de FECAPA importades i publicades al JSON de GitHub.'},grupalevi:{name:'Alev\u00ED OR 3',source:calendarUrl('4789'),ids:['4789'],msg:'Tots els partits de la temporada del Bar\u00E7a a Alev\u00ED OR 3, amb els marcadors publicats per FECAPA.'},grupinfantil:{name:'Infantil OR 10',source:calendarUrl('4786'),ids:['4786'],msg:'Tots els partits de la temporada del Sant Celoni B a Infantil OR 10, amb els marcadors publicats per FECAPA.'}};
 /* MAGI i TON - mostrar partits reals de l'AGENDA importada, no dependre
    d'una segona importacio per lliga. La lectura de tota la temporada existeix
@@ -2166,7 +2166,7 @@ window.addEventListener('pageshow',zonaokConfigureFavoriteNav);
 window.addEventListener('storage',e=>{if(e.key==='ZONAOK_FAVORITS_V1'||e.key===null)zonaokConfigureFavoriteNav()});
 zonaokConfigureFavoriteNav();
 function setFavoriteTitle(name,suffix='',highlight=true){
-  const title=$('#results-title');if(!title)return;
+  const title=document.getElementById('results-title');if(!title)return;
   title.replaceChildren(mk('span',highlight?'zok-title-name':'',name));
   if(suffix)title.append(document.createTextNode(' · '+suffix));
 }
