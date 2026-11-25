@@ -380,7 +380,7 @@
           const colors = key === 'clubs' ? selected.clubColors : selected.teamColors;
           const picker = document.createElement('input');
           picker.type='color'; picker.className='zok-favorite-color';
-          picker.value=/^#[0-9a-f]{6}$/i.test(colors[id]||'')?colors[id]:'#dce8f1';
+          picker.value=/^#[0-9a-f]{6}$/i.test(colors[id]||'')?colors[id]:'#ffffff';
           picker.setAttribute('aria-label','Color de '+label);
           picker.title='Color de '+label;
           picker.addEventListener('input',()=>{colors[id]=picker.value;save();window.dispatchEvent(new CustomEvent('zonaok:favorites-updated'))});
