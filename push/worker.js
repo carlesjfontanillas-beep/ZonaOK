@@ -134,7 +134,8 @@ async function encryptPush(subscription, payload) {
   const asPublic = new Uint8Array(await crypto.subtle.exportKey("raw", ephemeral.publicKey));
   const shared = new Uint8Array(await crypto.subtle.deriveBits({ name: "ECDH", public: uaPublic }, ephemeral.privateKey, 256));
 
-  const authKey = await crypto.subtle.importKey("raw", authSecret, { name: "HKDF" }, false, ["deriveBits"]);
+  // RFC 8291 §3.3: ECDH secret as IKM, auth secret as HKDF salt.
+  const authKey = await crypto.subtle.importKey("raw", shared, { name: "HKDF" }, false, ["deriveBits"]);
   const context = concat(encoder.encode("WebPush: info\0"), uaPublicBytes, asPublic);
   const ikm = new Uint8Array(await crypto.subtle.deriveBits({ name: "HKDF", hash: "SHA-256", salt: authSecret, info: context }, authKey, 256));
   const salt = crypto.getRandomValues(new Uint8Array(16));
