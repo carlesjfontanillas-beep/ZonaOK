@@ -11,8 +11,9 @@ from zonaok_jugadors_total_master import read_catalog, link_memberships
 from zonaok_actes_jugadors_probe import ingest_appearances
 from zonaok_fecapa_players import chromium_context
 
-LIMITS = {"acts":100, "rosters":10, "retry":20, "flash":20}
-BLOCKS = ("acts","rosters","retry")
+STATS_REVISION = 1
+LIMITS = {"acts":100, "rosters":10, "retry":20, "flash":20, "stats":100}
+BLOCKS = ("stats","acts","rosters","retry")
 def due(entry, hours, clock):
     try:
         return clock - datetime.fromisoformat(entry["checkedAt"]) >= timedelta(hours=hours)
@@ -39,6 +40,22 @@ def plan_matches(rows, state, captured, phase, clock):
     # Missing historical matches first. Initial schema validation does not prove
     # every acta was complete: older captured snapshots are checked last.
     return sorted(result,key=lambda x:(x[0] in captured,state.get(x[0],{}).get("checkedAt",""),x[1]["iso"],x[0]))[:LIMITS[phase]]
+
+def plan_stats(rows, state, captured, clock):
+    """Recheck existing appearances once with the new FECAPA stat reader.
+    Keep existing facts and honour retry backoff; prioritize the regression case.
+    """
+    pending=[]
+    for key,r in rows.items():
+        if key not in captured:
+            continue
+        old=state.get(key,{})
+        if old.get("statsRevision")==STATS_REVISION and old.get("status")=="verified" and old.get("fingerprint")==r["fingerprint"]:
+            continue
+        if old.get("status")=="pending" and old.get("fingerprint")==r["fingerprint"] and old.get("statsAttemptRevision")==STATS_REVISION and not due(old,6,clock):
+            continue
+        pending.append((key,r))
+    return sorted(pending,key=lambda x:(x[0]!="4786|152375",state.get(x[0],{}).get("checkedAt",""),x[1]["iso"],x[0]))[:LIMITS["stats"]]
 
 def plan_rosters(leagues,state,represented,clock):
     pending=[]
@@ -75,7 +92,8 @@ async def run_matches(master,state,plan,deadline,report):
                     else:
                         verify_master(candidate)
                         merge_verified(master,candidate)
-                state[key]={"status":"pending" if error else "verified","fingerprint":r["fingerprint"],"checkedAt":now()}
+                state[key]={"status":"pending" if error else "verified","fingerprint":r["fingerprint"],"checkedAt":now(),"statsAttemptRevision":STATS_REVISION}
+                if not error:state[key]["statsRevision"]=STATS_REVISION
                 report["attempted"]+=1
                 report["pending" if error else "verified"]+=1
                 if error:report["reasons"][error]=report["reasons"].get(error,0)+1
@@ -116,6 +134,7 @@ async def run(a):
     represented={v["leagueId"] for v in master["memberships"].values()}
     plans={p:plan_matches(rows,matches,captured,p,clock) for p in ("acts","retry","flash")}
     plans["rosters"]=plan_rosters(leagues,rosters,represented,clock)
+    plans["stats"]=plan_stats(rows,matches,captured,clock)
     # One bounded block per execution. Rotate historical acts, rosters and
     # retries so failures cannot starve other work. FLASH is separately selectable.
     phase=a.mode
@@ -135,7 +154,7 @@ async def run(a):
     verify_master(master);save(target,master)
     if load(target,"41")!=master:raise ValueError("roundtrip_mismatch")
     save(state_path,state)
-    report.update(players=len(master["players"]),memberships=len(master["memberships"]),appearances=len(master["matchAppearances"]),unprocessed=report["selected"]-report["attempted"],eligibleActs=len(rows),inventoryActs=len(inventory),inventoryLeagues=len(leagues),catalogErrors=len(errors),verifiedActs=sum(v.get("status")=="verified" and v.get("fingerprint")==rows[k]["fingerprint"] for k,v in matches.items() if k in rows),verifiedLeagues=sum(v.get("status")=="verified" for k,v in rosters.items() if k in leagues))
+    report.update(statsRevision=STATS_REVISION,statCoverage={k:sum(k in v.get("stats",{}) for v in master["matchAppearances"].values()) for k in ("goals","assists","yellowCards","blueCards","redCards")},statsRemaining=len([k for k in captured if k in rows and matches.get(k,{}).get("statsRevision")!=STATS_REVISION]),players=len(master["players"]),memberships=len(master["memberships"]),appearances=len(master["matchAppearances"]),unprocessed=report["selected"]-report["attempted"],eligibleActs=len(rows),inventoryActs=len(inventory),inventoryLeagues=len(leagues),catalogErrors=len(errors),verifiedActs=sum(v.get("status")=="verified" and v.get("fingerprint")==rows[k]["fingerprint"] for k,v in matches.items() if k in rows),verifiedLeagues=sum(v.get("status")=="verified" for k,v in rosters.items() if k in leagues))
     return report
 
 def main():
