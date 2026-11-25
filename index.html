@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <!-- ZonaOK V29.2 · En directe desde FECAPA principal, resum a Actualitzar dades -->
 <title>ZonaOK &#xB7; El teu hoquei</title>
-  <link rel="stylesheet" href="style.css?v=20261118-season">
+  <link rel="stylesheet" href="style.css?v=20261125-favorite-colors1">
   <style>
     /* ZonaOK: navegació setmanal, sense modificar style.css. */
     /* Espai perquè la setena consulta ràpida no tapi el contingut en mòbils. */
@@ -80,8 +80,6 @@ body.zok-ui-detail #results-note {display:none!important}
 }
 #results-read-at{margin:0 0 8px;font-size:12px;color:inherit;opacity:.82}
 #home-cards .match .zok-home-acta{min-height:25px;padding:4px 8px;border:0;border-radius:8px;background:#173d5b;color:#fff;font-size:10px;font-weight:800}
-#home-cards .match.zok-v5-barca .zok-home-acta{background:#a92e61}
-#home-cards .match.zok-v5-infantil .zok-home-acta,#home-cards .match.zok-v5-juvenil .zok-home-acta{background:#2868be}
 #home-cards .match.zok-v5-neutral .zok-home-acta{background:#526b7d}
 </style>
 <style id="zonaok-ui5-fixes">
@@ -328,7 +326,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
   .zok-favorite-empty-card a{justify-self:start;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 13px;border-radius:11px;background:#ffbd78;color:#102c43;font-weight:800;text-decoration:none}
 </style>
 <script id="zok-favorites-first-visit">
-(()=>{try{const s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}');const any=(Array.isArray(s.clubs)&&s.clubs.some(Boolean))||(Array.isArray(s.teams)&&s.teams.some(Boolean));const key='ZONAOK_FAVORITS_ONBOARDING_V1';if(!any&&!localStorage.getItem(key)){localStorage.setItem(key,'1');location.replace('favorits.html?v=20261125-cataleg1');}}catch(_){}})();
+(()=>{try{const s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}');const any=(Array.isArray(s.clubs)&&s.clubs.some(Boolean))||(Array.isArray(s.teams)&&s.teams.some(Boolean));const key='ZONAOK_FAVORITS_ONBOARDING_V1';if(!any&&!localStorage.getItem(key)){localStorage.setItem(key,'1');location.replace('favorits.html?v=20261125-favorite-colors1');}}catch(_){}})();
 </script>
 
 <style id="zonaok-quick-imports">
@@ -1267,28 +1265,49 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
     const mix=x=>Math.round(x*.32+255*.68).toString(16).padStart(2,'0');
     return '#'+mix(r)+mix(g)+mix(b);
   }
-  function favoriteColorForRow(row){
+  function favoriteRawColorForRow(row){
     let s={};try{s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){}
     const normName=x=>norm(x||'').replace(/\s+/g,' ').trim();
-    const teams=Array.isArray(s.teams)?s.teams:[];
-    for(const id of teams){
-      const p=String(id).split('|'),team=normName(p[1]),category=normName(p.slice(2).join('|'));
-      const comp=normName(row.competition||row.category||'');
-      if(!team||!category||category!==comp)continue;
-      if([row.home,row.away].some(name=>normName(name)===team)){
-        const color=s.teamColors?.[id];if(/^#[0-9a-f]{6}$/i.test(color||''))return favoriteTint(color);
+    const teamKey=x=>{
+      const n=normName(x);
+      if(/^(BAR|BARCA|FC BARCELONA|FCB)$/.test(n))return 'BARCA';
+      const c=n.match(/^(?:(?:CP|CLUB PATI) )?SANT CELONI(?: ([A-Z]))?$/)||n.match(/^CPSC ?([A-Z])?$/);
+      return c?'CP SANT CELONI'+(c[1]?' '+c[1]:''):n;
+    };
+    const valid=c=>/^#[0-9a-f]{6}$/i.test(c||'');
+    const names=[row.home,row.away].filter(Boolean);
+    const comp=normName(row.competition||row.category||'');
+    const league=String(row.leagueId||row.league||'');
+    for(const id of (Array.isArray(s.teams)?s.teams:[])){
+      const p=String(id).split('|'),team=teamKey(p[1]),category=normName(p.slice(2).join('|'));
+      const favLeague=String(s.teamLeagueIds?.[id]||'');
+      if(team&&category&&(category===comp||(league&&league===favLeague))&&names.some(name=>teamKey(name)===team)){
+        const color=s.teamColors?.[id];if(valid(color))return color;
       }
     }
-    const clubNames=Array.isArray(s.clubs)?s.clubs:[];
-    for(const name of clubNames){
-      const color=s.clubColors?.[name];if(!/^#[0-9a-f]{6}$/i.test(color||''))continue;
-      const key=normName(name),matches=[row.home,row.away].map(normName);
-      const found=matches.some(team=>key==='BARCA'?/\b(?:BAR|BARCA|FC BARCELONA)\b/.test(team):key==='CP SANT CELONI'?team.includes(key):team===key||team.startsWith(key+' ')||key.startsWith(team+' '));
-      if(found)return favoriteTint(color);
+    for(const name of (Array.isArray(s.clubs)?s.clubs:[])){
+      const color=s.clubColors?.[name];if(!valid(color))continue;
+      const key=normName(name);
+      const found=names.some(value=>{
+        const team=normName(value),canonical=teamKey(value);
+        if(!key||!team)return false;
+        if(key==='BARCA'||key==='FC BARCELONA')return /^(BAR|BARCA|FC BARCELONA|FCB|FCBETERANS|FCBETRANS)(?: |$)/.test(team);
+        if(key==='CP SANT CELONI'||key==='SANT CELONI')return /^CP SANT CELONI(?: |$)/.test(canonical);
+        return team===key||team.startsWith(key+' ')||key.startsWith(team+' ');
+      });
+      if(found)return color;
     }
     return '';
   }
-  function applyFavoriteCardColor(card,row){const tint=favoriteColorForRow(row);if(tint)card.style.setProperty('background-color',tint,'important');}
+  function favoriteColorForRow(row){return favoriteTint(favoriteRawColorForRow(row));}
+  function applyFavoriteCardColor(card,row){
+    const raw=favoriteRawColorForRow(row)||'#ffffff',tint=favoriteTint(raw)||'#ffffff';
+    const n=parseInt(raw.slice(1),16),rgb=[n>>16,n>>8&255,n&255];
+    const accent=raw.toLowerCase()==='#ffffff'?'#647b92':'#'+rgb.map((v,i)=>Math.round(v*.52+[36,56,75][i]*.48).toString(16).padStart(2,'0')).join('');
+    card.style.setProperty('--tint',tint,'important');
+    card.style.setProperty('--accent',accent,'important');
+    card.style.setProperty('background-color',tint,'important');
+  }
   window.ZonaOKFavoriteColorForRow=favoriteColorForRow;window.ZonaOKApplyFavoriteCardColor=applyFavoriteCardColor;
   function favoriteTeamLeague(fav){
     const state=(()=>{try{return JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){return {}}})();
@@ -1453,10 +1472,8 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
   }
   function inferLeague(r){const n=norm(r.competition);if(/ALEVI OR 0?3/.test(n))return '4789';if(/INFANTIL OR 0?10/.test(n))return '4786';if(/JUVENIL OR 0?6/.test(n))return '4784';return String(r.league||'');}
   function card(r,compact){
-    const cls=isBarca(r.home)||isBarca(r.away)?'zok-v5-barca':
-      /INFANTIL OR 10/.test(norm(r.competition))&& (isCeloni(r.home)||isCeloni(r.away))?'zok-v5-infantil':
-      /JUVENIL OR 6/.test(norm(r.competition))&&(isCeloni(r.home)||isCeloni(r.away))?'zok-v5-juvenil':'zok-v5-neutral';
-    const c=el('article','match zok-v5 '+cls+(compact?' zok-compact':''));
+    const c=el('article','match zok-v5 zok-v5-neutral'+(compact?' zok-compact':''));
+    applyFavoriteCardColor(c,r);
     c.dataset.zokV5='1';
     const top=el('div','match-top'),scoreLabel=validScore(r.homeScore)&&validScore(r.awayScore)?(r.scoreSource==='En directe'?'En directe':'Resultat \u00B7 FECAPA'):'Agenda \u00B7 FECAPA';top.append(el('span','pill',r.competition||'Categoria no indicada'),el('span','tag',scoreLabel));c.append(top);
     const dt=el('div','match-date');dt.append(el('strong','',r.time),el('small','',nice(r.iso)));if(compact)dt.dataset.zokCategoria=r.competition||'Categoria';c.append(dt);
@@ -1636,11 +1653,8 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
       },550);
     }
     const style=el('style');style.textContent=`
-      /* Prioritat absoluta al club, fins i tot quan la categoria es juvenil. */
-      .match.zok-v5-barca{--accent:#8d2446!important;--tint:#eed0da!important}
-      .match.zok-v5-infantil{--accent:#245bb0!important;--tint:#d9e8ff!important}
-      .match.zok-v5-juvenil{--accent:#bc9214!important;--tint:#fff0b4!important}
-      .match.zok-v5-neutral{--accent:#4c6680;--tint:#e5edf4}
+      /* Colors definits exclusivament per Favorits. */
+      .match.zok-v5-neutral{--accent:#647b92;--tint:#ffffff}
       #results-list .match.zok-v5{max-width:100%;margin:0}
       #results-list .match.zok-v5 .match-date[data-zok-categoria]::after {content:attr(data-zok-categoria)}
       .zok-v5-notice{padding:7px 10px;border-radius:9px;background:#254968;color:#fff}
@@ -1926,7 +1940,7 @@ r.append(a,mk('span','',resumPartits+' \u00B7 '+(item?.standings?.length||0)+' e
 function formatTimestamp(iso){try{return new Intl.DateTimeFormat('ca-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'}).format(new Date(iso))}catch(_){return 'Data desconeguda'}}
 function safeImage(src){try{const u=new URL(src);return u.protocol==='https:'&&(/(^|\.)hoqueipatins\.fecapa\.cat$/i.test(u.hostname)||(u.hostname==='sidgad.cloud'&&u.pathname.startsWith('/fecapa/images/logos_clubes/')))?u.href:''}catch(_){return ''}}
 function dateStatus(r){const now=localDate();if(r.status)return r.status+' \u00B7 lectura Safari';if(r.homeScore!==null&&r.awayScore!==null)return 'Marcador FECAPA';return r.iso>now?'Programat':'Sense resultat confirmat'}
-function createCard(r,id){const c=mk('article','match '+(LEAGUES[id]?.color||'gray'));window.ZonaOKApplyFavoriteCardColor?.(c,r);
+function createCard(r,id){const c=mk('article','match gray');window.ZonaOKApplyFavoriteCardColor?.(c,r);
 const top=mk('div','match-top'),pill=mk('span','pill',r.competition||LEAGUES[id]?.name||'FECAPA'),tag=mk('span','tag',dateStatus(r));top.append(pill,tag);c.append(top);
 const dt=mk('div','match-date');dt.append(mk('strong','',r.time||'Hora pendent'),mk('small','',niceDate(r.iso)));c.append(dt);
 const teams=mk('div','teams');const side=(name,logo)=>{name=name==='BAR'?'BAR\u00C7A':name==='CPSC'?'CP SANT CELONI':name;logo=logo||window.ZonaOKFavoriteLogoFor?.(name)||'';const d=mk('div','side'),crest=mk('div','crest');if(safeImage(logo)){const img=mk('img');img.src=safeImage(logo);img.alt='Escut de '+name;img.loading='lazy';img.onerror=()=>{crest.replaceChildren(mk('span','crest-fallback','\u{1F3D2}'))};crest.append(img)}else crest.append(mk('span','crest-fallback',name?name.trim().charAt(0).toUpperCase():'\u{1F3D2}'));d.append(crest,mk('strong','',name||'Equip no identificat'));return d};
@@ -2587,7 +2601,7 @@ window.ZonaOKRefreshSources=async function(){
  render();setTimeout(()=>window.ZonaOKRefreshSources?.(),0);
 })();
 </script>
-<script src="zonaok-retocs.js?v=20261119-restauracio-v15" defer></script>
+<script src="zonaok-retocs.js?v=20261125-favorite-colors1" defer></script>
 <script>
 /* ZonaOK UI6: mateixa UI5, dades Magí/Ton gestionades pel nucli V19 integrat. */
 (function(){
@@ -2825,7 +2839,7 @@ window.ZonaOKRefreshSources=async function(){
  window.ZonaOKPullRefresh=refresh;
 })();
 </script>
-  <script defer src="zonaok-resultats-7dies.js?v=20261124-state-team-names-r16"></script>
+  <script defer src="zonaok-resultats-7dies.js?v=20261125-favorite-colors1"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
   <script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script>
 </body>
