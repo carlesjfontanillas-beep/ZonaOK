@@ -1,7 +1,7 @@
 /* Public UI: no private GitHub URL, token, or automatic public export. */
 (()=>{
 'use strict';
-const demo=window.ZonaOKJugadorsDemo,preview=new URLSearchParams(location.search).get('demo')==='1';
+const demo=window.ZonaOKJugadorsDemo,preview=['1','2'].includes(new URLSearchParams(location.search).get('demo'));
 const KEY='zonaok.jugadors.preferences.v1',players=[],memberships=[],appearances=[],norm=demo.norm;
 let loaded=false;
 const obj=v=>v&&typeof v==='object'&&!Array.isArray(v),id=v=>typeof v==='string'&&/^[1-9]\d*$/.test(v),clean=v=>typeof v==='string'?v.trim():'',num=v=>Number.isInteger(v)&&v>=0;
@@ -48,5 +48,5 @@ function mount(){
  finally{input.value='';button.disabled=false}
  };
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
+if(document.readyState==='complete')mount();else document.addEventListener('DOMContentLoaded',mount,{once:true});
 })();

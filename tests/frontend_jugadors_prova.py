@@ -136,6 +136,23 @@ class Players(unittest.TestCase):
         p.locator("#zok-nav-resultats-7dies").click()
         p.wait_for_url("**/index.html?*tab=resultats")
         p.locator("body.zok-recent-mode").wait_for()
+    def test_favorites_import_inline(self):
+        p=self.page
+        p.route("**/zonaok-tots-agenda.json?*",lambda r:r.fulfill(json={"schema":"zonaok-all-v1","kind":"agenda","rows":[{"home":"FC BARCELONA","away":"CLUB DE MOSTRA","competition":"ALEVI OR 3","leagueId":"4789"}]}))
+        p.route("**/zonaok-classificacions.json?*",lambda r:r.fulfill(json={"competitions":{}}))
+        p.goto(self.base+"/favorits.html")
+        p.locator("#jugadors-favorits .zok-jp-import-btn").wait_for()
+        p.locator("#favorites-groups > section").nth(4).wait_for()
+        self.assertTrue(p.locator("#jugadors-favorits .zok-jp-search-line").evaluate("(n)=>n.contains(n.querySelector('input[type=search]')) && n.contains(n.querySelector('button'))"))
+        self.assertEqual(p.locator("#favorites-groups > section > h2").evaluate_all("(nodes)=>nodes.map(n=>n.firstChild.textContent.trim())"),["Clubs","Equips","Jugadors","Categories","Competicions"])
+        p.locator("#jp-data-status input[type=file]").set_input_files({"name":"invalid.json","mimeType":"application/json","buffer":b"{}"})
+        p.locator("#jugadors-favorits .zok-jp-import-status.zok-jp-error").wait_for()
+    def test_extended_demo(self):
+        p=self.page;p.goto(self.base+"/jugadors.html?demo=2")
+        p.locator("#jp-all").click()
+        p.locator("#jp-count").get_by_text("65 jugadors",exact=False).wait_for()
+        p.locator("#jp-search").fill("fictici 001")
+        p.locator("#jp-list .zok-jp-keeper").wait_for()
     def test_navigation(self):
         p=self.page
         p.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_ONBOARDING_V1','1')")
