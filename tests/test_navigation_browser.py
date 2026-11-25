@@ -60,6 +60,26 @@ with sync_playwright() as p:
     assert page.locator('#results-list .standings').count()==2
     assert page.locator('#standing-favorites').get_attribute('aria-pressed')=='true'
     assert not errors,errors
+    # Fitxa pròpia: sense iframe, enllaç oficial i pestanyes.
+    page.evaluate("""()=>window.ZonaOKActaFitxa.open({home:'Local de prova',away:'Visitant de prova',competition:'INFANTIL OR 10',homeScore:0,awayScore:0},'https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=999999999')""")
+    page.wait_for_selector('.zok-af-dialog[open]')
+    assert page.locator('.zok-af-dialog iframe').count()==0
+    assert page.locator('.zok-af-official').get_attribute('href').endswith('partido=999999999')
+    assert page.locator('.zok-af-fouls').inner_text().count('—')==2
+    for tab in ('Jugadors','Incidències','Arbitratge','Resum'):
+        page.locator('.zok-af-tabs button',has_text=tab).click()
+    page.locator('.zok-af-close').click()
+    assert page.locator('.zok-af-dialog[open]').count()==0
+    # Captura de faltes amb etiquetes explícites; el zero no és una dada absent.
+    import ast
+    module=ast.parse(Path('scripts/zonaok_jugadors_incremental.py').read_text())
+    extractor=next(ast.literal_eval(x.value) for x in module.body if isinstance(x,ast.Assign) and any(isinstance(y,ast.Name) and y.id=='FOULS_CAPTURE' for y in x.targets))
+    probe=browser.new_page()
+    probe.set_content('<div class="sidgad-match-modal"><div class="sidgad-local"><span>Faltes</span><span>0</span></div><div class="sidgad-visit"><span>Faltas de equipo</span><span>7</span></div></div>')
+    assert probe.evaluate(extractor)=={'home':0,'away':7}
+    probe.set_content('<div class="sidgad-match-modal"><div class="sidgad-local"><span>Gols</span><span>4</span></div></div>')
+    assert probe.evaluate(extractor)=={}
+    probe.close()
     # Comparar les tres botoneres amb el mateix navegador i mida.
     page.locator('.bottom [data-tab="classificacions"]').evaluate('(el)=>el.click()')
     def geometry(selector):

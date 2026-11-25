@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/jugadors-public.yml'
+      - 'scripts/zonaok_jugadors_incremental.py'
+      - 'scripts/zonaok_jugadors_blocks.py'
   schedule:
     - cron: '17 2,14 * * *'
     - cron: '17 0,4,8,12,16,20 * * *'

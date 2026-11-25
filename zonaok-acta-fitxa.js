@@ -4,7 +4,7 @@
 const int=x=>Number.isInteger(x)&&x>=0,fmt=x=>int(x)?String(x):'—',str=x=>typeof x==='string'?x.trim():'';
 function identity(url){try{const u=new URL(url);if(u.protocol!=='https:'||!['www.hoqueipatins.fecapa.cat','hoqueipatins.fecapa.cat'].includes(u.hostname)||u.username||u.password||u.port)return null;const l=u.searchParams.get('liga'),m=u.searchParams.get('partido');return /^\d{3,10}$/.test(l||'')&&/^\d{3,10}$/.test(m||'')?{leagueId:l,matchId:m,key:l+'|'+m,url:u.href}:null}catch{return null}}
 function matchData(id,row,catalog,master,state){
- const matches=(catalog?.matches||[]).filter(r=>String(r.leagueId||r.league)===id.leagueId&&String(r.matchId||r.id)===id.matchId);
+ const matches=(catalog?.matches||[]).filter(r=>{const linked=identity(r.actaUrl);return linked?linked.key===id.key:String(r.leagueId||r.league)===id.leagueId&&String(r.matchId||r.id)===id.matchId});
  const fixture=matches.length===1?{...row,...matches[0]}:row;
  const people=master?.players||{},seen=new Set(),sides={home:[],away:[]};
  if(master?.source==='FECAPA'||master?.trusted===true)for(const a of Object.values(master.matchAppearances||{})){
@@ -26,7 +26,7 @@ const colors={yellowCards:'#fbc252',blueCards:'#3893f5',redCards:'#ed5353'};
 function icon(k){const n=el('span','zok-af-card');n.style.background=colors[k];n.setAttribute('aria-label',({yellowCards:'Grogues',blueCards:'Blaves',redCards:'Vermelles'})[k]);return n}
 function metric(label,value){const n=el('div','zok-af-metric');n.append(el('b','',fmt(value)),el('small','',label));return n}
 function team(name,logo){const n=el('div','zok-af-team');if(/^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/\d+\.png$/.test(str(logo))){const img=el('img');img.src=logo;img.alt='';n.append(img)}n.append(el('strong','',name||'—'));return n}
-function playerLink(a){const l=el('a','zok-af-player',a.name);l.href='jugadors.html?playerId='+encodeURIComponent(a.playerId);l.onclick=e=>{if(root.ZonaOKOpenActaPlayer){e.preventDefault();active?.close();if(!root.ZonaOKOpenActaPlayer(a.playerId))location.href=l.href}};return l}
+function playerLink(a){const l=el('a','zok-af-player',a.name);l.href='jugadors.html?playerId='+encodeURIComponent(a.playerId);l.onclick=e=>{if(root.ZonaOKOpenActaPlayer){e.preventDefault();const dialog=active;active=null;dialog?.close();if(!root.ZonaOKOpenActaPlayer(a.playerId))location.href=l.href}};return l}
 function open(row,url){
  const id=identity(url);if(!id||root.ZonaOKActaLinks?.savedUrl({actaUrl:url,leagueId:id.leagueId,matchId:id.matchId})==='')return;
  if(active?.open)active.close();
@@ -48,6 +48,15 @@ function open(row,url){
   if(loading)content.append(el('p','zok-af-muted','Carregant dades publicades…'));
   if(current==='Resum'){
    const grid=el('div','zok-af-grid');grid.append(metric('Gols local',f.homeScore),metric('Gols visitant',f.awayScore));content.append(grid);
+   for(const side of ['home','away']){
+    const line=el('div','zok-af-event'),values=el('div','');line.append(el('strong','',side==='home'?home:away));
+    for(const k of Object.keys(colors)){
+     const a=sides[side],known=a.filter(p=>int(p.stats?.[k]));const v=known.length?known.reduce((n,p)=>n+p.stats[k],0):null;
+     values.append(icon(k),el('span','',fmt(v)+(known.length&&known.length!==a.length?'*':'')));
+    }
+    line.append(values);content.append(line);
+   }
+   content.append(el('p','zok-af-muted','* Suma parcial de les targetes individuals disponibles.'));
    if(f.status)content.append(el('p','','Estat: '+f.status));if(f.round)content.append(el('p','','Jornada: '+f.round));
    content.append(el('p','zok-af-muted','Faltes: recompte oficial d’equip. — = dada no disponible.'));
   }else if(current==='Jugadors'){

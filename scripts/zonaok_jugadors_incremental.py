@@ -106,6 +106,18 @@ async def closed_acta(ctx,league,match,details=None):
         if await modal.count()!=1 or await tabs.count()!=2:return [],[],"official_unavailable"
         await tabs.nth(1).click(timeout=10000)
         await page.wait_for_selector(".sidgad-match-modal .sidgad-acta-hoja",timeout=12000)
+        if details is not None:
+            try:
+                fouls=await page.evaluate(FOULS_CAPTURE)
+                if fouls:
+                    old=details.get("fouls",{})
+                    merged={**old,**fouls}
+                    for side in old.keys() & fouls.keys():
+                        if old[side]!=fouls[side]:merged.pop(side,None)
+                    if merged:details.update(source="FECAPA",fouls=merged)
+                    else:details.clear()
+            except Exception:
+                pass
         official=await stable_rows(page,league,"official")
         return summary,official,None if official else "official_empty"
     except Exception as e:return [],[],type(e).__name__
