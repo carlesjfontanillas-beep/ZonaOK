@@ -113,3 +113,9 @@
 .zok-jp-team-card-count{flex:0 0 auto;gap:3px;font-size:clamp(10px,2.75vw,12px)}
 .zok-jp-team-goals{margin-left:auto;flex:0 0 auto;white-space:nowrap;border-left:1px solid #52738a;padding-left:7px;color:#fbc252;font-size:clamp(14px,4vw,18px);font-weight:850;font-variant-numeric:tabular-nums}
 @media(max-width:365px){.zok-jp-team-card-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.zok-jp-team-cards{gap:10px}.zok-jp-team-card-count{font-size:12px}}
+
+/* Rànquing: accés directe a la fitxa local, sense canviar les columnes. */
+.zok-jp-rank-player{display:block;width:100%;padding:0;border:0;background:transparent;color:inherit;text-align:left;font:inherit;font-weight:700;text-decoration:underline;text-decoration-color:#7594aa;text-underline-offset:3px;overflow-wrap:anywhere;cursor:pointer}
+.zok-jp-rank-player:focus-visible{outline:2px solid #fbc252;outline-offset:3px;border-radius:3px}
+.zok-jp-rank-player:hover{color:#fbc252}
+.zok-jp-profile-back{display:flex;gap:5px;flex-wrap:wrap;align-items:center;min-width:0}
