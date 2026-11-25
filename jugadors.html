@@ -1,7 +1,13 @@
 <!doctype html>
-<html lang="ca"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#061d33"><title>Jugadors · ZonaOK</title><link rel="stylesheet" href="style.css?v=20261118-season"><link rel="stylesheet" href="jugadors.css?v=20261125-cerca-nav1"><script defer src="jugadors-dades-prova.js?v=20261125-cerca-nav2"></script><script defer src="jugadors-data.js?v=20261125-cataleg1"></script><script defer src="jugadors.js?v=20261125-cerca-nav2"></script><script src="zonaok-nav-shared.js?v=20261125-cerca-nav1"></script><script defer src="jugadors-nav.js?v=20261125-cerca-nav1"></script><link rel="stylesheet" href="zonaok-nav-shared.css?v=20261125-cerca-nav1"></head>
-<body><main class="app zok-jp-app"><header class="mast"><div><div class="brand">ZONA<span>OK</span></div><div class="strap">ELS TEUS JUGADORS</div></div><a class="secondary zok-back" href="index.html">← Inici</a></header>
-<section id="jp-search-panel" class="section"><div class="section-head"><h2>Jugadors</h2><a href="favorits.html?v=20261125-cataleg1" class="secondary">☆ Favorits</a></div>
+<html lang="ca"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#061d33"><title>Jugadors · ZonaOK</title><link rel="stylesheet" href="style.css?v=20261118-season"><link rel="stylesheet" href="jugadors.css?v=20261125-ranking-nav3"><script defer src="jugadors-dades-prova.js?v=20261125-cerca-nav2"></script><script defer src="jugadors-data.js?v=20261125-cataleg1"></script><script defer src="jugadors.js?v=20261125-ranking-nav3"></script><script src="zonaok-nav-shared.js?v=20261125-cerca-nav1"></script><script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script><link rel="stylesheet" href="zonaok-nav-shared.css?v=20261125-ranking-nav3"></head>
+<body><main class="app zok-jp-app"><header class="mast">
+    <div>
+      <div class="brand">ZONA<span>OK</span></div>
+      <div class="strap">ELS TEUS PARTITS &#xB7; EL TEU HOQUEI</div>
+    </div>
+    <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261125-cataleg1" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button><button id="refresh-home" type="button" class="primary" title="Obrir eines d’actualització" aria-label="Obrir o tancar les eines d’actualització">&#x21BB;</button></div>
+  </header>
+<section id="jp-search-panel" class="section"><div class="section-head"><h2>Jugadors</h2></div>
 <div class="zok-jp-segment" aria-label="Àmbit"><button id="jp-favs" type="button" aria-pressed="true">★ Favorits</button><button id="jp-all" type="button" aria-pressed="false">Tots els jugadors</button></div>
 <label for="jp-search">Cercador</label><div class="zok-jp-search-line"><input id="jp-search" type="search" placeholder="Nom o cognoms…" autocomplete="off"><div id="jp-data-status" class="zok-jp-import"></div></div>
 <div id="jp-suggestions" class="zok-jp-search-results" aria-label="Coincidències de jugadors" hidden></div>
