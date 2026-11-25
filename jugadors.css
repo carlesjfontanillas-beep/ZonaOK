@@ -76,3 +76,9 @@
 .zok-jp-fecapa-picker{position:relative;min-width:0}
 .zok-jp-fecapa-menu{position:absolute;top:calc(100% + 5px);right:0;width:min(250px,72vw);z-index:20;display:grid;gap:5px;padding:7px;border:1px solid #52738a;border-radius:10px;background:#102e47;box-shadow:0 5px 15px #0005}
 .zok-jp-fecapa-menu a{text-decoration:none;white-space:normal}
+
+/* Fitxa FECAPA al costat dels controls de foto, alineada a la dreta */
+.zok-jp-app .zok-jp-photo-controls{display:flex;flex-wrap:nowrap;align-items:stretch;gap:5px;width:100%;min-width:0}
+.zok-jp-app .zok-jp-photo-controls > button,.zok-jp-app .zok-jp-photo-controls .zok-jp-fecapa{font-size:clamp(10px,3.1vw,13px);padding:8px 6px;white-space:nowrap;min-width:0;box-sizing:border-box}
+.zok-jp-app .zok-jp-photo-controls > .zok-jp-fecapa,.zok-jp-app .zok-jp-photo-controls > .zok-jp-fecapa-picker{margin-left:auto;flex:0 0 auto}
+.zok-jp-app .zok-jp-photo-controls .zok-jp-fecapa{height:100%;display:flex;align-items:center;justify-content:center}
