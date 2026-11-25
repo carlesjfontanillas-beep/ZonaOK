@@ -197,10 +197,13 @@ async function handle(request, env) {
       const preferences = normalizePreferences(input.preferences || {});
       if (preferences === null) return response({ error: "invalid_preferences" }, 400, allowedOrigin);
       const endpoint = input.subscription.endpoint;
-      const existing = await env.DB.prepare("SELECT id, token_hash FROM subscriptions WHERE endpoint = ?").bind(endpoint).first();
+      const existing = await env.DB.prepare("SELECT id, token_hash, p256dh, auth FROM subscriptions WHERE endpoint = ?").bind(endpoint).first();
       if (existing) {
         const auth = /^Bearer ([A-Za-z0-9_-]{40,64})$/.exec(request.headers.get("authorization") || "");
-        if (!auth || b64url(await sha256(auth[1])) !== existing.token_hash) return response({ error: "subscription_exists" }, 409, allowedOrigin);
+        const tokenMatches = auth && b64url(await sha256(auth[1])) === existing.token_hash;
+        const subscriptionKeysMatch = input.subscription.keys.p256dh === existing.p256dh && input.subscription.keys.auth === existing.auth;
+        // Recover a lost local bearer token only when the browser presents the exact same Push subscription keys.
+        if (!tokenMatches && !subscriptionKeysMatch) return response({ error: "subscription_exists" }, 409, allowedOrigin);
         const token = await randomToken();
         await env.DB.prepare("UPDATE subscriptions SET token_hash = ?, p256dh = ?, auth = ?, preferences_json = ?, enabled = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
           .bind(b64url(await sha256(token)), input.subscription.keys.p256dh, input.subscription.keys.auth, preferences, existing.id).run();
