@@ -1,5 +1,11 @@
 name: Importació automàtica de jugadors
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/jugadors-public.yml'
+  schedule:
+    - cron: '17 2,14 * * *'
   pull_request:
     branches: [main]
     paths:
@@ -13,7 +19,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [flash, retry]
+        options: [flash, retry, stats, acts, rosters, auto]
         default: flash
 permissions:
   contents: read
@@ -35,7 +41,7 @@ jobs:
       - run: python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
       - run: python -m unittest discover -s tests -p 'test_jugadors*.py' -v
   update:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: tests
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -45,7 +51,7 @@ jobs:
       group: zonaok-public-jugadors
       cancel-in-progress: false
     env:
-      MODE: ${{ inputs.mode || 'flash' }}
+      MODE: ${{ inputs.mode || 'stats' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -82,7 +88,7 @@ jobs:
           case "$MODE" in
             auto) block flash 4; block auto 20 ;;
             flash) block flash 4 ;;
-            acts|rosters|retry) block "$MODE" 20 ;;
+            acts|rosters|retry|stats) block "$MODE" 20 ;;
             *) exit 2 ;;
           esac
           python scripts/verify_public_master.py data/jugadors-master.json
