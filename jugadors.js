@@ -5,7 +5,24 @@ const search=$('jp-search-panel'),profile=$('jp-profile-panel'),root=$('jp-profi
 const read=D.read,byId=id=>D.players.find(p=>p.playerId===id);
 function db(){if(!photoDb)photoDb=new Promise((ok,no)=>{const r=indexedDB.open(D.preview?'zonaok-jugadors-preview-photos':'zonaok-jugadors-photos',1);r.onupgradeneeded=()=>r.result.createObjectStore('photos');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});return photoDb}
 async function photo(id,method='get',value){const d=await db();return new Promise((ok,no)=>{const t=d.transaction('photos',method==='get'?'readonly':'readwrite'),s=t.objectStore('photos');const r=method==='put'?s.put(value,id):method==='delete'?s.delete(id):s.get(id);t.oncomplete=()=>ok(r.result);t.onerror=()=>no(t.error);t.onabort=()=>no(t.error)})}
-async function avatar(id,big=false){const n=el('div','zok-jp-avatar'+(big?' big':''),'♙');n.setAttribute('aria-hidden','true');try{const blob=await photo(id);if(blob instanceof Blob){const url=URL.createObjectURL(blob),img=el('img');img.alt='';img.onload=img.onerror=()=>URL.revokeObjectURL(url);img.src=url;n.replaceChildren(img)}}catch{}return n}
+function openPhoto(blob,name){
+ const dialog=el('dialog','zok-jp-photo-dialog'),url=URL.createObjectURL(blob);
+ dialog.setAttribute('aria-label','Foto de '+name);
+ const close=btn('✕',()=>dialog.close(),'zok-jp-photo-close');close.setAttribute('aria-label','Tancar foto');
+ const img=el('img','zok-jp-photo-full');img.alt='Foto de '+name;img.src=url;
+ dialog.append(close,img);document.body.append(dialog);
+ dialog.addEventListener('close',()=>{URL.revokeObjectURL(url);dialog.remove()},{once:true});
+ dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+ try{dialog.showModal();close.focus()}catch{URL.revokeObjectURL(url);dialog.remove()}
+}
+async function avatar(id,big=false){
+ const n=el('div','zok-jp-avatar'+(big?' big':''),'♙');n.setAttribute('aria-hidden','true');
+ try{const blob=await photo(id);if(blob instanceof Blob){
+  const url=URL.createObjectURL(blob),img=el('img');img.alt='';img.onload=img.onerror=()=>URL.revokeObjectURL(url);img.src=url;
+  if(big){const name=byId(id)?.name||'jugador',button=btn('',()=>openPhoto(blob,name),'zok-jp-avatar big zok-jp-avatar-open');button.setAttribute('aria-label','Ampliar foto de '+name);button.append(img);return button}
+  n.replaceChildren(img)
+ }}catch{}return n
+}
 async function imageBlob(file){if(!file||!file.type.startsWith('image/')||file.size>15_000_000)throw Error('Selecciona una imatge de menys de 15 MB.');const url=URL.createObjectURL(file);try{const img=new Image();img.src=url;await img.decode();const c=document.createElement('canvas');c.width=c.height=384;const side=Math.min(img.width,img.height);c.getContext('2d').drawImage(img,(img.width-side)/2,(img.height-side)/2,side,side,0,0,384,384);return await new Promise((ok,no)=>c.toBlob(b=>b?ok(b):no(Error('No es pot preparar la foto.')),'image/jpeg',.82))}finally{URL.revokeObjectURL(url)}}
 function btn(label,fn,cls='zok-jp-btn'){const n=el('button',cls,label);n.type='button';n.onclick=fn;return n}
 function star(id,callback){const on=read().favorites.includes(id),b=btn(on?'★':'☆',()=>{try{D.fav(id,!read().favorites.includes(id));callback()}catch{alert('No s’ha pogut desar el favorit.')}},'zok-jp-star');b.setAttribute('aria-label',on?'Treure de favorits':'Afegir a favorits');b.setAttribute('aria-pressed',String(on));return b}
@@ -39,7 +56,13 @@ async function renderList(){
  count.textContent=rows.length+' jugadors'+(rows.length>100?' · primers 100, afina la cerca':'')+(scope==='favorites'?' favorits':D.preview?' de mostra':'');
  if(!rows.length){list.append(el('p','zok-jp-note',scope==='favorites'&&!favs.size?'Encara no tens jugadors favorits. Cerca un nom i marca una estrella.':'Cap jugador coincideix amb els filtres.'));return}
  for(const p of rows.slice(0,100)){const row=el('article','zok-jp-row'),m=filteredMemberships(p.playerId)[0],b=btn('',()=>open(p.playerId),'zok-jp-row-main');const name=el('strong','',p.name);if(filteredMemberships(p.playerId).some(x=>x.position==='goalkeeper'))name.append(el('span','zok-jp-keeper','🥅 Porter'));b.append(name,el('small','',m.clubName+' · '+m.groupName+' · '+(m.position==='goalkeeper'?'Porter':m.position==='field'?'Pista':'Posició no verificada')));const placeholder=el('div','zok-jp-avatar','♙');placeholder.setAttribute('aria-hidden','true');if(token!==renderToken)return;row.append(placeholder,b,star(p.playerId,renderList));list.append(row);avatar(p.playerId).then(a=>{if(token===renderToken&&placeholder.isConnected)placeholder.replaceWith(a)})}}
-function stat(label,v){const n=el('div','zok-jp-stat');n.append(el('b','',v===undefined||v===null?'—':String(v)),el('small','',label));return n}
+const CARD_COLORS={Grogues:'yellow',Blaves:'blue',Vermelles:'red'};
+function cardSymbol(color){const n=el('span','zok-jp-card-symbol '+color);n.setAttribute('aria-hidden','true');return n}
+function stat(label,v){const n=el('div','zok-jp-stat'),shown=v===undefined||v===null?'—':String(v);n.append(el('b','',shown));
+ if(CARD_COLORS[label]){const small=el('small','zok-jp-stat-card-icon');small.append(cardSymbol(CARD_COLORS[label]));n.append(small);n.setAttribute('aria-label',label+': '+shown);n.title=label+': '+shown}
+ else n.append(el('small','',label));return n
+}
+function cardCount(label,color,value,partial=false){const item=el('span','zok-jp-team-card-count'),shown=(value??'—')+(partial?'*':'');item.setAttribute('aria-label',label+': '+shown);item.title=label+': '+shown;item.append(cardSymbol(color),el('span','zok-jp-team-card-value',shown));return item}
 function card(...nodes){const n=el('article','zok-jp-card');n.append(...nodes);return n}
 function open(id,fromRanking=false){if(!byId(id))return;if(!fromRanking)rankHistory=[];active=id;tab='Resum';membershipKey=ALL;rankingCategory='';search.hidden=true;profile.hidden=false;renderProfile();window.scrollTo(0,0)}
 function openRankPlayer(id){if(!byId(id))return;if(id!==active)rankHistory.push({id:active,tab,membershipKey,rankingCategory,scroll:window.scrollY});open(id,true)}
@@ -143,7 +166,7 @@ if(tab==='Partits'){
   matchCard.classList.add('zok-jp-match-card');
   const statsLine=el('div','zok-jp-match-stats');
   statsLine.append(el('span','zok-jp-gold',a.position==='goalkeeper'?(teamScore(a)?'GF equip '+teamScore(a)[0]+' · GC equip '+teamScore(a)[1]:'Resultat no verificat')+(a.participation==='played'?' · Participació confirmada':' · Consta a l’acta'):(a.stats.goals??'—')+' gols · '+(a.stats.assists??'—')+' assist.'));
-  const blue=el('span','zok-jp-blue-cards');const symbol=el('span','zok-jp-blue-icon');symbol.setAttribute('aria-hidden','true');blue.append(symbol,el('span','','Blaves: '+(a.stats.blueCards??'—')));statsLine.append(blue);content.append(statsLine);
+  const cards=el('span','zok-jp-match-card-counts');for(const [k,label,color] of [['yellowCards','Grogues','yellow'],['blueCards','Blaves','blue'],['redCards','Vermelles','red']])cards.append(cardCount(label,color,a.stats[k]));statsLine.append(cards);content.append(statsLine);
   const foot=el('div','zok-jp-match-foot');foot.append(el('p','zok-jp-note',((all||catMode)?(rows.find(x=>key(x)===key(a))?.groupName||a.teamName)+' · ':'')+'Dorsal '+(a.shirtNumber??'—')+(a.captain?' · Capità':'')+' · '+(a.position==='goalkeeper'?'Porter':a.position==='field'?'Pista':'Posició no verificada')));
   const actaUrl=window.ZonaOKActaLinks.savedUrl(a);if(actaUrl){const l=el('a','zok-jp-btn','Acta');l.href=actaUrl;l.target='_blank';l.rel='noopener';side.append(l)}
   content.append(foot);matchCard.append(content,side);root.append(matchCard);
@@ -157,11 +180,8 @@ else if(tab==='Equips'){
   teamHead.append(el('strong','zok-jp-team-name',x.teamName),played);
   const teamCard=card(teamHead,el('p','zok-jp-gold',x.groupName),el('p','zok-jp-note',(x.position==='goalkeeper'?'🥅 Porter · ':'')+x.seasonName));
   for(const [k,label,color] of [['yellowCards','Grogues','yellow'],['blueCards','Blaves','blue'],['redCards','Vermelles','red']]){
-   const item=el('span','zok-jp-team-card-count'),symbol=el('span','zok-jp-card-symbol '+color);symbol.setAttribute('aria-hidden','true');
    const value=totals.sp[k],partial=totals.partial.includes(k)&&Number.isInteger(value);
-   const shown=(value??'—')+(partial?'*':'');
-   item.setAttribute('aria-label',label+': '+shown);item.title=label+': '+shown;
-   item.append(symbol,el('span','zok-jp-team-card-label',label+':'),el('span','zok-jp-team-card-value',shown));line.append(item);
+   line.append(cardCount(label,color,value,partial));
   }
   const goals=el('strong','zok-jp-team-goals',(totals.sp.goals??'—')+' gols'+(totals.partial.includes('goals')&&Number.isInteger(totals.sp.goals)?'*':''));
   line.append(goals);teamCard.append(line);

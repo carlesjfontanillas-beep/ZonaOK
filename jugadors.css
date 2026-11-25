@@ -119,3 +119,20 @@
 .zok-jp-rank-player:focus-visible{outline:2px solid #fbc252;outline-offset:3px;border-radius:3px}
 .zok-jp-rank-player:hover{color:#fbc252}
 .zok-jp-profile-back{display:flex;gap:5px;flex-wrap:wrap;align-items:center;min-width:0}
+
+/* Foto ampliable i estadístiques de targetes amb icona i número. */
+.zok-jp-avatar.big{width:clamp(108px,32vw,144px);height:clamp(108px,32vw,144px)}
+.zok-jp-hero>div:first-child{flex:0 0 auto}
+.zok-jp-hero>div:last-child{min-width:0;flex:1}
+.zok-jp-avatar-open{padding:0;border:1px solid #719cba88;cursor:zoom-in}
+.zok-jp-avatar-open:focus-visible,.zok-jp-photo-close:focus-visible{outline:2px solid #fbc252;outline-offset:3px}
+.zok-jp-photo-dialog{position:fixed;inset:0;margin:auto;box-sizing:border-box;width:min(94vw,680px);max-height:90dvh;padding:44px 8px 8px;border:1px solid #52738a;border-radius:15px;background:#061d33;color:#fff;overflow:auto}
+.zok-jp-photo-dialog::backdrop{background:#000d}
+.zok-jp-photo-full{display:block;width:100%;max-height:calc(90dvh - 60px);object-fit:contain;border-radius:9px}
+.zok-jp-photo-close{position:absolute;top:5px;right:8px;min-width:36px;min-height:36px;padding:3px;border:1px solid #52738a;border-radius:50%;background:#173b55;color:#fff;font-size:18px;cursor:pointer}
+.zok-jp-team-cards{gap:12px}
+.zok-jp-team-card-count{font-size:13px;gap:4px}
+.zok-jp-match-card-counts{display:inline-flex;align-items:center;gap:9px;white-space:nowrap}
+.zok-jp-match-stats{gap:5px 8px}
+.zok-jp-stat-card-icon{display:flex;justify-content:center;align-items:center;min-height:16px}
+.zok-jp-stat-card-icon .zok-jp-card-symbol{width:12px;height:17px}
