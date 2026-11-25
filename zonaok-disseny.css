@@ -64,3 +64,10 @@ body .zok-nav-divider{width:1px;flex:0 0 1px;align-self:stretch;background:#9dbb
 
 body.zok-ui-home main.app .zok-ui-home-section .section-head h2{font-size:var(--zok-ui-title)!important}
 body.zok-recent-mode main.app > .mast #refresh-home{display:inline-grid!important}
+
+/* Inici: títol dels favorits per damunt del selector de setmana. */
+body main.app > .zok-home-heading{display:none}
+body.zok-ui-home:not(.zok-recent-mode) main.app > .zok-home-heading{display:block;margin:10px 0 9px}
+body main.app .zok-home-heading .section-head{align-items:center;margin:0}
+body main.app .zok-home-heading #home-favorites-title{font-size:var(--zok-ui-title)!important;color:var(--zok-ui-gold)!important;text-transform:uppercase}
+body.zok-ui-home main.app > .hero{margin-top:0!important}

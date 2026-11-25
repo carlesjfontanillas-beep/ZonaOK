@@ -430,7 +430,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
 <script src="zonaok-nav-shared.js?v=20261125-color-icona1"></script>
 <script src="zonaok-standing-scope.js?v=20261126-favorits2"></script>
 <link rel="stylesheet" href="zonaok-push-header.css?v=20261125-push6-page">
-<link rel="stylesheet" href="zonaok-disseny.css?v=20261126-disseny2">
+<link rel="stylesheet" href="zonaok-disseny.css?v=20261126-inici1">
 <script defer src="zonaok-disseny.js?v=20261126-disseny1"></script>
 </head>
 <body>
@@ -442,6 +442,12 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
     </div>
     <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261125-cataleg1" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><a class="zok-push-top" href="notificacions.html?v=20261125-serverprefs1" aria-label="Obrir Notificacions" title="Notificacions"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button><button id="refresh-home" type="button" class="primary" title="Obrir eines d’actualització" aria-label="Obrir o tancar les eines d’actualització">&#x21BB;</button></div>
   </header>
+  <section class="zok-home-heading" aria-label="Agenda dels favorits">
+    <div class="section-head">
+      <div><span class="overline">DILLUNS &#x2192; DIUMENGE</span><h2 id="home-favorites-title">Els meus favorits</h2></div>
+      <span class="section-tag" id="home-count">0 partits</span>
+    </div>
+  </section>
   <section class="hero">
     <div class="overline">AGENDA PERSONAL</div>
     <h1>Els meus partits<br>de la setmana</h1>
@@ -466,10 +472,6 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
   </section>
 
   <section class="section">
-    <div class="section-head">
-      <div><span class="overline">DILLUNS &#x2192; DIUMENGE</span><h2 id="home-favorites-title">Els meus favorits</h2></div>
-      <span class="section-tag" id="home-count">0 partits</span>
-    </div>
     <div id="home-cards" class="cards"></div>
   </section>
   <section class="section hide" id="results-section">

@@ -29,6 +29,13 @@ with sync_playwright() as p:
         print(tab,count)
     assert page.evaluate('async()=>await window.ZonaOKRefreshMatches()') is True
     assert page.locator('#results-list .match').count()>0
+    # Inici: el títol és daurat i queda abans del calendari setmanal.
+    page.locator('.zok-home-top').click()
+    page.wait_for_selector('#home-favorites-title')
+    assert page.evaluate("""()=>{const t=document.querySelector('#home-favorites-title'),w=document.querySelector('.zok-week-nav'),m=document.querySelector('.mast');return m.getBoundingClientRect().bottom<=t.getBoundingClientRect().top && t.getBoundingClientRect().bottom<w.getBoundingClientRect().top && getComputedStyle(t).color==='rgb(251, 194, 82)'}""")
+    page.locator('#week-next').click()
+    assert page.locator('#home-favorites-title').is_visible()
+    page.locator('#week-today').click()
     # Classificacions: navegar i verificar els grups exactes dels favorits.
     page.evaluate('async()=>await window.ZonaOKReloadClassificacions()')
     page.evaluate("window.ZonaOKSelectSection('classificacions')")
