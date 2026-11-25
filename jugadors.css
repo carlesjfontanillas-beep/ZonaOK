@@ -37,3 +37,5 @@
 #jugadors-favorits > .zok-jp-search-line{margin-block:10px}
 #jugadors-favorits .zok-jp-row{margin:6px 0}
 #jugadors-favorits > :last-child{margin-bottom:14px}
+
+.zok-jp-camera{display:inline-flex;align-items:center;justify-content:center;gap:7px}.zok-jp-camera svg{width:19px;height:19px;flex:0 0 auto;color:#fbc252}
