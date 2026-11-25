@@ -816,7 +816,10 @@ def eligible_acta(row,scope,now=None):
     try:delta=(now or datetime.now(timezone.utc))-check_when(last)
     except ValueError:return True
     if row.get('actaState')=='available':return delta>=timedelta(days=1)
-    cadence=timedelta(days=1 if clean(row.get('iso'))>=recent_start() else 7)
+    if clean(row.get('iso'))>=recent_start() and score_tuple(row):
+        cadence=timedelta(minutes=5)
+    else:
+        cadence=timedelta(days=1 if clean(row.get('iso'))>=recent_start() else 7)
     return delta>=cadence
 
 
@@ -840,7 +843,7 @@ async def collect_actes(ctx,args,diagnostic):
             'nextFullKey':list(key(rows[-1])) if rows else last,
             'fullCompleted':completed}
     else:
-        all_rows.sort(key=lambda r:(r.get('actaCheckedAt') or '',r.get('iso') or ''))
+        all_rows.sort(key=lambda r:(not (in_recent_window(r) and score_tuple(r)),r.get('actaCheckedAt') or '',r.get('iso') or ''))
         rows=all_rows[:args.limit] if args.limit else all_rows
         diagnostic['selection']={'scope':'fast','candidates':len(all_rows)}
     diag=[];out=[];page=await ctx.new_page()

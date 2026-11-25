@@ -79,7 +79,13 @@ def has_score(row: dict) -> bool:
 def finished_with_score(row: dict, local_date: str) -> bool:
     if str(row.get("iso") or "") > local_date or not has_score(row):
         return False
-    return bool(FINAL_STATUS.search(str(row.get("status") or "")))
+    status=str(row.get("status") or "")
+    if FINAL_STATUS.search(status):return True
+    # Agenda FECAPA sovint publica un marcador històric sense text FINAL.
+    return (str(row.get("iso") or "") < local_date
+            and row.get("scoreSource") in ("Agenda","En directe")
+            and bool(row.get("scoreUpdatedAt"))
+            and not re.search(r"EN JOC|EN DIRECTE|LIVE|PLAYING|AJORNAT|SUSPES|CANCEL",status,re.I))
 
 
 def pending_acta_count(path: Path, now: datetime) -> int:

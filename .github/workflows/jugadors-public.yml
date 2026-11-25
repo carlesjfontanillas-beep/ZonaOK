@@ -6,6 +6,7 @@ on:
       - '.github/workflows/jugadors-public.yml'
   schedule:
     - cron: '17 2,14 * * *'
+    - cron: '17 0,4,8,12,16,20 * * *'
   pull_request:
     branches: [main]
     paths:
@@ -51,11 +52,12 @@ jobs:
       group: zonaok-public-jugadors
       cancel-in-progress: false
     env:
-      MODE: ${{ inputs.mode || 'stats' }}
+      MODE: ${{ inputs.mode || (github.event_name == 'schedule' && github.event.schedule == '17 2,14 * * *' && 'auto' || 'stats') }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0
       - uses: actions/checkout@v4
         with:
           repository: carlesjfontanillas-beep/ZonaOK
@@ -71,6 +73,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          base=$(git rev-parse HEAD)
           mkdir -m 700 data
           gzip -dc imports/jugadors-master.json.gz > data/jugadors-master.json
           if [ -f imports/jugadors-maintenance-state.json ]; then
@@ -99,5 +102,18 @@ jobs:
           git add -- imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
           if ! git diff --cached --quiet; then
             git commit -m 'Actualitza automàticament el catàleg de jugadors'
-            git push origin HEAD:main
+            # Els fitxers de jugadors tenen una cua pròpia. Reaplicar el commit
+            # sobre main si altres importacions o canvis de disseny han avançat.
+            for attempt in 1 2 3 4 5 6 7 8; do
+              git fetch origin main
+              if ! git diff --quiet "$base" origin/main -- imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json; then
+                echo "::error::Les dades de jugadors han canviat concurrentment; no sobreescriure. Cal una nova captura."
+                exit 1
+              fi
+              git rebase origin/main
+              if git push origin HEAD:main; then exit 0; fi
+              sleep "$attempt"
+            done
+            echo "::error::No s'ha pogut publicar Jugadors després de 8 intents."
+            exit 1
           fi

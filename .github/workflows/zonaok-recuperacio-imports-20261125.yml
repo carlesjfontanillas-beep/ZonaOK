@@ -1,0 +1,40 @@
+name: 'ZonaOK - Recuperar i verificar totes les importacions'
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/zonaok-recuperacio-imports-20261125.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: write
+jobs:
+  recuperar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Executar i verificar les quatre importacions esportives
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          failed=0
+          for wf in zonaok-auto-actes.yml zonaok-auto-directe.yml zonaok-auto-agenda.yml zonaok-classificacions-auto.yml; do
+            before=$(gh run list --workflow "$wf" --branch main --event workflow_dispatch --limit 30 --json databaseId --jq '.[].databaseId')
+            if ! gh workflow run "$wf" --ref main -f publish=true; then failed=1; continue; fi
+            id=""
+            for attempt in $(seq 1 24); do
+              candidates=$(gh run list --workflow "$wf" --branch main --event workflow_dispatch --limit 30 --json databaseId --jq '.[].databaseId')
+              for candidate in $candidates; do
+                if ! grep -Fxq "$candidate" <<< "$before"; then id="$candidate"; break; fi
+              done
+              if [ -n "$id" ]; then break; fi
+              sleep 5
+            done
+            if [ -z "$id" ]; then echo "::error::No s'ha localitzat $wf"; failed=1; continue; fi
+            echo "https://github.com/$GH_REPO/actions/runs/$id"
+            if ! gh run watch "$id" --exit-status --interval 15; then failed=1; fi
+          done
+          exit "$failed"

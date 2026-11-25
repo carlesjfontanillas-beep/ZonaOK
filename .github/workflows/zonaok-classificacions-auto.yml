@@ -33,7 +33,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: zonaok-tots-clubs
+  group: zonaok-import-classificacions
   cancel-in-progress: false
 
 jobs:

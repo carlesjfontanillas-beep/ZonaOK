@@ -34,9 +34,9 @@ permissions:
   contents: write
   actions: write
 
-# Agenda, Directe i Actes comparteixen el JSON; executar-los en serie.
+# Una cua per importació; publicació optimista amb fusió sobre el main actual.
 concurrency:
-  group: zonaok-tots-clubs
+  group: zonaok-import-directe
   cancel-in-progress: false
 
 jobs:
@@ -100,7 +100,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           # Captura ja feta, pero es refa la fusio amb el main mes recent.
-          for attempt in 1 2 3 4; do
+          for attempt in 1 2 3 4 5 6 7 8; do
             git fetch origin main
             git reset --hard origin/main
             python scripts/zonaok_fecapa_unificat.py merge \
@@ -116,14 +116,14 @@ jobs:
             if git push origin HEAD:main; then
               python scripts/zonaok_jugadors_trigger.py --catalog zonaok-tots-partits.json --state imports/jugadors-maintenance-state.json --previous-ref HEAD^ > player-trigger.txt
               if grep -q '^run=true$' player-trigger.txt; then
-                gh workflow run jugadors-public.yml --repo carlesjfontanillas-beep/ZonaOK --ref main -f mode=flash
+                gh workflow run jugadors-public.yml --repo carlesjfontanillas-beep/ZonaOK --ref main -f mode=flash || echo "::warning::No s'ha pogut activar Jugadors; el repàs programat recupera els partits pendents."
               fi
               exit 0
             fi
             echo 'Canvi concurrent a main, es reintenta la fusio...'
             sleep 2
           done
-          echo "ERROR: no s'ha pogut publicar després de 4 intents" >&2
+          echo "ERROR: no s'ha pogut publicar després de 8 intents" >&2
           exit 1
       - name: Resum de captura i fusio
         if: always()
