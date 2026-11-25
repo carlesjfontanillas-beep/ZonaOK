@@ -85,6 +85,11 @@ function normalizePreferences(value) {
   return text;
 }
 
+function parsePreferences(value) {
+  try { return JSON.parse(value || "{}"); }
+  catch { return {}; }
+}
+
 async function authSubscription(request, env) {
   const match = /^Bearer ([A-Za-z0-9_-]{40,64})$/.exec(request.headers.get("authorization") || "");
   if (!match) return null;
@@ -134,7 +139,7 @@ async function encryptPush(subscription, payload) {
   const asPublic = new Uint8Array(await crypto.subtle.exportKey("raw", ephemeral.publicKey));
   const shared = new Uint8Array(await crypto.subtle.deriveBits({ name: "ECDH", public: uaPublic }, ephemeral.privateKey, 256));
 
-  // RFC 8291 §3.3: ECDH secret as IKM, auth secret as HKDF salt.
+  // RFC 8291 §3.3: extract the ECDH shared secret using the UA auth secret as salt.
   const authKey = await crypto.subtle.importKey("raw", shared, { name: "HKDF" }, false, ["deriveBits"]);
   const context = concat(encoder.encode("WebPush: info\0"), uaPublicBytes, asPublic);
   const ikm = new Uint8Array(await crypto.subtle.deriveBits({ name: "HKDF", hash: "SHA-256", salt: authSecret, info: context }, authKey, 256));
@@ -185,19 +190,21 @@ async function handle(request, env) {
   if (url.pathname === "/health" && request.method === "GET") {
     return response({ ok: true, service: "zonaok-push", database: Boolean(env.DB), vapid: Boolean(env.VAPID_PRIVATE_KEY && env.VAPID_PUBLIC_KEY), sportsDelivery: false }, 200, origin === allowedOrigin ? allowedOrigin : null);
   }
-  if (request.method !== "POST") return response({ error: "not_found" }, 404, origin === allowedOrigin ? allowedOrigin : null);
+  const preferenceRead = url.pathname === "/preferences" && request.method === "GET";
+  if (request.method !== "POST" && !preferenceRead) return response({ error: "not_found" }, 404, origin === allowedOrigin ? allowedOrigin : null);
   if (origin !== allowedOrigin) return response({ error: "origin_required" }, 403);
   if (!env.DB) return response({ error: "database_unavailable" }, 503, allowedOrigin);
-  if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return response({ error: "json_required" }, 415, allowedOrigin);
+  if (request.method === "POST" && !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return response({ error: "json_required" }, 415, allowedOrigin);
 
   try {
     if (url.pathname === "/subscriptions") {
       const input = await readJson(request);
       if (!validateSubscription(input.subscription)) return response({ error: "invalid_subscription" }, 400, allowedOrigin);
-      const preferences = normalizePreferences(input.preferences || {});
-      if (preferences === null) return response({ error: "invalid_preferences" }, 400, allowedOrigin);
+      const hasPreferences = Object.hasOwn(input, "preferences");
+      const preferences = hasPreferences ? normalizePreferences(input.preferences) : null;
+      if (hasPreferences && preferences === null) return response({ error: "invalid_preferences" }, 400, allowedOrigin);
       const endpoint = input.subscription.endpoint;
-      const existing = await env.DB.prepare("SELECT id, token_hash, p256dh, auth FROM subscriptions WHERE endpoint = ?").bind(endpoint).first();
+      const existing = await env.DB.prepare("SELECT id, token_hash, p256dh, auth, preferences_json FROM subscriptions WHERE endpoint = ?").bind(endpoint).first();
       if (existing) {
         const auth = /^Bearer ([A-Za-z0-9_-]{40,64})$/.exec(request.headers.get("authorization") || "");
         const tokenMatches = auth && b64url(await sha256(auth[1])) === existing.token_hash;
@@ -205,9 +212,10 @@ async function handle(request, env) {
         // Recover a lost local bearer token only when the browser presents the exact same Push subscription keys.
         if (!tokenMatches && !subscriptionKeysMatch) return response({ error: "subscription_exists" }, 409, allowedOrigin);
         const token = await randomToken();
+        const savedPreferences = preferences ?? existing.preferences_json;
         await env.DB.prepare("UPDATE subscriptions SET token_hash = ?, p256dh = ?, auth = ?, preferences_json = ?, enabled = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
-          .bind(b64url(await sha256(token)), input.subscription.keys.p256dh, input.subscription.keys.auth, preferences, existing.id).run();
-        return response({ token }, 200, allowedOrigin);
+          .bind(b64url(await sha256(token)), input.subscription.keys.p256dh, input.subscription.keys.auth, savedPreferences, existing.id).run();
+        return response({ token, preferences: parsePreferences(savedPreferences) }, 200, allowedOrigin);
       }
       const ip = request.headers.get("cf-connecting-ip");
       if (!ip) return response({ error: "registration_rate_limited" }, 429, allowedOrigin);
@@ -218,14 +226,16 @@ async function handle(request, env) {
       if (!allowed) return response({ error: "registration_rate_limited" }, 429, allowedOrigin, { "retry-after": "3600" });
       const id = crypto.randomUUID();
       const token = await randomToken();
+      const newPreferences = preferences ?? "{}";
       await env.DB.prepare("INSERT INTO subscriptions (id, token_hash, endpoint, p256dh, auth, preferences_json) VALUES (?, ?, ?, ?, ?, ?)")
-        .bind(id, b64url(await sha256(token)), endpoint, input.subscription.keys.p256dh, input.subscription.keys.auth, preferences).run();
-      return response({ token }, 201, allowedOrigin);
+        .bind(id, b64url(await sha256(token)), endpoint, input.subscription.keys.p256dh, input.subscription.keys.auth, newPreferences).run();
+      return response({ token, preferences: parsePreferences(newPreferences) }, 201, allowedOrigin);
     }
 
     const subscription = await authSubscription(request, env);
     if (!subscription) return response({ error: "unauthorized" }, 401, allowedOrigin);
     if (url.pathname === "/preferences") {
+      if (request.method === "GET") return response({ preferences: parsePreferences(subscription.preferences_json) }, 200, allowedOrigin);
       const input = await readJson(request);
       const preferences = normalizePreferences(input.preferences);
       if (preferences === null) return response({ error: "invalid_preferences" }, 400, allowedOrigin);
