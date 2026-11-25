@@ -13,6 +13,14 @@
   <script defer src="jugadors-dades-prova.js?v=20261125-cerca-nav2"></script>
   <script defer src="jugadors-data.js?v=20261125-cataleg1"></script>
   <script defer src="jugadors-favorits.js?v=20261125-global1"></script>
+  <style>
+    #zok-push-settings .zok-push-choice{display:flex;align-items:center;gap:10px;padding:6px 0;cursor:pointer}
+    #zok-push-settings .zok-push-choice input{width:18px;height:18px;flex:none;accent-color:#ffcb55}
+    #zok-push-settings h3{font-size:1rem;margin:14px 0 5px}
+    #zok-push-settings button:disabled{opacity:.55;cursor:not-allowed}
+    #zok-push-settings p{font-size:.86rem}
+  </style>
+  <script defer src="zonaok-push-preferencies.js?v=20261125-push1"></script>
 </head>
 <body>
 <main class="app zok-favorites-app">
@@ -24,6 +32,24 @@
     <div class="overline">EL TEU ESPAI</div>
     <h1>Els meus favorits</h1>
     <p>Marca un club per limitar els equips, categories i competicions a les opcions on participa.</p>
+  </section>
+  <section class="section" id="zok-push-settings" aria-label="Notificacions push">
+    <details>
+      <summary style="cursor:pointer;font-weight:700;padding:6px 0">🔔 Notificacions <small style="font-weight:400">· En preparació</small></summary>
+      <p>Tria els avisos que vols rebre. Les campanes són independents de les seleccions de Favorits.</p>
+      <p role="status" data-push-capability></p>
+      <h3>Tipus d’avís</h3>
+      <label class="zok-push-choice"><input type="checkbox" data-push-event="start"> Inici del partit</label>
+      <label class="zok-push-choice"><input type="checkbox" data-push-event="goal"> Gols (Nacional Catalana M/F)</label>
+      <label class="zok-push-choice"><input type="checkbox" data-push-event="card"> Targetes (Nacional Catalana M/F)</label>
+      <label class="zok-push-choice"><input type="checkbox" data-push-event="finish"> Final i resultat definitiu</label>
+      <h3>Els meus avisos</h3>
+      <div data-push-targets></div>
+      <button class="secondary" type="button" data-push-refresh>Actualitza la llista de favorits</button>
+      <p>Els avisos de jugadors s’incorporaran quan les seves dades estiguin verificades.</p>
+      <p><button class="secondary" type="button" disabled>Activar notificacions</button> <button class="secondary" type="button" disabled>Notificació de prova</button></p>
+      <p role="status" aria-live="polite" data-push-status>Enviaments desactivats. Pots desar les teves preferències.</p>
+    </details>
   </section>
   <section class="keyline" aria-live="polite"><span id="favorites-status">Carregant dades de ZonaOK…</span><span id="favorites-count">0 seleccionats</span></section>
   <section class="section zok-favorites-controls">
