@@ -1,9 +1,51 @@
 (()=>{
 'use strict';
-const D=window.ZonaOKJugadors,host=document.getElementById('jugadors-favorits');if(!D||!host)return;const el=(t,c,s)=>{const n=document.createElement(t);if(c)n.className=c;if(s!==undefined)n.textContent=s;return n};const btn=(s,f)=>{const b=el('button','zok-jp-btn',s);b.type='button';b.onclick=f;return b};
-const heading=el('h2','','Jugadors'),note=el('p','zok-jp-note','Cerca i selecciona els jugadors favorits del catàleg carregat.'),input=el('input');input.type='search';input.placeholder='Escriu nom o cognoms…';input.setAttribute('aria-label','Cerca jugadors favorits');const results=el('div');const searchLine=el('div','zok-jp-search-line');const importHost=document.getElementById('jp-data-status');searchLine.append(input);if(importHost)searchLine.append(importHost);host.append(heading,note,searchLine,results);
-function render(){const q=D.norm(input.value),selected=D.read().favorites;results.replaceChildren();if(!D.loaded){results.append(el('p','zok-jp-note','Catàleg de jugadors encara no carregat.'));return}for(const p of D.players.filter(p=>!q||D.norm(p.name).includes(q)).sort((a,b)=>Number(selected.includes(b.playerId))-Number(selected.includes(a.playerId))).slice(0,100)){const row=el('label','zok-jp-row'),c=el('input');c.type='checkbox';c.style.width='auto';c.checked=selected.includes(p.playerId);c.onchange=()=>{try{D.fav(p.playerId,c.checked);render()}catch{note.textContent='No s’ha pogut desar la selecció.'}};const txt=el('span');const name=el('strong','',p.name);if(D.list(p.playerId).some(m=>m.position==='goalkeeper'))name.append(el('span','zok-jp-keeper','🥅 Porter'));txt.append(name,el('small','',D.list(p.playerId).map(m=>m.groupName).join(' · ')));row.append(c,txt);results.append(row)}}
-function mount(){document.querySelectorAll('.zok-jp-team-picker:not([data-mounted])').forEach(box=>{box.dataset.mounted='1';if(!D.loaded)return;const id=box.dataset.teamId,existing=box.dataset.originalName,eligible=D.players.filter(p=>D.list(p.playerId).some(m=>D.teamMatches(m,id)));const label=el('p','zok-jp-note',existing?'Nom actual: '+existing+' · es conserva':'Selecciona jugador de l’equip');const q=el('input');q.type='search';q.placeholder='Cerca jugador…';q.setAttribute('aria-label','Cerca jugador de '+box.dataset.teamLabel);const picked=el('p','zok-jp-picked'),opts=el('div','zok-jp-picker-options');box.append(label,q,picked,opts);box.addEventListener('click',e=>e.stopPropagation());function show(){const selected=D.read().teamPlayers[id];picked.textContent=selected?'Seleccionat: '+(D.players.find(p=>p.playerId===selected)?.name||'—'):'Cap jugador seleccionat';opts.replaceChildren();if(selected)opts.append(btn('Treure selecció',()=>{D.assign(id,'');show();render()}));const matches=eligible.filter(p=>D.norm(p.name).includes(D.norm(q.value)));for(const p of matches)opts.append(btn(p.name+(D.list(p.playerId).some(m=>D.teamMatches(m,id)&&m.position==='goalkeeper')?' · 🥅 Porter':''),()=>{D.assign(id,p.playerId);q.value='';show();render()}));if(!matches.length)opts.append(el('p','zok-jp-note','Cap jugador disponible d’aquest equip.'))}q.oninput=show;show()})}
+const D=window.ZonaOKJugadors,host=document.getElementById('jugadors-favorits');if(!D||!host)return;
+const el=(t,c,s)=>{const n=document.createElement(t);if(c)n.className=c;if(s!==undefined)n.textContent=s;return n};
+const btn=(s,f)=>{const b=el('button','zok-jp-btn',s);b.type='button';b.onclick=f;return b};
+const byName=(a,b)=>a.name.localeCompare(b.name,'ca',{sensitivity:'base'});
+const matches=(p,q)=>q.split(/\s+/).every(word=>D.norm(p.name).includes(word));
+function playerText(p,teamId){const txt=el('span','zok-jp-choice-text'),name=el('strong','',p.name);const ms=D.list(p.playerId).filter(m=>!teamId||D.teamMatches(m,teamId));if(ms.some(m=>m.position==='goalkeeper'))name.append(el('span','zok-jp-keeper','🥅 Porter'));txt.append(name,el('small','',[...new Set(ms.map(m=>m.groupName))].join(' · ')));return txt}
+const heading=el('h2','','Jugadors'),note=el('p','zok-jp-note','Escriu el nom del jugador per afegir-lo a Favorits.'),input=el('input');
+input.type='search';input.placeholder='Escriu nom o cognoms…';input.setAttribute('aria-label','Cerca jugadors favorits');input.autocomplete='off';
+const results=el('div','zok-jp-fav-results'),searchLine=el('div','zok-jp-search-line'),importHost=document.getElementById('jp-data-status');
+searchLine.append(input);if(importHost)searchLine.append(importHost);host.append(heading,note,searchLine,results);
+function render(){
+ const q=D.norm(input.value),selected=new Set(D.read().favorites);results.replaceChildren();
+ if(!D.loaded){results.append(el('p','zok-jp-note','Catàleg de jugadors encara no carregat.'));return}
+ const found=D.players.filter(p=>q?matches(p,q):selected.has(p.playerId)).sort((a,b)=>Number(selected.has(b.playerId))-Number(selected.has(a.playerId))||byName(a,b));
+ if(!found.length){results.append(el('p','zok-jp-note',q?'Cap coincidència.':'Cap jugador seleccionat.'));return}
+ const list=el('div',q?'zok-jp-suggestions':'zok-jp-selected-list');list.setAttribute('aria-label',q?'Coincidències de jugadors':'Jugadors seleccionats');
+ for(const p of (q?found.slice(0,8):found)){
+  const row=el('label','zok-jp-row'),c=el('input');c.type='checkbox';c.checked=selected.has(p.playerId);c.setAttribute('aria-label',p.name);
+  c.onchange=()=>{try{if(c.checked)input.value='';D.fav(p.playerId,c.checked);render()}catch{note.textContent='No s’ha pogut desar la selecció.';render()}};
+  row.append(c,playerText(p));list.append(row)
+ }
+ results.append(list);if(q&&found.length>8)results.append(el('p','zok-jp-note','Escriu més lletres per afinar la cerca.'));
+}
+function mount(){
+ document.querySelectorAll('.zok-jp-team-picker:not([data-mounted])').forEach(box=>{
+  box.dataset.mounted='1';if(!D.loaded)return;
+  const id=box.dataset.teamId,existing=box.dataset.originalName,eligible=D.players.filter(p=>D.list(p.playerId).some(m=>D.teamMatches(m,id))).sort(byName);
+  const q=el('input');q.type='search';q.placeholder='Cerca jugador de l’equip…';q.setAttribute('aria-label','Cerca jugador de '+box.dataset.teamLabel);q.autocomplete='off';
+  const picked=el('div','zok-jp-picked'),opts=el('div','zok-jp-picker-options zok-jp-suggestions');
+  box.append(q,picked,opts);box.addEventListener('click',e=>e.stopPropagation());
+  function show(){
+   const selected=D.read().teamPlayers[id],p=D.players.find(p=>p.playerId===selected);
+   picked.replaceChildren();
+   if(p){picked.append(el('span','','Seleccionat: '+p.name),btn('×',()=>{D.assign(id,'');q.value='';show();render()}));picked.lastChild.setAttribute('aria-label','Treure selecció');picked.lastChild.title='Treure selecció'}
+   else if(existing)picked.append(el('span','zok-jp-note','Nom actual: '+existing+' · es conserva'));
+   picked.hidden=!picked.childNodes.length;
+   opts.replaceChildren();const query=D.norm(q.value);opts.hidden=!query;if(!query)return;
+   const found=eligible.filter(p=>matches(p,query));
+   for(const p of found.slice(0,8)){const b=btn('',()=>{q.value='';D.assign(id,p.playerId);show();render()});b.append(playerText(p,id));opts.append(b)}
+   if(!found.length)opts.append(el('p','zok-jp-note','Cap jugador coincideix.'));
+   else if(found.length>8)opts.append(el('p','zok-jp-note','Escriu més lletres.'));
+  }
+  q.oninput=show;q.addEventListener('keydown',e=>{if(e.key==='Escape'){q.value='';show()}});show()
+ })
+}
 window.addEventListener('zonaok:jugadors-loaded',()=>{document.querySelectorAll('.zok-jp-team-picker').forEach(b=>{b.replaceChildren();delete b.dataset.mounted});render();mount()});
-input.oninput=render;window.addEventListener('zonaok:team-pickers-rendered',mount);window.addEventListener('zonaok:jugadors-preferences',render);render();mount();
+input.oninput=render;input.addEventListener('keydown',e=>{if(e.key==='Escape'){input.value='';render()}});
+window.addEventListener('zonaok:team-pickers-rendered',mount);window.addEventListener('zonaok:jugadors-preferences',render);render();mount();
 })();

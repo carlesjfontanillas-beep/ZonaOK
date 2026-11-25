@@ -337,8 +337,9 @@
       for (const option of options) {
         const id = optionId(option);
         const label = optionLabel(option);
-        const row = document.createElement('label');
-        row.className = 'zok-favorite-option';
+        const teamRow = key === 'teams';
+        const row = document.createElement(teamRow ? 'div' : 'label');
+        row.className = 'zok-favorite-option' + (teamRow ? ' zok-jp-team-row' : '');
         row.hidden = Boolean(query && !optionMatchesSearch(key, option, label, query, matchingClubs));
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -358,7 +359,8 @@
           crest.src=logoUrl; crest.alt=''; crest.loading='lazy'; crest.decoding='async';
           crest.onerror=()=>crest.remove(); row.append(crest);
         }
-        const text = document.createElement('span');
+        const text = document.createElement(teamRow ? 'label' : 'span');
+        if(teamRow){checkbox.id='zok-team-'+encodeURIComponent(id);text.htmlFor=checkbox.id;checkbox.setAttribute('aria-label',label)}
         text.className='zok-favorite-option-label';
         text.textContent = label;
         row.append(checkbox, text);
