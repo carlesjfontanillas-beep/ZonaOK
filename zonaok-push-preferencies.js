@@ -15,6 +15,17 @@
       targets: Array.isArray(p.targets) ? p.targets.filter(v => typeof v === 'string') : []};
   }
   let prefs = defaults();
+  // Les preferències del servidor prevalen en aquest dispositiu quan la Push subscription es recupera.
+  window.addEventListener('zonaok:push-preferences-restored', event => {
+    const saved = event.detail && typeof event.detail === 'object' ? event.detail : {};
+    prefs = {
+      events: Array.isArray(saved.events) ? saved.events.filter(v => events.includes(v)) : prefs.events,
+      targets: Array.isArray(saved.targets) ? saved.targets.filter(v => typeof v === 'string') : prefs.targets
+    };
+    root.querySelectorAll('[data-push-event]').forEach(input => { input.checked = prefs.events.includes(input.dataset.pushEvent); });
+    try { localStorage.setItem(key, JSON.stringify(prefs)); } catch (_) {}
+    renderTargets();
+  });
   const queries = Object.create(null);
   const normalizeSearch = value => String(value ?? '').normalize('NFD')
     .replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('ca')
