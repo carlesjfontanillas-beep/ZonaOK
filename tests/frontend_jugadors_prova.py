@@ -1,0 +1,123 @@
+import unittest,threading,os
+from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
+from pathlib import Path
+from playwright.sync_api import sync_playwright
+ROOT=Path(__file__).resolve().parents[1]
+class Quiet(SimpleHTTPRequestHandler):
+    def log_message(self,*args):pass
+class Players(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        os.chdir(ROOT)
+        cls.server=ThreadingHTTPServer(("127.0.0.1",0),Quiet)
+        threading.Thread(target=cls.server.serve_forever,daemon=True).start()
+        cls.base=f"http://127.0.0.1:{cls.server.server_port}"
+        cls.pw=sync_playwright().start()
+        cls.browser=cls.pw.chromium.launch(headless=True)
+    @classmethod
+    def tearDownClass(cls):
+        cls.browser.close();cls.pw.stop();cls.server.shutdown()
+    def setUp(self):
+        self.ctx=self.browser.new_context(viewport={"width":390,"height":844},is_mobile=True,has_touch=True)
+        self.page=self.ctx.new_page()
+        self.errors=[]
+        self.page.on("pageerror",lambda e:self.errors.append(str(e)))
+    def tearDown(self):
+        self.ctx.close()
+    def test_profile_and_photo(self):
+        p=self.page;p.goto(self.base+"/jugadors.html?demo=1")
+        p.get_by_text("Encara no tens jugadors favorits",exact=False).wait_for()
+        p.locator("#jp-all").click()
+        p.locator("#jp-search").fill("mostra A")
+        p.locator("#jp-list article").wait_for()
+        self.assertEqual(p.locator("#jp-list article").count(),1)
+        p.get_by_role("button",name="Afegir a favorits").click()
+        p.locator("#jp-favs").click()
+        p.get_by_role("button",name="Jugador de mostra A",exact=False).click()
+        p.locator("#jp-profile select").select_option(label="Tots els equips")
+        self.assertEqual(p.locator(".zok-jp-stat").nth(0).locator("b").inner_text(),"15")
+        self.assertEqual(p.locator(".zok-jp-stat").nth(1).locator("b").inner_text(),"26")
+        p.get_by_role("button",name="Rànquings",exact=True).click()
+        p.get_by_text("1. Jugador de mostra A · 26 G",exact=True).wait_for()
+        p.locator("#jp-profile select").select_option(value="4789|99001")
+        p.get_by_role("button",name="Resum",exact=True).click()
+        self.assertEqual(p.locator(".zok-jp-stat").nth(1).locator("b").inner_text(),"24")
+        for t in ["Partits","Equips","Estadístiques","Rànquings","Resum"]:
+            p.get_by_role("button",name=t,exact=True).click()
+        # A tiny, valid PNG from Chromium itself; no personal photo.
+        data=p.evaluate("()=>{const c=document.createElement('canvas');c.width=c.height=32;c.getContext('2d').fillRect(0,0,32,32);return c.toDataURL().split(',')[1]}")
+        import base64
+        p.locator("#jp-profile input[type=file]").set_input_files({"name":"test.png","mimeType":"image/png","buffer":base64.b64decode(data)})
+        p.locator(".zok-jp-avatar.big img").wait_for()
+        p.reload()
+        p.get_by_role("button",name="Jugador de mostra A",exact=False).click()
+        p.locator(".zok-jp-avatar.big img").wait_for()
+        p.get_by_role("button",name="Eliminar foto").click()
+        p.locator(".zok-jp-avatar.big img").wait_for(state="detached")
+        self.assertTrue(p.evaluate("document.documentElement.scrollWidth<=innerWidth+1"))
+        self.assertFalse(self.errors,self.errors)
+    def test_goalkeeper(self):
+        p=self.page;p.goto(self.base+"/jugadors.html?demo=1")
+        p.locator("#jp-all").click()
+        p.locator("#jp-position").select_option("goalkeeper")
+        p.locator("#jp-list .zok-jp-keeper").wait_for()
+        self.assertEqual(p.locator("#jp-list article").count(),1)
+        p.locator("#jp-list .zok-jp-row-main").click()
+        p.get_by_text("Estadístiques de porter",exact=False).wait_for()
+        stats=p.locator(".zok-jp-stat").evaluate_all("(nodes)=>Object.fromEntries(nodes.map(n=>[n.querySelector('small').textContent,n.querySelector('b').textContent]))")
+        for key,val in {"Actes com a porter":"6","Amb resultat":"5","GF equip":"15","GC equip":"10","Diferència":"5","Victòries":"3","Empats":"1","Derrotes":"1","Porteria a zero equip":"1","GF / partit":"3,00","GC / partit":"2,00"}.items():self.assertEqual(stats[key],val,key)
+        p.locator("#jp-profile select").select_option("all")
+        self.assertEqual(p.locator(".zok-jp-stat").filter(has_text="GF equip").locator("b").inner_text(),"15")
+        p.get_by_role("button",name="Partits",exact=True).click()
+        p.get_by_text("GF equip 5 · GC equip 1",exact=False).wait_for()
+        p.get_by_text("Resultat no verificat",exact=False).wait_for()
+        p.get_by_role("button",name="Rànquings",exact=True).click()
+        p.get_by_text("Comparativa de porters",exact=False).wait_for()
+        p.get_by_text("No és un rànquing d’aturades",exact=False).wait_for()
+        self.assertFalse(self.errors,self.errors)
+    def test_favorites_and_team_selector(self):
+        p=self.page
+        p.add_init_script("""localStorage.setItem('ZONAOK_FAVORITS_V1',JSON.stringify({clubs:['FC Barcelona'],teams:['TEAM|FC BARCELONA|ALEVI OR 3'],teamNames:{'TEAM|FC BARCELONA|ALEVI OR 3':'Nom anterior'}}))""")
+        p.route("**/zonaok-tots-agenda.json?*",lambda r:r.fulfill(json={"schema":"zonaok-all-v1","kind":"agenda","rows":[{"home":"FC BARCELONA","away":"CLUB DE MOSTRA","competition":"ALEVI OR 3","leagueId":"4789"}]}))
+        p.route("**/zonaok-classificacions.json?*",lambda r:r.fulfill(json={"competitions":{}}))
+        p.goto(self.base+"/favorits.html?demo=1")
+        p.locator("#jugadors-favorits input[type=search]").fill("mostra B")
+        p.locator("#jugadors-favorits input[type=checkbox]").check()
+        p.locator(".zok-jp-team-picker input").first.wait_for()
+        p.locator(".zok-jp-team-picker input").first.fill("mostra A")
+        p.locator(".zok-jp-team-picker").first.get_by_role("button",name="Jugador de mostra A").click()
+        p.get_by_text("Seleccionat: Jugador de mostra A").wait_for()
+        self.assertEqual(p.evaluate("JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')).teamNames['TEAM|FC BARCELONA|ALEVI OR 3']"),"Nom anterior")
+        p.goto(self.base+"/jugadors.html?demo=1")
+        p.locator("#jp-list article").first.wait_for()
+        self.assertEqual(p.locator("#jp-list article").count(),2)
+        self.assertFalse(self.errors,self.errors)
+    def test_real_contract(self):
+        p=self.page;p.goto(self.base+"/jugadors.html")
+        p.get_by_text("Encara no hi ha catàleg carregat.",exact=True).wait_for()
+        p.locator("#jp-all").click()
+        self.assertEqual(p.locator("#jp-list article").count(),0)
+        master={"schema":"zonaok-jugadors-v1","source":"FECAPA","seasonId":"41","players":{"123":{"playerId":"123","name":"Porter de prova contracte","birthYear":2013,"firstSeenAt":"2026-11-01","lastSeenAt":"2026-11-25","nameVariants":[]}},"memberships":{"41|4786|1234|123":{"playerId":"123","seasonId":"41","leagueId":"4786","teamFilterId":"1234","teamName":"CP SANT CELONI B","clubName":"CP Sant Celoni","teamId":None,"clubId":"281","groupName":"INFANTIL OR 10","position":"goalkeeper","firstSeenAt":"2026-11-01","lastSeenAt":"2026-11-25","profileUrl":"https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=plantillas","sports":{"played":1,"number":1}}},"matchAppearances":{"41|4786|4321|away|123":{"seasonId":"41","leagueId":"4786","matchId":"4321","playerId":"123","teamFilterId":"1234","side":"away","teamName":"CP SANT CELONI B","position":"goalkeeper","participation":"listed","shirtNumber":1,"checkedAt":"2026-11-25","source":"FECAPA:acta_resum","actaUrl":"https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=4321"}}}
+        catalog={"matches":[{"leagueId":"4786","matchId":"4321","iso":"2026-11-22","status":"FINAL","home":"RIVAL","away":"CP SANT CELONI B","homeScore":2,"awayScore":5}]}
+        p.route("**/zonaok-tots-partits.json",lambda r:r.fulfill(json=catalog))
+        import json
+        p.locator("#jp-data-status input[type=file]").set_input_files({"name":"test.json","mimeType":"application/json","buffer":json.dumps(master).encode()})
+        p.locator("#jp-list article").wait_for()
+        p.get_by_role("button",name="Porter de prova contracte",exact=False).click()
+        stats=p.locator(".zok-jp-stat").evaluate_all("(nodes)=>Object.fromEntries(nodes.map(n=>[n.querySelector('small').textContent,n.querySelector('b').textContent]))")
+        self.assertEqual(stats["GF equip"],"5")
+        self.assertEqual(stats["GC equip"],"2")
+        self.assertEqual(stats["Participació confirmada"],"0")
+        self.assertFalse(self.errors,self.errors)
+        p.reload()
+        p.get_by_text("Encara no hi ha catàleg carregat.",exact=True).wait_for()
+    def test_navigation(self):
+        p=self.page
+        p.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_ONBOARDING_V1','1')")
+        p.goto(self.base+"/index.html",wait_until="domcontentloaded")
+        p.locator("#zok-nav-jugadors").wait_for()
+        self.assertTrue(p.evaluate("document.getElementById('zok-nav-jugadors').previousElementSibling.id==='zok-nav-resultats-7dies'"))
+        p.locator("#zok-nav-jugadors").click()
+        p.wait_for_url("**/jugadors.html?*")
+        p.locator("#jp-favs").wait_for()
+if __name__=="__main__":unittest.main()
