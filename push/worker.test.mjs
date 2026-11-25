@@ -86,7 +86,7 @@ async function decryptPayload(rawBody, clientSubscription, clientPair) {
   const context = new Uint8Array([
     ...encoder.encode("WebPush: info\0"), ...clientPublic, ...serverPublicBytes,
   ]);
-  const authKey = await crypto.subtle.importKey("raw", auth, { name: "HKDF" }, false, ["deriveBits"]);
+  const authKey = await crypto.subtle.importKey("raw", shared, { name: "HKDF" }, false, ["deriveBits"]);
   const ikm = new Uint8Array(await crypto.subtle.deriveBits({ name: "HKDF", hash: "SHA-256", salt: auth, info: context }, authKey, 256));
   const extractKey = await crypto.subtle.importKey("raw", salt, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const prkBytes = await crypto.subtle.sign("HMAC", extractKey, ikm);
