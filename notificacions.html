@@ -16,8 +16,10 @@
     .zok-notifications-mast .brand{font-size:21px;line-height:1.1;white-space:nowrap}
     .zok-notifications-mast .strap{display:none}
     main.app > .mast.zok-notifications-mast > .zok-header-actions{flex:0 0 auto;gap:5px;margin-left:auto}
-    .zok-notifications-mast .zok-back{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 12px;border:1px solid #91b7d155;border-radius:13px;background:linear-gradient(145deg,#214d6d,#14344e);color:#fff;font-size:12px;font-weight:800;white-space:nowrap}
-    @media(max-width:400px){main.app > .mast.zok-notifications-mast > .zok-header-actions{gap:4px}.zok-notifications-mast .zok-back{padding:8px 7px}}
+    main.app > .mast.zok-notifications-mast :is(.zok-favorites-top,.zok-back){display:inline-flex;align-items:center;justify-content:center;gap:5px;width:84px;height:35px;flex:0 0 84px;padding:0 5px;border:1px solid #91b7d155;border-radius:13px;background:linear-gradient(145deg,#214d6d,#14344e);color:#fff;font-size:12px;font-weight:800;line-height:1;text-decoration:none;white-space:nowrap}
+    main.app > .mast.zok-notifications-mast .zok-favorites-top span{display:inline-flex;align-items:center;justify-content:center;width:21px;height:21px;flex:0 0 21px;font-size:22px;line-height:1;color:#ffc17c}
+    .zok-notifications-mast .zok-back svg{display:block;width:21px;height:21px;flex:0 0 21px;color:#ffc17c}
+    @media(max-width:400px){main.app > .mast.zok-notifications-mast > .zok-header-actions{gap:4px}}
     @media(max-width:360px){main.app > .mast.zok-notifications-mast > .zok-header-actions{gap:3px}}
     #zok-push-settings{padding:0;min-width:0}
     #zok-push-settings .zok-push-summary{display:flex;align-items:center;gap:11px;padding:14px 15px;cursor:pointer;list-style:none;color:#eaf5ff}
@@ -60,7 +62,7 @@
     <div><div class="brand">ZONA<span>OK</span></div><div class="strap">ELS TEUS PARTITS · EL TEU HOQUEI</div></div>
     <div class="zok-header-actions">
       <a class="zok-favorites-top" href="favorits.html?v=20261125-push6-page" title="Favorits" aria-label="Obrir Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a>
-      <a class="secondary zok-back" href="index.html?v=20261125-push6-page">⌂ Inici</a>
+      <a class="secondary zok-back" href="index.html?v=20261125-push6-page" aria-label="Inici"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-8h6v8"/></svg><strong>Inici</strong></a>
     </div>
   </header>
   <section class="hero zok-favorites-hero">
