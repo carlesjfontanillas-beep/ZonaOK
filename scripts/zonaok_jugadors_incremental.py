@@ -45,7 +45,7 @@ def select(rows,state,mode,today=None):
     selected=[]
     for key,r in rows.items():
         old=state.get(key,{})
-        if old.get("status")=="verified" and old.get("fingerprint")==r["fingerprint"]:continue
+        if mode!="weekly" and old.get("status")=="verified" and old.get("fingerprint")==r["fingerprint"]:continue
         if mode=="weekly" or r["iso"]>=recent or old: selected.append((key,r))
     return sorted(selected,key=lambda x:(x[1]["iso"],x[0]),reverse=True)
 
@@ -139,15 +139,21 @@ async def maintain(a,rows,leagues):
     master.update(updatedAt=now(),coverageVerified=False)
     verify_master(master);save(target,master);save(state_path,state)
     if load(target,"41")!=master:raise ValueError("roundtrip_mismatch")
-    report["rosterTeamsObserved"]=sum(x["teamsObserved"] for x in report.pop("leagues"))
+    report["rosterTeamsObserved"]=sum(x["teamsObserved"] for x in report["leagues"])
+    report["rosterTeamsSelected"]=sum(x["teamsSelected"] for x in report["leagues"])
+    report["rosterLeaguesAttempted"]=len(report["leagues"])
+    report["rosterErrorCount"]=sum(x["errors"] for x in report.pop("leagues"))
+    report["unprocessed"]=max(0,len(plan)-report["verified"]-report["pending"])
+    report["coverageComplete"]=not (report["unprocessed"] or report["pending"] or report["rosterErrorCount"] or report["rosterErrors"]) and (a.mode!="weekly" or report["rosterLeaguesAttempted"]==len(leagues))
     report["players"]=len(master["players"]);report["appearances"]=len(master["matchAppearances"])
     return report
 
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--catalog",type=Path,required=True);p.add_argument("--mode",choices=["incremental","weekly"],required=True)
-    p.add_argument("--private-dir",type=Path);p.add_argument("--limit",type=int,default=0);p.add_argument("--budget-minutes",type=int,default=45)
+    p.add_argument("--private-dir",type=Path);p.add_argument("--limit",type=int,default=0);p.add_argument("--budget-minutes",type=int)
     a=p.parse_args()
+    if a.budget_minutes is None:a.budget_minutes=720 if a.mode=="weekly" else 45
     try:
         rows=candidates(a.catalog);acts,leagues,errors=read_catalog(a.catalog)
         if a.private_dir:

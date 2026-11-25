@@ -16,6 +16,7 @@ class TestMaintenance(unittest.TestCase):
             self.assertEqual(len(select(found,{},"weekly",date(2026,11,25))),2)
             state={"1|2":{"status":"verified","fingerprint":found["1|2"]["fingerprint"]}}
             self.assertEqual(len(select(found,state,"incremental",date(2026,11,25))),0)
+            self.assertEqual(len(select(found,state,"weekly",date(2026,11,25))),2)
             state["1|2"]["fingerprint"]="old"
             self.assertEqual(len(select(found,state,"incremental",date(2026,11,25))),1)
     def test_merge_keeps_optional_and_updates_explicit(self):
