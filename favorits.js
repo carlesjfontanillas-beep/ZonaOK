@@ -307,6 +307,7 @@
       ? 'Equips, categories i competicions filtrats pels clubs marcats. Les seleccions desades es conserven.'
       : hasClubScope ? 'Mostrant totes les opcions; les seleccions desades es conserven.'
       : 'Marca un club per limitar els equips, les categories i les competicions disponibles.';
+    const playerSection = document.getElementById('jugadors-favorits');
     nodes.groups.replaceChildren();
     for (const [key, title] of GROUPS) {
       const section = document.createElement('section');
@@ -394,6 +395,7 @@
       }
       section.append(list);
       nodes.groups.append(section);
+      if (key === 'teams' && playerSection) nodes.groups.append(playerSection);
     }
     renderCount();
     window.dispatchEvent(new CustomEvent('zonaok:team-pickers-rendered'));
@@ -456,7 +458,9 @@
     } catch (error) {
       console.error('Favorits: error carregant catàleg', error);
       nodes.status.textContent = 'No s’ha pogut carregar l’agenda total. Revisa zonaok-tots-agenda.json i torna-ho a provar.';
+      const playerSection = document.getElementById('jugadors-favorits');
       nodes.groups.replaceChildren();
+      if (playerSection) nodes.groups.append(playerSection);
       const message = document.createElement('p');
       message.className = 'empty';
       message.textContent = 'Els clubs, equips, partits i escuts es carreguen de zonaok-tots-agenda.json.';

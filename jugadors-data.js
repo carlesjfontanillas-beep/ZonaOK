@@ -1,7 +1,7 @@
 /* Public UI: no private GitHub URL, token, or automatic public export. */
 (()=>{
 'use strict';
-const demo=window.ZonaOKJugadorsDemo,preview=new URLSearchParams(location.search).get('demo')==='1';
+const demo=window.ZonaOKJugadorsDemo,preview=['1','2'].includes(new URLSearchParams(location.search).get('demo'));
 const KEY='zonaok.jugadors.preferences.v1',players=[],memberships=[],appearances=[],norm=demo.norm;
 let loaded=false;
 const obj=v=>v&&typeof v==='object'&&!Array.isArray(v),id=v=>typeof v==='string'&&/^[1-9]\d*$/.test(v),clean=v=>typeof v==='string'?v.trim():'',num=v=>Number.isInteger(v)&&v>=0;
@@ -31,6 +31,22 @@ function ingest(master,catalog){
 }
 const api=preview?{...demo,preview:true,get loaded(){return true}}:{players,memberships,appearances,norm,read,write,fav,assign,list,teamMatches,ingest,preview:false,get loaded(){return loaded}};
 window.ZonaOKJugadors=api;
-function mount(){const host=document.getElementById('jp-data-status');if(!host)return;if(preview){host.textContent='VERSIÓ DE PROVES · Dades fictícies';return}host.replaceChildren();const status=document.createElement('p');status.textContent='Catàleg privat pendent de connexió automàtica. Pots obrir una còpia autoritzada del JSON mestre en aquest dispositiu.';const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.setAttribute('aria-label','Obrir JSON privat autoritzat');const help=document.createElement('small');help.textContent='Lectura local, sense enviar el fitxer al servidor. El catàleg no es desa al navegador i cal tornar a obrir-lo en canviar de pàgina.';host.append(status,input,help);input.onchange=async()=>{try{const file=input.files?.[0];if(!file)return;if(file.size>100000000)throw Error('Fitxer massa gran.');status.textContent='Llegint el catàleg…';const master=JSON.parse(await file.text());let catalog={};try{const r=await fetch('zonaok-tots-partits.json',{cache:'no-store'});if(r.ok)catalog=await r.json()}catch{}const n=ingest(master,catalog);status.textContent=n.players+' jugadors disponibles · '+(n.coverageVerified?'Cobertura verificada':'Cobertura encara no completa');}catch(e){status.textContent='No s’ha pogut obrir el catàleg: '+e.message}finally{input.value=''}}}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
+function mount(){
+ const host=document.getElementById('jp-data-status');if(!host)return;
+ if(preview){host.hidden=true;const marker=document.createElement('p');marker.className='zok-jp-note';marker.textContent='Dades fictícies · versió de proves';host.closest('.zok-jp-search-line')?.after(marker);return}
+ host.replaceChildren();
+ const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.hidden=true;input.setAttribute('aria-label','Obrir JSON privat autoritzat');
+ const button=document.createElement('button');button.type='button';button.className='zok-jp-import-btn';button.title='Obrir fitxer JSON privat';button.setAttribute('aria-label','Obrir fitxer JSON privat');
+ const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 24 24');icon.setAttribute('fill','none');icon.setAttribute('stroke','currentColor');icon.setAttribute('stroke-width','1.8');icon.setAttribute('stroke-linecap','round');icon.setAttribute('stroke-linejoin','round');icon.setAttribute('aria-hidden','true');
+ const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M12 16V3m-5 5 5-5 5 5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4');icon.append(path);button.append(icon);
+ const status=document.createElement('p');status.className='zok-jp-import-status zok-jp-note';status.setAttribute('role','status');status.hidden=true;
+ host.append(input,button);host.closest('.zok-jp-search-line')?.after(status);
+ button.onclick=()=>input.click();
+ input.onchange=async()=>{const file=input.files?.[0];if(!file)return;button.disabled=true;status.hidden=false;status.classList.remove('zok-jp-error');status.textContent='Llegint el catàleg…';
+ try{if(file.size>100000000)throw Error('Fitxer massa gran.');const master=JSON.parse(await file.text());let catalog={};try{const r=await fetch('zonaok-tots-partits.json',{cache:'no-store'});if(r.ok)catalog=await r.json()}catch{}const n=ingest(master,catalog);status.textContent=n.players+' jugadors disponibles'+(n.coverageVerified?'':' · Cobertura parcial');button.title='Canviar fitxer JSON privat';}
+ catch(e){status.textContent='No s’ha pogut obrir el catàleg: '+e.message;status.classList.add('zok-jp-error')}
+ finally{input.value='';button.disabled=false}
+ };
+}
+if(document.readyState==='complete')mount();else document.addEventListener('DOMContentLoaded',mount,{once:true});
 })();

@@ -328,7 +328,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
   .zok-favorite-empty-card a{justify-self:start;display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 13px;border-radius:11px;background:#ffbd78;color:#102c43;font-weight:800;text-decoration:none}
 </style>
 <script id="zok-favorites-first-visit">
-(()=>{try{const s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}');const any=(Array.isArray(s.clubs)&&s.clubs.some(Boolean))||(Array.isArray(s.teams)&&s.teams.some(Boolean));const key='ZONAOK_FAVORITS_ONBOARDING_V1';if(!any&&!localStorage.getItem(key)){localStorage.setItem(key,'1');location.replace('favorits.html?v=20261124-fecapa-crest-map1');}}catch(_){}})();
+(()=>{try{const s=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}');const any=(Array.isArray(s.clubs)&&s.clubs.some(Boolean))||(Array.isArray(s.teams)&&s.teams.some(Boolean));const key='ZONAOK_FAVORITS_ONBOARDING_V1';if(!any&&!localStorage.getItem(key)){localStorage.setItem(key,'1');location.replace('favorits.html?v=20261125-nav4');}}catch(_){}})();
 </script>
 
 <style id="zonaok-quick-imports">
@@ -428,7 +428,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
       <div class="brand">ZONA<span>OK</span></div>
       <div class="strap">ELS TEUS PARTITS &#xB7; EL TEU HOQUEI</div>
     </div>
-    <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261124-fecapa-crest-map1" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button><button id="refresh-home" type="button" class="primary" title="Obrir eines d’actualització" aria-label="Obrir o tancar les eines d’actualització">&#x21BB;</button></div>
+    <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261125-nav4" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button><button id="refresh-home" type="button" class="primary" title="Obrir eines d’actualització" aria-label="Obrir o tancar les eines d’actualització">&#x21BB;</button></div>
   </header>
   <section class="hero">
     <div class="overline">AGENDA PERSONAL</div>
@@ -2837,6 +2837,6 @@ window.ZonaOKRefreshSources=async function(){
 </script>
   <script defer src="zonaok-resultats-7dies.js?v=20261124-state-team-names-r16"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
-  <script defer src="jugadors-nav.js?v=20261125-real1"></script>
+  <script defer src="jugadors-nav.js?v=20261125-nav4"></script>
 </body>
 </html>
