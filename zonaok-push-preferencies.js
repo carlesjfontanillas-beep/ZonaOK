@@ -22,20 +22,28 @@
   function renderTargets() {
     const fav = read('ZONAOK_FAVORITS_V1');
     host.replaceChildren();
-    let count = 0;
+    const catalog = window.ZonaOKPushFavoriteCatalog?.() || {};
+    const teamLabels = new Map((catalog.teams || []).map(option => [option.id, option.label]));
     for (const [group,title] of groups) {
-      const values = Array.isArray(fav[group]) ? [...new Set(fav[group].filter(v => typeof v === 'string' && v))] : [];
-      if (!values.length) continue;
+      const saved = Array.isArray(fav[group]) ? fav[group] : [];
+      const available = group === 'categories' || group === 'competitions' ? (catalog[group] || []) : [];
+      const previous = prefs.targets.flatMap(value => { try { const [kind,id] = JSON.parse(value); return kind === group && typeof id === 'string' ? [id] : []; } catch (_) { return []; } });
+      const values = [...new Set([...saved, ...available, ...((group === 'categories' || group === 'competitions') ? previous : [])].filter(v => typeof v === 'string' && v))];
       const card = document.createElement('section'); card.className = 'zok-favorite-group zok-push-card';
       const heading = document.createElement('h2'); heading.textContent = title; card.append(heading);
       const list = document.createElement('div'); list.className = 'zok-favorite-list zok-push-list';
       card.append(list); host.append(card);
+      if (!values.length) {
+        const empty = document.createElement('p'); empty.className = 'zok-favorite-empty';
+        empty.textContent = group === 'clubs' || group === 'teams' ? 'Marca favorits per configurar els seus avisos.' : 'No hi ha opcions disponibles amb els filtres actuals.';
+        list.append(empty);
+      }
       for (const id of values) {
-        count++;
         const target = JSON.stringify([group,id]);
         const label = document.createElement('label'); label.className = 'zok-favorite-option zok-push-choice';
         const input = document.createElement('input'); input.type = 'checkbox'; input.checked = prefs.targets.includes(target);
-        const name = group === 'teams' ? (fav.teamNames?.[id] || id.split('|').slice(1).join(' · ')) : id;
+        const parts = id.split('|');
+        const name = group === 'teams' ? (teamLabels.get(id) || (parts.length >= 3 ? parts.slice(2).join(' · ') + ' · ' + parts[1] : id)) : id;
         const span = document.createElement('span'); span.className = 'zok-favorite-option-label'; span.textContent = name;
         input.addEventListener('change', () => {
           prefs.targets = prefs.targets.filter(v => v !== target);
@@ -44,9 +52,6 @@
         });
         label.append(input,span); list.append(label);
       }
-    }
-    if (!count) {
-      const p = document.createElement('p'); p.textContent = 'Marca favorits per poder configurar els seus avisos aquí.'; host.append(p);
     }
   }
   const capability = root.querySelector('[data-push-capability]');
