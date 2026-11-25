@@ -66,3 +66,13 @@
 .zok-jp-rank-table .zok-jp-rank-current{background:#294965;outline:1px solid #fbc252;outline-offset:-1px}
 .zok-jp-rank-table .zok-jp-rank-current td:first-child{color:#fbc252;font-weight:800}
 @media(max-width:380px){.zok-jp-rank-table{font-size:11px}.zok-jp-rank-table td,.zok-jp-rank-table th{padding:7px 4px}}
+
+/* Fitxa de jugador: tots els controls en una fila */
+.zok-jp-app .zok-jp-profile-tabs{display:grid;grid-template-columns:1fr 1fr 1fr 1.45fr 1.15fr;gap:4px;overflow:visible;width:100%;min-width:0}
+.zok-jp-app .zok-jp-profile-tabs button{width:100%;min-width:0;box-sizing:border-box;padding:9px 1px;font-size:clamp(10px,3.05vw,13px);white-space:nowrap;text-align:center}
+.zok-jp-app .zok-jp-profile-title{gap:6px;position:relative}
+.zok-jp-app .zok-jp-fecapa{display:block;background:#fbc252;color:#061d33;border-color:#fbc252;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;cursor:pointer;list-style:none}
+.zok-jp-fecapa::-webkit-details-marker{display:none}
+.zok-jp-fecapa-picker{position:relative;min-width:0}
+.zok-jp-fecapa-menu{position:absolute;top:calc(100% + 5px);right:0;width:min(250px,72vw);z-index:20;display:grid;gap:5px;padding:7px;border:1px solid #52738a;border-radius:10px;background:#102e47;box-shadow:0 5px 15px #0005}
+.zok-jp-fecapa-menu a{text-decoration:none;white-space:normal}
