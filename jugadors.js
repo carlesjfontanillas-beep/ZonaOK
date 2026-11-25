@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const D=window.ZonaOKJugadors,$=id=>document.getElementById(id),el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n};
-const search=$('jp-search-panel'),profile=$('jp-profile-panel'),root=$('jp-profile');let scope='favorites',active=null,tab='Resum',membershipKey='',photoDb;
+const search=$('jp-search-panel'),profile=$('jp-profile-panel'),root=$('jp-profile');let scope='favorites',active=null,tab='Resum',membershipKey='',rankingCategory='',photoDb;
 const read=D.read,byId=id=>D.players.find(p=>p.playerId===id);
 function db(){if(!photoDb)photoDb=new Promise((ok,no)=>{const r=indexedDB.open(D.preview?'zonaok-jugadors-preview-photos':'zonaok-jugadors-photos',1);r.onupgradeneeded=()=>r.result.createObjectStore('photos');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});return photoDb}
 async function photo(id,method='get',value){const d=await db();return new Promise((ok,no)=>{const t=d.transaction('photos',method==='get'?'readonly':'readwrite'),s=t.objectStore('photos');const r=method==='put'?s.put(value,id):method==='delete'?s.delete(id):s.get(id);t.oncomplete=()=>ok(r.result);t.onerror=()=>no(t.error);t.onabort=()=>no(t.error)})}
@@ -41,7 +41,7 @@ async function renderList(){
  for(const p of rows.slice(0,100)){const row=el('article','zok-jp-row'),m=filteredMemberships(p.playerId)[0],b=btn('',()=>open(p.playerId),'zok-jp-row-main');const name=el('strong','',p.name);if(filteredMemberships(p.playerId).some(x=>x.position==='goalkeeper'))name.append(el('span','zok-jp-keeper','🥅 Porter'));b.append(name,el('small','',m.clubName+' · '+m.groupName+' · '+(m.position==='goalkeeper'?'Porter':m.position==='field'?'Pista':'Posició no verificada')));const a=await avatar(p.playerId);if(token!==renderToken)return;row.append(a,b,star(p.playerId,renderList));list.append(row)}}
 function stat(label,v){const n=el('div','zok-jp-stat');n.append(el('b','',v===undefined||v===null?'—':String(v)),el('small','',label));return n}
 function card(...nodes){const n=el('article','zok-jp-card');n.append(...nodes);return n}
-function open(id){active=id;tab='Resum';membershipKey='';search.hidden=true;profile.hidden=false;renderProfile();window.scrollTo(0,0)}
+function open(id){active=id;tab='Resum';membershipKey='';rankingCategory='';search.hidden=true;profile.hidden=false;renderProfile();window.scrollTo(0,0)}
 function back(){active=null;profile.hidden=true;search.hidden=false;renderList();window.scrollTo(0,0)}
 const key=m=>m.leagueId+'|'+m.teamFilterId;
 const ALL='all';
@@ -56,7 +56,40 @@ function aggregate(rows){
   return sp;
 }
 function uniqueMatches(rows,id){const allowed=new Set(rows.map(key)),seen=new Map();for(const a of D.appearances){if(a.playerId===id&&(allowed.has(key(a))||(rows.length===D.list(id).length&&rows.some(m=>m.leagueId===a.leagueId)&&!a.teamFilterId))){const k=a.seasonId+'|'+a.leagueId+'|'+a.matchId;if(!seen.has(k))seen.set(k,a)}}return [...seen.values()].sort((a,b)=>String(b.fixture.date).localeCompare(String(a.fixture.date)))}
-function ranking(rows){rows=rows.filter(x=>x.position==='field');const groups=new Map();for(const x of rows){if(!groups.has(x.playerId))groups.set(x.playerId,[]);groups.get(x.playerId).push(x)}return [...groups].map(([playerId,ms])=>({playerId,goals:aggregate(ms).goals})).filter(x=>Number.isInteger(x.goals)).sort((a,b)=>b.goals-a.goals||byId(a.playerId).name.localeCompare(byId(b.playerId).name,'ca'))}
+// Categoria sencera: conserva el nivell i l'edat, treu únicament el sufix de grup.
+function category(m){
+ const raw=String(m.groupName||m.leagueName||'').trim();
+ const label=raw.replace(/\s+(?:GRUP|GRUPO|GROUP)\s+[A-Z0-9]+$/i,'').replace(/(\b(?:OR|PLATA|BRONZE|BRONCE|GOLD|SILVER))\s+\d+$/i,'$1').trim();
+ const name=D.norm(label);
+ return {key:String(m.seasonId||'')+'|'+(name||'LLIGA '+m.leagueId),label:label||m.leagueName||'Competició '+m.leagueId};
+}
+function rankGroups(rows){
+ const groups=new Map();for(const x of rows){if(!byId(x.playerId))continue;if(!groups.has(x.playerId))groups.set(x.playerId,[]);groups.get(x.playerId).push(x)}
+ return [...groups].map(([playerId,ms])=>({playerId,ms,club:[...new Set(ms.map(m=>m.clubName).filter(Boolean))].join(' / ')||'—',...aggregate(ms)}));
+}
+function rankTable(headers,rows,id){
+ const wrap=el('div','zok-jp-rank-wrap'),table=el('table','zok-jp-rank-table'),thead=el('thead'),hr=el('tr'),body=el('tbody');
+ headers.forEach(text=>{const th=el('th','',text);th.scope='col';hr.append(th)});thead.append(hr);table.append(thead,body);
+ for(const row of rows){const tr=el('tr',row.playerId===id?'zok-jp-rank-current':'');tr.dataset.playerId=row.playerId;row.cells.forEach((v,i)=>{const td=el('td',i===1?'zok-jp-rank-name':'',v===null||v===undefined?'—':String(v));tr.append(td)});body.append(tr)}
+ wrap.append(table);root.append(wrap);
+}
+function renderCategoryRanking(selected,id){
+ const categories=new Map();for(const m of selected){const c=category(m);categories.set(c.key,c)}
+ if(!categories.size){root.append(el('p','zok-jp-note','No hi ha categories disponibles.'));return}
+ if(!categories.has(rankingCategory))rankingCategory=categories.keys().next().value;
+ const label=el('label','zok-jp-ranking-filter','Categoria del rànquing'),select=el('select');select.id='jp-ranking-category';
+ for(const c of categories.values()){const opt=el('option','',c.label);opt.value=c.key;select.append(opt)}
+ select.value=rankingCategory;select.onchange=()=>{rankingCategory=select.value;renderProfile()};label.append(select);root.append(label);
+ const c=categories.get(rankingCategory),own=selected.filter(m=>category(m).key===c.key),peers=D.memberships.filter(m=>category(m).key===c.key);
+ root.append(el('p','zok-jp-note',c.label+' · Tots els grups de la categoria'+(D.preview?' · Dades de mostra':' · Dades disponibles')));
+ if(own.some(m=>m.position==='field'||!m.position)){
+  const ranked=rankGroups(peers.filter(m=>m.position==='field'||(!m.position&&Number.isInteger(m.sports?.goals))));
+  ranked.sort((a,b)=>(b.goals??-1)-(a.goals??-1)||byId(a.playerId).name.localeCompare(byId(b.playerId).name,'ca'));
+  let rank=0,last;const records=ranked.map((x,i)=>{if(x.goals!==last)rank=i+1;last=x.goals;return {playerId:x.playerId,cells:[Number.isInteger(x.goals)?rank:'—',byId(x.playerId).name,x.club,x.goals,x.played]}});
+  if(records.length)rankTable(['Pos.','Jugador','Club','Gols','PJ'],records,id);else root.append(el('p','zok-jp-note','No hi ha golejadors disponibles.'));
+ }
+ if(own.some(m=>m.position==='goalkeeper'))keeperRanking(peers,id);
+}
 
 function teamScore(a){
   const f=a.fixture;
@@ -81,18 +114,18 @@ function keeperBlock(matches,sp,detail){
  root.append(el('p','zok-jp-note','Cobertura: '+k.n+' de '+k.acts+' actes amb resultat. GF i GC són els de l’equip en partits on el porter consta a l’acta, no gols individuals encaixats. Les mitjanes divideixen pels partits amb resultat.'));
  if(detail)root.append(card(el('p','zok-jp-note','Aturades, minuts, gols encaixats individuals i percentatge d’aturades: — (no verificats). No s’infereixen del marcador.')));
 }
-function keeperRanking(selected,id){
- const groups=new Map();
- for(const x of D.memberships.filter(x=>x.position==='goalkeeper'&&selected.some(y=>x.leagueId===y.leagueId&&x.groupName===y.groupName))){if(!groups.has(x.playerId))groups.set(x.playerId,[]);groups.get(x.playerId).push(x)}
+function keeperRanking(peers,id){
  root.append(el('h3','zok-jp-gold','🥅 Comparativa de porters'),el('p','zok-jp-note','Ordenat per GC de l’equip / partit amb resultat. No és un rànquing d’aturades ni de rendiment individual. Es mostra la cobertura.'));
- const peers=[...groups].map(([pid,ms])=>({pid,k:keeperStats(uniqueMatches(ms,pid))})).filter(x=>x.k.n).sort((a,b)=>a.k.avgGC-b.k.avgGC||b.k.n-a.k.n||byId(a.pid).name.localeCompare(byId(b.pid).name,'ca'));
- if(!peers.length)root.append(el('p','zok-jp-note','No hi ha resultats verificats per comparar.'));
- for(const x of peers){const n=card(el('strong','',byId(x.pid).name+' · '+decimal(x.k.avgGC)+' GC/partit equip'),el('p','zok-jp-note',x.k.n+'/'+x.k.acts+' actes amb resultat · '+x.k.gc+' GC equip'));if(x.pid===id)n.style.borderColor='#fbc252';root.append(n)}
+ const ranked=rankGroups(peers.filter(m=>m.position==='goalkeeper')).map(x=>({...x,k:keeperStats(uniqueMatches(x.ms,x.playerId))}));
+ ranked.sort((a,b)=>(a.k.avgGC??Infinity)-(b.k.avgGC??Infinity)||b.k.n-a.k.n||byId(a.playerId).name.localeCompare(byId(b.playerId).name,'ca'));
+ let rank=0,last;const records=ranked.map((x,i)=>{if(x.k.avgGC!==last)rank=i+1;last=x.k.avgGC;return {playerId:x.playerId,cells:[x.k.n?rank:'—',byId(x.playerId).name,x.club,x.k.gf,x.k.gc,x.played,decimal(x.k.avgGC),x.k.n+'/'+x.k.acts]}});
+ if(records.length)rankTable(['Pos.','Porter','Club','GF','GC','PJ','GC/partit','Actes'],records,id);else root.append(el('p','zok-jp-note','No hi ha resultats verificats per comparar.'));
 }
+
 async function renderProfile(){const id=active,p=byId(id);if(!p)return;const rows=D.list(id),m=rows.find(x=>key(x)===membershipKey)||rows[0];const all=membershipKey===ALL;membershipKey=all?ALL:key(m);const selected=all?rows:[m],match=uniqueMatches(selected,id),sp=all?aggregate(rows):m.sports;const keeperRows=selected.filter(x=>x.position==='goalkeeper'),fieldRows=selected.filter(x=>x.position==='field'),keeper=keeperRows.length>0;const positions=[...new Set(selected.map(x=>x.position))];const position=positions.length!==1?'Diverses posicions':positions[0]==='goalkeeper'?'Porter':positions[0]==='field'?'Jugador de pista':'Posició no verificada';root.replaceChildren();const head=el('div','zok-jp-profile-title');head.append(btn('← Cercador',back),star(id,renderProfile));root.append(head);
 const hero=el('div','zok-jp-hero'),avatarHost=el('div'),info=el('div');hero.append(avatarHost,info);info.append(el('h2','',p.name),el('p','zok-jp-gold','Dorsal '+(sp.number??'—')+' · '+position),el('p','zok-jp-note',(p.birthYear??'—')+' · '+m.seasonName),el('p','zok-jp-note',(all?'Tots els equips · '+rows.length+' vinculacions':m.clubName+' · '+m.groupName)));root.append(hero);avatar(id,true).then(a=>avatarHost.replaceChildren(a));
 const controls=el('div','zok-jp-photo-controls'),input=el('input');input.type='file';input.accept='image/*';input.hidden=true;const message=el('p','zok-jp-note','Foto privada en aquest dispositiu. No s’envia al servidor.');input.onchange=async()=>{try{await photo(id,'put',await imageBlob(input.files[0]));if(active===id)renderProfile()}catch(e){message.textContent=e.message||'No s’ha pogut desar la foto.'}finally{input.value=''}};const photoButton=btn('',()=>input.click(),'zok-jp-btn zok-jp-camera');photoButton.title='Pujar imatge';photoButton.setAttribute('aria-label','Pujar imatge');const camera=document.createElementNS('http://www.w3.org/2000/svg','svg');camera.setAttribute('viewBox','0 0 24 24');camera.setAttribute('fill','none');camera.setAttribute('stroke','currentColor');camera.setAttribute('stroke-width','1.8');camera.setAttribute('stroke-linejoin','round');camera.setAttribute('aria-hidden','true');const outline=document.createElementNS(camera.namespaceURI,'path');outline.setAttribute('d','M3 7h4l2-3h6l2 3h4v13H3z');const lens=document.createElementNS(camera.namespaceURI,'circle');lens.setAttribute('cx','12');lens.setAttribute('cy','13');lens.setAttribute('r','4');camera.append(outline,lens);photoButton.append(camera,el('span','','Pujar imatge'));controls.append(photoButton,btn('Eliminar foto',async()=>{try{await photo(id,'delete');if(active===id)renderProfile()}catch{message.textContent='No s’ha pogut eliminar la foto.'}}),input);root.append(controls,message);
-const label=el('label','','Equip i competició'),sel=el('select');const totalOption=el('option','','Tots els equips');totalOption.value=ALL;sel.append(totalOption);rows.forEach(x=>{const o=el('option','',x.teamName+' · '+x.groupName);o.value=key(x);sel.append(o)});sel.value=membershipKey;sel.onchange=()=>{membershipKey=sel.value;renderProfile()};label.append(sel);root.append(label);if(!D.preview&&m.profileUrl&&!all){const l=el('a','zok-jp-btn','Fitxa FECAPA');l.href=m.profileUrl;l.target='_blank';l.rel='noopener';root.append(l)}
+const label=el('label','','Equip i competició'),sel=el('select');sel.id='jp-membership';const totalOption=el('option','','Tots els equips');totalOption.value=ALL;sel.append(totalOption);rows.forEach(x=>{const o=el('option','',x.teamName+' · '+x.groupName);o.value=key(x);sel.append(o)});sel.value=membershipKey;sel.onchange=()=>{membershipKey=sel.value;rankingCategory='';renderProfile()};label.append(sel);root.append(label);if(!D.preview&&m.profileUrl&&!all){const l=el('a','zok-jp-btn','Fitxa FECAPA');l.href=m.profileUrl;l.target='_blank';l.rel='noopener';root.append(l)}
 const nav=el('div','zok-jp-segment zok-jp-profile-tabs');['Resum','Partits','Equips','Estadístiques','Rànquings'].forEach(t=>{const b=btn(t,()=>{tab=t;renderProfile()});b.setAttribute('aria-pressed',String(t===tab));nav.append(b)});root.append(nav);
 if((tab==='Resum'||tab==='Estadístiques')&&keeper){
  keeperBlock(match,aggregate(keeperRows),tab==='Estadístiques');
@@ -101,8 +134,7 @@ if((tab==='Resum'||tab==='Estadístiques')&&keeper){
 else if(tab==='Resum'||tab==='Estadístiques'){const grid=el('div','zok-jp-grid');const ratio=sp.played>0&&Number.isInteger(sp.goals)?(sp.goals/sp.played).toLocaleString('ca',{minimumFractionDigits:2,maximumFractionDigits:2}):undefined;[['PJ',sp.played],['Gols',sp.goals],['Gols/PJ',ratio],['Assist.',sp.assists],['Grogues',sp.yellowCards],['Blaves',sp.blueCards],['Vermelles',sp.redCards],['Capità (actes)',match.filter(a=>a.captain).length],['Consta a l’acta',match.length]].forEach(x=>grid.append(stat(...x)));root.append(grid);if(all)root.append(el('p','zok-jp-note','Totals de competicions diferents · — si falten dades o hi ha solapaments.'));if(tab==='Resum'&&match.some(a=>Number.isInteger(a.stats.goals))){root.append(el('h3','','Evolució golejadora · actes disponibles'));const spark=el('div','zok-jp-spark');for(const a of [...match].reverse().filter(a=>Number.isInteger(a.stats.goals))){const col=el('div','',String(a.stats.goals));col.style.height=Math.max(12,Math.min(100,a.stats.goals*24))+'%';spark.append(col)}root.append(spark)}if(tab==='Estadístiques')root.append(card(el('p','zok-jp-note','Penals, faltes directes, aturades i minuts: — (no verificats).')))}
 else if(tab==='Partits'){if(!match.length)root.append(el('p','zok-jp-note','No hi ha partits disponibles per a aquesta vinculació.'));for(const a of match){const matchCard=card(el('strong','',a.fixture.date+' · '+a.fixture.rival+' · '+a.fixture.result),el('p','zok-jp-gold',a.position==='goalkeeper'?(teamScore(a)?'GF equip '+teamScore(a)[0]+' · GC equip '+teamScore(a)[1]:'Resultat no verificat')+(a.participation==='played'?' · Participació confirmada':' · Consta a l’acta'):(a.stats.goals??'—')+' gols · '+(a.stats.assists??'—')+' assist.'),el('p','zok-jp-note',(all?(rows.find(x=>key(x)===key(a))?.groupName||a.teamName)+' · ':'')+'Dorsal '+(a.shirtNumber??'—')+(a.captain?' · Capità':'')+' · '+(a.position==='goalkeeper'?'Porter':a.position==='field'?'Pista':'Posició no verificada')));if(a.actaUrl){const l=el('a','zok-jp-btn','Acta');l.href=a.actaUrl;l.target='_blank';l.rel='noopener';matchCard.append(l)}root.append(matchCard)}}
 else if(tab==='Equips'){for(const x of selected)root.append(card(el('strong','',x.teamName),el('p','zok-jp-gold',x.groupName),el('p','zok-jp-note',(x.sports.played??'—')+' PJ · '+(x.position==='goalkeeper'?'🥅 Porter':(x.sports.goals??'—')+' gols')+' · '+x.seasonName)))}
-else if(keeper){keeperRanking(keeperRows,id);if(fieldRows.length)root.append(el('p','zok-jp-note','Selecciona una vinculació de pista per veure el rànquing de golejadors.'))}
-else {const peers=ranking(D.memberships.filter(x=>selected.some(y=>x.groupName===y.groupName&&x.leagueId===y.leagueId)));root.append(el('p','zok-jp-note',(all?'Rànquing acumulat de les competicions seleccionades':'Rànquing de gols de la competició')+(D.preview?' · mostra':' · dades disponibles, cobertura no garantida')));let rank=0,last=-1;peers.forEach((x,i)=>{if(x.goals!==last)rank=i+1;last=x.goals;const n=card(el('strong','',rank+'. '+byId(x.playerId).name+' · '+x.goals+' G'));if(x.playerId===id)n.style.borderColor='#fbc252';root.append(n)})}}
+else renderCategoryRanking(selected,id)}
 $('jp-favs').onclick=()=>{scope='favorites';searchInput.value='';renderList()};$('jp-all').onclick=()=>{scope='all';searchInput.value='';renderList()};searchInput.oninput=renderList;searchInput.addEventListener('keydown',e=>{if(e.key==='Escape'){searchInput.value='';renderList()}else if(e.key==='Enter'&&!suggestions.hidden){const first=suggestions.querySelector('.zok-jp-row-main');if(first){e.preventDefault();first.click()}}});['jp-club','jp-team','jp-category','jp-position'].forEach(k=>$(k).onchange=()=>{filterOptions();renderList()});filterOptions();renderList();
 window.addEventListener('zonaok:jugadors-loaded',()=>{active=null;profile.hidden=true;search.hidden=false;filterOptions();renderList()});
 window.addEventListener('pageshow',e=>{if(e.persisted)active?renderProfile():renderList()});

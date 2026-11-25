@@ -52,3 +52,17 @@
 .zok-jp-search-results>.zok-jp-note{padding:2px 6px;margin:5px 0}
 .zok-jp-search-choice{display:flex;align-items:center;gap:5px;padding:7px 8px;background:#102e47;border-radius:7px;margin:3px 0;min-width:0}
 .zok-jp-search-choice strong{font-size:13px;line-height:1.3}.zok-jp-search-choice small{font-size:11px;color:#b5c7d7;line-height:1.3;margin-top:3px}.zok-jp-search-choice .zok-jp-star{flex:0 0 auto}
+
+/* Rànquing per categoria: taula compacta amb el jugador consultat destacat. */
+.zok-jp-ranking-filter{margin:10px 0 7px}
+.zok-jp-ranking-filter select{margin-top:4px}
+.zok-jp-rank-wrap{width:100%;max-width:100%;overflow-x:auto;border:1px solid #45627a;border-radius:10px;background:#102e47;margin:8px 0 14px}
+.zok-jp-rank-table{width:100%;border-collapse:collapse;font-size:12px;line-height:1.3;text-align:left;font-variant-numeric:tabular-nums}
+.zok-jp-rank-table th{background:#214762;color:#e7f2fb;padding:9px 5px;white-space:nowrap;font-weight:750}
+.zok-jp-rank-table td{padding:9px 5px;border-top:1px solid #35516b;overflow-wrap:anywhere}
+.zok-jp-rank-table th:first-child,.zok-jp-rank-table td:first-child,.zok-jp-rank-table th:nth-child(n+4),.zok-jp-rank-table td:nth-child(n+4){text-align:center;white-space:nowrap}
+.zok-jp-rank-name{font-weight:700;min-width:80px}
+.zok-jp-rank-table td:nth-child(3){font-size:11px;color:#b9cddd;min-width:60px}
+.zok-jp-rank-table .zok-jp-rank-current{background:#294965;outline:1px solid #fbc252;outline-offset:-1px}
+.zok-jp-rank-table .zok-jp-rank-current td:first-child{color:#fbc252;font-weight:800}
+@media(max-width:380px){.zok-jp-rank-table{font-size:11px}.zok-jp-rank-table td,.zok-jp-rank-table th{padding:7px 4px}}
