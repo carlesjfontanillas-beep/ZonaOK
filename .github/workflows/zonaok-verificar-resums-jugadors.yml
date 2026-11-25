@@ -1,0 +1,24 @@
+name: 'ZonaOK - Verificar resums jugadors'
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'zonaok-player-totals.js'
+      - 'jugadors.js'
+      - 'jugadors.html'
+      - 'tests/test_player_totals.cjs'
+      - '.github/workflows/zonaok-verificar-resums-jugadors.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check jugadors.js
+      - run: node --check zonaok-player-totals.js
+      - run: node tests/test_player_totals.cjs
