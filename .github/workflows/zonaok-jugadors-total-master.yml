@@ -29,6 +29,10 @@ jobs:
       - run: python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
       - run: python -m playwright install --with-deps chromium
       - run: python -m unittest discover -s tests -p 'test_jugadors*.py' -v
+      - name: Bloqueig preventiu de la importació massiva
+        run: |
+          echo "Importació total aturada fins a configurar i verificar un destí privat persistent."
+          exit 1
       - name: Importar inventari complet i validar JSON temporal
         run: xvfb-run -a python scripts/zonaok_jugadors_total_master.py --catalog catalog --budget-minutes 330
       - name: Diagnòstic agregat (mai el master)

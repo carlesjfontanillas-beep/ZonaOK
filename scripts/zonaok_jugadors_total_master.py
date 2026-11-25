@@ -68,6 +68,15 @@ def link_memberships(doc):
         if len(options)==1:a["teamFilterId"]=next(iter(options));linked+=1
     return linked
 
+async def fetch_acta_retry(ctx,l,m):
+    result=([],[],"not_attempted")
+    for attempt in range(3):
+        result=await fetch_acta(ctx,l,m)
+        summary,official,error=result
+        if error in ("http_403","http_429","http_503") or (summary and official):return result
+        if attempt<2:await asyncio.sleep(3*(attempt+1))
+    return result
+
 async def all_actes(acts,doc,report,checkpoint,deadline):
     queue=asyncio.Queue()
     for item in acts:queue.put_nowait(item)
@@ -80,7 +89,7 @@ async def all_actes(acts,doc,report,checkpoint,deadline):
                 try:l,m=queue.get_nowait()
                 except asyncio.QueueEmpty:break
                 try:
-                    summary,official,error=await fetch_acta(ctx,l,m)
+                    summary,official,error=await fetch_acta_retry(ctx,l,m)
                     if error in ("http_403","http_429","http_503"):
                         stop.set()
                     if summary:
@@ -144,7 +153,7 @@ async def run(a,private):
     report["master"]={"schemaValid":True,"roundTrip":True,"players":len(doc["players"]),"memberships":len(doc["memberships"]),"appearances":len(doc["matchAppearances"]),"jsonBytes":checkpoint.stat().st_size,"fieldCoverage":dict(collections.Counter(k for r in doc["matchAppearances"].values() for k in ("shirtNumber","position","captain","teamFilterId") if k in r)),"statCoverage":dict(collections.Counter(k for r in doc["matchAppearances"].values() for k in r.get("stats",{})))}
     report["rosters"]={"leaguesAttempted":len(report["leagues"]),"leaguesWithTeams":sum(x["teamsObserved"]>0 for x in report["leagues"]),"teamsSelected":sum(x["teamsSelected"] for x in report["leagues"]),"teamsObserved":sum(x["teamsObserved"] for x in report["leagues"]),"errors":sum(x["errors"] for x in report["leagues"])}
     # Keep only public match/league IDs and aggregate diagnostics; strip detailed roster probes.
-    report["leagues"]=[{k:v for k,v in x.items() if k in ("leagueId","filters","teamsSelected","teamsObserved","membershipsObserved","errors","discoveredFilters")} for x in report["leagues"]]
+    report["leagues"]=[{k:v for k,v in x.items() if k in ("leagueId","filters","teamsSelected","teamsObserved","membershipsObserved","errors","discoveredFilters","failedTeamFilters")} for x in report["leagues"]]
     report["profileEnrichment"]="not_run_separate_phase"
     report["finishedAt"]=now()
     report["coverageComplete"]=not catalog_errors and report["acts"]["attempted"]==len(acts) and not report["acts"]["failures"] and report["rosters"]["leaguesAttempted"]==len(leagues) and report["rosters"]["teamsObserved"]==report["rosters"]["teamsSelected"] and not report["rosters"]["errors"] and not report["rosterErrors"]

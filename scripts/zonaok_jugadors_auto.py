@@ -551,10 +551,12 @@ async def collect(a,leagues,doc,report):
                             await page.close()
                         if accepted:break
                         await asyncio.sleep(attempt)
-                    if not accepted:lr["errors"]+=1;continue
+                    if not accepted:
+                        lr["errors"]+=1;lr.setdefault("failedTeamFilters",[]).append(team);continue
                     n=merge(doc,league,team,accepted["rows"],filters[team],now())
                     lr["links"]+=accepted["links"];lr["missingNames"]+=accepted["missing"];lr["birthLabelTeams"]+=int(accepted["birthLabel"])
                     lr["membershipsObserved"]+=n;lr["teamsObserved"]+=int(n>0);lr["errors"]+=int(n==0)
+                    if n==0:lr.setdefault("failedTeamFilters",[]).append(team)
                     hc=lr.setdefault("sportsHeaderCounts",{})
                     for k,v in accepted["headerCounts"].items():hc[k]=hc.get(k,0)+v
                     lr["duplicateLinks"]=lr.get("duplicateLinks",0)+accepted["links"]-len(accepted["rows"])
