@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b46">
+  <title>Notificacions de prova · ZonaOK</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon-192.png">
+  <style>
+    :root{color-scheme:light dark;--bg:#102b46;--card:#fff;--ink:#17212b;--muted:#5c6873;--accent:#e48b2a;--line:#dce3e9}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#102b46,#1d4564);font:16px/1.5 system-ui,-apple-system,sans-serif;color:#fff;min-height:100vh;padding:24px 16px}
+    main{width:min(100%,620px);margin:6vh auto}.brand{font-size:14px;opacity:.8;letter-spacing:.08em;text-transform:uppercase}h1{font-size:clamp(30px,8vw,44px);line-height:1.1;margin:.4em 0}p{margin:.65em 0}.card{background:var(--card);color:var(--ink);border-radius:22px;padding:clamp(20px,5vw,32px);box-shadow:0 18px 50px #0003;margin:24px 0}.note{color:var(--muted);font-size:14px}.status{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:18px 0;min-height:48px}.actions{display:grid;gap:10px;margin-top:18px}button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:13px 16px;min-height:48px;cursor:pointer;background:var(--accent);color:#25190b}button.secondary{background:#e8eef3;color:#17212b}button:disabled{opacity:.5;cursor:not-allowed}a{color:inherit}.card a{color:#155783}footer{font-size:13px;opacity:.8}.hidden{display:none!important}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">ZonaOK · prova controlada</div>
+    <h1>Notificacions</h1>
+    <p>Aquesta pàgina només permet registrar aquest dispositiu i enviar-hi una notificació de prova quan tu ho demanis.</p>
+    <section class="card" aria-labelledby="push-title">
+      <h2 id="push-title">Prova en aquest dispositiu</h2>
+      <p class="note">El permís del navegador només es demana quan prems el botó. El servidor no envia avisos de partits: les notificacions esportives generals continuen desactivades.</p>
+      <div id="push-status" class="status" role="status" aria-live="polite">Comprovant si aquest dispositiu admet notificacions…</div>
+      <div class="actions">
+        <button id="enable-push" type="button">Permet les notificacions de prova</button>
+        <button id="test-push" class="secondary hidden" type="button">Envia’m una prova ara</button>
+        <button id="disable-push" class="secondary hidden" type="button">Desactiva-les en aquest dispositiu</button>
+      </div>
+      <p class="note">A l’iPhone o l’iPad, afegeix primer ZonaOK a la pantalla d’inici i obre’l des d’allà. Pots retirar el permís després des dels ajustos del dispositiu.</p>
+    </section>
+    <p><a href="./index.html">Torna a ZonaOK</a></p>
+    <footer>Servei de prova. No activa seguiment de partits ni subscripcions esportives.</footer>
+  </main>
+  <script type="module">
+    import { pushStatus, enablePush, testPush, disablePush } from './zonaok-push-client.js';
+    const config = {
+      api: 'https://zonaok-push.carles-j-fontanillas.workers.dev',
+      publicKey: 'BOCyjlpx0e7o6RNcjowDmf5ceBwoO4shUh0JcmIYxCruRzauTVwMOhANs8puiJ0YaW50_gxUMbqynarl71YyT5s'
+    };
+    const status = document.querySelector('#push-status');
+    const enable = document.querySelector('#enable-push');
+    const test = document.querySelector('#test-push');
+    const disable = document.querySelector('#disable-push');
+    function render(message) {
+      const state = pushStatus();
+      if (message) status.textContent = message;
+      else if (!state.supported) status.textContent = 'Aquest navegador no admet Web Push. A l’iPhone/iPad cal obrir ZonaOK des de la pantalla d’inici.';
+      else if (state.configuredDevice) status.textContent = 'Aquest dispositiu està preparat per a una notificació de prova.';
+      else status.textContent = state.permission === 'denied' ? 'El permís està bloquejat als ajustos del navegador.' : 'Aquest dispositiu encara no està registrat.';
+      enable.classList.toggle('hidden', !state.supported || state.configuredDevice || state.permission === 'denied');
+      test.classList.toggle('hidden', !state.configuredDevice);
+      disable.classList.toggle('hidden', !state.configuredDevice);
+    }
+    async function run(button, action, success) {
+      button.disabled = true;
+      try { await action(); render(success); }
+      catch (error) { render(error?.message || 'No s’ha pogut completar l’acció.'); }
+      finally { button.disabled = false; }
+    }
+    enable.addEventListener('click', () => run(enable, () => enablePush(config, {}), 'Dispositiu registrat. Prem “Envia’m una prova ara” quan vulguis comprovar l’avís.'));
+    test.addEventListener('click', () => run(test, () => testPush(config), 'Prova enviada a aquest dispositiu.'));
+    disable.addEventListener('click', () => run(disable, () => disablePush(config), 'Notificacions desactivades en aquest dispositiu.'));
+    render();
+  </script>
+</body>
+</html>
