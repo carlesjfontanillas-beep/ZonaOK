@@ -1,0 +1,20 @@
+name: 'ZonaOK - Verificar classificacions favorites'
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'zonaok-standing-scope.js'
+      - 'tests/test_standing_scope.cjs'
+      - '.github/workflows/zonaok-verificar-classificacions-favorits.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/test_standing_scope.cjs

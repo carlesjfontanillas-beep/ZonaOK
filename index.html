@@ -227,6 +227,9 @@ body.zok-ui-home .zok-ui-home-section .section-head h2{font-size:16px!important}
 /* Capçalera més compacta als menús CP Sant Celoni, Barça i classificacions. */
 .zok-standing-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0 7px}
 .zok-standing-filters[hidden]{display:none!important}
+.zok-standing-scope{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.zok-standing-scope button{min-height:38px;border:1px solid #7597b0;border-radius:11px;padding:8px;background:#183d5b;color:#fff;font:inherit;font-size:12px;font-weight:800}
+.zok-standing-scope button[aria-pressed="true"]{background:#fbc252;color:#10283c;border-color:#fbc252}
 .zok-standing-filters label{display:grid;gap:6px;color:#b9dbec;font-size:12px;font-weight:850;min-width:0}
 .zok-standing-filters input{width:100%;min-width:0;padding:12px 8px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fff;font:inherit;font-size:12px}
 .zok-standing-filters .zok-suggest-wrap{position:relative;min-width:0}
@@ -285,6 +288,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-actions {
 <style id="zonaok-favorite-title-gold">
 /* Nom daurat, categoria/equip i separador amb el color original. */
 #results-title .zok-title-name{color:#fbc252!important}
+body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-title{color:#fbc252!important;text-transform:uppercase}
 </style>
 <style id="zonaok-single-row-favorites-nav">
   .navgrid{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:4px!important}
@@ -424,6 +428,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
 </style>
 <script src="zonaok-acta-links.js?v=20261125-acta1"></script>
 <script src="zonaok-nav-shared.js?v=20261125-color-icona1"></script>
+<script src="zonaok-standing-scope.js?v=20261125-favorits1"></script>
 <link rel="stylesheet" href="zonaok-push-header.css?v=20261125-push6-page">
 </head>
 <body>
@@ -481,6 +486,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
     <p id="results-note" class="helper"></p>
     <p id="results-read-at" class="helper zok-read-at" hidden></p>
     <div id="standings-filters" class="zok-standing-filters" hidden>
+      <div class="zok-standing-scope" role="group" aria-label="Àmbit de les classificacions"><button type="button" id="standing-favorites" aria-pressed="true">★ Equips favorits</button><button type="button" id="standing-all" aria-pressed="false">Totes</button></div>
       <label for="standing-club-filter">Club<input type="search" id="standing-club-filter" placeholder="Tots els clubs" aria-label="Filtra la classificació per club" autocomplete="off" spellcheck="false"></label>
       <label for="standing-category-filter">Categoria<input type="search" id="standing-category-filter" placeholder="Totes les categories" aria-label="Filtra la classificació per categoria" autocomplete="off" spellcheck="false"></label>
       <label for="standing-competition-filter">Competició<input type="search" id="standing-competition-filter" placeholder="Totes les competicions" aria-label="Filtra la classificació per competició" autocomplete="off" spellcheck="false"></label>
@@ -515,7 +521,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
   <div class="zok-nav-scroll" aria-label="Clubs i equips favorits"><div class="navgrid" id="zok-nav-favorites"></div></div>
   <span class="zok-nav-divider" aria-hidden="true"></span>
   <div class="zok-nav-fixed">
-    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>▤</span><strong>Classificacions</strong><small id="zonaok-classificacions-count">Carregant…</small></button>
+    <button data-tab="classificacions" class="navbtn" aria-label="Classificacions" title="Classificacions"><span>🏆</span><strong>Classificacions</strong><small id="zonaok-classificacions-count">Carregant…</small></button>
   </div>
 </nav>
 <dialog id="guide">
@@ -2092,10 +2098,17 @@ function zonaokStandingSuggestions(input,values){
   }
   input._zokStandingSuggest([...new Set(values)].filter(Boolean).sort((a,b)=>a.localeCompare(b,'ca',{sensitivity:'base'})));
 }
+let standingScope='favorites';
+function setStandingScope(scope,clear=false){
+  standingScope=scope==='all'?'all':'favorites';
+  $('#standing-favorites').setAttribute('aria-pressed',String(standingScope==='favorites'));
+  $('#standing-all').setAttribute('aria-pressed',String(standingScope==='all'));
+  if(clear)for(const id of ['standing-club-filter','standing-category-filter','standing-competition-filter'])document.getElementById(id).value='';
+}
 function renderClassificationSection(box){
   const root=$$('#standings-filters'),club=$$('#standing-club-filter'),category=$$('#standing-category-filter'),competition=$$('#standing-competition-filter');
   root.hidden=false;
-  const entries=Object.entries(store.classifications||{}).map(([id,item])=>({id,name:String(item.name||id),category:String(item.category||zonaokStandingCategory(item.name||id)),competition:String(item.competition||zonaokStandingCompetition(item.name||id)),rows:item.standings||[],standingsAt:item.standingsAt||item.capturedAt||''}));
+  let entries=Object.entries(store.classifications||{}).map(([id,item])=>({id,name:String(item.name||id),category:String(item.category||zonaokStandingCategory(item.name||id)),competition:String(item.competition||zonaokStandingCompetition(item.name||id)),rows:item.standings||[],standingsAt:item.standingsAt||item.capturedAt||''}));
   const loaded=entries.filter(e=>e.rows.length).length;
   const navCount=document.querySelector('[data-tab="classificacions"] small');
   if(navCount)navCount.textContent=loaded?loaded+' grups':'Sense importar';
@@ -2108,6 +2121,14 @@ function renderClassificationSection(box){
   }
 
   for(const id of Object.keys(LEAGUES))if(!entries.some(entry=>entry.id===id||entry.id.startsWith(id+':'))&&(store[id]?.standings||[]).length)entries.push({id,name:LEAGUES[id].name,category:zonaokStandingCategory(LEAGUES[id].name),competition:zonaokStandingCompetition(LEAGUES[id].name),rows:store[id].standings,standingsAt:store[id].standingsAt||''});
+  const favorites=zonaokFavoriteState();
+  const favTeams=(favorites.teams||[]).map(id=>zonaokFavoriteTeamFromId(id,favorites)).filter(Boolean);
+  const allEntries=entries;
+  const scopeResult=window.ZonaOKStandingScope.select(allEntries,favTeams,favorites.teamLeagueIds||{});
+  if(standingScope==='favorites')entries=scopeResult.entries;
+  if(status&&loaded)status.textContent=standingScope==='favorites'?
+    entries.length+' grups dels equips favorits'+(scopeResult.missing.length?' · '+scopeResult.missing.length+' grups o equips sense coincidència':''):
+    loaded+' grups de classificació carregats del JSON de GitHub.';
   const selectedClub=club.value,selectedCategory=category.value,selectedCompetition=competition.value;
   const matchClub=(entry,row,value)=>!normalize(value)||zonaokStandingQueryMatches(zonaokStandingDisplayName(entry.id,row.team),value)||zonaokStandingQueryMatches(row.team,value);
   const hasClub=(entry,value)=>!normalize(value)||entry.rows.some(row=>matchClub(entry,row,value));
@@ -2137,8 +2158,11 @@ function renderClassificationSection(box){
     for(const row of rows){const team=zonaokStandingDisplayName(entry.id,row.team),highlight=normalize(selectedClub)?matchClub(entry,row,selectedClub):zonaokStandingIsFavorite(entry.id,row.team);const tr=mk('tr',highlight?'highlight':'');const rowTint=window.ZonaOKFavoriteColorForRow?.({home:team,away:'',competition:entry.name,category:entry.category})||'';if(rowTint){tr.style.backgroundColor=rowTint;tr.style.borderLeft='4px solid '+rowTint;}for(const [key] of columns){const value=key==='team'?team:(key.startsWith('stats.')?row.stats?.[key.slice(6)]:row[key]);const td=mk('td','',value??'—');if(key==='team'){td.classList.add('zok-standing-team-name');if(String(value)!==String(row.team||''))td.title='Codi FECAPA: '+row.team;}tr.append(td)}table.append(tr)}
     const wrap=mk('div','standings-wrap');wrap.append(table);box.append(wrap);
   }
-  if(!any&&entries.every(entry=>!entry.rows.length))toast('Importa les classificacions des de Safari.');
-  else if(!any)box.append(mk('div','empty','No hi ha classificacions que coincideixin amb aquests filtres.'));
+  if(!any)box.append(mk('div','empty',!allEntries.some(e=>e.rows.length)?
+    'Encara no hi ha classificacions publicades.':
+    standingScope==='favorites'&&!favTeams.length?'Selecciona equips a Favorits o prem Totes per veure les classificacions.':
+    standingScope==='favorites'&&!entries.length?'No hi ha classificacions disponibles dels equips favorits. Prem Totes per consultar les altres.':
+    'No hi ha classificacions que coincideixin amb aquests filtres.'));
 }
 function zonaokFavoriteState(){try{return JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')}catch(_){return {}}}
 function zonaokFavoriteClub(i){return zonaokFavoriteState().clubs?.[i]||''}
@@ -2236,7 +2260,7 @@ window.ZonaOKShowStanding= function(id){
   }
   quickStandingDialog.showModal();
 };
-function selectSection(key){zonaokConfigureFavoriteNav();showSeason=isSeasonMenu(key);if(key==='home'){section='home';$$('#results-section').classList.add('hide');$$('#home-cards').scrollIntoView({behavior:'smooth',block:'start'});}else{section=key;$$('#results-section').classList.remove('hide');renderSection(key);$$('#results-section').scrollIntoView({behavior:'smooth',block:'start'});}document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.tab===key));}
+function selectSection(key){zonaokConfigureFavoriteNav();if(key==='classificacions')setStandingScope('favorites',true);showSeason=isSeasonMenu(key);if(key==='home'){section='home';$$('#results-section').classList.add('hide');$$('#home-cards').scrollIntoView({behavior:'smooth',block:'start'});}else{section=key;$$('#results-section').classList.remove('hide');renderSection(key);$$('#results-section').scrollIntoView({behavior:'smooth',block:'start'});}document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.tab===key));}
 window.ZonaOKSelectSection=selectSection;
 function escapeICS(v){return String(v||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
 function exportICS(r){if(!r.iso||!r.time)return toast('No hi ha data i hora confirmades');const local=(r.iso.replace(/-/g,'')+'T'+r.time.replace(':','')+'00');const h=+r.time.slice(0,2);const end=(h+2)%24;const next=end<h?plusDays(r.iso,1).replace(/-/g,''):r.iso.replace(/-/g,'');const finish=next+'T'+String(end).padStart(2,'0')+r.time.slice(3,5)+'00';const event=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ZonaOK//FECAPA//CA','BEGIN:VEVENT','UID:zonaok-'+(r.id||Date.now())+'@zonaok.local','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z'),'DTSTART;TZID=Europe/Madrid:'+local,'DTEND;TZID=Europe/Madrid:'+finish,'SUMMARY:'+escapeICS(r.home+' - '+r.away),'LOCATION:'+escapeICS(r.venue||''),'DESCRIPTION:'+escapeICS('Consulta la font FECAPA. Durada provisional de 2 hores.'),'END:VEVENT','END:VCALENDAR'].join('\r\n');const url=URL.createObjectURL(new Blob([event],{type:'text/calendar;charset=utf-8'}));const a=mk('a');a.href=url;a.download='ZonaOK-partit.ics';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);}
@@ -2514,6 +2538,7 @@ $$('#export-shared').onclick=downloadShared;
 $$('#publish-shared').onclick=()=>window.open('https://github.com/carlesjfontanillas-beep/ZonaOK/upload/main','_blank','noopener');
 $$('#reload-shared').onclick=()=>window.ZonaOKRefreshSources?.();
 $$('#guide-button').onclick=()=>$$('#guide').showModal();$$('#guide-close').onclick=()=>$$('#guide').close();$$('#clear-button').onclick=()=>window.ZonaOKRefreshSources?.();$$('#refresh-home').onclick=()=>selectSection('home');$$('#close-results').onclick=()=>selectSection('home');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>selectSection(b.dataset.tab));
+for(const [id,scope] of [['standing-favorites','favorites'],['standing-all','all']])document.getElementById(id).onclick=()=>{setStandingScope(scope,true);if(section==='classificacions')renderSection('classificacions')};
 for(const id of ['standing-club-filter','standing-category-filter','standing-competition-filter'])document.getElementById(id)?.addEventListener('input',()=>{if(section==='classificacions')renderSection('classificacions')});
 $$('#week-prev').onclick=()=>changeWeek(-1);
 $$('#week-next').onclick=()=>changeWeek(1);

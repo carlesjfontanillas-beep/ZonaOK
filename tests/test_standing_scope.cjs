@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),{select}=require('../zonaok-standing-scope.js');
+const data=JSON.parse(fs.readFileSync('zonaok-classificacions.json'));
+const entries=Object.entries(data.competitions).map(([id,x])=>({id,name:x.name,rows:x.standings}));
+const favs=[{id:'a',team:'BARÇA',category:'ALEVI OR 3'},{id:'b',team:'CP SANT CELONI B',category:'INFANTIL OR 10'},{id:'c',team:'CP SANT CELONI B',category:'JUVENIL OR 6'},{id:'d',team:'CP SANT CELONI A',category:'JUVENIL OR 8'}];
+const s=select(entries,favs,{a:'4789',b:'4786',c:'4784',d:'4784'});
+assert.equal(s.entries.length,4);assert.equal(s.missing.length,0);
+assert.deepEqual(s.entries.map(x=>x.name.normalize('NFD').replace(/[\u0300-\u036f]/g,'')).sort(),['ALEVI OR 3','INFANTIL OR 10','JUVENIL OR 6','JUVENIL OR 8'].sort(), 'exact groups');
+assert.equal(select(entries,[]).entries.length,0);
+assert.equal(select(entries,[{id:'x',category:'JUVENIL OR'}],{x:'4784'}).entries.length,0);
+assert.equal(select(entries,[favs[2],favs[2]]).entries.length,1);
+console.log('Proves de classificacions favorites superades');
