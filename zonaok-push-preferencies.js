@@ -112,7 +112,23 @@
   });
   function refresh() { renderTargets(); }
   root.querySelector('details').addEventListener('toggle', refresh);
-  root.querySelector('[data-push-refresh]').addEventListener('click', refresh);
+  const catalogStatus = root.querySelector('[data-push-catalog-status]');
+  const refreshButton = root.querySelector('[data-push-refresh]');
+  window.addEventListener('zonaok:push-catalog-ready', () => {
+    if (catalogStatus) catalogStatus.textContent = 'Catàleg complet carregat.';
+    refreshButton.disabled = false;
+    refresh();
+  });
+  window.addEventListener('zonaok:push-catalog-error', () => {
+    if (catalogStatus) catalogStatus.textContent = 'No s’ha pogut carregar el catàleg. Torna-ho a provar.';
+    refreshButton.disabled = false;
+  });
+  refreshButton.addEventListener('click', () => {
+    if (typeof window.ZonaOKReloadPushCatalog !== 'function') return refresh();
+    if (catalogStatus) catalogStatus.textContent = 'Carregant el catàleg…';
+    refreshButton.disabled = true;
+    window.ZonaOKReloadPushCatalog();
+  });
   window.addEventListener('zonaok:favorites-updated', refresh);
   window.addEventListener('zonaok:team-pickers-rendered', refresh);
   window.addEventListener('pageshow', refresh);
