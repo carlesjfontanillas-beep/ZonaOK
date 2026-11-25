@@ -390,6 +390,7 @@
   async function openResults() {
     document.body.classList.add('zok-recent-mode');
     panel.hidden = false;
+    selectPeriod('past'); // Sempre obrir els darrers set dies en entrar al menú.
     document.querySelectorAll('.bottom .navbtn').forEach(button =>
       button.classList.toggle('active', button === navButton));
     panel.scrollIntoView({block: 'start', behavior: 'auto'});
