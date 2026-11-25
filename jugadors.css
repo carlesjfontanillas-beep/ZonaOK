@@ -29,3 +29,11 @@
 .zok-jp-import-btn svg{width:19px;height:19px}
 .zok-jp-import-btn:disabled{opacity:.5;cursor:wait}
 .zok-jp-import-status{margin:5px 0 8px}
+
+/* Favorits · marge interior coherent amb la capçalera i els altres grups. */
+#jugadors-favorits > :not(h2){margin-inline:14px}
+#jugadors-favorits .zok-jp-note{padding-inline:0}
+#jugadors-favorits > .zok-jp-note{margin-block:12px}
+#jugadors-favorits > .zok-jp-search-line{margin-block:10px}
+#jugadors-favorits .zok-jp-row{margin:6px 0}
+#jugadors-favorits > :last-child{margin-bottom:14px}
