@@ -80,19 +80,20 @@ async function json(path,gzip=false){
  return response.json();
 }
 async function refresh(){
- if(pending)return;pending=true;const button=$('zok-dashboard-refresh'),status=$('zok-dashboard-status');button.disabled=true;status.textContent='Llegint les darreres dades publicades…';
+ if(pending)return false;pending=true;const button=$('zok-dashboard-refresh'),status=$('zok-dashboard-status');button.disabled=true;status.textContent='Llegint les darreres dades publicades…';
  try{
   const names=['Partits','Classificacions','Jugadors'];
   const res=await Promise.allSettled([json('zonaok-tots-partits.json'),json('zonaok-classificacions.json'),json('imports/jugadors-master.json.gz',true)]);
   const data=res.map(x=>x.status==='fulfilled'?x.value:null),failed=res.map((x,i)=>x.status==='rejected'?names[i]:null).filter(Boolean);
   const s=summarize(...data);render(s);
   status.textContent=(s.updatedAt?'Catàleg de partits publicat: '+date(s.updatedAt):'Data del catàleg no disponible')+(failed.length?' · Sense lectura: '+failed.join(', '):'');
- }catch(e){status.textContent='No s’ha pogut actualitzar el resum. Torna a provar.'}
+  return failed.length===0;
+ }catch(e){status.textContent='No s’ha pogut actualitzar el resum. Torna a provar.';return false}
  finally{pending=false;button.disabled=false}
 }
 function mount(){
  if(!$('zok-dashboard-sources'))return;
- sourceCards(summarize(null,null,null));$('zok-dashboard-refresh').onclick=refresh;
+ sourceCards(summarize(null,null,null));$('zok-dashboard-refresh').onclick=refresh;window.ZonaOKRefreshDashboard=refresh;
  let visible=false;const check=()=>{const next=document.body.classList.contains('zok-ui-import');if(next&&!visible)refresh();visible=next};
  new MutationObserver(check).observe(document.body,{attributes:true,attributeFilter:['class']});check();
 }

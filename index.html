@@ -1590,10 +1590,12 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
   let scheduled=false;
   function draw(){
     scheduled=false;
-    const store=read(),list=store.agenda?.rows||[];
-    if(!list.length)return; // Sense agenda, app.js segueix funcionant.
-    // renderHome() de l’app llegeix els favorits guardats i pinta la portada.
     const tab=activeTab();
+    // Els menús actuals els pinta el nucli principal; no clonar i recalcular
+    // tota l'Agenda quan només ha canviat una targeta o el resum ocult.
+    if(document.body.classList.contains('zok-recent-mode')||document.body.classList.contains('zok-ui-import')||!['barca','celoni','grupalevi','grupinfantil'].includes(tab))return;
+    const store=read(),list=store.agenda?.rows||[];
+    if(!list.length)return;
     // MAI passar la llista setmanal a Magi/Ton: la font son totes les files.
     const all=list.map(r=>resolved(r,store));
     drawList(tab,all,store);
@@ -1612,7 +1614,7 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
   }
   /* La càrrega remota centralitzada és ZonaOKRefreshSources, definida més avall. */
   function setup(){
-    for(const selector of ['#home-cards','#results-list','#import-summary']){
+    for(const selector of ['#results-list']){
       const e=$(selector);if(e)new MutationObserver(schedule).observe(e,{childList:true,subtree:true});
     }
     const exportButton=$('#export-shared');if(exportButton)exportButton.addEventListener('click',saveJson,true);
@@ -1673,7 +1675,7 @@ window.ZonaOKCurrentWeek=()=>selectedMonday;
 // V19: Inici i clubs tenen filtre SETMANAL; Magí i Ton sempre TEMPORADA.
 // La setmana seleccionada no pot modificar el filtre de les dues temporades.
 function isSeasonMenu(key){return key==='grupalevi'||key==='grupinfantil'||/^favteam\d+$/.test(key);}
-function isWeekMenu(key){return key==='home'||key==='barca'||key==='celoni';}
+function isWeekMenu(key){return key==='home'||key==='barca'||key==='celoni'||/^favclub\d+$/.test(key);}
 function load(){return window.ZonaOKSafeStorage.read();}
 function save(){store=window.ZonaOKSafeStorage.commit(store);return true}
 function toast(msg){const e=$$('#toast');e.textContent=msg;e.classList.add('visible');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('visible'),5200)}
@@ -1686,7 +1688,8 @@ function changeWeek(weeks){
   if(!Number.isInteger(weeks)||!weeks)return;
   selectedMonday=plusDays(selectedMonday,7*weeks);
   showSeason=isSeasonMenu(section); // Filtre de temporada independent de selectedMonday.
-  render();
+  weekText();
+  if(section==='home')renderHome();else if(isWeekMenu(section))renderSection(section);
 }
 function resetWeek(){
   selectedMonday=mondayISO();
@@ -1694,36 +1697,10 @@ function resetWeek(){
   render();
 }
 function installWeekGestures(){
-  const root=document.querySelector('main.app');
-  if(!root)return;
-  let touch=null;
-  const excluded='a,button,input,select,textarea,summary,[contenteditable],.standings-wrap,.zok-week-nav';
-  root.addEventListener('touchstart',event=>{
-    touch=null;
-    if(event.touches.length!==1||document.querySelector('dialog[open]'))return;
-    if(!isWeekMenu(section))return;
-    const target=event.target;
-    if(target?.closest?.(excluded))return;
-    // Les targetes de partit (role=button) admeten lliscament. La resta de controls, no.
-    const interactive=target?.closest?.('[role="button"]');
-    if(interactive&&!interactive.classList.contains('match'))return;
-    const t=event.touches[0];
-    // Els extrems de Safari estan reservats als gestos de navegació del navegador.
-    if(t.clientX<22||t.clientX>window.innerWidth-22)return;
-    touch={x:t.clientX,y:t.clientY,at:Date.now()};
-  },{passive:true});
-  root.addEventListener('touchcancel',()=>{touch=null;},{passive:true});
-  root.addEventListener('touchend',event=>{
-    if(!touch||event.changedTouches.length!==1)return;
-    const t=event.changedTouches[0],dx=t.clientX-touch.x,dy=t.clientY-touch.y;
-    const elapsed=Date.now()-touch.at;
-    touch=null;
-    // No confondre el desplaçament vertical o un toc amb un canvi de setmana.
-    if(elapsed>1000||Math.abs(dx)<65||Math.abs(dx)<Math.abs(dy)*1.4)return;
-    // Esquerra = setmana SEGÜENT; dreta = setmana ANTERIOR.
-    event.preventDefault(); // Evita que el lliscament també obri el modal d'acta.
-    changeWeek(dx<0?1:-1);
-  },{passive:false});
+  window.ZonaOKWeekGesture={
+    enabled:()=>isWeekMenu(section)&&!document.body.classList.contains('zok-recent-mode')&&!document.body.classList.contains('zok-ui-import'),
+    change:changeWeek
+  };
 }
 
 function plusDays(s,n){const d=new Date(s+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)}
@@ -2494,7 +2471,7 @@ async function loadActesJSON(){
 function downloadShared(){const packet={version:3,publishedAt:new Date().toISOString(),data:load()};const a=mk('a');const url=URL.createObjectURL(new Blob([JSON.stringify(packet,null,2)],{type:'application/json'}));a.href=url;a.download='zonaok-data.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);toast('Fitxer preparat. Puja zonaok-data.json a l\u2019arrel del repositori i confirma el commit.');}
 async function loadShared(){
  try {
-  const response=await fetch('zonaok-tots-agenda.json?t='+Date.now(),{cache:'no-store'});
+  const response=await fetch('zonaok-tots-agenda.json',{cache:'no-cache'});
   if(!response.ok)throw Error('No s’ha pogut carregar l’agenda total ('+response.status+')');
   const packet=await response.json();
   if(packet?.schema!=='zonaok-all-v1'||packet?.kind!=='agenda'||!Array.isArray(packet.rows)||!packet.rows.length||packet.rows.length>30000)throw Error('L’agenda total no conté partits vàlids');
@@ -2635,8 +2612,7 @@ window.ZonaOKRefreshSources=async function(){
       let error='';
       try{
         const url=new URL('zonaok-classificacions.json',document.baseURI);
-        url.searchParams.set('zonaok_v278',String(Date.now()));
-        const response=await fetch(url.href,{cache:'no-store'});
+        const response=await fetch(url.href,{cache:'no-cache'});
         if(!response.ok)throw Error('JSON unificat: HTTP '+response.status);
         const data=await response.json();
         if(!has(data)||!['zonaok-classificacions-v1','zonaok-classificacions-v2'].includes(data.schema))
@@ -2728,72 +2704,11 @@ window.ZonaOKRefreshSources=async function(){
   },{once:true});
 })();
 </script>
-<script id="zonaok-pull-refresh-v23">
-/* Safari iPhone · estirar avall per reconsultar els JSON de GitHub.
-   Sense emmagatzematge local persistent; gest horitzontal de setmanes intacte. */
-(function(){
- 'use strict';
- const status=document.createElement('div');
- status.id='zok-pull-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
- status.textContent='↓ Estira per actualitzar';
- const css=document.createElement('style');css.textContent=`
- #zok-pull-status{position:fixed;top:max(9px,env(safe-area-inset-top));left:50%;transform:translate(-50%,-130%);z-index:9999;background:#06243e;color:#f6fbff;border:1px solid #6e9db6;box-shadow:0 6px 22px #0004;border-radius:22px;padding:9px 15px;font-size:13px;font-weight:700;transition:transform .18s ease;max-width:92vw;text-align:center;pointer-events:none}
- #zok-pull-status.zok-visible{transform:translate(-50%,0)}
- #zok-pull-status.zok-loading{background:#0b3d60}
- `;document.head.append(css);document.body.append(status);
- let start=null,refreshing=false,hideTimer;
- function display(message,loading=false){clearTimeout(hideTimer);status.textContent=message;status.classList.add('zok-visible');status.classList.toggle('zok-loading',loading);if(!loading)hideTimer=setTimeout(()=>status.classList.remove('zok-visible'),3200);}
- async function refresh(){
-   if(refreshing)return;refreshing=true;
-   display('Actualitzant dades…',true);
-   try{
-     // Netejar només les entrades de cache HTTP de ZonaOK, mai altres projectes.
-     if('caches' in window){
-       // Un domini GitHub Pages pot contenir altres projectes: esborrem
-       // només entrades del directori /ZonaOK/, no caches d'altres apps.
-       const prefix=new URL('.',location.href).pathname;
-       for(const name of await caches.keys()){
-         const cache=await caches.open(name);
-         const requests=await cache.keys();
-         const ours=requests.filter(req=>{try{const u=new URL(req.url);return u.origin===location.origin&&u.pathname.startsWith(prefix);}catch(_){return false;}});
-         await Promise.all(ours.map(req=>cache.delete(req)));
-       }
-     }
-     const updated=typeof window.ZonaOKRefreshSources==='function'&&await window.ZonaOKRefreshSources();
-     display(updated?'JSON de GitHub actualitzats':'No s’han pogut carregar els JSON · Sense canvis');
-   }catch(_){display('Error de connexió · Es manté la vista actual');}
-   finally{refreshing=false;}
- }
- const ignore='input,textarea,select,[contenteditable="true"],dialog[open]';
- document.addEventListener('touchstart',e=>{
-   start=null;
-   if(refreshing||e.touches.length!==1||window.scrollY>8||e.target.closest?.(ignore))return;
-   const t=e.touches[0]; start={x:t.clientX,y:t.clientY,at:Date.now()};
- },{passive:true});
- document.addEventListener('touchmove',e=>{
-   if(!start||e.touches.length!==1)return;
-   const t=e.touches[0],dx=t.clientX-start.x,dy=t.clientY-start.y;
-   if(dy>25&&dy>Math.abs(dx)*1.6&&window.scrollY<10){
-     display(dy>=95?'↑ Deixa anar per actualitzar':'↓ Estira per actualitzar',false);
-     if(e.cancelable)e.preventDefault();
-   }
- },{passive:false});
- document.addEventListener('touchend',e=>{
-   if(!start||e.changedTouches.length!==1)return;
-   const t=e.changedTouches[0],dx=t.clientX-start.x,dy=t.clientY-start.y;
-   start=null;
-   if(dy>=95&&dy>Math.abs(dx)*1.6&&window.scrollY<=10){e.preventDefault();refresh();}
-   else if(!refreshing)status.classList.remove('zok-visible');
- },{passive:false});
- document.addEventListener('touchcancel',()=>{start=null;if(!refreshing)status.classList.remove('zok-visible');},{passive:true});
- // Alternativa per a escriptori o navegadors sense control gestual.
- window.ZonaOKPullRefresh=refresh;
-})();
-</script>
-  <script defer src="zonaok-resultats-7dies.js?v=20261125-proximament2"></script>
+<script defer src="zonaok-gestos.js?v=20261125-gestos1"></script>
+  <script defer src="zonaok-resultats-7dies.js?v=20261125-gestos1"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
   <script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script>
   <link rel="stylesheet" href="zonaok-actualitzacions.css?v=20261125-dashboard1">
-  <script defer src="zonaok-actualitzacions.js?v=20261125-dashboard1"></script>
+  <script defer src="zonaok-actualitzacions.js?v=20261125-gestos1"></script>
 </body>
 </html>

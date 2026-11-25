@@ -1,0 +1,25 @@
+name: 'ZonaOK - Verificar gestos'
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'zonaok-gestos.js'
+      - 'tests/test_gestures.cjs'
+      - '.github/workflows/zonaok-verificar-gestos.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check zonaok-gestos.js
+      - run: node --check zonaok-resultats-7dies.js
+      - run: node --check zonaok-actualitzacions.js
+      - run: node tests/test_gestures.cjs
+      - run: node tests/test_recent_periods.cjs
+      - run: node tests/test_dashboard.cjs

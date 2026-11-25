@@ -226,7 +226,7 @@
   }
 
   async function loadData() {
-    const response = await fetch(`zonaok-tots-agenda.json?t=${Date.now()}`, {cache:'no-store'});
+    const response = await fetch('zonaok-tots-agenda.json', {cache:'no-cache'});
     if (!response.ok) throw new Error('No s’ha pogut carregar l’agenda total.');
     const packet = await response.json();
     if (packet?.schema !== 'zonaok-all-v1' || packet?.kind !== 'agenda' || !Array.isArray(packet.rows) || !packet.rows.length)
@@ -239,7 +239,7 @@
   async function enrichActes(rows) {
     let data;
     try {
-      const response = await fetch(`zonaok-tots-actes.json?t=${Date.now()}`, {cache:'no-store'});
+      const response = await fetch('zonaok-tots-actes.json', {cache:'no-cache'});
       if (!response.ok) return rows;
       data = await response.json();
     } catch (_) { return rows; }
@@ -387,13 +387,13 @@
     }
   }
 
-  async function openResults() {
+  async function openResults(preserve=false) {
     document.body.classList.add('zok-recent-mode');
     panel.hidden = false;
-    selectPeriod('past'); // Sempre obrir els darrers set dies en entrar al menú.
+    if(!preserve)selectPeriod('past'); // Sempre obrir els darrers set dies en entrar al menú.
     document.querySelectorAll('.bottom .navbtn').forEach(button =>
       button.classList.toggle('active', button === navButton));
-    panel.scrollIntoView({block: 'start', behavior: 'auto'});
+    if(!preserve)panel.scrollIntoView({block: 'start', behavior: 'auto'});
     if(pendingLoad)return pendingLoad;
     status.textContent = 'Carregant dades de GitHub…';
     pendingLoad=(async()=>{
@@ -405,9 +405,11 @@
         setTeamAliases(combined, data.agendaRows || []);
         periodLoaded=true;
         selectPeriod(activePeriod);
+        return true;
       } catch (error) {
         if(!periodLoaded){matches=[];content.replaceChildren(make('div','empty',error.message||'No s’han pogut carregar els partits.'));counter.textContent='0 partits'}
         status.textContent = periodLoaded?'No s’han pogut actualitzar els JSON · Dades anteriors conservades':'No s’han pogut llegir els JSON publicats';
+        return false;
       } finally {pendingLoad=null}
     })();
     return pendingLoad;
@@ -550,6 +552,7 @@
     main.insertBefore(panel, footer || null);
 
     // El botó nou no té data-tab: no interfereix amb el selectSection d'app.js.
+    window.ZonaOKRefreshRecent=()=>openResults(true);
     navButton.addEventListener('click', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
