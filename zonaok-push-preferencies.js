@@ -26,20 +26,23 @@
     for (const [group,title] of groups) {
       const values = Array.isArray(fav[group]) ? [...new Set(fav[group].filter(v => typeof v === 'string' && v))] : [];
       if (!values.length) continue;
-      const heading = document.createElement('h3'); heading.textContent = title; host.append(heading);
+      const card = document.createElement('section'); card.className = 'zok-favorite-group zok-push-card';
+      const heading = document.createElement('h2'); heading.textContent = title; card.append(heading);
+      const list = document.createElement('div'); list.className = 'zok-favorite-list zok-push-list';
+      card.append(list); host.append(card);
       for (const id of values) {
         count++;
         const target = JSON.stringify([group,id]);
-        const label = document.createElement('label'); label.className = 'zok-push-choice';
+        const label = document.createElement('label'); label.className = 'zok-favorite-option zok-push-choice';
         const input = document.createElement('input'); input.type = 'checkbox'; input.checked = prefs.targets.includes(target);
         const name = group === 'teams' ? (fav.teamNames?.[id] || id.split('|').slice(1).join(' · ')) : id;
-        const span = document.createElement('span'); span.textContent = name;
+        const span = document.createElement('span'); span.className = 'zok-favorite-option-label'; span.textContent = name;
         input.addEventListener('change', () => {
           prefs.targets = prefs.targets.filter(v => v !== target);
           if (input.checked) prefs.targets.push(target);
           save();
         });
-        label.append(input,span); host.append(label);
+        label.append(input,span); list.append(label);
       }
     }
     if (!count) {
