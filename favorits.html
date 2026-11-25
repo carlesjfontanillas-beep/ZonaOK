@@ -31,6 +31,12 @@
     #zok-push-settings .zok-push-choice small{display:block;font-size:10px;color:#a9c3d7;margin-top:2px}
     #zok-push-settings .zok-push-list{max-height:none}
     #zok-push-settings .zok-push-targets .zok-push-list{max-height:300px;overflow:auto}
+    #zok-push-settings .zok-push-search-wrap{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid #8cc5e722;min-width:0}
+    #zok-push-settings .zok-push-search{width:100%;min-width:0;flex:1;padding:9px 10px;box-sizing:border-box;border:1px solid #719cba77;border-radius:10px;background:#103451;color:#eaf5ff;font:inherit;font-size:16px}
+    #zok-push-settings .zok-push-search::placeholder{color:#9eb8cc;font-size:12px}
+    #zok-push-settings .zok-push-search:focus{outline:2px solid #ffbb79;outline-offset:1px}
+    #zok-push-settings .zok-push-search-count{color:#a9c3d7;font-size:10px;white-space:nowrap;flex:none;font-variant-numeric:tabular-nums}
+    #zok-push-settings .zok-push-targets [hidden]{display:none!important}
     #zok-push-settings .zok-push-targets{display:grid;gap:10px;min-width:0}
     #zok-push-settings .zok-push-subheading{font-size:13px;font-weight:800;color:#c7dbea;padding:3px 2px 0}
     #zok-push-settings .zok-push-intro,#zok-push-settings .zok-push-activation p,#zok-push-settings .zok-push-targets>p{margin:0;font-size:11px;line-height:1.5;color:#b9d3e5}
@@ -40,7 +46,7 @@
     #zok-push-settings button:disabled{opacity:.55;cursor:not-allowed}
     #zok-push-settings .zok-push-refresh{justify-self:start}
   </style>
-  <script defer src="zonaok-push-preferencies.js?v=20261125-push3-catalog"></script>
+  <script defer src="zonaok-push-preferencies.js?v=20261125-push4-search"></script>
 </head>
 <body>
 <main class="app zok-favorites-app">
