@@ -1,0 +1,485 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ZonaOK – Jugadors master v1 (contracte ampliat)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source",
+    "seasonId",
+    "players",
+    "memberships"
+  ],
+  "properties": {
+    "schema": {
+      "const": "zonaok-jugadors-v1"
+    },
+    "source": {
+      "const": "FECAPA"
+    },
+    "seasonId": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*$"
+    },
+    "updatedAt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "coverageVerified": {
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "unverified_empty",
+        "candidate_only"
+      ]
+    },
+    "players": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[1-9][0-9]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "playerId",
+          "name",
+          "firstSeenAt",
+          "lastSeenAt",
+          "nameVariants"
+        ],
+        "properties": {
+          "playerId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "firstSeenAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nameVariants": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "birthYear": {
+            "type": "integer",
+            "minimum": 1900,
+            "maximum": 2100
+          },
+          "birthYearConflict": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "memberships": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[1-9][0-9]*\\|[1-9][0-9]*\\|[1-9][0-9]*\\|[1-9][0-9]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "playerId",
+          "leagueId",
+          "teamFilterId",
+          "seasonId",
+          "teamName",
+          "teamId",
+          "clubId",
+          "clubName",
+          "firstSeenAt",
+          "lastSeenAt",
+          "profileUrl"
+        ],
+        "properties": {
+          "playerId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "leagueId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "teamFilterId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "seasonId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "teamName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "teamId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[1-9][0-9]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "clubId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[1-9][0-9]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "clubName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "firstSeenAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profileUrl": {
+            "type": "string",
+            "pattern": "^https://www\\.hoqueipatins\\.fecapa\\.cat/\\?"
+          },
+          "sports": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "number": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "played": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "goals": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "yellowCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "redCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "blueCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "assists": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "leagueName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "groupName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "seasonName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "clubCrestId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*(?:_[0-9]+)?$"
+          },
+          "nameSources": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "propertyNames": {
+              "enum": [
+                "teamName",
+                "leagueName",
+                "groupName",
+                "seasonName",
+                "clubName"
+              ]
+            }
+          },
+          "position": {
+            "enum": [
+              "goalkeeper",
+              "field"
+            ]
+          },
+          "profileStats": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "number": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "played": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "goals": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "yellowCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "redCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "blueCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "assists": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "profileCheckedAt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "matchId",
+                "leagueId",
+                "source",
+                "actaUrl"
+              ],
+              "properties": {
+                "matchId": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*$"
+                },
+                "leagueId": {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]*$"
+                },
+                "source": {
+                  "const": "FECAPA:fitxa_partits_jugats"
+                },
+                "actaUrl": {
+                  "type": "string",
+                  "pattern": "^https://www\\.hoqueipatins\\.fecapa\\.cat/\\?"
+                },
+                "stats": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "number": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "goals": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "yellowCards": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "blueCards": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "redCards": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "matchAppearances": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[1-9][0-9]*\\|[1-9][0-9]*\\|[1-9][0-9]*\\|(home|away)\\|[1-9][0-9]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "seasonId",
+          "leagueId",
+          "matchId",
+          "side",
+          "playerId",
+          "actaUrl",
+          "source",
+          "participation",
+          "checkedAt"
+        ],
+        "properties": {
+          "seasonId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "leagueId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "matchId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "side": {
+            "enum": [
+              "home",
+              "away"
+            ]
+          },
+          "playerId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "teamFilterId": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]*$"
+          },
+          "teamName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "shirtNumber": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "position": {
+            "enum": [
+              "goalkeeper",
+              "field"
+            ]
+          },
+          "captain": {
+            "type": "boolean"
+          },
+          "participation": {
+            "enum": [
+              "listed",
+              "played"
+            ]
+          },
+          "stats": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "goals": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "assists": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "yellowCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "blueCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "redCards": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "penaltiesTaken": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "penaltiesScored": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "directFreeHitsTaken": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "directFreeHitsScored": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "saves": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "minutes": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "actaUrl": {
+            "type": "string",
+            "pattern": "^https://www\\.hoqueipatins\\.fecapa\\.cat/\\?"
+          },
+          "source": {
+            "enum": [
+              "FECAPA:acta_resum",
+              "FECAPA:acta_oficial",
+              "FECAPA:fitxa_partits_jugats"
+            ]
+          },
+          "checkedAt": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

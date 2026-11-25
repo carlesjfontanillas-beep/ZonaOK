@@ -1,0 +1,108 @@
+name: Importació automàtica de jugadors
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/jugadors-public.yml'
+      - 'scripts/zonaok_jugadors_*.py'
+      - 'scripts/zonaok_actes_jugadors_probe.py'
+      - 'scripts/zonaok_fecapa_players.py'
+      - 'schemas/jugadors-master.schema.json'
+      - 'tests/test_jugadors*.py'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/jugadors-public.yml'
+      - 'scripts/zonaok_jugadors_*.py'
+      - 'scripts/zonaok_actes_jugadors_probe.py'
+      - 'scripts/zonaok_fecapa_players.py'
+      - 'schemas/jugadors-master.schema.json'
+      - 'tests/test_jugadors*.py'
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [auto, acts, rosters, retry, flash]
+        default: auto
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts
+            tests
+            schemas
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
+      - run: python -m unittest discover -s tests -p 'test_jugadors*.py' -v
+  update:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    concurrency:
+      group: zonaok-public-jugadors
+      cancel-in-progress: false
+    env:
+      MODE: ${{ inputs.mode || 'auto' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/checkout@v4
+        with:
+          repository: carlesjfontanillas-beep/ZonaOK
+          ref: main
+          path: catalog
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
+      - run: python -m playwright install --with-deps chromium
+      - name: Actualitzar, validar i comprimir el JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -m 700 data
+          gzip -dc imports/jugadors-master.json.gz > data/jugadors-master.json
+          if [ -f imports/jugadors-maintenance-state.json ]; then
+            cp imports/jugadors-maintenance-state.json data/jugadors-maintenance-state.json
+          else
+            printf '%s\n' '{"matches":{},"rosters":{},"blockCursor":0}' > data/jugadors-maintenance-state.json
+          fi
+          trap 'rm -f data/jugadors-master.json; rm -rf data' EXIT
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          block() {
+            xvfb-run -a python scripts/zonaok_jugadors_blocks.py --catalog catalog --private-dir "$PWD/data" --mode "$1" --budget-minutes "$2"
+            python scripts/verify_public_master.py data/jugadors-master.json
+          }
+          case "$MODE" in
+            auto) block flash 4; block auto 20 ;;
+            flash) block flash 4 ;;
+            acts|rosters|retry) block "$MODE" 20 ;;
+            *) exit 2 ;;
+          esac
+          python scripts/verify_public_master.py data/jugadors-master.json
+          tmp="$(mktemp imports/.jugadors-master.XXXXXX.gz)"
+          gzip -n -c data/jugadors-master.json > "$tmp"
+          mv "$tmp" imports/jugadors-master.json.gz
+          cp data/jugadors-maintenance-state.json imports/jugadors-maintenance-state.json
+          git add -- imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Actualitza automàticament el catàleg de jugadors'
+            git push origin HEAD:main
+          fi
