@@ -432,6 +432,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
 <link rel="stylesheet" href="zonaok-push-header.css?v=20261125-push6-page">
 <link rel="stylesheet" href="zonaok-disseny.css?v=20261126-botoneres1">
 <script defer src="zonaok-disseny.js?v=20261126-disseny1"></script>
+<link rel="stylesheet" href="zonaok-acta-fitxa.css?v=20261126-acta-propia1"><script defer src="zonaok-acta-fitxa.js?v=20261126-acta-propia1"></script>
 </head>
 <body>
 <main class="app">
@@ -1780,58 +1781,9 @@ function savedActaLink(r,id){
   const link=resolveActaLink(r,id);
   return link.exact?link.url:'';
 }
-let actaDialog=null,actaFrame=null,actaTitle=null,actaHint=null,actaExternal=null,actaPosition=null;
-function setupActaDialog(){
-  const style=mk('style');style.textContent=`
-  .zok-acta-dialog:not([open]){display:none}
-  .zok-acta-dialog[open]{display:flex;flex-direction:column}
-  .zok-acta-dialog{position:fixed;margin:auto;inset:0;box-sizing:border-box;width:min(98vw,1050px);max-width:98vw;height:min(93vh,940px);height:min(93dvh,940px);max-height:93vh;max-height:93dvh;padding:0;overflow:hidden;border:1px solid #34536d;border-radius:17px;background:#f3f6fa;color:#082238;box-shadow:0 20px 70px #000a}
-  .zok-acta-dialog::backdrop{background:#03172bd9}
-  .zok-acta-header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#061f38;color:#fff;padding:12px 14px;min-height:48px}
-  .zok-acta-header strong{font-size:1rem;line-height:1.25}
-  .zok-acta-close{flex:0 0 auto;border:1px solid #b5c9d3;border-radius:10px;background:#244860;color:#fff;font-size:1.5rem;font-weight:800;line-height:1;padding:6px 11px;cursor:pointer}
-  .zok-acta-subtitle{background:#e3eaf0;padding:8px 14px;font-weight:700;font-size:.9rem;line-height:1.3}
-  .zok-acta-iframe{display:block;flex:1 1 auto;min-height:0;width:100%;border:0;background:#fff}
-  .zok-acta-footer{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;background:#e3eaf0;padding:10px 12px}
-  .zok-acta-hint{flex:1 1 200px;margin:0;font-size:.78rem;line-height:1.3;color:#234259}
-  .zok-acta-external{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:10px 12px;background:#8f224c;color:#fff!important;text-decoration:none;font-weight:700;font-size:.85rem;white-space:nowrap}
-  .match.zok-acta-available{cursor:pointer}
-  .match.zok-acta-available:focus-visible{outline:3px solid #ffc66e;outline-offset:3px}
-  .match.zok-acta-available .zok-acta-action{background:#8f224c;color:#fff;border:0;border-radius:8px;cursor:pointer;font-weight:700}
-  @media(max-width:600px){.zok-acta-dialog{width:96vw;max-width:96vw;height:94dvh;max-height:94dvh;border:1px solid #34536d;border-radius:15px}.zok-acta-footer{padding-bottom:max(10px,env(safe-area-inset-bottom))}}
-  `;document.head.append(style);
-  actaDialog=mk('dialog','zok-acta-dialog');actaDialog.setAttribute('aria-label','Fitxa oficial del partit a FECAPA');
-  const header=mk('div','zok-acta-header');header.append(mk('strong','','FITXA DEL PARTIT · FECAPA'));
-  const close=mk('button','zok-acta-close','×');close.type='button';close.setAttribute('aria-label','Tancar la fitxa i tornar a ZonaOK');close.onclick=()=>actaDialog.close();header.append(close);
-  actaTitle=mk('div','zok-acta-subtitle');
-  actaFrame=mk('iframe','zok-acta-iframe');actaFrame.title='Fitxa oficial de FECAPA';actaFrame.setAttribute('loading','eager');actaFrame.setAttribute('sandbox','allow-forms allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
-  const footer=mk('div','zok-acta-footer');actaHint=mk('p','zok-acta-hint');
-  actaExternal=mk('a','zok-acta-external','Obrir a FECAPA ↗');actaExternal.target='_blank';actaExternal.rel='noopener';footer.append(actaHint,actaExternal);
-  actaDialog.append(header,actaTitle,actaFrame,footer);document.body.append(actaDialog);
-  actaDialog.addEventListener('click',e=>{if(e.target===actaDialog)actaDialog.close();});
-  actaDialog.addEventListener('close',()=>{
-    actaFrame.removeAttribute('src');
-    if(actaPosition){const p=actaPosition;actaPosition=null;requestAnimationFrame(()=>window.scrollTo(p.x,p.y));}
-  });
-}
 function openActaDialog(r,id){
-  // La importacio de JSON i el mòdul de sincronització poden escriure al mateix magatzem.
-  store=load();
-  const link=resolveActaLink(r,id);
-  if(!link.exact)return;
-  if(!actaDialog)setupActaDialog();
-  actaPosition={x:window.scrollX,y:window.scrollY};
-  actaTitle.textContent=`${r.home} · ${r.homeScore} - ${r.awayScore} · ${r.away} · ${niceDate(r.iso)}`;
-  actaHint.textContent=link.exact
-    ?'Si FECAPA no permet veure l’acta dins la finestra, prem «Obrir a FECAPA».'
-    :'No s\u2019ha pogut relacionar una acta de manera inequívoca. IDs de la lliga: '+(link.stats?.imported||0)+'; mateix dia: '+(link.stats?.sameDay||0)+'. El calendari oficial està disponible al botó.';
-  actaExternal.href=link.url;
-  actaExternal.textContent=link.exact?'Obrir a FECAPA ↗':'Veure calendari ↗';
-  actaFrame.hidden=!link.exact;
-  actaFrame.style.display=link.exact?'':'none';
-  actaDialog.showModal();
-  if(link.exact)actaFrame.src=link.url;
-  else actaFrame.removeAttribute('src');
+  store=load();const link=resolveActaLink(r,id);if(!link.exact)return;
+  window.ZonaOKActaFitxa?.open(r,link.url);
 }
 // API mínima perquè zonaok-sync-v5.js obri exactament la mateixa finestra.
 window.ZonaOKActes={open:openActaDialog,resolve:resolveActaLink,url:savedActaLink};
@@ -2755,7 +2707,7 @@ window.ZonaOKRefreshMatches=window.ZonaOKRefreshSources=async function(){
 })();
 </script>
 <script defer src="zonaok-gestos.js?v=20261125-relectura1"></script>
-  <script defer src="zonaok-resultats-7dies.js?v=20261126-botoneres1"></script>
+  <script defer src="zonaok-resultats-7dies.js?v=20261126-acta-propia1"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
   <script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script>
   <link rel="stylesheet" href="zonaok-actualitzacions.css?v=20261125-dashboard1">

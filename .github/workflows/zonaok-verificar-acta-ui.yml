@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - 'zonaok-acta-links.js'
+      - 'zonaok-acta-fitxa.js'
+      - 'tests/test_acta_fitxa.cjs'
       - 'index.html'
       - 'zonaok-resultats-7dies.js'
       - 'jugadors.js'
@@ -21,10 +23,12 @@ jobs:
         with:
           node-version: '22'
       - name: Proves dels enllaços guardats
-        run: node tests/test_acta_links.cjs
+        run: |
+          node tests/test_acta_links.cjs
+          node tests/test_acta_fitxa.cjs
       - name: Sintaxi JavaScript de tots els menús
         run: |
-          for f in zonaok-acta-links.js zonaok-resultats-7dies.js app.js zonaok-sync-v5.js jugadors.js; do node --check "$f"; done
+          for f in zonaok-acta-fitxa.js zonaok-acta-links.js zonaok-resultats-7dies.js app.js zonaok-sync-v5.js jugadors.js; do node --check "$f"; done
           python - <<'PY'
           from html.parser import HTMLParser
           from pathlib import Path

@@ -62,7 +62,29 @@ def select(rows,state,mode,today=None):
         return sorted(selected,key=lambda x:(state.get(x[0],{}).get("checkedAt",""),x[1]["iso"],x[0]))
     return sorted(selected,key=lambda x:(state.get(x[0],{}).get("checkedAt",""),x[1]["iso"],x[0]))
 
-async def closed_acta(ctx,league,match):
+# Only explicitly labelled team foul values; do not infer missing zeros or sides.
+FOULS_CAPTURE=r"""()=>{
+ const visible=e=>e&&e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden';
+ const scopes=[...document.querySelectorAll('.sidgad-match-modal')].filter(visible);if(scopes.length!==1)return {};
+ const scope=scopes[0],norm=x=>String(x||'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/\s+/g,' ').trim();
+ const label=/^(?:faltas|faltes|faltas de equipo|faltes d'equip|faltas equipo|team fouls)$/;
+ const read=x=>/^\d{1,3}$/.test(norm(x))?Number(norm(x)):null;
+ const values={home:new Set(),away:new Set()};
+ for(const [side,selector] of [['home','.sidgad-local'],['away','.sidgad-visit']]){
+  for(const box of scope.querySelectorAll(selector)){
+   if(!visible(box))continue;
+   for(const e of box.querySelectorAll('*')){
+    if(!visible(e)||e.children.length)continue;
+    const t=norm(e.innerText),m=t.match(/^(?:faltas(?: de equipo)?|faltes(?: d'equip)?|team fouls)\s*:?\s*(\d{1,3})$/);
+    if(m)values[side].add(Number(m[1]));
+    if(label.test(t.replace(/:$/,''))){const siblings=[...e.parentElement.children].filter(x=>x!==e&&visible(x));if(siblings.length===1){const v=read(siblings[0].innerText);if(v!==null)values[side].add(v)}}
+   }
+  }
+ }
+ return Object.fromEntries(Object.entries(values).filter(([_,v])=>v.size===1).map(([k,v])=>[k,[...v][0]]));
+}"""
+
+async def closed_acta(ctx,league,match,details=None):
     page=await ctx.new_page()
     try:
         res=await page.goto(BASE+"?"+urlencode({"liga":league,"vista":"calendar","partido":match}),wait_until="domcontentloaded",timeout=30000)
@@ -71,6 +93,12 @@ async def closed_acta(ctx,league,match):
         # Require a positive closed/finished label inside the match modal.
         labels=await page.locator(".sidgad-match-modal:visible .sidgad-modal-status:visible").all_inner_texts()
         if not any(norm(v) in FINAL for v in labels) or any(LIVE.search(norm(v)) for v in labels):return [],[],"closure_unverified"
+        if details is not None:
+            try:
+                fouls=await page.evaluate(FOULS_CAPTURE)
+                if fouls:details.update(source="FECAPA",fouls=fouls)
+            except Exception:
+                pass
         summary=await stable_rows(page,league,"summary")
         if not summary:return [],[],"summary_empty"
         modal=page.locator(".sidgad-match-modal:visible")

@@ -321,7 +321,7 @@
     }
     const actions=el('div','match-actions');
     if(actaUrl){
-      const link=el('a','light','\u2315 Acta');link.href=actaUrl;link.target='_blank';link.rel='noopener';
+      const link=el('a','light','\u2315 Acta');link.href=actaUrl;link.target='_blank';link.rel='noopener';link.addEventListener('click',e=>{if(window.ZonaOKActaFitxa){e.preventDefault();e.stopPropagation();window.ZonaOKActaFitxa.open(r,actaUrl)}});
       link.setAttribute('aria-label','Obrir la fitxa i l\u2019acta oficial del partit');actions.append(link);
     }
     if(actions.childNodes.length)c.append(actions);

@@ -11,7 +11,7 @@ from zonaok_jugadors_total_master import read_catalog, link_memberships
 from zonaok_actes_jugadors_probe import ingest_appearances
 from zonaok_fecapa_players import chromium_context
 
-STATS_REVISION = 1
+STATS_REVISION = 2
 LIMITS = {"acts":100, "rosters":10, "retry":20, "flash":20, "stats":100}
 BLOCKS = ("stats","acts","rosters","retry")
 def due(entry, hours, clock):
@@ -77,8 +77,9 @@ async def run_matches(master,state,plan,deadline,report):
             for key,r in plan:
                 if time.monotonic()>=deadline:break
                 l,m=r["leagueId"],r["matchId"]
+                details={}
                 try:
-                    summary,official,error=await asyncio.wait_for(closed_acta(ctx,l,m),timeout=max(1,min(120,deadline-time.monotonic())))
+                    summary,official,error=await asyncio.wait_for(closed_acta(ctx,l,m,details),timeout=max(1,min(120,deadline-time.monotonic())))
                 except asyncio.TimeoutError:
                     error="timeout"
                 if error in ("http_403","http_429","http_503"):
@@ -92,7 +93,13 @@ async def run_matches(master,state,plan,deadline,report):
                     else:
                         verify_master(candidate)
                         merge_verified(master,candidate)
+                previous=state.get(key,{})
                 state[key]={"status":"pending" if error else "verified","fingerprint":r["fingerprint"],"checkedAt":now(),"statsAttemptRevision":STATS_REVISION}
+                if previous.get("fingerprint")==r["fingerprint"] and previous.get("details"):
+                    state[key]["details"]=previous["details"]
+                if not error and details.get("source")=="FECAPA":
+                    old=state[key].get("details",{}).get("fouls",{})
+                    state[key]["details"]={"source":"FECAPA","fouls":{**old,**details["fouls"]}}
                 if not error:state[key]["statsRevision"]=STATS_REVISION
                 report["attempted"]+=1
                 report["pending" if error else "verified"]+=1

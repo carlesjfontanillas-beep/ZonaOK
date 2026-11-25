@@ -168,7 +168,7 @@ if(tab==='Partits'){
   statsLine.append(el('span','zok-jp-gold',a.position==='goalkeeper'?(teamScore(a)?'GF equip '+teamScore(a)[0]+' · GC equip '+teamScore(a)[1]:'Resultat no verificat')+(a.participation==='played'?' · Participació confirmada':' · Consta a l’acta'):(a.stats.goals??'—')+' gols · '+(a.stats.assists??'—')+' assist.'));
   const cards=el('span','zok-jp-match-card-counts');for(const [k,label,color] of [['yellowCards','Grogues','yellow'],['blueCards','Blaves','blue'],['redCards','Vermelles','red']])cards.append(cardCount(label,color,a.stats[k]));statsLine.append(cards);content.append(statsLine);
   const foot=el('div','zok-jp-match-foot');foot.append(el('p','zok-jp-note',((all||catMode)?(rows.find(x=>key(x)===key(a))?.groupName||a.teamName)+' · ':'')+'Dorsal '+(a.shirtNumber??'—')+(a.captain?' · Capità':'')+' · '+(a.position==='goalkeeper'?'Porter':a.position==='field'?'Pista':'Posició no verificada')));
-  const actaUrl=window.ZonaOKActaLinks.savedUrl(a);if(actaUrl){const l=el('a','zok-jp-btn','Acta');l.href=actaUrl;l.target='_blank';l.rel='noopener';side.append(l)}
+  const actaUrl=window.ZonaOKActaLinks.savedUrl(a);if(actaUrl){const l=btn('Acta',()=>window.ZonaOKActaFitxa.open({...a,iso:a.fixture.date,home:a.side==='home'?a.teamName:a.fixture.rival,away:a.side==='away'?a.teamName:a.fixture.rival,homeScore:a.fixture.homeScore,awayScore:a.fixture.awayScore,competition:rows.find(x=>key(x)===key(a))?.groupName},actaUrl));side.append(l)}
   content.append(foot);matchCard.append(content,side);root.append(matchCard);
  }
 }
@@ -191,6 +191,9 @@ else if(tab==='Equips'){
 }
 else if(tab==='Rànquings')renderCategoryRanking(selected,id)}
 $('jp-favs').onclick=()=>{scope='favorites';searchInput.value='';renderList()};$('jp-all').onclick=()=>{scope='all';searchInput.value='';renderList()};searchInput.oninput=renderList;searchInput.addEventListener('keydown',e=>{if(e.key==='Escape'){searchInput.value='';renderList()}else if(e.key==='Enter'&&!suggestions.hidden){const first=suggestions.querySelector('.zok-jp-row-main');if(first){e.preventDefault();first.click()}}});['jp-club','jp-team','jp-category','jp-position'].forEach(k=>$(k).onchange=()=>{filterOptions();renderList()});filterOptions();renderList();
-window.addEventListener('zonaok:jugadors-loaded',()=>{filterOptions();if(active&&byId(active)&&D.list(active).length){renderProfile();return}rankHistory=[];active=null;profile.hidden=true;search.hidden=false;renderList()});
+function openRequestedPlayer(){const id=new URLSearchParams(location.search).get('playerId');if(id&&byId(id)&&!active){open(id);return true}return false}
+window.ZonaOKOpenActaPlayer=id=>{if(!byId(id))return false;open(id);return true};
+openRequestedPlayer();
+window.addEventListener('zonaok:jugadors-loaded',()=>{filterOptions();if(openRequestedPlayer())return;if(active&&byId(active)&&D.list(active).length){renderProfile();return}rankHistory=[];active=null;profile.hidden=true;search.hidden=false;renderList()});
 window.addEventListener('pageshow',e=>{if(e.persisted)active?renderProfile():renderList()});
 })();

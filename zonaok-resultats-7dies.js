@@ -303,7 +303,7 @@
       const acta=make('button','zok-recent-acta','Acta');
       acta.type='button';
       acta.setAttribute('aria-label','Veure la fitxa i l’acta del partit');
-      acta.onclick=()=>window.open(actaUrl,'_blank','noopener');
+      acta.onclick=()=>window.ZonaOKActaFitxa.open(row,actaUrl);
       top.append(acta);
     }
 
