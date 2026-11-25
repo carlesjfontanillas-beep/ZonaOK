@@ -128,6 +128,7 @@ function teamScore(a){
   if(!f||!['home','away'].includes(a.side)||![f.homeScore,f.awayScore].every(v=>Number.isInteger(v)&&v>=0))return null;
   return a.side==='home'?[f.homeScore,f.awayScore]:[f.awayScore,f.homeScore];
 }
+function matchOutcome(a){const f=a.fixture;if(!f||!['home','away'].includes(a.side)||![f.homeScore,f.awayScore].every(v=>Number.isInteger(v)&&v>=0))return 'unknown';const [gf,gc]=a.side==='home'?[f.homeScore,f.awayScore]:[f.awayScore,f.homeScore];return gf>gc?'win':gf<gc?'loss':'draw'}
 function keeperStats(matches){
   const acts=matches.filter(a=>a.position==='goalkeeper'), scores=acts.map(teamScore).filter(Boolean),n=scores.length;
   const gf=n?scores.reduce((s,r)=>s+r[0],0):null,gc=n?scores.reduce((s,r)=>s+r[1],0):null;
@@ -168,14 +169,14 @@ if((tab==='Resum'||tab==='Estadístiques')&&(totals.partial.length||totals.possi
 if(tab==='Partits'){
  if(!match.length)root.append(el('p','zok-jp-note','No hi ha partits disponibles per a aquesta vinculació.'));
  for(const a of match){
-  const matchCard=card(el('strong','',a.fixture.date+' · '+a.fixture.rival+' · '+a.fixture.result));
+  const matchCard=card();const content=el('div','zok-jp-match-content'),side=el('div','zok-jp-match-side');content.append(el('strong','',a.fixture.date+' · '+a.fixture.rival));const outcome=matchOutcome(a),score=el('strong','zok-jp-match-score '+outcome,a.fixture.result||'— : —');score.setAttribute('aria-label',({win:'Victòria',loss:'Derrota',draw:'Empat',unknown:'Resultat no verificat'})[outcome]+': '+(a.fixture.result||'— : —'));side.append(score);
   matchCard.classList.add('zok-jp-match-card');
   const statsLine=el('div','zok-jp-match-stats');
   statsLine.append(el('span','zok-jp-gold',a.position==='goalkeeper'?(teamScore(a)?'GF equip '+teamScore(a)[0]+' · GC equip '+teamScore(a)[1]:'Resultat no verificat')+(a.participation==='played'?' · Participació confirmada':' · Consta a l’acta'):(a.stats.goals??'—')+' gols · '+(a.stats.assists??'—')+' assist.'));
-  const blue=el('span','zok-jp-blue-cards');const symbol=el('span','zok-jp-blue-icon');symbol.setAttribute('aria-hidden','true');blue.append(symbol,el('span','','Blaves: '+(a.stats.blueCards??'—')));statsLine.append(blue);matchCard.append(statsLine);
+  const blue=el('span','zok-jp-blue-cards');const symbol=el('span','zok-jp-blue-icon');symbol.setAttribute('aria-hidden','true');blue.append(symbol,el('span','','Blaves: '+(a.stats.blueCards??'—')));statsLine.append(blue);content.append(statsLine);
   const foot=el('div','zok-jp-match-foot');foot.append(el('p','zok-jp-note',(all?(rows.find(x=>key(x)===key(a))?.groupName||a.teamName)+' · ':'')+'Dorsal '+(a.shirtNumber??'—')+(a.captain?' · Capità':'')+' · '+(a.position==='goalkeeper'?'Porter':a.position==='field'?'Pista':'Posició no verificada')));
-  if(a.actaUrl){const l=el('a','zok-jp-btn','Acta');l.href=a.actaUrl;l.target='_blank';l.rel='noopener';foot.append(l)}
-  matchCard.append(foot);root.append(matchCard);
+  if(a.actaUrl){const l=el('a','zok-jp-btn','Acta');l.href=a.actaUrl;l.target='_blank';l.rel='noopener';side.append(l)}
+  content.append(foot);matchCard.append(content,side);root.append(matchCard);
  }
 }
 else if(tab==='Equips'){
