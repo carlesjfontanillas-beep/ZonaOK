@@ -38,13 +38,25 @@ function mount(){
  if(preview){host.hidden=true;modeRow('Catàleg de prova · '+demo.players.length+' jugadors ficticis','Dades reals','0');return}
  modeRow('Catàleg real','Catàleg de prova','2');
  host.replaceChildren();
- const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.hidden=true;input.setAttribute('aria-label','Obrir JSON privat autoritzat');
- const button=document.createElement('button');button.type='button';button.className='zok-jp-import-btn';button.title='Obrir fitxer JSON privat';button.setAttribute('aria-label','Obrir fitxer JSON privat');
+ const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.hidden=true;input.setAttribute('aria-label','Importar JSON de jugadors');
+ const button=document.createElement('button');button.type='button';button.className='zok-jp-import-btn';button.title='Importar JSON de jugadors';button.setAttribute('aria-label','Obrir fitxer JSON privat');
  const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 24 24');icon.setAttribute('fill','none');icon.setAttribute('stroke','currentColor');icon.setAttribute('stroke-width','1.8');icon.setAttribute('stroke-linecap','round');icon.setAttribute('stroke-linejoin','round');icon.setAttribute('aria-hidden','true');
  const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M12 16V3m-5 5 5-5 5 5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4');icon.append(path);button.append(icon);
  const status=document.createElement('p');status.className='zok-jp-import-status zok-jp-note';status.setAttribute('role','status');status.hidden=true;
  host.append(input,button);host.closest('.zok-jp-search-line')?.after(status);
+ async function loadPublished(){
+  status.hidden=false;status.classList.remove('zok-jp-error');status.textContent='Carregant dades reals de jugadors…';
+  try{
+   const response=await fetch('imports/jugadors-master.json',{cache:'no-cache',credentials:'same-origin'});
+   if(!response.ok)throw Error('HTTP '+response.status);
+   const master=await response.json();let catalog={};
+   try{const r=await fetch('zonaok-tots-partits.json',{cache:'no-cache',credentials:'same-origin'});if(r.ok)catalog=await r.json()}catch{}
+   const n=ingest(master,catalog);
+   status.textContent=n.players+' jugadors disponibles'+(n.coverageVerified?'':' · Cobertura parcial');
+  }catch(e){status.textContent='No s’han pogut carregar les dades reals. Comprova la connexió i torna a provar.';status.classList.add('zok-jp-error')}
+ }
  button.onclick=()=>input.click();
+ loadPublished();
  input.onchange=async()=>{const file=input.files?.[0];if(!file)return;button.disabled=true;status.hidden=false;status.classList.remove('zok-jp-error');status.textContent='Llegint el catàleg…';
  try{if(file.size>100000000)throw Error('Fitxer massa gran.');const master=JSON.parse(await file.text());let catalog={};try{const r=await fetch('zonaok-tots-partits.json',{cache:'no-store'});if(r.ok)catalog=await r.json()}catch{}const n=ingest(master,catalog);status.textContent=n.players+' jugadors disponibles'+(n.coverageVerified?'':' · Cobertura parcial');button.title='Canviar fitxer JSON privat';}
  catch(e){status.textContent='No s’ha pogut obrir el catàleg: '+e.message;status.classList.add('zok-jp-error')}
