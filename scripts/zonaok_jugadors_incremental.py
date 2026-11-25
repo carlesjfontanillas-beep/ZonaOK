@@ -8,7 +8,7 @@ from types import SimpleNamespace
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 from zonaok_jugadors_auto import BASE,collect,empty,enrich_names,load,now,numeric,save,verify_master
-from zonaok_jugadors_total_master import read_catalog,stable_rows,link_memberships,all_rosters
+from zonaok_jugadors_total_master import read_catalog,stable_rows,link_memberships,all_rosters,official_tab
 from zonaok_actes_jugadors_probe import ingest_appearances
 from zonaok_fecapa_players import chromium_context
 from playwright.async_api import async_playwright
@@ -84,6 +84,23 @@ FOULS_CAPTURE=r"""()=>{
  return Object.fromEntries(Object.entries(values).filter(([_,v])=>v.size===1).map(([k,v])=>[k,[...v][0]]));
 }"""
 
+# Explicit sports comparison rows; preserve labels and values, not arbitrary page text.
+TEAM_STATS_CAPTURE=r"""()=>{
+ const visible=e=>e&&e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden';
+ const scopes=[...document.querySelectorAll('.sidgad-match-modal')].filter(visible);if(scopes.length!==1)return {};
+ const out={},text=e=>String(e?.innerText||'').trim().replace(/\s+/g,' ');
+ for(const row of scopes[0].querySelectorAll('.sidgad-match-stats-table-like .sidgad-stat-row')){
+   if(!visible(row))continue;
+   const names=[...row.querySelectorAll('.sidgad-stat-name')].filter(visible),vals=[...row.querySelectorAll('.sidgad-stat-val')].filter(visible);
+   if(names.length!==1||vals.length!==2)continue;
+   const label=text(names[0]),home=text(vals[0]),away=text(vals[1]);
+   if(!label||label.length>80||!/^[\p{L}\p{N} .,%()/'’+\-]+$/u.test(label)||!/^\d{1,4}(?:[.,]\d+)?\s*%?$/.test(home)||!/^\d{1,4}(?:[.,]\d+)?\s*%?$/.test(away))continue;
+   if(!(vals[1].matches('.sidgad-right')||vals[1].closest('.sidgad-right')))continue;
+   out[label]={home,away};
+ }
+ return out;
+}"""
+
 async def closed_acta(ctx,league,match,details=None):
     page=await ctx.new_page()
     try:
@@ -97,14 +114,22 @@ async def closed_acta(ctx,league,match,details=None):
             try:
                 fouls=await page.evaluate(FOULS_CAPTURE)
                 if fouls:details.update(source="FECAPA",fouls=fouls)
+                team_stats=await page.evaluate(TEAM_STATS_CAPTURE)
+                if team_stats:
+                    details.update(source="FECAPA",teamStats=team_stats)
+                    for label,values in team_stats.items():
+                        if norm(label) in {"faltes","faltas","faltes d'equip","faltas de equipo"}:
+                            found={k:int(v) for k,v in values.items() if v.isdigit()}
+                            old=details.get("fouls",{})
+                            details["fouls"]={**old,**{k:v for k,v in found.items() if k not in old or old[k]==v}}
             except Exception:
                 pass
         summary=await stable_rows(page,league,"summary")
         if not summary:return [],[],"summary_empty"
         modal=page.locator(".sidgad-match-modal:visible")
-        tabs=modal.locator(".sidgad-modal-tab-btn:visible")
-        if await modal.count()!=1 or await tabs.count()!=2:return [],[],"official_unavailable"
-        await tabs.nth(1).click(timeout=10000)
+        target=await official_tab(modal) if await modal.count()==1 else None
+        if target is None:return [],[],"official_unavailable"
+        await target.click(timeout=10000)
         await page.wait_for_selector(".sidgad-match-modal .sidgad-acta-hoja",timeout=12000)
         if details is not None:
             try:
@@ -115,7 +140,7 @@ async def closed_acta(ctx,league,match,details=None):
                     for side in old.keys() & fouls.keys():
                         if old[side]!=fouls[side]:merged.pop(side,None)
                     if merged:details.update(source="FECAPA",fouls=merged)
-                    else:details.clear()
+                    else:details.pop('fouls',None)
             except Exception:
                 pass
         official=await stable_rows(page,league,"official")
@@ -134,6 +159,8 @@ def merge_verified(master,candidate):
         old=master["matchAppearances"].get(key,{})
         merged={**old,**a}
         if old.get("stats") or a.get("stats"):merged["stats"]={**old.get("stats",{}),**a.get("stats",{})}
+        if old.get("fecapaFields") or a.get("fecapaFields"):
+            merged["fecapaFields"]={**old.get("fecapaFields",{}),**a.get("fecapaFields",{})}
         master["matchAppearances"][key]=merged
 
 async def maintain(a,rows,leagues):

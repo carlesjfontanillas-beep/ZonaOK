@@ -11,7 +11,7 @@ from zonaok_jugadors_total_master import read_catalog, link_memberships
 from zonaok_actes_jugadors_probe import ingest_appearances
 from zonaok_fecapa_players import chromium_context
 
-STATS_REVISION = 2
+STATS_REVISION = 3
 LIMITS = {"acts":100, "rosters":10, "retry":20, "flash":20, "stats":100}
 BLOCKS = ("stats","acts","rosters","retry")
 def due(entry, hours, clock):
@@ -98,8 +98,10 @@ async def run_matches(master,state,plan,deadline,report):
                 if previous.get("fingerprint")==r["fingerprint"] and previous.get("details"):
                     state[key]["details"]=previous["details"]
                 if not error and details.get("source")=="FECAPA":
-                    old=state[key].get("details",{}).get("fouls",{})
-                    state[key]["details"]={"source":"FECAPA","fouls":{**old,**details["fouls"]}}
+                    old=state[key].get("details",{})
+                    state[key]["details"]={**old,**details,"source":"FECAPA",
+                        "fouls":{**old.get("fouls",{}),**details.get("fouls",{})},
+                        "teamStats":{**old.get("teamStats",{}),**details.get("teamStats",{})}}
                 if not error:state[key]["statsRevision"]=STATS_REVISION
                 report["attempted"]+=1
                 report["pending" if error else "verified"]+=1

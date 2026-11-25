@@ -460,6 +460,22 @@
               "minutes": {
                 "type": "integer",
                 "minimum": 0
+              },
+              "penalties": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "directFreeHits": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "foulsCommitted": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "foulsReceived": {
+                "type": "integer",
+                "minimum": 0
               }
             }
           },
@@ -477,6 +493,144 @@
           "checkedAt": {
             "type": "string",
             "minLength": 1
+          },
+          "startingFive": {
+            "type": "boolean"
+          },
+          "playerCategory": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 24
+          },
+          "fecapaFields": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "summary": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "Núm.": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "P": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "C": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "5i": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "Cat": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "G": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "As": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "PEN": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "FD": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "F→": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "F←": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "TA": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "TB": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "TR": {
+                    "type": "string",
+                    "maxLength": 32
+                  }
+                }
+              },
+              "official": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "Núm.": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "P": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "C": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "5i": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "Cat": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "G": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "As": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "PEN": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "FD": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "F→": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "F←": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "TA": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "TB": {
+                    "type": "string",
+                    "maxLength": 32
+                  },
+                  "TR": {
+                    "type": "string",
+                    "maxLength": 32
+                  }
+                }
+              }
+            }
           }
         }
       }

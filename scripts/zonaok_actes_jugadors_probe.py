@@ -105,7 +105,7 @@ CAPTURE=r"""({league,mode})=>{
  if(modal.length!==1)return {rows:[],shapes:{},sideEvidence:{}};
  const scope=modal[0],text=e=>String(e?.innerText||'').replace(/\s+/g,' ').trim();
  const teams={home:text(scope.querySelector('.sidgad-modal-team.sidgad-local .sidgad-modal-team-name')),away:text(scope.querySelector('.sidgad-modal-team.sidgad-visit .sidgad-modal-team-name'))};
- const fields={number:/^(num|numero|dorsal|nº)$/,goalkeeper:/^(p|porter|portero|portera)$/,captain:/^(c|capita|capitana|capitan)$/,goals:/^(g|gol|gols|goles)$/,assists:/^(a|as|assistencies|asistencias)$/,yellowCards:/^(ta|targetes grogues|tarjetas amarillas)$/,blueCards:/^(tb|targetes blaves|tarjetas azules)$/,redCards:/^(tr|targetes vermelles|tarjetas rojas)$/};
+ const fields={startingFive:/^5i$/,playerCategory:/^cat$/,penalties:/^pen$/,directFreeHits:/^fd$/,foulsCommitted:/^f\s*->$/,foulsReceived:/^f\s*<-$/,number:/^(num|numero|dorsal|nº)$/,goalkeeper:/^(p|porter|portero|portera)$/,captain:/^(c|capita|capitana|capitan)$/,goals:/^(g|gol|gols|goles)$/,assists:/^(a|as|assistencies|asistencias)$/,yellowCards:/^(ta|targetes grogues|tarjetas amarillas)$/,blueCards:/^(tb|targetes blaves|tarjetas azules)$/,redCards:/^(tr|targetes vermelles|tarjetas rojas)$/};
  const field=c=>{
    const values=[text(c),c.title,c.getAttribute('aria-label'),...Array.from(c.querySelectorAll('[title],[aria-label],img[alt]')).flatMap(e=>[e.title,e.getAttribute('aria-label'),e.getAttribute('alt')])];
    const iconFields={yellowCards:'.acta-hp-card.card-yellow',blueCards:'.acta-hp-card.card-blue',redCards:'.acta-hp-card.card-red'};
@@ -144,10 +144,18 @@ CAPTURE=r"""({league,mode})=>{
      const shirt=integer(get(cols,cells,'number'));
      if(shirt===null)continue;
      const p=val(get(cols,cells,'goalkeeper')),c=val(get(cols,cells,'captain'));
-     const stats={};for(const k of ['goals','assists','yellowCards','blueCards','redCards']){
+     const stats={};for(const k of ['goals','assists','yellowCards','blueCards','redCards','penalties','directFreeHits','foulsCommitted','foulsReceived']){
        const n=integer(get(cols,cells,k));if(n!==null)stats[k]=n;
      }
      const r={shirtNumber:shirt,stats};
+     // Preserve exact visible cells, including blank values. Do not invent a zero.
+     const raw={};const labels={number:'Núm.',goalkeeper:'P',captain:'C',startingFive:'5i',playerCategory:'Cat',goals:'G',assists:'As',penalties:'PEN',directFreeHits:'FD',foulsCommitted:'F→',foulsReceived:'F←',yellowCards:'TA',blueCards:'TB',redCards:'TR'};
+     for(const [k,label] of Object.entries(labels)){const cell=get(cols,cells,k);if(cell){const value=text(cell);if(value.length<=32&&/^[\p{L}\p{N}\s.,:/+\-✓✔×]*$/u.test(value))raw[label]=value}}
+     if(Object.keys(raw).length)r.rawFields=raw;
+     const starting=get(cols,cells,'startingFive'),category=get(cols,cells,'playerCategory');
+     if(starting&&/^(?:5i|x|1|si|sí|✓|✔)$/i.test(text(starting)))r.startingFive=true;
+     else if(starting&&/^(?:0|no)$/i.test(text(starting)))r.startingFive=false;
+     if(category&&/^[\p{L}\p{N} .-]{1,24}$/u.test(text(category)))r.playerCategory=text(category);
      if(p==='p'||p==='')r.position=p==='p'?'goalkeeper':'field';
      if(c==='c'||c==='')r.captain=c==='c';
      if(mode==='summary'){
@@ -189,6 +197,10 @@ def ingest_appearances(doc,league,match,summary,official,stamp):
         if r.get("teamName"):a["teamName"]=r["teamName"]
         if r.get("position") in {"goalkeeper","field"}:a["position"]=r["position"]
         stats=dict(r.get("stats",{}))
+        raw={}
+        if r.get("rawFields"):raw["summary"]=r["rawFields"]
+        for k in ("startingFive","playerCategory"):
+            if k in r:a[k]=r[k]
         matches=[o for o in official if o["shirtNumber"]==r["shirtNumber"] and set(o["nameKeys"])&set(r["nameKeys"])]
         # Reject ambiguous matches in either direction.
         if len(matches)==1:
@@ -197,10 +209,16 @@ def ingest_appearances(doc,league,match,summary,official,stamp):
             if len(reverse)==1:
                 report["officialMatched"]+=1
                 if "captain" in o:a["captain"]=o["captain"];report["captainsMarked"]+=int(o["captain"])
+                if o.get("rawFields"):raw["official"]=o["rawFields"]
+                for k in ("startingFive","playerCategory"):
+                    if k in o:
+                        if k not in a:a[k]=o[k]
+                        elif a[k]!=o[k]:a.pop(k)
                 for k,v in o.get("stats",{}).items():
                     if k in stats and stats[k]!=v:stats.pop(k);report["conflicts"]+=1
                     else:stats[k]=v
         if stats:a["stats"]=stats
+        if raw:a["fecapaFields"]=raw
         prev=doc["matchAppearances"].get(key)
         if prev:
             if any(prev.get(k)!=a.get(k) for k in ("shirtNumber","position","captain","stats","teamName")):

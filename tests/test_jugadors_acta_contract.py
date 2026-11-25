@@ -13,6 +13,12 @@ class TestActaContract(unittest.TestCase):
         d=self.candidate()
         self.assertTrue(verify_master(d))
         self.assertTrue(persistence_probe(d)["reimportNoDuplicates"])
+    def test_new_confirmed_fields(self):
+        d=self.candidate();a=d["matchAppearances"]["41|1|3|home|123"]
+        a.update(startingFive=True,playerCategory="INFB",fecapaFields={"summary":{"5i":"X","Cat":"INFB","PEN":"","FD":"0","F→":"2","F←":"3"}})
+        a["stats"].update(penalties=0,directFreeHits=0,foulsCommitted=2,foulsReceived=3)
+        self.assertTrue(verify_master(d))
+        self.assertTrue(persistence_probe(d)["reimportNoDuplicates"])
     def test_invalid_key(self):
         d=self.candidate();d["matchAppearances"]["41|1|4|home|123"]=d["matchAppearances"].pop("41|1|3|home|123")
         with self.assertRaises(ValueError):verify_master(d)

@@ -36,6 +36,13 @@ async def stable_rows(page,league,mode):
         await page.wait_for_timeout(650)
     return []
 
+async def official_tab(modal):
+    tabs=modal.locator(".sidgad-modal-tab-btn:visible")
+    names=await tabs.all_inner_texts()
+    accepted={"acta","acta del partit","acta del partido","acta oficial","official match report"}
+    matches=[i for i,name in enumerate(names) if " ".join("".join(c for c in unicodedata.normalize("NFKD",name.lower()) if not unicodedata.combining(c)).split()) in accepted]
+    return tabs.nth(matches[0]) if len(matches)==1 else None
+
 async def fetch_acta(ctx,l,m):
     page=await ctx.new_page()
     try:
@@ -45,10 +52,10 @@ async def fetch_acta(ctx,l,m):
         summary=await stable_rows(page,l,"summary")
         if not summary:return [],[],"summary_empty"
         modal=page.locator(".sidgad-match-modal:visible")
-        tabs=modal.locator(".sidgad-modal-tab-btn:visible")
         official=[]
-        if await modal.count()==1 and await tabs.count()==2:
-            await tabs.nth(1).click(timeout=10000)
+        target=await official_tab(modal) if await modal.count()==1 else None
+        if target is not None:
+            await target.click(timeout=10000)
             try:
                 await page.wait_for_selector(".sidgad-match-modal .sidgad-acta-hoja",timeout=12000)
                 official=await stable_rows(page,l,"official")
