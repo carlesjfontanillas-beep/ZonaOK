@@ -190,6 +190,18 @@ class Players(unittest.TestCase):
         self.assertFalse(p.locator("#jp-suggestions").is_visible())
         self.assertEqual(p.locator("#jp-search").input_value(),"")
         self.assertFalse(self.errors,self.errors)
+    def test_demo_additional_favorite_team(self):
+        p=self.page
+        p.add_init_script("""localStorage.setItem('ZONAOK_FAVORITS_V1',JSON.stringify({clubs:['FC Barcelona'],teams:['TEAM|FC BARCELONA|ALEVI OR 10']}))""")
+        p.route("**/zonaok-tots-agenda.json?*",lambda r:r.fulfill(json={"schema":"zonaok-all-v1","kind":"agenda","rows":[{"home":"FC BARCELONA","away":"CLUB DE MOSTRA","competition":"ALEVI OR 10","leagueId":"4789"}]}))
+        p.route("**/zonaok-classificacions.json?*",lambda r:r.fulfill(json={"competitions":{}}))
+        p.goto(self.base+"/favorits.html?demo=2")
+        box=p.locator(".zok-jp-team-picker").first
+        box.locator("input").fill("fictici")
+        box.get_by_role("button",name="Jugador fictici 03",exact=False).click()
+        box.get_by_text("Seleccionat: Jugador fictici 03",exact=False).wait_for()
+        p.goto(self.base+"/jugadors.html?demo=2")
+        p.get_by_role("button",name="Jugador fictici 03",exact=False).wait_for()
     def test_navigation(self):
         p=self.page
         p.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_ONBOARDING_V1','1')")

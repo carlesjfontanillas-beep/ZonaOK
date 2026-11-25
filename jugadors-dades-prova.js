@@ -36,6 +36,22 @@ function write(v){localStorage.setItem(P,JSON.stringify(v));window.dispatchEvent
 function fav(id,on){const s=read();s.favorites=on?[...new Set([...s.favorites,id])]:s.favorites.filter(x=>x!==id);write(s)}
 function assign(team,id){const s=read();if(id){s.teamPlayers[team]=id;s.favorites=[...new Set([...s.favorites,id])]}else delete s.teamPlayers[team];write(s)}
 function list(id){return memberships.filter(m=>m.playerId===id)}
-function teamMatches(m,teamId){const [,team,group]=String(teamId).split('|');if(!team||!group)return false;const a=N(m.teamName),b=N(team),g=N(group);const alias=(x)=>/^(BAR|BARCA|FC BARCELONA|FCB)( A)?$/.test(x)?'BARCA':/^(CPSCB|CPSC B|CP SANT CELONI B|SANT CELONI B)$/.test(x)?'CELONI B':x;return alias(a)===alias(b)&&N(m.groupName)===g}
+function teamMatches(m,teamId){const [,team,...parts]=String(teamId).split('|'),group=parts.join('|');if(!team||!group)return false;const a=N(m.teamName),b=N(team),g=N(group);const alias=(x)=>/^(BAR|BARCA|FC BARCELONA|FCB)( A)?$/.test(x)?'BARCA':/^(CPSCB|CPSC B|CP SANT CELONI B|SANT CELONI B)$/.test(x)?'CELONI B':x;return alias(a)===alias(b)&&N(m.groupName)===g}
+// En la demostració ampliada, generar una plantilla fictícia per a cada equip
+// favorit que encara no té mostra. Mai afegir aquestes dades al mode real.
+if(mode==='2'){
+ let prefs={};try{prefs=JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')||{}}catch{}
+ const hash=value=>{let a=2166136261;for(const c of value){a^=c.charCodeAt(0);a=Math.imul(a,16777619)}return a>>>0};
+ for(const teamId of [...new Set(Array.isArray(prefs.teams)?prefs.teams:[])].filter(x=>typeof x==='string').sort()){
+  const [,team,...parts]=teamId.split('|'),group=parts.join('|');if(!team||!group||memberships.some(m=>teamMatches(m,teamId)))continue;
+  const code=hash(N(team)+'|'+N(group)),filter=String(9800000000+code),league=String(prefs.teamLeagueIds?.[teamId]||(/^ALEVI\b/.test(N(group))?'4789':/^INFANTIL\b/.test(N(group))?'4786':/^JUVENIL\b/.test(N(group))?'4784':9700000000+hash(N(group))));
+  const club=(Array.isArray(prefs.clubs)?prefs.clubs:[]).find(c=>N(team).startsWith(N(c))||(/^(?:BAR|BARCA|FC BARCELONA)$/.test(N(c))&&/^(?:BAR|BARCA|FC BARCELONA)\b/.test(N(team)))||(/^(?:CPSC|CP SANT CELONI|SANT CELONI)$/.test(N(c))&&/^(?:CPSC|CP SANT CELONI|SANT CELONI)\b/.test(N(team))))||team;
+  for(let n=1;n<=8;n++){
+   const playerId=String(980000000000+code*10+n),position=n<=2?'goalkeeper':'field';if(players.some(p=>p.playerId===playerId))continue;
+   const name=(position==='goalkeeper'?'Porter':'Jugador')+' fictici '+String(n).padStart(2,'0')+' · '+team+' · '+group;
+   players.push({playerId,name});memberships.push(M(playerId,team,club,league,group,filter,n,position,0,0,0,0));
+  }
+ }
+}
 window.ZonaOKJugadorsDemo=Object.freeze({players,memberships,appearances,norm:N,read,write,fav,assign,list,teamMatches});
 })();
