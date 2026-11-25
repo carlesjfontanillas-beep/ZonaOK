@@ -178,7 +178,21 @@ if(tab==='Partits'){
   matchCard.append(foot);root.append(matchCard);
  }
 }
-else if(tab==='Equips'){for(const x of selected)root.append(card(el('strong','',x.teamName),el('p','zok-jp-gold',x.groupName),el('p','zok-jp-note',(x.sports.played??'—')+' PJ · '+(x.position==='goalkeeper'?'🥅 Porter':(x.sports.goals??'—')+' gols')+' · '+x.seasonName)))}
+else if(tab==='Equips'){
+ for(const x of selected){
+  const teamCard=card(el('strong','',x.teamName),el('p','zok-jp-gold',x.groupName),el('p','zok-jp-note',(x.sports.played??'—')+' PJ · '+(x.position==='goalkeeper'?'🥅 Porter':(x.sports.goals??'—')+' gols')+' · '+x.seasonName));
+  const acts=uniqueMatches([x],id).filter(a=>key(a)===key(x)||(!a.teamFilterId&&a.leagueId===x.leagueId&&rows.filter(m=>m.leagueId===x.leagueId).length===1));
+  const totals=profileTotals([x],acts),line=el('div','zok-jp-team-cards');
+  for(const [k,label,color] of [['yellowCards','Grogues','yellow'],['blueCards','Blaves','blue'],['redCards','Vermelles','red']]){
+   const item=el('span','zok-jp-team-card-count'),symbol=el('span','zok-jp-card-symbol '+color);symbol.setAttribute('aria-hidden','true');
+   const value=totals.sp[k],partial=totals.partial.includes(k)&&Number.isInteger(value);
+   item.append(symbol,el('span','',label+': '+(value??'—')+(partial?'*':'')));line.append(item);
+  }
+  teamCard.append(line);
+  if(['yellowCards','blueCards','redCards'].some(k=>totals.partial.includes(k)&&Number.isInteger(totals.sp[k])))teamCard.append(el('p','zok-jp-note','* Dades parcials de les actes disponibles.'));
+  root.append(teamCard);
+ }
+}
 else if(tab==='Rànquings')renderCategoryRanking(selected,id)}
 $('jp-favs').onclick=()=>{scope='favorites';searchInput.value='';renderList()};$('jp-all').onclick=()=>{scope='all';searchInput.value='';renderList()};searchInput.oninput=renderList;searchInput.addEventListener('keydown',e=>{if(e.key==='Escape'){searchInput.value='';renderList()}else if(e.key==='Enter'&&!suggestions.hidden){const first=suggestions.querySelector('.zok-jp-row-main');if(first){e.preventDefault();first.click()}}});['jp-club','jp-team','jp-category','jp-position'].forEach(k=>$(k).onchange=()=>{filterOptions();renderList()});filterOptions();renderList();
 window.addEventListener('zonaok:jugadors-loaded',()=>{active=null;profile.hidden=true;search.hidden=false;filterOptions();renderList()});
