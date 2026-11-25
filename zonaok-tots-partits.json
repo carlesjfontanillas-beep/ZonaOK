@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-25T18:51:22Z",
+  "updatedAt": "2026-11-25T18:54:35Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-25T18:50:52Z",
@@ -130481,49 +130481,9 @@
       "status": "",
       "scoreSource": "Agenda",
       "scoreUpdatedAt": "2026-11-25T18:50:52Z",
-      "lastAgendaAt": "2026-11-25T18:50:52Z"
-    },
-    {
-      "iso": "2026-11-23",
-      "time": "21:30",
-      "competition": "LCV GRUP B",
-      "home": "CLUB PATI CALAFELL",
-      "away": "CLUB HOQUEI CANET",
-      "venue": "POLIESPORTIU MUNICIPAL DE CALAFELL",
-      "homeLogo": "",
-      "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
-      "status": "",
-      "round": "",
-      "homeScore": null,
-      "awayScore": null,
+      "lastAgendaAt": "2026-11-25T18:50:52Z",
       "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
-      "scoreUpdatedAt": "",
-      "scoreSource": "",
-      "directeUpdatedAt": ""
-    },
-    {
-      "iso": "2026-11-23",
-      "time": "21:30",
-      "competition": "LCV MÀSTER 50",
-      "home": "CLUB PATI CALAFELL",
-      "away": "MOLLET HC",
-      "venue": "POLIESPORTIU MUNICIPAL DE CALAFELL",
-      "homeLogo": "",
-      "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
-      "status": "",
-      "round": "",
-      "homeScore": null,
-      "awayScore": null,
-      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
-      "scoreUpdatedAt": "",
-      "scoreSource": "",
-      "directeUpdatedAt": ""
+      "round": ""
     },
     {
       "iso": "2026-11-23",
@@ -130564,7 +130524,9 @@
       "status": "",
       "scoreSource": "Agenda",
       "scoreUpdatedAt": "2026-11-25T18:50:52Z",
-      "lastAgendaAt": "2026-11-25T18:50:52Z"
+      "lastAgendaAt": "2026-11-25T18:50:52Z",
+      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+      "round": ""
     },
     {
       "iso": "2026-11-24",
@@ -274687,7 +274649,7 @@
     }
   ],
   "stats": {
-    "total": 12334,
+    "total": 12332,
     "withScores": 5730,
     "withActaLinks": 2009,
     "verifiedActes": 0
