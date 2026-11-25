@@ -175,7 +175,7 @@ if(tab==='Partits'){
   statsLine.append(el('span','zok-jp-gold',a.position==='goalkeeper'?(teamScore(a)?'GF equip '+teamScore(a)[0]+' · GC equip '+teamScore(a)[1]:'Resultat no verificat')+(a.participation==='played'?' · Participació confirmada':' · Consta a l’acta'):(a.stats.goals??'—')+' gols · '+(a.stats.assists??'—')+' assist.'));
   const blue=el('span','zok-jp-blue-cards');const symbol=el('span','zok-jp-blue-icon');symbol.setAttribute('aria-hidden','true');blue.append(symbol,el('span','','Blaves: '+(a.stats.blueCards??'—')));statsLine.append(blue);content.append(statsLine);
   const foot=el('div','zok-jp-match-foot');foot.append(el('p','zok-jp-note',(all?(rows.find(x=>key(x)===key(a))?.groupName||a.teamName)+' · ':'')+'Dorsal '+(a.shirtNumber??'—')+(a.captain?' · Capità':'')+' · '+(a.position==='goalkeeper'?'Porter':a.position==='field'?'Pista':'Posició no verificada')));
-  if(a.actaUrl){const l=el('a','zok-jp-btn','Acta');l.href=a.actaUrl;l.target='_blank';l.rel='noopener';side.append(l)}
+  const actaUrl=window.ZonaOKActaLinks.savedUrl(a);if(actaUrl){const l=el('a','zok-jp-btn','Acta');l.href=actaUrl;l.target='_blank';l.rel='noopener';side.append(l)}
   content.append(foot);matchCard.append(content,side);root.append(matchCard);
  }
 }

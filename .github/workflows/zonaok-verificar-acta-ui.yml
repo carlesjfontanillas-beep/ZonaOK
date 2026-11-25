@@ -1,0 +1,45 @@
+name: 'ZonaOK - Verificar botons Acta'
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'zonaok-acta-links.js'
+      - 'index.html'
+      - 'zonaok-resultats-7dies.js'
+      - 'jugadors.js'
+      - 'tests/test_acta_links.cjs'
+      - '.github/workflows/zonaok-verificar-acta-ui.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Proves dels enllaços guardats
+        run: node tests/test_acta_links.cjs
+      - name: Sintaxi JavaScript de tots els menús
+        run: |
+          for f in zonaok-acta-links.js zonaok-resultats-7dies.js app.js zonaok-sync-v5.js jugadors.js; do node --check "$f"; done
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import subprocess,tempfile
+          class Scripts(HTMLParser):
+              def __init__(self): super().__init__(); self.active=False; self.parts=[]; self.scripts=[]
+              def handle_starttag(self,tag,attrs):
+                  if tag=='script' and 'src' not in dict(attrs): self.active=True; self.parts=[]
+              def handle_data(self,data):
+                  if self.active:self.parts.append(data)
+              def handle_endtag(self,tag):
+                  if tag=='script' and self.active:self.scripts.append(''.join(self.parts));self.active=False
+          p=Scripts();p.feed(Path('index.html').read_text())
+          with tempfile.TemporaryDirectory() as d:
+              for i,s in enumerate(p.scripts):
+                  f=Path(d)/f'script-{i}.js';f.write_text(s);subprocess.run(['node','--check',str(f)],check=True)
+          print('Scripts HTML correctes:',len(p.scripts))
+          PY

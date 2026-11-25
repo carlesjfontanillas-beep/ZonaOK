@@ -234,6 +234,7 @@
     return rows.map(row => {
       const k = key(row), f = linked.get(k);
       if (!f || ambiguous.has(k) || (row.matchId && String(row.matchId) !== String(f.matchId)) ||
+          (row.leagueId && String(row.leagueId) !== String(f.leagueId)) ||
           (row.actaUrl && row.actaUrl !== f.actaUrl)) return row;
       return {...row, matchId: String(f.matchId), id: row.id || String(f.matchId),
         leagueId: row.leagueId || String(f.leagueId), actaUrl: f.actaUrl};
@@ -270,33 +271,15 @@
     category.title = row.competition || 'Categoria no informada';
     const time = make('strong', 'zok-recent-time', row.time);
     const date = make('small', 'zok-recent-day', prettyDate(row.iso));
-    const acta = make('button', 'zok-recent-acta', 'Acta');
-    acta.type = 'button';
-    acta.setAttribute('aria-label', 'Veure la fitxa i l’acta del partit');
-    acta.onclick = () => {
-      // Quan l'Agenda porta liga + partido oficials, obrir la fitxa directament.
-      // Aleshores l'usuari pot consultar l'acta si FECAPA ja l'ha publicada.
-      try {
-        const url = new URL(String(row.actaUrl || ''), location.href);
-        if (url.protocol === 'https:' &&
-            ['hoqueipatins.fecapa.cat', 'www.hoqueipatins.fecapa.cat'].includes(url.hostname) &&
-            /^\d{3,10}$/.test(url.searchParams.get('liga') || '') &&
-            /^\d{4,10}$/.test(url.searchParams.get('partido') || '')) {
-          window.open(url.href, '_blank', 'noopener');
-          return;
-        }
-      } catch (_) { /* Sense URL oficial verificada: usar la funció existent. */ }
-      if (typeof window.ZonaOKActes?.open === 'function') {
-        // Preservem els identificadors del nou JSON, necessaris per localitzar l'acta.
-        window.ZonaOKActes.open({
-          ...row,
-          id: row.id || row.matchId || '',
-          leagueId: row.leagueId || '',
-          actaUrl: row.actaUrl || ''
-        }, row.leagueId || 'live');
-      } else alert('La funció d’actes de ZonaOK no està disponible en aquesta versió.');
-    };
-    top.append(category, time, date, acta);
+    top.append(category, time, date);
+    const actaUrl=window.ZonaOKActaLinks.savedUrl(row)||window.ZonaOKActes?.url(row,row.leagueId||'live')||'';
+    if(actaUrl){
+      const acta=make('button','zok-recent-acta','Acta');
+      acta.type='button';
+      acta.setAttribute('aria-label','Veure la fitxa i l’acta del partit');
+      acta.onclick=()=>window.open(actaUrl,'_blank','noopener');
+      top.append(acta);
+    }
 
     // Segona línia: escuts (inclosos els clubs nous), equips i marcador.
     const teams = make('div', 'teams');
@@ -386,7 +369,7 @@
     status.textContent = 'Carregant dades de GitHub…';
     try {
       const data = await loadData();
-      matches = rowsInLastSevenDays(data.rows);
+      matches = await enrichActes(rowsInLastSevenDays(data.rows));
       setTeamAliases(matches, data.agendaRows || []);
       updateClubOptions();
       updateCategoryOptions();

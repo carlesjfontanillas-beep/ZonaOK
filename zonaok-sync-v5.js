@@ -281,6 +281,7 @@
   }
   function inferLeague(r){const n=norm(r.competition);if(/ALEVI OR 0?3/.test(n))return '4789';if(/INFANTIL OR 0?10/.test(n))return '4786';if(/JUVENIL OR 0?6/.test(n))return '4784';return String(r.league||'');}
   function card(r,compact){
+    const actaUrl=window.ZonaOKActes?.url(r,inferLeague(r))||window.ZonaOKActaLinks?.savedUrl(r)||'';
     const cls=isBarca(r.home)||isBarca(r.away)?'zok-v5-barca':
       /INFANTIL OR 10/.test(norm(r.competition))&& (isCeloni(r.home)||isCeloni(r.away))?'zok-v5-infantil':
       /JUVENIL OR 6/.test(norm(r.competition))&&(isCeloni(r.home)||isCeloni(r.away))?'zok-v5-juvenil':'zok-v5-neutral';
@@ -291,7 +292,7 @@
     const teams=el('div','teams'),middle=el('div','middle');middle.append(el('div','score',validScore(r.homeScore)&&validScore(r.awayScore)?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'),el('small','score-note',validScore(r.homeScore)&&validScore(r.awayScore)?scoreLabel:'Pendent'));
     // V15: les actes són només una interacció addicional; NO substituïm
     // el filtratge de temporada V10.5 ni els resultats de les targetes.
-    if(validScore(r.homeScore)&&validScore(r.awayScore)){
+    if(actaUrl){
       const acta=el('button','zok-acta-chip','⌕ Acta');acta.type='button';
       acta.setAttribute('aria-label','Obrir acta de '+r.home+' contra '+r.away);
       acta.addEventListener('click',ev=>{ev.stopPropagation();window.ZonaOKActes?.open(r,inferLeague(r));});
@@ -319,8 +320,8 @@
       c.append(venue);
     }
     const actions=el('div','match-actions');
-    if(r.actaUrl){
-      const link=el('a','light','\u2315 Acta');link.href=r.actaUrl;link.target='_blank';link.rel='noopener';
+    if(actaUrl){
+      const link=el('a','light','\u2315 Acta');link.href=actaUrl;link.target='_blank';link.rel='noopener';
       link.setAttribute('aria-label','Obrir la fitxa i l\u2019acta oficial del partit');actions.append(link);
     }
     if(actions.childNodes.length)c.append(actions);

@@ -418,6 +418,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
   line-height:1.1!important
 }
 </style>
+<script src="zonaok-acta-links.js?v=20261125-acta1"></script>
 <script src="zonaok-nav-shared.js?v=20261125-cerca-nav1"></script>
 <link rel="stylesheet" href="zonaok-push-header.css?v=20261125-push6-page">
 </head>
@@ -1472,6 +1473,7 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
   }
   function inferLeague(r){const n=norm(r.competition);if(/ALEVI OR 0?3/.test(n))return '4789';if(/INFANTIL OR 0?10/.test(n))return '4786';if(/JUVENIL OR 0?6/.test(n))return '4784';return String(r.league||'');}
   function card(r,compact){
+    const actaUrl=window.ZonaOKActes?.url(r,inferLeague(r))||window.ZonaOKActaLinks.savedUrl(r);
     const c=el('article','match zok-v5 zok-v5-neutral'+(compact?' zok-compact':''));
     applyFavoriteCardColor(c,r);
     c.dataset.zokV5='1';
@@ -1480,7 +1482,7 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
     const teams=el('div','teams'),middle=el('div','middle');middle.append(el('div','score',validScore(r.homeScore)&&validScore(r.awayScore)?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'),el('small','score-note',validScore(r.homeScore)&&validScore(r.awayScore)?scoreLabel:'Pendent'));
     // V15: les actes són només una interacció addicional; NO substituïm
     // el filtratge de temporada V10.5 ni els resultats de les targetes.
-    if(validScore(r.homeScore)&&validScore(r.awayScore)){
+    if(actaUrl){
       c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');
       c.addEventListener('click',ev=>{if(ev.target.closest?.('button,a,input,select,textarea'))return;window.ZonaOKActes?.open(r,inferLeague(r));});
       c.addEventListener('keydown',ev=>{if(ev.target!==c||(ev.key!=='Enter'&&ev.key!==' '))return;ev.preventDefault();window.ZonaOKActes?.open(r,inferLeague(r));});
@@ -1494,13 +1496,9 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
     const actions=el('div','match-actions');
     const map=el('a','light','↗ Google Maps');map.href=mapsURL(r.venue||((r.home||'')+' '+(r.away||'')));map.target='_blank';map.rel='noopener noreferrer';
     map.setAttribute('aria-label','Obrir Google Maps per al partit '+r.home+' contra '+r.away);actions.append(map);
-    if(r.actaUrl&&compact){
-      const link=el('a','light','⌕ Acta');link.href=r.actaUrl;link.target='_blank';link.rel='noopener';actions.append(link);actions.classList.add('zok-has-acta');
-    }else if(!compact&&(r.actaUrl||validScore(r.homeScore)&&validScore(r.awayScore))){
-      if(validScore(r.homeScore)&&validScore(r.awayScore)){
-        const acta=el('button','zok-home-acta','⌕ Acta');acta.type='button';acta.setAttribute('aria-label','Obrir acta de '+r.home+' contra '+r.away);
-        acta.addEventListener('click',ev=>{ev.stopPropagation();window.ZonaOKActes?.open(r,inferLeague(r));});actions.append(acta);
-      }else{const link=el('a','light','⌕ Acta');link.href=r.actaUrl;link.target='_blank';link.rel='noopener';actions.append(link)}
+    if(actaUrl){
+      const acta=el('button',compact?'light':'zok-home-acta','⌕ Acta');acta.type='button';acta.setAttribute('aria-label','Obrir acta de '+r.home+' contra '+r.away);
+      acta.addEventListener('click',ev=>{ev.stopPropagation();window.ZonaOKActes?.open({...r,actaUrl},inferLeague(r));});actions.append(acta);
       actions.classList.add('zok-has-acta');
     }
     const calendar=el('button','zok-calendar-btn','▦ Calendari');calendar.type='button';calendar.title='Afegir al calendari';
@@ -1780,59 +1778,35 @@ function matchTeamKey(name){
   return v.replace(/^(?:CP|C P|CLUB PATI)\s+/,'');
 }
 function exactActaLink(r,id){
-  const fromImport=officialFecapaURL(r?.actaUrl);
-  if(fromImport){
-    const u=new URL(fromImport);
-    if(numericId(u.searchParams.get('partido'))||/acta|fecapa_gr_/i.test(u.pathname))return fromImport;
-  }
-  const league=matchLeagueId(r,id),match=numericId(r?.id);
-  return league&&match?matchOfficialLink(league,match):'';
+  return window.ZonaOKActaLinks?.savedUrl(r)||'';
 }
 function resolveActaLink(r,id){
   const direct=exactActaLink(r,id);
-  if(direct)return {url:direct,exact:true,method:'Enllaç del partit'};
+  if(direct)return {url:direct,exact:true,method:'Enllaç guardat'};
   const league=matchLeagueId(r,id);
   const official=store.actaIndex?.[league]?.rows||[];
   const stats={league,imported:official.length,sameDay:0,withBothTeams:0};
-  const same=(x,y)=>matchTeamKey(x)===matchTeamKey(y);
-  const unique=values=>[...new Set(values)];
-  const exact=[],byDay=[];
-  const favSide=(name)=>{
-    const n=matchTeamKey(name);
-    if(n==='BARCA')return 'BARCA';
-    if(/^SANT CELONI(?: [AB])?$/.test(n))return n;
-    return '';
-  };
-  for(const other of official){
-    if(String(other.iso)!==String(r.iso))continue;
-    const idp=numericId(other.id);if(!idp)continue;
-    stats.sameDay++;
-    const url=matchOfficialLink(league,idp);
-    if(same(other.home,r.home)&&same(other.away,r.away)){
-      stats.withBothTeams++;exact.push(url);
-    }
-    // No dependre d'un nom patrocinat exacte: només es pot usar un únic
-    // partit de la mateixa lliga i el mateix dia, amb el favorit al mateix costat.
-    if((favSide(other.home)&&favSide(other.home)===favSide(r.home))||
-       (favSide(other.away)&&favSide(other.away)===favSide(r.away)))byDay.push(url);
-  }
-  const matched=unique(exact);
-  if(matched.length===1)return {url:matched[0],exact:true,method:'Data i equips'};
-  // Davant de més d'un ID contradictori, no triem per hora ni marcador.
-  if(matched.length>1)return {url:league?calendarUrl(league):BASE,exact:false,stats};
-  if(unique(byDay).length===1 && stats.sameDay===1)return {url:byDay[0],exact:true,method:'Únic partit del grup aquell dia'};
-  // Els calendaris de Magí/Ton poden portar un enllaç directe importat.
   const possible=new Set();
-  for(const group of ['4789','4786','4784']){
-    if(league&&group!==league)continue;
-    for(const rows of [allRows(group),store.seasons?.[group]?.rows||[]])for(const other of rows){
-      if(other.iso!==r.iso||!same(other.home,r.home)||!same(other.away,r.away))continue;
-      const known=exactActaLink(other,group);
-      if(known)possible.add(known);
-    }
+  const same=(a,b)=>matchTeamKey(a)===matchTeamKey(b);
+  const mid=numericId(r?.matchId||r?.id);
+  const consider=other=>{
+    if(String(other.iso)!==String(r.iso)||!same(other.home,r.home)||!same(other.away,r.away))return;
+    const otherId=numericId(other.matchId||other.id);
+    if(mid&&otherId&&mid!==otherId)return;
+    const url=exactActaLink(other,league);
+    if(!url||new URL(url).searchParams.get('liga')!==league)return;
+    possible.add(url);
+  };
+  if(league){
+    for(const other of official)consider(other);
+    for(const rows of [allRows(league),store.seasons?.[league]?.rows||[]])for(const other of rows)consider(other);
   }
-  if(possible.size===1)return {url:[...possible][0],exact:true,method:'Calendari oficial'};
-  return {url:league?calendarUrl(league):BASE,exact:false,stats};
+  if(possible.size===1)return {url:[...possible][0],exact:true,method:'Enllaç guardat al catàleg'};
+  return {url:'',exact:false,stats};
+}
+function savedActaLink(r,id){
+  const link=resolveActaLink(r,id);
+  return link.exact?link.url:'';
 }
 let actaDialog=null,actaFrame=null,actaTitle=null,actaHint=null,actaExternal=null,actaPosition=null;
 function setupActaDialog(){
@@ -1869,11 +1843,11 @@ function setupActaDialog(){
   });
 }
 function openActaDialog(r,id){
-  if(!scorePresent(r))return;
   // La importacio de JSON i el mòdul de sincronització poden escriure al mateix magatzem.
   store=load();
-  if(!actaDialog)setupActaDialog();
   const link=resolveActaLink(r,id);
+  if(!link.exact)return;
+  if(!actaDialog)setupActaDialog();
   actaPosition={x:window.scrollX,y:window.scrollY};
   actaTitle.textContent=`${r.home} · ${r.homeScore} - ${r.awayScore} · ${r.away} · ${niceDate(r.iso)}`;
   actaHint.textContent=link.exact
@@ -1888,7 +1862,7 @@ function openActaDialog(r,id){
   else actaFrame.removeAttribute('src');
 }
 // API mínima perquè zonaok-sync-v5.js obri exactament la mateixa finestra.
-window.ZonaOKActes={open:openActaDialog,resolve:resolveActaLink};
+window.ZonaOKActes={open:openActaDialog,resolve:resolveActaLink,url:savedActaLink};
 
 function weekText(){
   const {start,end}=chosenWeek();
@@ -1940,13 +1914,13 @@ r.append(a,mk('span','',resumPartits+' \u00B7 '+(item?.standings?.length||0)+' e
 function formatTimestamp(iso){try{return new Intl.DateTimeFormat('ca-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'}).format(new Date(iso))}catch(_){return 'Data desconeguda'}}
 function safeImage(src){try{const u=new URL(src);return u.protocol==='https:'&&(/(^|\.)hoqueipatins\.fecapa\.cat$/i.test(u.hostname)||(u.hostname==='sidgad.cloud'&&u.pathname.startsWith('/fecapa/images/logos_clubes/')))?u.href:''}catch(_){return ''}}
 function dateStatus(r){const now=localDate();if(r.status)return r.status+' \u00B7 lectura Safari';if(r.homeScore!==null&&r.awayScore!==null)return 'Marcador FECAPA';return r.iso>now?'Programat':'Sense resultat confirmat'}
-function createCard(r,id){const c=mk('article','match gray');window.ZonaOKApplyFavoriteCardColor?.(c,r);
+function createCard(r,id){const actaUrl=savedActaLink(r,id);const c=mk('article','match gray');window.ZonaOKApplyFavoriteCardColor?.(c,r);
 const top=mk('div','match-top'),pill=mk('span','pill',r.competition||LEAGUES[id]?.name||'FECAPA'),tag=mk('span','tag',dateStatus(r));top.append(pill,tag);c.append(top);
 const dt=mk('div','match-date');dt.append(mk('strong','',r.time||'Hora pendent'),mk('small','',niceDate(r.iso)));c.append(dt);
 const teams=mk('div','teams');const side=(name,logo)=>{name=name==='BAR'?'BAR\u00C7A':name==='CPSC'?'CP SANT CELONI':name;logo=logo||window.ZonaOKFavoriteLogoFor?.(name)||'';const d=mk('div','side'),crest=mk('div','crest');if(safeImage(logo)){const img=mk('img');img.src=safeImage(logo);img.alt='Escut de '+name;img.loading='lazy';img.onerror=()=>{crest.replaceChildren(mk('span','crest-fallback','\u{1F3D2}'))};crest.append(img)}else crest.append(mk('span','crest-fallback',name?name.trim().charAt(0).toUpperCase():'\u{1F3D2}'));d.append(crest,mk('strong','',name||'Equip no identificat'));return d};
 const mid=mk('div','middle');mid.append(mk('div','score',r.homeScore!==null&&r.awayScore!==null?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'));mid.append(mk('small','score-note',r.homeScore!==null?'Resultat':'Pendent'));teams.append(side(window.ZonaOKStateTeamName?.(r.home,r,'home')??r.home,r.homeLogo),mid,side(window.ZonaOKStateTeamName?.(r.away,r,'away')??r.away,r.awayLogo));c.append(teams);
 const loc=mk('div','venue');loc.append(mk('strong','','\u{1F4CD} '+(r.venue||'Pista pendent de verificar a FECAPA')));if(!r.venue)loc.append(mk('div','', 'No s\u2019ha llegit cap pista per a aquest partit'));c.append(loc);
-const buttons=mk('div','match-actions');const maps=mk('a','light','↗ Google Maps');maps.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue||((r.home||'')+' '+(r.away||'')));maps.target='_blank';maps.rel='noopener';buttons.append(maps);if(scorePresent(r)||r.actaUrl){const acta=mk('button','zok-acta-action','⌕ Acta');acta.type='button';acta.onclick=()=>openActaDialog(r,id);acta.setAttribute('aria-label','Obrir l’acta del partit sense sortir de ZonaOK');buttons.append(acta);buttons.classList.add('zok-has-acta')}const cal=mk('button','zok-calendar-btn','▦ Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);buttons.append(cal);c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));if(scorePresent(r)){c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Obrir fitxa del partit '+r.home+' - '+r.away);c.addEventListener('click',e=>{if(e.target.closest?.('button,a,input,select,textarea'))return;openActaDialog(r,id)});c.addEventListener('keydown',e=>{if(e.target!==c||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();openActaDialog(r,id)})}return c}
+const buttons=mk('div','match-actions');const maps=mk('a','light','↗ Google Maps');maps.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue||((r.home||'')+' '+(r.away||'')));maps.target='_blank';maps.rel='noopener';buttons.append(maps);if(actaUrl){const acta=mk('button','zok-acta-action','⌕ Acta');acta.type='button';acta.onclick=()=>openActaDialog(r,id);acta.setAttribute('aria-label','Obrir l’acta del partit sense sortir de ZonaOK');buttons.append(acta);buttons.classList.add('zok-has-acta')}const cal=mk('button','zok-calendar-btn','▦ Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);buttons.append(cal);c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));if(actaUrl){c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Obrir fitxa del partit '+r.home+' - '+r.away);c.addEventListener('click',e=>{if(e.target.closest?.('button,a,input,select,textarea'))return;openActaDialog(r,id)});c.addEventListener('keydown',e=>{if(e.target!==c||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();openActaDialog(r,id)})}return c}
 function zonaokFavoriteTeamWeekRows(i){const f=zonaokFavoriteTeam(i);if(!f)return [];const {start,end}=chosenWeek();return clubRows().filter(r=>r.iso>=start&&r.iso<=end&&normalize(r.competition)===f.category&&(normalize(r.home)===f.team||normalize(r.away)===f.team)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time))}
 function favoriteHelpCard(title,message){const card=mk('article','zok-favorite-empty-card');card.append(mk('h3','',title),mk('p','',message));const link=mk('a','','Configura Favorits');link.href='favorits.html';card.append(link);return card}
 function renderHome(){
@@ -2839,7 +2813,7 @@ window.ZonaOKRefreshSources=async function(){
  window.ZonaOKPullRefresh=refresh;
 })();
 </script>
-  <script defer src="zonaok-resultats-7dies.js?v=20261125-favorite-colors1"></script>
+  <script defer src="zonaok-resultats-7dies.js?v=20261125-acta1"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
   <script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script>
 </body>

@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict');
+const {savedUrl}=require('../zonaok-acta-links.js');
+const url='https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=151001';
+assert.equal(savedUrl({homeScore:8,awayScore:3}),'');
+assert.equal(savedUrl({leagueId:'4789',matchId:'151001'}),'');
+assert.equal(savedUrl({actaUrl:url,homeScore:null,awayScore:null}),url);
+assert.equal(savedUrl({actaUrl:url,leagueId:'4789',matchId:'151001'}),url);
+assert.equal(savedUrl({actaUrl:url,leagueId:'4786'}),'');
+assert.equal(savedUrl({actaUrl:url,matchId:'151002'}),'');
+assert.equal(savedUrl({actaUrl:'https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar'}),'');
+assert.equal(savedUrl({actaUrl:'https://example.com/?liga=4789&partido=151001'}),'');
+assert.equal(savedUrl({actaUrl:'javascript:alert(1)'}),'');
+console.log('9 proves Acta correctes');
