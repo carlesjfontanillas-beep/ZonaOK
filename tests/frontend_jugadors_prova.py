@@ -202,6 +202,20 @@ class Players(unittest.TestCase):
         box.get_by_text("Seleccionat: Jugador fictici 03",exact=False).wait_for()
         p.goto(self.base+"/jugadors.html?demo=2")
         p.get_by_role("button",name="Jugador fictici 03",exact=False).wait_for()
+    def test_favorites_global_catalog(self):
+        p=self.page
+        p.add_init_script("""localStorage.setItem('ZONAOK_FAVORITS_V1',JSON.stringify({clubs:['FC Barcelona'],teams:[]}))""")
+        p.goto(self.base+"/favorits.html?demo=2")
+        search=p.locator("#jugadors-favorits input[type=search]")
+        search.fill("fictici")
+        p.get_by_text("60 coincidències de tot el catàleg",exact=True).wait_for()
+        self.assertEqual(p.locator("#jugadors-favorits input[type=checkbox]").count(),40)
+        p.get_by_role("button",name="Mostra més jugadors (20 restants)",exact=True).click()
+        self.assertEqual(p.locator("#jugadors-favorits input[type=checkbox]").count(),60)
+        search.fill("fictici 060")
+        p.locator("#jugadors-favorits input[type=checkbox]").check()
+        self.assertEqual(p.locator("#jugadors-favorits input[type=checkbox]").count(),1)
+        self.assertTrue(p.locator("#jugadors-favorits input[type=checkbox]").is_checked())
     def test_navigation(self):
         p=self.page
         p.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_ONBOARDING_V1','1')")
