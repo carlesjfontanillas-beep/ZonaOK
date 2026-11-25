@@ -1,0 +1,41 @@
+name: ZonaOK - Notificar finals a Jugadors FLASH
+on:
+  workflow_run:
+    workflows:
+      - ZonaOK - Actes TOTAL AUTO (Chromium Playwright)
+      - ZonaOK - En directe TOTAL AUTO (Chromium Playwright)
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  notify:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_repository.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Detectar nous finals o actes disponibles
+        env:
+          BEFORE: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          python scripts/zonaok_flash_finish_event.py "$BEFORE" "$(git rev-parse HEAD)" > "$RUNNER_TEMP/flash-event.json"
+      - name: Enviar només si hi ha canvis de final
+        env:
+          GH_TOKEN: ${{ secrets.ZONAOK_DADES_DISPATCH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ "$(jq '.client_payload.matches | length' "$RUNNER_TEMP/flash-event.json")" = 0 ]; then
+            echo 'Cap final nou.'
+            exit 0
+          fi
+          if [ -z "$GH_TOKEN" ]; then
+            echo 'Falta configurar el secret ZONAOK_DADES_DISPATCH_TOKEN.'
+            exit 1
+          fi
+          gh api --method POST repos/carlesjfontanillas-beep/ZonaOK-Dades/dispatches --input "$RUNNER_TEMP/flash-event.json"
