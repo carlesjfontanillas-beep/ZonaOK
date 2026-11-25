@@ -1,7 +1,7 @@
 {
   "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
   "name": "zonaok-push",
-  "main": "push/worker.js",
+  "main": "worker.js",
   "compatibility_date": "2026-11-25",
   "workers_dev": true,
   "preview_urls": false,
@@ -16,7 +16,7 @@
       "binding": "DB",
       "database_name": "zonaok-push-db",
       "database_id": "301776a1-93a6-4801-8a4a-30fe91a76fb3",
-      "migrations_dir": "push/migrations"
+      "migrations_dir": "migrations"
     }
   ]
 }
