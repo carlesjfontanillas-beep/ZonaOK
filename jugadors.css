@@ -90,3 +90,9 @@
 .zok-jp-match-foot{display:flex;align-items:center;gap:8px;justify-content:space-between}
 .zok-jp-match-foot p{flex:1;min-width:0;margin:0}
 .zok-jp-match-foot a{margin-left:auto;flex:0 0 auto;padding:6px 11px;text-decoration:none}
+
+/* Sancions de cada equip a la fitxa del jugador */
+.zok-jp-team-cards{display:flex;flex-wrap:wrap;align-items:center;gap:5px 12px;margin-top:8px}
+.zok-jp-team-card-count{display:inline-flex;align-items:center;gap:4px;color:#d2e0eb;font-size:12px;white-space:nowrap}
+.zok-jp-card-symbol{display:inline-block;width:10px;height:14px;border-radius:2px;border:1px solid #ffffff55;box-sizing:border-box}
+.zok-jp-card-symbol.yellow{background:#fbc252}.zok-jp-card-symbol.blue{background:#3893f5}.zok-jp-card-symbol.red{background:#ed5353}
