@@ -107,6 +107,8 @@ jobs:
             python scripts/zonaok_fecapa_unificat.py merge \
               --mode agenda --capture captura-agenda-auto.json \
               --output zonaok-tots-partits.json --compat --report fusio-agenda-auto.json
+            # Fusionar només duplicats inequívocs abans de la validació i publicació.
+            python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-agenda.json
             python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
             git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
             if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
@@ -146,3 +148,4 @@ jobs:
             diagnostic-agenda-auto.json
             captura-agenda-auto.json
             fusio-agenda-auto.json
+            diagnostic-duplicats-agenda.json

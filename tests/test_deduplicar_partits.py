@@ -41,5 +41,16 @@ class DedupTest(unittest.TestCase):
         self.assertEqual(rep2["removed"],0)
         self.assertEqual(rows,again)
 
+class WorkflowIntegrationTest(unittest.TestCase):
+    def test_all_canonical_imports_check_duplicates_before_publishing(self):
+        root=Path(__file__).resolve().parents[1]
+        for mode in ("agenda","directe","actes"):
+            with self.subTest(mode=mode):
+                text=(root/".github"/"workflows"/f"zonaok-auto-{mode}.yml").read_text(encoding="utf-8")
+                check=f"python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-{mode}.json"
+                self.assertIn(check,text)
+                self.assertLess(text.index(check),text.index("python scripts/zonaok_fecapa_unificat.py validate"))
+                self.assertLess(text.index(check),text.index("git add zonaok-tots-partits.json"))
+
 if __name__=="__main__":
     unittest.main()

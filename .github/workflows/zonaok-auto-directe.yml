@@ -106,6 +106,8 @@ jobs:
             python scripts/zonaok_fecapa_unificat.py merge \
               --mode directe --capture captura-directe-auto.json \
               --output zonaok-tots-partits.json --compat --report fusio-directe-auto.json
+            # Fusionar només duplicats inequívocs abans de la validació i publicació.
+            python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-directe.json
             python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
             git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
             if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
@@ -145,3 +147,4 @@ jobs:
             diagnostic-directe-auto.json
             captura-directe-auto.json
             fusio-directe-auto.json
+            diagnostic-duplicats-directe.json
