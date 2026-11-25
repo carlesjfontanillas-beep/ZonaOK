@@ -133,7 +133,7 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] .zok-week-nav{display:none
 #home-cards .match-date small{font-size:14px!important;font-weight:800!important;line-height:1.15!important;white-space:nowrap!important}
 #home-cards .teams{
   width:100%!important;display:grid!important;
-  grid-template-columns:minmax(0,1fr) 58px minmax(0,1fr)!important;
+  grid-template-columns:minmax(0,1fr) clamp(76px,21vw,94px) minmax(0,1fr)!important;
   align-items:center!important;gap:5px!important;
   min-width:0!important;min-height:51px!important;
   margin:4px 0!important;padding:0!important;
@@ -163,8 +163,8 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] .zok-week-nav{display:none
   border-radius:9px!important;margin:0!important;
 }
 #home-cards .crest img{width:27px!important;height:27px!important;object-fit:contain!important}
-#home-cards .teams .middle{min-width:0!important;width:58px!important;max-width:58px!important;align-items:center!important;gap:0!important;text-align:center!important}
-#home-cards .teams .score{font-size:20px!important;line-height:1.08!important;white-space:nowrap!important}
+#home-cards .teams .middle{min-width:0!important;width:100%!important;max-width:100%!important;align-items:center!important;gap:0!important;text-align:center!important}
+#home-cards .teams .score{font-size:clamp(26px,7.4vw,32px)!important;font-weight:900!important;font-variant-numeric:tabular-nums;letter-spacing:-.025em;line-height:1.05!important;white-space:nowrap!important}
 #home-cards .teams .score-note{font-size:9px!important;line-height:1.1!important;margin:0!important}
 #home-cards .teams .zok-acta-chip{padding:1px 4px!important;min-height:0!important;line-height:1.1!important;font-size:10px!important}
 #home-cards .match.zok-v5:not(.zok-compact) .venue,
