@@ -1,0 +1,69 @@
+name: 'ZonaOK - Auditoria i neteja de duplicats'
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/zonaok-deduplicar-partits.yml'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publicar nomes duplicats inequívocs'
+        type: boolean
+        default: true
+permissions:
+  contents: write
+concurrency:
+  group: zonaok-deduplicar-partits
+  cancel-in-progress: false
+jobs:
+  deduplicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Proves de seguretat
+        run: |
+          python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
+          python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Auditar i publicar nomes duplicats inequívocs
+        env:
+          PUBLISH: ${{ github.event_name == 'push' || inputs.publish }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            if [ "$PUBLISH" != "true" ]; then
+              python scripts/zonaok_deduplicar_partits.py
+              exit 0
+            fi
+            python scripts/zonaok_deduplicar_partits.py --apply
+            git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
+            if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
+            if git diff --cached --quiet; then echo 'Sense duplicats fusionables'; exit 0; fi
+            git commit -m 'ZonaOK: fusionar duplicats inequívocs del cataleg'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
+      - name: Resum
+        if: always()
+        run: |
+          if [ -f diagnostic-duplicats.json ]; then
+            python -c 'import json; d=json.load(open("diagnostic-duplicats.json")); print(json.dumps({k:v for k,v in d.items() if k not in ("merged","review")},indent=2))' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: diagnostic-duplicats
+          path: diagnostic-duplicats.json
+          if-no-files-found: ignore
