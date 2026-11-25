@@ -81,6 +81,8 @@ class Players(unittest.TestCase):
         p.route("**/zonaok-tots-agenda.json?*",lambda r:r.fulfill(json={"schema":"zonaok-all-v1","kind":"agenda","rows":[{"home":"FC BARCELONA","away":"CLUB DE MOSTRA","competition":"ALEVI OR 3","leagueId":"4789"}]}))
         p.route("**/zonaok-classificacions.json?*",lambda r:r.fulfill(json={"competitions":{}}))
         p.goto(self.base+"/favorits.html?demo=1")
+        p.locator(".zok-jp-team-picker input").first.wait_for()
+        self.assertEqual(p.locator("#favorites-groups > section > h2").evaluate_all("(nodes)=>nodes.map(n=>n.firstChild.textContent.trim())"),["Clubs","Equips","Jugadors","Categories","Competicions"])
         p.locator("#jugadors-favorits input[type=search]").fill("mostra B")
         p.locator("#jugadors-favorits input[type=checkbox]").check()
         p.locator(".zok-jp-team-picker input").first.wait_for()
