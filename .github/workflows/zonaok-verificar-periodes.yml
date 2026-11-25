@@ -1,0 +1,32 @@
+name: 'ZonaOK - Verificar períodes de partits'
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'zonaok-resultats-7dies.js'
+      - 'tests/test_recent_periods.cjs'
+      - '.github/workflows/zonaok-verificar-periodes.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check zonaok-resultats-7dies.js
+      - run: node tests/test_recent_periods.cjs
+      - name: Comprovar catàleg real
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),assert=require('assert/strict'),{rowsInPeriod}=require('./zonaok-resultats-7dies.js');
+          const data=JSON.parse(fs.readFileSync('zonaok-tots-agenda.json')),now=new Date();
+          const past=rowsInPeriod(data.rows,'past',now),upcoming=rowsInPeriod(data.rows,'upcoming',now);
+          const k=r=>r.iso+'T'+r.time;
+          assert.ok(past.every((r,i)=>!i||k(past[i-1])>=k(r)));
+          assert.ok(upcoming.every((r,i)=>!i||k(upcoming[i-1])<=k(r)));
+          console.log(JSON.stringify({past:past.length,upcoming:upcoming.length}));
+          NODE

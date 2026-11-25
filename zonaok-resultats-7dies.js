@@ -62,12 +62,14 @@
   };
   const setTeamAliases = (rows, references = []) => {
     const candidates = new Map();
-    const sources = [...rows, ...references];
+    const sources = [...rows, ...references], bySlot = new Map();
+    const slot = r => r.iso+'|'+String(r.time||'').padStart(5,'0');
+    for(const r of sources){if(!r?.iso||!r?.time)continue;const k=slot(r);if(!bySlot.has(k))bySlot.set(k,[]);bySlot.get(k).push(r)}
     rowTeamAliases = new WeakMap();
     for (const row of rows) {
       if (!row?.iso || !row?.time) continue;
       const perRow = {};
-      for (const other of sources) {
+      for (const other of (bySlot.get(slot(row))||[])) {
         if (other === row || other.iso !== row.iso || String(other.time || '').padStart(5, '0') !== String(row.time || '').padStart(5, '0') ||
             !aliasCompatible(row.home, other.home) || !aliasCompatible(row.away, other.away)) continue;
         for (const side of ['home', 'away']) {
@@ -150,8 +152,8 @@
   const sameCategory = (a, b) => norm(a) === norm(b);
   const newest = (a, b) => String(b.capturedAt || b.scoreCapturedAt || '').localeCompare(String(a.capturedAt || a.scoreCapturedAt || ''));
 
-  let matches = [];
-  let publishedAt = '';
+  let matches = [], periodRows = {past:[],upcoming:[]}, activePeriod = 'past', periodLoaded = false;
+  let publishedAt = '', pendingLoad = null, periodTitle, periodNote, pastButton, upcomingButton;
   let panel, navButton, clubFilter, categoryFilter, competitionFilter, content, counter, status;
 
   function combinedAgenda(data) {
@@ -188,15 +190,39 @@
       norm(a.competition).localeCompare(norm(b.competition), 'ca'));
   }
 
-  function rowsInLastSevenDays(rows) {
-    const upper = madridTimeKey(new Date());
-    const lower = madridTimeKey(new Date(Date.now() - 7 * 86400000));
+  // Dues finestres mòbils de set dies, amb el rellotge de Madrid.
+  function rowsInPeriod(rows, period, now = new Date()) {
+    const current = madridTimeKey(now);
+    const localShift = days => {
+      // Desplaçament de dates civils: manté l'hora local també en canvi CET/CEST.
+      const d = new Date(current + ':00Z');
+      d.setUTCDate(d.getUTCDate() + days);
+      return d.toISOString().slice(0,16);
+    };
+    const upcoming = period === 'upcoming', edge = localShift(upcoming ? 7 : -7);
     return rows.filter(r => r && /^20\d\d-\d\d-\d\d$/.test(String(r.iso)) &&
       /^\d{2}:\d{2}$/.test(String(r.time)) && r.home && r.away &&
-      rowDateKey(r) >= lower && rowDateKey(r) <= upper &&
-      !/EN JOC|EN DIRECTE|LIVE|IN PROGRESS|PLAYING|DESCANS|PRIMERA PART|SEGONA PART/i.test(String(r.status || '')))
-      .sort((a,b) => rowDateKey(b).localeCompare(rowDateKey(a)) ||
+      (upcoming ? rowDateKey(r) > current && rowDateKey(r) <= edge &&
+        !/AJORNAT|APLAZADO|CANCEL|SUSPES|SUSPÈS|SUSPENDIDO/i.test(String(r.status || '')) :
+        rowDateKey(r) >= edge && rowDateKey(r) <= current &&
+        !/EN JOC|EN DIRECTE|LIVE|IN PROGRESS|PLAYING|DESCANS|PRIMERA PART|SEGONA PART/i.test(String(r.status || ''))))
+      .sort((a,b) => (upcoming ? rowDateKey(a).localeCompare(rowDateKey(b)) : rowDateKey(b).localeCompare(rowDateKey(a))) ||
         norm(a.competition).localeCompare(norm(b.competition),'ca'));
+  }
+
+  function selectPeriod(period) {
+    activePeriod = period === 'upcoming' ? 'upcoming' : 'past';
+    const future = activePeriod === 'upcoming';
+    pastButton.setAttribute('aria-pressed',String(!future));
+    upcomingButton.setAttribute('aria-pressed',String(future));
+    periodTitle.textContent = future ? 'Pròxims partits' : 'Partits recents';
+    periodNote.textContent = future ? 'Pròxims 7 dies · Més propers primer' : 'Darrers 7 dies · Més recents primer';
+    if(!periodLoaded)return;
+    matches = periodRows[activePeriod];
+    updateClubOptions();
+    updateCategoryOptions();
+    updateCompetitionOptions();
+    renderCards();
   }
 
   async function loadData() {
@@ -284,7 +310,7 @@
     // Segona línia: escuts (inclosos els clubs nous), equips i marcador.
     const teams = make('div', 'teams');
     const center = make('div', 'middle');
-    const score = validResult(row) ? `${Number(row.homeScore)} : ${Number(row.awayScore)}` : '– : –';
+    const score = activePeriod !== 'upcoming' && validResult(row) ? `${Number(row.homeScore)} : ${Number(row.awayScore)}` : '– : –';
     center.append(make('strong', 'score', score));
     teams.append(buildTeam(row.home, row.homeLogo, row, 'home'), center, buildTeam(row.away, row.awayLogo, row, 'away'));
     card.append(top, teams);
@@ -346,9 +372,10 @@
     counter.textContent = `${selected.length} ${selected.length === 1 ? 'partit' : 'partits'}`;
     content.replaceChildren();
     if (!selected.length) {
+      const period = activePeriod === 'upcoming' ? 'els pròxims 7 dies' : 'els darrers 7 dies';
       content.append(make('div', 'empty', matches.length ?
-        'No hi ha partits d’aquest club i categoria en els darrers 7 dies.' :
-        'No hi ha partits a l’Agenda dels darrers 7 dies.'));
+        'No hi ha partits amb aquests filtres durant '+period+'.' :
+        'No hi ha partits a l’Agenda durant '+period+'.'));
     } else for (const row of selected) content.append(buildCard(row));
     if (publishedAt) {
       try {
@@ -366,21 +393,23 @@
     document.querySelectorAll('.bottom .navbtn').forEach(button =>
       button.classList.toggle('active', button === navButton));
     panel.scrollIntoView({block: 'start', behavior: 'auto'});
+    if(pendingLoad)return pendingLoad;
     status.textContent = 'Carregant dades de GitHub…';
-    try {
-      const data = await loadData();
-      matches = await enrichActes(rowsInLastSevenDays(data.rows));
-      setTeamAliases(matches, data.agendaRows || []);
-      updateClubOptions();
-      updateCategoryOptions();
-      updateCompetitionOptions();
-      renderCards();
-    } catch (error) {
-      matches = [];
-      content.replaceChildren(make('div', 'empty', error.message || 'No s’han pogut carregar els resultats.'));
-      counter.textContent = '0 partits';
-      status.textContent = 'No s’han pogut llegir els JSON publicats';
-    }
+    pendingLoad=(async()=>{
+      try {
+        const data = await loadData();
+        const now=new Date(),past=rowsInPeriod(data.rows,'past',now),upcoming=rowsInPeriod(data.rows,'upcoming',now);
+        const combined=await enrichActes([...past,...upcoming]);
+        periodRows={past:combined.slice(0,past.length),upcoming:combined.slice(past.length)};
+        setTeamAliases(combined, data.agendaRows || []);
+        periodLoaded=true;
+        selectPeriod(activePeriod);
+      } catch (error) {
+        if(!periodLoaded){matches=[];content.replaceChildren(make('div','empty',error.message||'No s’han pogut carregar els partits.'));counter.textContent='0 partits'}
+        status.textContent = periodLoaded?'No s’han pogut actualitzar els JSON · Dades anteriors conservades':'No s’han pogut llegir els JSON publicats';
+      } finally {pendingLoad=null}
+    })();
+    return pendingLoad;
   }
 
   function install() {
@@ -432,6 +461,10 @@
       #${ID} .zok-suggestions button{padding:9px 10px;border:0;border-radius:7px;background:transparent;color:#fff;text-align:left;font:inherit;font-size:12px;cursor:pointer}
       #${ID} .zok-suggestions button:hover,#${ID} .zok-suggestions button:focus{background:#2869c7;outline:0}
       #${ID} .zok-recent-period{font-size:12px;color:#b3cee1;margin:7px 0 14px}
+      #${ID} .zok-period-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0 10px}
+      #${ID} .zok-period-tabs button{min-width:0;min-height:37px;padding:8px 4px;border:1px solid #719cba88;border-radius:11px;background:#173b55;color:#edf6ff;font:inherit;font-size:13px;font-weight:750;cursor:pointer}
+      #${ID} .zok-period-tabs button[aria-pressed=true]{background:#fbc252;border-color:#fbc252;color:#10283c}
+      #${ID} .zok-period-tabs button:focus-visible{outline:2px solid #fff;outline-offset:2px}
       /* V4 · Dues línies i sense franja inferior: només menú Resultats. */
       #${ID} .cards{display:grid;grid-template-columns:minmax(0,1fr);gap:5px}
       #${ID} .zok-recent-card{width:100%;min-width:0;max-width:100%;min-height:0;height:auto;box-sizing:border-box;padding:5px 8px;border-radius:12px;display:flex;flex-direction:column;gap:3px}
@@ -481,7 +514,8 @@
     panel.hidden = true;
     const header = make('div', 'section-head');
     const left = make('div');
-    left.append(make('span', 'overline', 'AGENDA · MARCADORS'), make('h2', '', 'Partits recents'));
+    periodTitle=make('h2','','Partits recents');
+    left.append(make('span', 'overline', 'AGENDA · MARCADORS'), periodTitle);
     counter = make('span', 'section-tag', '0 partits');
     header.append(left, counter);
     const filterRow = make('div', 'zok-recent-filters');
@@ -503,9 +537,14 @@
     filterRow.append(clubLabel, categoryLabel, competitionLabel);
     content = make('div', 'cards');
     status = make('p', 'zok-recent-stamp', '');
-    panel.append(header, filterRow,
-      make('p', 'zok-recent-period', 'Darrers 7 dies · Tots els partits · Més recents primer'),
-      status, content);
+    const tabs=make('div','zok-period-tabs');tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Període dels partits');
+    pastButton=make('button','','Darrers 7 dies');upcomingButton=make('button','','Pròximament');
+    for(const button of [pastButton,upcomingButton])button.type='button';
+    pastButton.onclick=()=>selectPeriod('past');upcomingButton.onclick=()=>selectPeriod('upcoming');
+    tabs.append(pastButton,upcomingButton);
+    periodNote=make('p','zok-recent-period');
+    panel.append(header, filterRow,tabs,periodNote,status,content);
+    selectPeriod('past');
     const footer = main.querySelector('.footer');
     main.insertBefore(panel, footer || null);
 
@@ -527,6 +566,7 @@
     competitionFilter.addEventListener('input', () => { updateCategoryOptions(); renderCards(); });
   }
 
+  if(typeof module!=='undefined'&&module.exports){module.exports={rowsInPeriod};return}
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install, {once: true});
   else install();
 })();
