@@ -1,0 +1,44 @@
+name: ZonaOK - diagnostic registre Ton Lleida
+on:
+  push:
+    paths:
+      - '.github/workflows/zonaok-diagnostic-ton-lleida.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Llegir registre existent (sense modificar dades)
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import gzip, json
+          from pathlib import Path
+          with gzip.open('imports/jugadors-master.json.gz', 'rt', encoding='utf-8') as f:
+              doc = json.load(f)
+          pid, mid, lid = '70072', '152375', '4786'
+          def values(key):
+              v = doc.get(key, {})
+              return v.values() if isinstance(v, dict) else v if isinstance(v,list) else []
+          appearances = [a for a in values('matchAppearances') if str(a.get('playerId')) == pid and str(a.get('matchId')) == mid and str(a.get('leagueId')) == lid]
+          memberships = []
+          for m in values('memberships'):
+              if str(m.get('playerId')) != pid or str(m.get('leagueId')) != lid:
+                  continue
+              memberships.append({k:v for k,v in m.items() if k in ('playerId','leagueId','teamFilterId','teamName','groupName','sports','profileStats','profileCheckedAt') } | {'match': [x for x in m.get('matches',[]) if str(x.get('matchId')) == mid]})
+          out = {'source': 'imports/jugadors-master.json.gz', 'playerId': pid, 'leagueId': lid, 'matchId': mid, 'appearanceCount':len(appearances), 'matchAppearances':appearances, 'memberships':memberships}
+          print(json.dumps(out, ensure_ascii=False, indent=2))
+          for p in ('zonaok-tots-partits.json','zonaok-tots-actes.json'):
+              if not Path(p).exists(): continue
+              data=json.loads(Path(p).read_text(encoding='utf-8'))
+              rows=data.get('rows',data.get('matches',[]))
+              for row in rows:
+                  if str(row.get('leagueId'))==lid and str(row.get('matchId'))==mid:
+                      print(p, json.dumps(row, ensure_ascii=False))
+          PY
