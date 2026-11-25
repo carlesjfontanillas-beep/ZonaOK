@@ -1,0 +1,22 @@
+{
+  "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
+  "name": "zonaok-push",
+  "main": "push/worker.js",
+  "compatibility_date": "2026-11-25",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "ALLOWED_ORIGIN": "https://carlesjfontanillas-beep.github.io",
+    "VAPID_SUBJECT": "https://carlesjfontanillas-beep.github.io/ZonaOK/",
+    "VAPID_PUBLIC_KEY": "BOCyjlpx0e7o6RNcjowDmf5ceBwoO4shUh0JcmIYxCruRzauTVwMOhANs8puiJ0YaW50_gxUMbqynarl71YyT5s",
+    "SPORTS_DELIVERY_ENABLED": "false"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "zonaok-push-db",
+      "database_id": "301776a1-93a6-4801-8a4a-30fe91a76fb3",
+      "migrations_dir": "push/migrations"
+    }
+  ]
+}
