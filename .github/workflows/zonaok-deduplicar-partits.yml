@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/zonaok-deduplicar-partits.yml'
+      - 'scripts/zonaok_deduplicar_partits.py'
   workflow_dispatch:
     inputs:
       publish:

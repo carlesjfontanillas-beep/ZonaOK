@@ -2,11 +2,12 @@
 """Auditoria i fusio conservadora de duplicats del cataleg oficial ZonaOK."""
 import argparse
 import json
+import re
 from collections import defaultdict
 from pathlib import Path
 from zonaok_fecapa_unificat import (
     clean, norm, check_iso, check_time, check_when, make_match_url,
-    official_match_url, score_tuple, utc_now, load_unified, write_compatibility,
+    official_match_url, score_tuple, utc_now, local_today, load_unified, write_compatibility,
 )
 
 TIMES = {"lastAgendaAt", "lastDirecteAt", "directeUpdatedAt", "scoreUpdatedAt",
@@ -31,7 +32,28 @@ def fixture(row):
          norm(row.get("home")), norm(row.get("away")))
     return k if all(k) and k[3] != k[4] else None
 
-def merge_group(group):
+def minute(row):
+    h,m=map(int,row["time"].split(":"))
+    return h*60+m
+
+def day_fixture(row):
+    k=fixture(row)
+    return (k[0],*k[2:]) if k else None
+
+LIVE_OR_INVALID = re.compile(r"\\b(EN JOC|EN DIRECTE|PLAYING|LIVE|IN PROGRESS|AJORNAT|APLAZADO|SUSPES|SUSPENDIDO|CANCEL LAT|CANCELADO|CANCELLED)\\b")
+FINAL = re.compile(r"\\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|TERMINADO|TANCAT|CERRADO|FINISHED|COMPLETED)\\b")
+
+def finished_score(row):
+    status=norm(row.get("status"))
+    return score_tuple(row) and not LIVE_OR_INVALID.search(status) and (
+        bool(FINAL.search(status)) or row["iso"] < local_today().isoformat())
+
+def blank_score(row):
+    status=norm(row.get("status"))
+    return row.get("homeScore") is None and row.get("awayScore") is None and not (
+        LIVE_OR_INVALID.search(status) or FINAL.search(status))
+
+def merge_group(group, scored_reference=None):
     """No perdre cap camp significatiu ni resoldre conflictes esportius a cegues."""
     if any(not isinstance(r, dict) for r in group):
         return None, "invalid_row"
@@ -49,10 +71,14 @@ def merge_group(group):
     for i in (0,1):
         if len({identity(r)[i] for r in group if identity(r)[i]})>1:
             return None, "different_official_ids"
-    base = max(group, key=lambda r:(bool(official_id(r)),r.get("actaState")=="available",
+    base = scored_reference if scored_reference is not None else max(group, key=lambda r:(bool(official_id(r)),r.get("actaState")=="available",
                                    score_tuple(r),sum(present(v) for v in r.values())))
     out=dict(base)
     for field in sorted(set().union(*(r.keys() for r in group))):
+        if scored_reference is not None and field in {"time","status","scoreSource","scoreUpdatedAt","lastDirecteAt","directeUpdatedAt"}:
+            if field in scored_reference:
+                out[field]=scored_reference[field]
+            continue
         vals=[r[field] for r in group if field in r and present(r[field])]
         if not vals:
             if field not in out:
@@ -105,7 +131,12 @@ def deduplicate(rows):
             if any(i in protected for i in ids):
                 report["review"].append({"kind":kind,"key":k,"reason":"previous_conflict","rows":group})
                 protected.update(ids);continue
-            merged,reason=merge_group(group)
+            references=[r for r in group if score_tuple(r)]
+            reference=references[0] if (len(references)==1 and day_fixture(references[0]) and finished_score(references[0])
+                and all(r is references[0] or (blank_score(r) and day_fixture(r)==day_fixture(references[0])
+                        and abs(minute(r)-minute(references[0]))<=90) for r in group)
+                and day_fixture(references[0])) else None
+            merged,reason=merge_group(group,scored_reference=reference)
             if reason:
                 report["review"].append({"kind":kind,"key":k,"reason":reason,"rows":group})
                 protected.update(ids);continue
@@ -113,6 +144,52 @@ def deduplicate(rows):
                                      "originalRows":group,"result":merged})
             active[ids[0]]=merged
             for i in ids[1:]:del active[i]
+    # Agenda general i calendari de lliga poden conservar hores diferents del
+    # mateix partit. Només fusionar amb una referència amb marcador final,
+    # equips/categoria/data iguals i cap altre partit amb marcador al grup.
+    groups=defaultdict(list)
+    for i,r in active.items():
+        k=day_fixture(r)
+        if k:groups[k].append(i)
+    for k,ids in groups.items():
+        if len(ids)<2:continue
+        scored=[i for i in ids if score_tuple(active[i])]
+        if len(scored)!=1 or not finished_score(active[scored[0]]):continue
+        keep=scored[0]
+        ref=active[keep]
+        candidates=[i for i in ids if i!=keep and blank_score(active[i]) and
+                    abs(minute(active[i])-minute(ref))<=90]
+        if not candidates:continue
+        chosen=[keep,*candidates]
+        group=[active[i] for i in chosen]
+        if any(i in protected for i in chosen):
+            report["review"].append({"kind":"changed_time","key":k,"reason":"previous_conflict","rows":group})
+            continue
+        merged,reason=merge_group(group,scored_reference=ref)
+        if reason:
+            report["review"].append({"kind":"changed_time","key":k,"reason":reason,"rows":group})
+            continue
+        report["merged"].append({"kind":"changed_time","key":k,"removed":len(candidates),
+                                 "originalRows":group,"result":merged})
+        active[keep]=merged
+        for i in candidates:del active[i]
+    # Un equip no hauria de tenir dos partits simultanis dins la mateixa
+    # competició. Si el rival és diferent, auditar sense inventar quin és fals.
+    slots=defaultdict(list)
+    for i,r in active.items():
+        k=fixture(r)
+        if not k:continue
+        for team in (k[3],k[4]):slots[(k[0],k[1],k[2],team)].append(i)
+    overlaps=set()
+    for k,ids in slots.items():
+        if len(ids)<2:continue
+        signature=tuple(sorted(ids))
+        if signature in overlaps:continue
+        overlaps.add(signature)
+        group=[active[i] for i in ids]
+        if len({day_fixture(r) for r in group})>1:
+            report["review"].append({"kind":"same_team_same_time","key":k,
+                                     "reason":"different_opponents_or_home_away","rows":group})
     result=list(active.values())
     report.update(after=len(result),removed=len(rows)-len(result),
                   reviewGroups=len(report["review"]),mergedGroups=len(report["merged"]))
@@ -139,6 +216,13 @@ def main():
         path.write_text(json.dumps(doc,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
         write_compatibility(doc)
     print(json.dumps({k:v for k,v in report.items() if k not in ("merged","review")},ensure_ascii=False))
+    for g in report["merged"][:30]:
+        print("FUSIO",json.dumps({"kind":g["kind"],"key":g["key"],
+             "times":[r.get("time") for r in g["originalRows"]],
+             "kept":g["result"].get("time"),"score":[g["result"].get("homeScore"),g["result"].get("awayScore")]},ensure_ascii=False))
+    for g in report["review"][:30]:
+        print("REVISAR",json.dumps({"kind":g["kind"],"key":g["key"],"reason":g["reason"],
+              "rows":[{k:r.get(k) for k in ("time","home","away","homeScore","awayScore","leagueId","matchId","round")} for r in g["rows"]]},ensure_ascii=False))
 
 if __name__=="__main__":
     main()

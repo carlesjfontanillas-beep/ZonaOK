@@ -1007,6 +1007,8 @@ def merge_unified(packet,previous,mode):
         if previous_time and check_when(previous_time)>timestamp:counts['unchanged']+=1;continue
         if mode=='agenda':
             for field in ('iso','time','competition','home','away','venue','homeLogo','awayLogo','matchId','leagueId','round'):
+                if field=='time' and score_tuple(old) and not score_tuple(r) and old.get('iso')==r.get('iso'):
+                    continue  # conservar hora del registre amb marcador, no l'hora de la fitxa buida
                 if r.get(field) not in (None,''):old[field]=r[field]
             if score_tuple(r) and not (old.get('lastDirecteAt') or old.get('directeUpdatedAt') or
                                            norm(old.get('scoreSource')) in ('EN DIRECTE','DIRECTE')):
