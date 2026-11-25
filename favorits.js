@@ -282,9 +282,10 @@
   }
   // Read-only catalog shared with push settings. Never expose personal aliases as team labels.
   window.ZonaOKPushFavoriteCatalog = () => ({
+    clubs: [...catalog.clubs],
     teams: catalog.teams.map(option => ({id: option.id, label: option.label})),
-    categories: scopedOptions('categories').map(optionId),
-    competitions: scopedOptions('competitions').map(optionId)
+    categories: [...catalog.categories],
+    competitions: [...catalog.competitions]
   });
   function optionMatchesSearch(key, option, label, query, matchingClubs) {
     if (!query || norm(label).includes(query)) return true;
