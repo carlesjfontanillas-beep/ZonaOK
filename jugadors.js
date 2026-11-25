@@ -32,7 +32,7 @@ async function renderList(){
  list.replaceChildren();suggestions.replaceChildren();suggestions.hidden=true;count.hidden=false;list.hidden=false;
  if(!D.loaded){count.textContent='0 jugadors';list.append(el('p','zok-jp-note','Encara no hi ha catàleg carregat.'));return}
  if(q){
-  const words=q.split(/\s+/),rows=D.players.filter(p=>words.every(w=>D.norm(p.name).includes(w))&&filteredMemberships(p.playerId).length).sort((a,b)=>Number(favs.includes(b.playerId))-Number(favs.includes(a.playerId))||a.name.localeCompare(b.name,'ca',{sensitivity:'base'}));
+  const words=q.split(/\s+/),rows=D.players.filter(p=>(words.length===1?D.norm(p.name).includes(q):words.every(w=>D.norm(p.name).split(/\s+/).some(n=>n.startsWith(w))))&&filteredMemberships(p.playerId).length).sort((a,b)=>Number(favs.includes(b.playerId))-Number(favs.includes(a.playerId))||a.name.localeCompare(b.name,'ca',{sensitivity:'base'}));
   list.hidden=true;count.hidden=true;renderSuggestions(rows);return;
  }
  const rows=D.players.filter(p=>(scope==='all'||favs.includes(p.playerId))&&filteredMemberships(p.playerId).length);

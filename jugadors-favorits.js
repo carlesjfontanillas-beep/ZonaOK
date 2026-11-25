@@ -4,7 +4,7 @@ const D=window.ZonaOKJugadors,host=document.getElementById('jugadors-favorits');
 const el=(t,c,s)=>{const n=document.createElement(t);if(c)n.className=c;if(s!==undefined)n.textContent=s;return n};
 const btn=(s,f)=>{const b=el('button','zok-jp-btn',s);b.type='button';b.onclick=f;return b};
 const byName=(a,b)=>a.name.localeCompare(b.name,'ca',{sensitivity:'base'});
-const matches=(p,q)=>q.split(/\s+/).every(word=>D.norm(p.name).includes(word));
+const matches=(p,q)=>{const words=q.split(/\s+/),name=D.norm(p.name);return words.length===1?name.includes(q):words.every(w=>name.split(/\s+/).some(n=>n.startsWith(w)))};
 function playerText(p,teamId){const txt=el('span','zok-jp-choice-text'),name=el('strong','',p.name);const ms=D.list(p.playerId).filter(m=>!teamId||D.teamMatches(m,teamId));if(ms.some(m=>m.position==='goalkeeper'))name.append(el('span','zok-jp-keeper','🥅 Porter'));txt.append(name,el('small','',[...new Set(ms.map(m=>m.groupName))].join(' · ')));return txt}
 const heading=el('h2','','Jugadors'),note=el('p','zok-jp-note','Escriu el nom del jugador per afegir-lo a Favorits.'),input=el('input');
 input.type='search';input.placeholder='Escriu nom o cognoms…';input.setAttribute('aria-label','Cerca jugadors favorits');input.autocomplete='off';
@@ -26,7 +26,7 @@ function render(){
 function mount(){
  document.querySelectorAll('.zok-jp-team-picker:not([data-mounted])').forEach(box=>{
   box.dataset.mounted='1';if(!D.loaded)return;
-  const id=box.dataset.teamId,existing=box.dataset.originalName,eligible=D.players.filter(p=>D.list(p.playerId).some(m=>D.teamMatches(m,id))).sort(byName);
+  const id=box.dataset.teamId,existing=box.dataset.originalName;if(D.preview&&D.ensureTeam?.(id)){render();const marker=document.querySelector('#jugadors-favorits .zok-jp-mode-row .zok-jp-note');if(marker)marker.textContent='Catàleg de prova · '+D.players.length+' jugadors ficticis'}const eligible=D.players.filter(p=>D.list(p.playerId).some(m=>D.teamMatches(m,id))).sort(byName);
   const q=el('input');q.type='search';q.placeholder='Cerca jugador de l’equip…';q.setAttribute('aria-label','Cerca jugador de '+box.dataset.teamLabel);q.autocomplete='off';
   const picked=el('div','zok-jp-picked'),opts=el('div','zok-jp-picker-options zok-jp-suggestions');
   box.append(q,picked,opts);box.addEventListener('click',e=>e.stopPropagation());
