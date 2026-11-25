@@ -105,10 +105,12 @@ CAPTURE=r"""({league,mode})=>{
  if(modal.length!==1)return {rows:[],shapes:{},sideEvidence:{}};
  const scope=modal[0],text=e=>String(e?.innerText||'').replace(/\s+/g,' ').trim();
  const teams={home:text(scope.querySelector('.sidgad-modal-team.sidgad-local .sidgad-modal-team-name')),away:text(scope.querySelector('.sidgad-modal-team.sidgad-visit .sidgad-modal-team-name'))};
- const fields={number:/^(num|numero|dorsal|nº)$/,goalkeeper:/^(p|porter|portero|portera)$/,captain:/^(c|capita|capitana|capitan)$/,goals:/^(g|gol|gols|goles)$/,assists:/^(a|assistencies|asistencias)$/,yellowCards:/^(ta|targetes grogues|tarjetas amarillas)$/,blueCards:/^(tb|targetes blaves|tarjetas azules)$/,redCards:/^(tr|targetes vermelles|tarjetas rojas)$/};
+ const fields={number:/^(num|numero|dorsal|nº)$/,goalkeeper:/^(p|porter|portero|portera)$/,captain:/^(c|capita|capitana|capitan)$/,goals:/^(g|gol|gols|goles)$/,assists:/^(a|as|assistencies|asistencias)$/,yellowCards:/^(ta|targetes grogues|tarjetas amarillas)$/,blueCards:/^(tb|targetes blaves|tarjetas azules)$/,redCards:/^(tr|targetes vermelles|tarjetas rojas)$/};
  const field=c=>{
    const values=[text(c),c.title,c.getAttribute('aria-label'),...Array.from(c.querySelectorAll('[title],[aria-label],img[alt]')).flatMap(e=>[e.title,e.getAttribute('aria-label'),e.getAttribute('alt')])];
-   const keys=[...new Set(values.flatMap(v=>Object.keys(fields).filter(k=>fields[k].test(norm(v)))))];
+   const iconFields={yellowCards:'.acta-hp-card.card-yellow',blueCards:'.acta-hp-card.card-blue',redCards:'.acta-hp-card.card-red'};
+   const iconKeys=Object.entries(iconFields).filter(([k,selector])=>c.matches(selector)||c.querySelector(selector)).map(([k])=>k);
+   const keys=[...new Set([...values.flatMap(v=>Object.keys(fields).filter(k=>fields[k].test(norm(v)))),...iconKeys])];
    return keys.length===1?keys[0]:'unknown';
  };
  const header=tb=>tb.querySelector('thead tr:last-child')||[...tb.rows].find(r=>[...r.cells].some(c=>c.tagName==='TH'));
