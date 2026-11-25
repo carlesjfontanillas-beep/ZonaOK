@@ -95,7 +95,7 @@ class Players(unittest.TestCase):
         self.assertEqual(p.locator("#jp-list article").count(),2)
         self.assertFalse(self.errors,self.errors)
     def test_real_contract(self):
-        p=self.page;p.goto(self.base+"/jugadors.html")
+        p=self.page;p.goto(self.base+"/jugadors.html?demo=0")
         p.get_by_text("Encara no hi ha catàleg carregat.",exact=True).wait_for()
         self.assertFalse(p.locator(".zok-jp-demo").count())
         self.assertTrue(p.locator(".zok-jp-search-line").evaluate("(n)=>n.contains(document.querySelector('#jp-search')) && n.contains(document.querySelector('#jp-data-status button'))"))
@@ -140,7 +140,7 @@ class Players(unittest.TestCase):
         p=self.page
         p.route("**/zonaok-tots-agenda.json?*",lambda r:r.fulfill(json={"schema":"zonaok-all-v1","kind":"agenda","rows":[{"home":"FC BARCELONA","away":"CLUB DE MOSTRA","competition":"ALEVI OR 3","leagueId":"4789"}]}))
         p.route("**/zonaok-classificacions.json?*",lambda r:r.fulfill(json={"competitions":{}}))
-        p.goto(self.base+"/favorits.html")
+        p.goto(self.base+"/favorits.html?demo=0")
         p.locator("#jugadors-favorits .zok-jp-import-btn").wait_for()
         p.locator("#favorites-groups > section").nth(4).wait_for()
         self.assertTrue(p.locator("#jugadors-favorits .zok-jp-search-line").evaluate("(n)=>n.contains(n.querySelector('input[type=search]')) && n.contains(n.querySelector('button'))"))
@@ -153,6 +153,21 @@ class Players(unittest.TestCase):
         p.locator("#jp-count").get_by_text("65 jugadors",exact=False).wait_for()
         p.locator("#jp-search").fill("fictici 001")
         p.locator("#jp-list .zok-jp-keeper").wait_for()
+    def test_default_catalog_and_mode(self):
+        p=self.page;p.goto(self.base+"/favorits.html")
+        p.get_by_text("Catàleg de prova · 65 jugadors ficticis",exact=True).wait_for()
+        p.locator("#jugadors-favorits input[type=search]").fill("fictici 001")
+        p.locator("#jugadors-favorits input[type=checkbox]").check()
+        p.goto(self.base+"/jugadors.html")
+        p.get_by_role("button",name="Porter fictici 001",exact=False).wait_for()
+        p.get_by_role("button",name="Dades reals",exact=True).click()
+        p.get_by_text("Encara no hi ha catàleg carregat.",exact=True).wait_for()
+        p.goto(self.base+"/favorits.html")
+        p.locator("#jugadors-favorits .zok-jp-import-btn").wait_for()
+        p.get_by_role("button",name="Catàleg de prova",exact=True).click()
+        p.get_by_text("Catàleg de prova · 65 jugadors ficticis",exact=True).wait_for()
+        p.locator("#jugadors-favorits input[type=search]").fill("fictici 001")
+        self.assertTrue(p.locator("#jugadors-favorits input[type=checkbox]").is_checked())
     def test_navigation(self):
         p=self.page
         p.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_ONBOARDING_V1','1')")

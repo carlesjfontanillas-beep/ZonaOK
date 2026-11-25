@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const $=s=>document.querySelector(s),el=(t,c,v)=>{const n=document.createElement(t);if(c)n.className=c;if(v!==undefined)n.textContent=v;return n};
-const version='20261125-nav4';
+const version='20261125-cataleg1';
 function go(tab){const u=new URL('index.html',location.href);u.searchParams.set('v',version);if(tab!=='home')u.searchParams.set('tab',tab);location.href=u.href}
 function prefs(){try{return JSON.parse(localStorage.getItem('ZONAOK_FAVORITS_V1')||'{}')||{}}catch{return {}}}
 function logo(value){try{const u=new URL(value,location.href);if(u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&/^\/fecapa\/images\/logos_clubes\/[0-9]+(?:_[0-9]+)?\.(?:png|gif)$/i.test(u.pathname))return u.href}catch{}return ''}
