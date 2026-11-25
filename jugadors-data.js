@@ -47,9 +47,9 @@ function mount(){
  async function loadPublished(){
   status.hidden=false;status.classList.remove('zok-jp-error');status.textContent='Carregant dades reals de jugadors…';
   try{
-   const response=await fetch('imports/jugadors-master.json',{cache:'no-cache',credentials:'same-origin'});
+   const response=await fetch('imports/jugadors-master.json.gz',{cache:'no-cache',credentials:'same-origin'});
    if(!response.ok)throw Error('HTTP '+response.status);
-   const master=await response.json();let catalog={};
+   if(typeof DecompressionStream==='undefined')throw Error('Navegador sense suport gzip.');const master=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json();let catalog={};
    try{const r=await fetch('zonaok-tots-partits.json',{cache:'no-cache',credentials:'same-origin'});if(r.ok)catalog=await r.json()}catch{}
    const n=ingest(master,catalog);
    status.textContent=n.players+' jugadors disponibles'+(n.coverageVerified?'':' · Cobertura parcial');
