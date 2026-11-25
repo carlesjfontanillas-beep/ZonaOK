@@ -33,9 +33,15 @@
     const teamLabels = new Map((catalog.teams || []).map(option => [option.id, option.label]));
     for (const [group,title] of groups) {
       const saved = Array.isArray(fav[group]) ? fav[group] : [];
-      const available = group === 'categories' || group === 'competitions' ? (catalog[group] || []) : [];
+      const available = (catalog[group] || []).map(option => typeof option === 'string' ? option : option?.id);
       const previous = prefs.targets.flatMap(value => { try { const [kind,id] = JSON.parse(value); return kind === group && typeof id === 'string' ? [id] : []; } catch (_) { return []; } });
-      const values = [...new Set([...saved, ...available, ...((group === 'categories' || group === 'competitions') ? previous : [])].filter(v => typeof v === 'string' && v))];
+      const marked = new Set(previous);
+      const favoriteIds = new Set(saved);
+      const displayName = id => group === 'teams' ? (teamLabels.get(id) || id.split('|').slice(1).reverse().join(' · ')) : id;
+      const values = [...new Set([...saved, ...available, ...previous].filter(v => typeof v === 'string' && v))].sort((a,b) =>
+        Number(marked.has(b)) - Number(marked.has(a)) ||
+        Number(favoriteIds.has(b)) - Number(favoriteIds.has(a)) ||
+        displayName(a).localeCompare(displayName(b),'ca',{sensitivity:'base',numeric:true}));
       const card = document.createElement('section'); card.className = 'zok-favorite-group zok-push-card';
       const heading = document.createElement('h2'); heading.textContent = title; card.append(heading);
       const searchWrap = document.createElement('div'); searchWrap.className = 'zok-push-search-wrap';
@@ -51,7 +57,7 @@
       card.append(list); host.append(card);
       if (!values.length) {
         const empty = document.createElement('p'); empty.className = 'zok-favorite-empty';
-        empty.textContent = group === 'clubs' || group === 'teams' ? 'Marca favorits per configurar els seus avisos.' : 'No hi ha opcions disponibles amb els filtres actuals.';
+        empty.textContent = 'Encara no hi ha dades del catàleg disponibles.';
         list.append(empty);
       }
       for (const id of values) {
