@@ -19,18 +19,18 @@ function logoFor(name){
 function render(host,s=state()){
  if(!host)return;
  host.replaceChildren();
- const add=(tab,label,sub,logo,player=false,initial='')=>{
+ const add=(tab,label,sub,logo,player=false,initial='',color='')=>{
   const b=document.createElement('button');b.type='button';b.className='navbtn';b.dataset.tab=tab;b.title=label;b.setAttribute('aria-label',label);
   const icon=document.createElement('span');
   if(logo){icon.className='club-icon';const img=document.createElement('img');img.src=logo;img.alt='';img.loading='lazy';img.decoding='async';icon.append(img)}
-  else if(player){icon.className='nav-person';icon.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1';icon.textContent='👤';if(initial){const letter=document.createElement('b');letter.className='nav-player-initial';letter.textContent=initial;letter.style.cssText='display:block;color:#ffb66f;font-size:13px;line-height:1;font-weight:900;margin-top:-2px';icon.append(letter)}}
+  else if(player){icon.className='nav-person';icon.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1';const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');svg.style.cssText='display:block;width:28px;height:28px;flex:none';const silhouette=document.createElementNS(svg.namespaceURI,'path');silhouette.setAttribute('d','M12 2a5 5 0 0 1 5 5v2a5 5 0 0 1-2.5 4.33v1.5c.2.85 1.5 1.4 3.6 2.35C20.7 18.35 23 20 23 23H1c0-3 2.3-4.65 4.9-5.82 2.1-.95 3.4-1.5 3.6-2.35v-1.5A5 5 0 0 1 7 9V7a5 5 0 0 1 5-5Z');silhouette.setAttribute('fill',/^#[0-9a-f]{6}$/i.test(color)?color:'#8bb5ce');svg.append(silhouette);icon.append(svg);if(initial){const letter=document.createElement('b');letter.className='nav-player-initial';letter.textContent=initial;letter.style.cssText='display:block;color:#ffb66f;font-size:13px;line-height:1;font-weight:900;margin-top:-2px';icon.append(letter)}}
   else {icon.className='nav-name';icon.textContent='☆'}
   const strong=document.createElement('strong');strong.textContent=label;
   const small=document.createElement('small');small.textContent=sub;
   b.append(icon,strong,small);host.append(b);
  };
  (s.clubs||[]).forEach((name,i)=>add('favclub'+(i+1),name,'Setmana',logoFor(name)||''));
- (s.teams||[]).forEach((id,i)=>{const f=teamFromId(id,s);if(!f)return;const child=String(s.teamNames?.[id]||'').trim(),playerName=child||String(f.name||f.team).trim(),initial=Array.from(playerName)[0]?.toLocaleUpperCase('ca')||'';add('favteam'+(i+1),playerName||((f.name||f.team)+' · '+f.category),child?'Temporada':f.category,'',true,initial)});
+ (s.teams||[]).forEach((id,i)=>{const f=teamFromId(id,s);if(!f)return;const child=String(s.teamNames?.[id]||'').trim(),playerName=child||String(f.name||f.team).trim(),initial=Array.from(playerName)[0]?.toLocaleUpperCase('ca')||'';add('favteam'+(i+1),playerName||((f.name||f.team)+' · '+f.category),child?'Temporada':f.category,'',true,initial,s.teamColors?.[id]||'')});
 
 }
 async function loadLogos(){try{const r=await fetch('zonaok-tots-agenda.json',{cache:'no-store'});if(!r.ok)return;const d=await r.json();logos=d.clubLogos||{};rows=Array.isArray(d.rows)?d.rows:[]}catch{}}
