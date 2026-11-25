@@ -23,6 +23,7 @@
     scope: document.getElementById('favorites-scope-toggle'),
     scopeNote: document.getElementById('favorites-scope-note')
   };
+  const catalogOnly = !nodes.groups && !!document.getElementById('zok-push-settings');
   let catalog = {clubs: [], teams: [], categories: [], competitions: [], teamRecords: [], agendaRows: [], clubLogos: {}, clubNameLookup: new Map()};
   let selected = readSelection();
   let showAllOptions = false;
@@ -197,6 +198,10 @@
       agendaRows: agenda,
       clubLogos: clubLogos && typeof clubLogos === 'object' ? clubLogos : {}
     };
+    if (catalogOnly) {
+      window.dispatchEvent(new CustomEvent('zonaok:push-catalog-ready'));
+      return;
+    }
     const clubsByName = new Map(catalog.clubs.map(club => [norm(club), club]));
     // Use the same verified club grouping for saved favorites and crests.
     catalog.clubNameLookup = new Map(clubsByName);
@@ -460,12 +465,17 @@
         catch (error) { console.warn('Favorits: classificacions no disponibles', error); }
       }
       buildCatalog(packet.rows, standings, packet.clubLogos || {});
+      if (catalogOnly) return;
       nodes.status.textContent = location.protocol === 'file:'
         ? 'Previsualització local: Safari pot separar les seleccions de Favorits i Inici.'
         : 'Clubs, equips i escuts carregats de l’agenda total FECAPA.';
       discoverClubLogos();
     } catch (error) {
       console.error('Favorits: error carregant catàleg', error);
+      if (catalogOnly) {
+        window.dispatchEvent(new CustomEvent('zonaok:push-catalog-error'));
+        return;
+      }
       nodes.status.textContent = 'No s’ha pogut carregar l’agenda total. Revisa zonaok-tots-agenda.json i torna-ho a provar.';
       const playerSection = document.getElementById('jugadors-favorits');
       nodes.groups.replaceChildren();
@@ -475,6 +485,11 @@
       message.textContent = 'Els clubs, equips, partits i escuts es carreguen de zonaok-tots-agenda.json.';
       nodes.groups.append(message);
     }
+  }
+  if (catalogOnly) {
+    window.ZonaOKReloadPushCatalog = load;
+    load();
+    return;
   }
   nodes.search.addEventListener('input', render);
   nodes.scope.addEventListener('click', () => {
