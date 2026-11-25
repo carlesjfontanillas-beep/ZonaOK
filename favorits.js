@@ -280,6 +280,12 @@
   function optionLabel(option) {
     return typeof option === 'string' ? option : option.label;
   }
+  // Read-only catalog shared with push settings. Never expose personal aliases as team labels.
+  window.ZonaOKPushFavoriteCatalog = () => ({
+    teams: catalog.teams.map(option => ({id: option.id, label: option.label})),
+    categories: scopedOptions('categories').map(optionId),
+    competitions: scopedOptions('competitions').map(optionId)
+  });
   function optionMatchesSearch(key, option, label, query, matchingClubs) {
     if (!query || norm(label).includes(query)) return true;
     if (!matchingClubs.size) return false;
