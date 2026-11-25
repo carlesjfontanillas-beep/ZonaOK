@@ -5,11 +5,7 @@
   'use strict';
   const STYLE_ID = 'zonaok-retocs-20261118';
   const css = `
-/* Els colors dels partits depenen de l'equip; el Barca te prioritat. */
-.match.zok-barca { --accent: #8d2446; --tint: #eed0da; }
-.match.zok-infantil { --accent: #245bb0; --tint: #d9e8ff; }
-.match.zok-juvenil { --accent: #bc9214; --tint: #fff0b4; }
-.match.zok-juvenil .pill { color: #172b3d; }
+/* Els colors de les targetes es resolen a Favorits. */
 
 /* Targetes dels llistats: data, hora, categoria, clubs i marcador. */
 #results-list .match.zok-compact {
@@ -50,7 +46,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#results-list .match.zok-juvenil.zok-compact .match-date[data-zok-categoria]::after { color: #13263a; }
 #results-list .match.zok-compact .teams {
   display: grid;
   grid-template-columns: minmax(0,1fr) 62px minmax(0,1fr);
@@ -86,9 +81,7 @@
 #results-list .match.zok-compact .score { font-size: 16px; }
 #results-list .match.zok-compact .score-note { display: none; }
 /* Les actes són una acció pròpia, no formen part de .match-actions, que s'amaga. */
-.match .zok-acta-chip{display:inline-flex!important;align-items:center;justify-content:center;align-self:center;white-space:nowrap;margin:3px auto 0!important;padding:3px 6px!important;border:0!important;border-radius:6px!important;background:#8d2446!important;color:#fff!important;font-size:10px!important;font-weight:800!important;line-height:1.2!important;min-height:20px!important;cursor:pointer!important}
-.match.zok-v5-infantil .zok-acta-chip,.match.zok-infantil .zok-acta-chip{background:#245bb0!important}
-.match.zok-v5-juvenil .zok-acta-chip,.match.zok-juvenil .zok-acta-chip{background:#866514!important}
+.match .zok-acta-chip{display:inline-flex!important;align-items:center;justify-content:center;align-self:center;white-space:nowrap;margin:3px auto 0!important;padding:3px 6px!important;border:0!important;border-radius:6px!important;background:var(--accent,#647b92)!important;color:#fff!important;font-size:10px!important;font-weight:800!important;line-height:1.2!important;min-height:20px!important;cursor:pointer!important}
 #results-list .match.zok-compact.zok-acta-available{cursor:pointer;}
 #results-list .match.zok-compact .zok-acta-chip{display:inline-flex!important;position:static!important;opacity:1!important;visibility:visible!important}
 #results-list.cards { gap: 7px; }
@@ -222,11 +215,7 @@
   const classes = ['zok-barca', 'zok-infantil', 'zok-juvenil', 'zok-alevi'];
   function decorate() {
     for (const card of document.querySelectorAll('#home-cards .match, #results-list .match')) {
-      const expected = colorEquip(card);
-      for (const cls of classes) {
-        if (cls !== expected && card.classList.contains(cls)) card.classList.remove(cls);
-      }
-      if (expected && !card.classList.contains(expected)) card.classList.add(expected);
+      for (const cls of classes) if (card.classList.contains(cls)) card.classList.remove(cls);
       const compact = !!card.closest('#results-list');
       if (card.classList.contains('zok-compact') !== compact) card.classList.toggle('zok-compact', compact);
 
