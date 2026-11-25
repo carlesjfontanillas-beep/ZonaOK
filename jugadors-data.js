@@ -1,7 +1,7 @@
 /* Public UI: no private GitHub URL, token, or automatic public export. */
 (()=>{
 'use strict';
-const demo=window.ZonaOKJugadorsDemo,preview=['1','2'].includes(new URLSearchParams(location.search).get('demo'));
+const demo=window.ZonaOKJugadorsDemo,preview=['1','2'].includes(window.ZonaOKJugadorsMode);
 const KEY='zonaok.jugadors.preferences.v1',players=[],memberships=[],appearances=[],norm=demo.norm;
 let loaded=false;
 const obj=v=>v&&typeof v==='object'&&!Array.isArray(v),id=v=>typeof v==='string'&&/^[1-9]\d*$/.test(v),clean=v=>typeof v==='string'?v.trim():'',num=v=>Number.isInteger(v)&&v>=0;
@@ -33,7 +33,10 @@ const api=preview?{...demo,preview:true,get loaded(){return true}}:{players,memb
 window.ZonaOKJugadors=api;
 function mount(){
  const host=document.getElementById('jp-data-status');if(!host)return;
- if(preview){host.hidden=true;const marker=document.createElement('p');marker.className='zok-jp-note';marker.textContent='Dades fictícies · versió de proves';host.closest('.zok-jp-search-line')?.after(marker);return}
+ const switchMode=(value)=>{const u=new URL(location.href);u.searchParams.set('demo',value);u.searchParams.set('v','20261125-cataleg1');location.href=u.href};
+ function modeRow(text,label,value){const row=document.createElement('div');row.className='zok-jp-mode-row';const marker=document.createElement('span');marker.className='zok-jp-note';marker.textContent=text;const link=document.createElement('button');link.type='button';link.className='zok-jp-mode-btn';link.textContent=label;link.onclick=()=>switchMode(value);row.append(marker,link);host.closest('.zok-jp-search-line')?.after(row)}
+ if(preview){host.hidden=true;modeRow('Catàleg de prova · '+demo.players.length+' jugadors ficticis','Dades reals','0');return}
+ modeRow('Catàleg real','Catàleg de prova','2');
  host.replaceChildren();
  const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.hidden=true;input.setAttribute('aria-label','Obrir JSON privat autoritzat');
  const button=document.createElement('button');button.type='button';button.className='zok-jp-import-btn';button.title='Obrir fitxer JSON privat';button.setAttribute('aria-label','Obrir fitxer JSON privat');

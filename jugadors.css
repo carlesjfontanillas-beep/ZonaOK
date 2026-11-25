@@ -39,3 +39,8 @@
 #jugadors-favorits > :last-child{margin-bottom:14px}
 
 .zok-jp-camera{display:inline-flex;align-items:center;justify-content:center;gap:7px}.zok-jp-camera svg{width:19px;height:19px;flex:0 0 auto;color:#fbc252}
+
+/* Commutador temporal de catàleg, amb dades fictícies explícites. */
+.zok-jp-mode-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px;margin:7px 0 10px;min-width:0}
+.zok-jp-mode-row .zok-jp-note{color:#b9cddd;font-size:11px;line-height:1.3}
+.zok-jp-mode-btn{border:1px solid #45627a;border-radius:7px;background:#15344d;color:#e5f2ff;font-size:11px;padding:5px 8px;white-space:nowrap}
