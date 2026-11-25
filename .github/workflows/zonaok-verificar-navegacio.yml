@@ -4,6 +4,11 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'jugadors.html'
+      - 'favorits.html'
+      - 'notificacions.html'
+      - 'zonaok-disseny.css'
+      - 'zonaok-disseny.js'
       - 'tests/test_navigation_browser.py'
       - '.github/workflows/zonaok-verificar-navegacio.yml'
   workflow_dispatch:

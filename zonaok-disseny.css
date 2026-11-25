@@ -1,0 +1,63 @@
+/* Sistema visual comú: només estructura, tipografia i controls de la interfície.
+   Els colors configurables dels equips, resultats i sancions no es modifiquen. */
+:root{--zok-ui-gold:#fbc252;--zok-ui-text:#ecf5ff;--zok-ui-muted:#b9cddd;--zok-ui-border:#719cba77;--zok-ui-button:#204969;--zok-ui-radius:12px;--zok-ui-title:clamp(22px,5.6vw,28px);--zok-ui-header-height:64px;--zok-ui-bottom-height:66px}
+html{scroll-padding-top:calc(env(safe-area-inset-top) + var(--zok-ui-header-height) + 8px);scroll-padding-bottom:calc(env(safe-area-inset-bottom) + var(--zok-ui-bottom-height) + 8px)}
+body main.app{padding-top:calc(env(safe-area-inset-top) + var(--zok-ui-header-height) + 7px)!important;padding-bottom:calc(env(safe-area-inset-bottom) + var(--zok-ui-bottom-height) + 14px)!important}
+body main.app > .mast,body main.app > .mast.zok-notifications-mast{
+ position:fixed!important;top:0;left:50%;transform:translateX(-50%);z-index:15;width:min(100%,480px);
+ box-sizing:border-box;min-height:calc(env(safe-area-inset-top) + var(--zok-ui-header-height));
+ padding:calc(env(safe-area-inset-top) + 11px) 15px 9px!important;
+ display:flex!important;align-items:center;justify-content:space-between;flex-wrap:nowrap!important;gap:5px!important;
+ background:linear-gradient(115deg,#091c30,#13374e);border-bottom:1px solid #719cba38;
+ box-shadow:0 4px 12px #06192d48;
+}
+body main.app > .mast > div:first-child{flex:0 0 auto;min-width:0}
+body main.app > .mast .brand{font-size:clamp(20px,5.8vw,24px)!important;font-weight:950;line-height:1.1;white-space:nowrap;letter-spacing:-.07em}
+body main.app > .mast :is(.strap,.emblem){display:none!important}
+body main.app > .mast > .zok-header-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 0 auto;gap:5px!important;margin:0!important;max-width:none}
+body main.app > .mast :is(.zok-favorites-top,.zok-home-top,.zok-push-top){
+ display:inline-flex!important;align-items:center;justify-content:center;gap:5px;
+ box-sizing:border-box;height:40px;min-height:40px;padding:0 9px!important;
+ border:1px solid #91b7d155;border-radius:var(--zok-ui-radius);background:linear-gradient(145deg,#214d6d,#14344e);
+ font:inherit;font-size:13px;font-weight:800;color:#fff;text-decoration:none;white-space:nowrap
+}
+body main.app > .mast .zok-favorites-top span{font-size:23px;line-height:1;color:#ffc17c}
+body main.app > .mast .zok-favorites-top strong{font-size:13px}
+body main.app > .mast .zok-push-top{width:40px;min-width:40px;flex:0 0 40px;padding:0!important;color:#ffc17c}
+body main.app > .mast .zok-push-top svg{width:21px;height:21px}
+body main.app > .mast :is(.zok-favorites-top,.zok-push-top)[aria-current="page"]{border-color:#ffc17c;background:#305a77}
+body main.app > .mast #refresh-home{display:inline-grid!important;place-items:center;width:29px;min-width:29px;height:40px;min-height:40px;flex:0 0 29px;padding:0!important;background:transparent;color:#c1daec;border:0;border-radius:9px;font-size:25px;line-height:1;text-decoration:none}
+body main.app > .mast #refresh-home::after{content:none!important}
+body main.app > .mast :is(a,button){touch-action:manipulation}
+body main.app .section-head h2,body main.app .zok-page-heading h1,body main.app .zok-jp-hero h2{
+ font-size:var(--zok-ui-title)!important;line-height:1.12!important;font-weight:850!important;letter-spacing:-.025em!important;
+ text-transform:uppercase;color:var(--zok-ui-gold)!important;margin:3px 0 0!important;overflow-wrap:anywhere
+}
+/* Als títols dels favorits, només el nom daurat; la categoria queda blanca. */
+body main.app #results-title{color:var(--zok-ui-text)!important}
+body main.app #results-title .zok-title-name,body.zok-ui-detail[data-zok-ui-tab="classificacions"] main.app #results-title{color:var(--zok-ui-gold)!important}
+body main.app .section-head .overline,body main.app .zok-page-heading .overline{font-size:11px;letter-spacing:.15em;font-weight:850;color:#9ed3f4}
+body main.app .zok-page-heading{margin:13px 0 10px;padding:0;background:none;border:0;box-shadow:none}
+body main.app .zok-page-heading p{font-size:13px;color:var(--zok-ui-muted);line-height:1.5;margin:8px 0 0}
+body main.app .section-head{align-items:flex-start;gap:9px}
+body main.app .section-head > div{min-width:0}
+body main.app .section-head > :is(.mini,.section-tag){flex:none}
+body main.app .section-head > .mini{border-radius:var(--zok-ui-radius);min-height:38px;font-size:12px}
+body main.app :is(.zok-standing-filters,.zok-recent-filters,.zok-jp-filters,.zok-favorites-controls) label{font-size:12px;font-weight:750;color:#b9dbec}
+body main.app :is(.zok-standing-filters,.zok-recent-filters,.zok-jp-filters,.zok-favorites-controls) :is(input[type="search"],select){font-family:inherit;font-size:16px!important;min-height:42px;background:#183d5b;color:var(--zok-ui-text);border:1px solid #7597b0;border-radius:11px}
+body main.app :is(.zok-standing-scope,.zok-period-tabs,.zok-jp-segment,.zok-jp-profile-tabs) button{border-radius:11px;min-height:37px;font-size:13px;font-weight:750}
+body main.app :is(.zok-standing-scope,.zok-period-tabs,.zok-jp-segment,.zok-jp-profile-tabs) button[aria-pressed="true"]{background:var(--zok-ui-gold);color:#10283c;border-color:var(--zok-ui-gold)}
+body .bottom.zok-bottom-nav{position:fixed;z-index:10;display:flex!important;align-items:stretch!important;gap:5px!important;padding:5px 6px calc(env(safe-area-inset-bottom) + 5px)!important;background:#071a2ef5;box-shadow:0 -6px 20px #00101fa6}
+body .zok-bottom-nav .bottom-title,body .zok-bottom-nav .navbtn strong,body .zok-bottom-nav .navbtn small{display:none!important}
+body .zok-bottom-nav .navbtn{height:54px!important;min-height:54px!important;border-radius:11px!important;padding:3px 0!important;gap:0!important;justify-content:center!important;align-items:center!important}
+body .zok-bottom-nav .navbtn>span{font-size:23px;line-height:1;display:grid;place-items:center}
+body .zok-bottom-nav .navbtn>.club-icon{width:31px;height:31px}
+body .zok-bottom-nav .navbtn>.club-icon img{width:27px;height:27px;object-fit:contain}
+body .zok-bottom-nav .navbtn>.nav-person b{display:block!important}
+body .zok-nav-scroll{flex:1 1 auto!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x}
+body .zok-nav-scroll::-webkit-scrollbar{display:none}
+body .zok-nav-scroll .navgrid{display:flex!important;grid-template-columns:none!important;width:max-content!important;min-width:100%!important;gap:4px!important}
+body .zok-nav-fixed{display:flex!important;flex:0 0 auto!important;gap:5px!important}
+body .zok-bottom-nav :is(.zok-nav-fixed,.zok-nav-scroll) .navbtn{flex:0 0 54px!important;width:54px!important;min-width:54px!important}
+body .zok-nav-divider{width:1px;flex:0 0 1px;align-self:stretch;background:#9dbbd044}
+@media(max-width:360px){body main.app > .mast,body main.app > .mast.zok-notifications-mast{padding-inline:10px!important;gap:3px!important}body main.app > .mast > .zok-header-actions{gap:3px!important}body main.app > .mast :is(.zok-favorites-top,.zok-home-top){padding-inline:6px!important;font-size:12px}body main.app > .mast .zok-favorites-top strong{font-size:12px}body main.app > .mast .zok-push-top{width:34px;min-width:34px;flex-basis:34px}body main.app > .mast #refresh-home{width:25px;min-width:25px;flex-basis:25px}}

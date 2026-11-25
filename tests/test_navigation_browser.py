@@ -45,6 +45,20 @@ with sync_playwright() as p:
     assert page.locator('#results-list .standings').count()==2
     assert page.locator('#standing-favorites').get_attribute('aria-pressed')=='true'
     assert not errors,errors
+    # Totes les pàgines: capçalera fixa, una sola línia i títol principal daurat.
+    for filename,selector in [('index.html','#home-favorites-title'),('jugadors.html','#jp-search-panel h2'),('favorits.html','.zok-page-heading h1'),('notificacions.html','.zok-page-heading h1')]:
+        page.goto(url+'/'+filename,wait_until='domcontentloaded')
+        page.wait_for_selector('.zok-bottom-nav')
+        page.wait_for_selector(selector)
+        for width in (320,390,430):
+            page.set_viewport_size({'width':width,'height':844})
+            data=page.evaluate("""(selector)=>{const mast=document.querySelector('main.app>.mast'),actions=mast.querySelector('.zok-header-actions'),title=document.querySelector(selector),bounds=mast.getBoundingClientRect();return {position:getComputedStyle(mast).position,top:bounds.top,right:actions.getBoundingClientRect().right,controls:actions.children.length,color:getComputedStyle(title).color,uppercase:getComputedStyle(title).textTransform}}""",selector)
+            assert data['position']=='fixed' and abs(data['top'])<1 and data['right']<=width+1,(filename,width,data)
+            assert data['controls']==4 and data['color']=='rgb(251, 194, 82)' and data['uppercase']=='uppercase',(filename,width,data)
+            assert page.locator('.zok-nav-fixed .navbtn').count()==3
+        page.evaluate("document.body.style.minHeight='200vh';window.scrollTo(0,400)")
+        assert abs(page.locator('main.app > .mast').bounding_box()['y'])<1
+        print('Disseny comú:',filename)
     browser.close()
 server.shutdown()
 print('Navegació i recàrrega real correctes')
