@@ -420,6 +420,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
   line-height:1.1!important
 }
 </style>
+<script src="zonaok-nav-shared.js?v=20261125-cerca-nav1"></script>
 </head>
 <body>
 <main class="app">
@@ -2206,19 +2207,7 @@ function zonaokConfigureFavoriteNav(){
  const homeTitle=document.getElementById('home-favorites-title');
  if(homeTitle){const clubs=(s.clubs||[]),teams=(s.teams||[]).map(id=>{const f=zonaokFavoriteTeamFromId(id,s);return f?String(f.name||f.team):''}).filter(Boolean);homeTitle.textContent=clubs.length?clubs.join(' · '):teams.join(' · ')||'Els meus favorits';}
  if(!host)return;
- host.replaceChildren();
- const add=(tab,label,sub,logo,player=false,initial='')=>{
-  const b=document.createElement('button');b.type='button';b.className='navbtn';b.dataset.tab=tab;b.title=label;b.setAttribute('aria-label',label);
-  const icon=document.createElement('span');
-  if(logo){icon.className='club-icon';const img=document.createElement('img');img.src=logo;img.alt='';img.loading='lazy';img.decoding='async';icon.append(img)}
-  else if(player){icon.className='nav-person';icon.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1';icon.textContent='👤';if(initial){const letter=document.createElement('b');letter.className='nav-player-initial';letter.textContent=initial;letter.style.cssText='display:block;color:#ffb66f;font-size:13px;line-height:1;font-weight:900;margin-top:-2px';icon.append(letter)}}
-  else {icon.className='nav-name';icon.textContent='☆'}
-  const strong=document.createElement('strong');strong.textContent=label;
-  const small=document.createElement('small');small.textContent=sub;
-  b.append(icon,strong,small);host.append(b);
- };
- (s.clubs||[]).forEach((name,i)=>add('favclub'+(i+1),name,'Setmana',window.ZonaOKFavoriteLogoFor?.(name)||''));
- (s.teams||[]).forEach((id,i)=>{const f=zonaokFavoriteTeamFromId(id,s);if(!f)return;const child=String(s.teamNames?.[id]||'').trim(),playerName=child||String(f.name||f.team).trim(),initial=Array.from(playerName)[0]?.toLocaleUpperCase('ca')||'';add('favteam'+(i+1),playerName||((f.name||f.team)+' · '+f.category),child?'Temporada':f.category,'',true,initial)});
+ window.ZonaOKSharedNav.render(host,s);
 }
 window.addEventListener('zonaok:favorites-updated',zonaokConfigureFavoriteNav);
 window.addEventListener('zonaok:agenda-loaded',zonaokConfigureFavoriteNav);
@@ -2837,6 +2826,6 @@ window.ZonaOKRefreshSources=async function(){
 </script>
   <script defer src="zonaok-resultats-7dies.js?v=20261124-state-team-names-r16"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
-  <script defer src="jugadors-nav.js?v=20261125-cataleg1"></script>
+  <script defer src="jugadors-nav.js?v=20261125-cerca-nav1"></script>
 </body>
 </html>

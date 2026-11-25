@@ -3,23 +3,7 @@
 
 .zok-jp-keeper{display:inline-block;margin-left:6px;padding:2px 5px;color:#fbc252;border:1px solid #997c44;border-radius:5px;font-size:11px;white-space:nowrap;vertical-align:middle;font-weight:700}
 
-/* Mateixa botonera fixa que Inici; visible també dins de la fitxa individual. */
 .zok-jp-app{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
-.zok-jp-bottom{display:flex;align-items:stretch;gap:7px;padding:6px 5px calc(env(safe-area-inset-bottom) + 6px)}
-.zok-jp-bottom .zok-nav-scroll{flex:1 1 auto;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.zok-jp-bottom .zok-nav-scroll::-webkit-scrollbar{display:none}
-.zok-jp-bottom .navgrid{display:flex;gap:6px;width:max-content;min-width:100%;height:100%}
-.zok-jp-bottom .zok-nav-fixed{flex:0 0 auto;display:flex;gap:5px}
-.zok-jp-bottom .navbtn{flex:0 0 62px;width:62px;min-width:62px;min-height:57px;height:57px;padding:5px 1px;gap:3px;border-radius:10px}
-.zok-jp-bottom .navbtn>span{font-size:19px;line-height:1;min-height:24px;display:grid;place-items:center;max-width:100%}
-.zok-jp-bottom .navbtn strong{width:100%;min-width:0;font-size:9px;line-height:1.08;overflow-wrap:anywhere}
-.zok-jp-bottom .nav-person{display:flex!important;flex-direction:column;justify-content:center;align-items:center}
-.zok-jp-bottom .nav-person b{font-size:13px;color:#ffb66f;line-height:1}
-.zok-jp-bottom .navbtn .club-icon{width:28px;height:28px;padding:1px;border-radius:8px;overflow:hidden}
-.zok-jp-bottom .navbtn .club-icon img{width:26px;height:26px;object-fit:contain}
-.zok-jp-bottom .zok-nav-divider{width:1px;flex:0 0 1px;align-self:stretch;background:#9dbbd044;margin:0 1px}
-@media(max-width:430px){.zok-jp-bottom{gap:5px}.zok-jp-bottom .navgrid{gap:4px}.zok-jp-bottom .navbtn{width:54px;min-width:54px;flex-basis:54px}.zok-jp-bottom .navbtn strong{font-size:8px}.zok-jp-bottom .zok-nav-divider{margin:0}}
-
 /* Importació local discreta, al costat de la cerca. */
 .zok-jp-search-line{display:flex;gap:6px;align-items:stretch;min-width:0}
 .zok-jp-search-line input[type=search]{flex:1 1 auto;width:0!important;min-width:0}
@@ -63,3 +47,8 @@
 .zok-jp-picked{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:4px;font-size:11px}
 .zok-jp-picked .zok-jp-btn{padding:2px 7px;line-height:1.3}
 .zok-jp-picker-options button{padding:6px 8px;width:100%;min-width:0}
+
+.zok-jp-search-results{margin:5px 0 9px;padding:5px;max-height:260px;overflow-y:auto;overscroll-behavior:contain;border:1px solid #45627a;background:#0b253c;border-radius:10px}
+.zok-jp-search-results>.zok-jp-note{padding:2px 6px;margin:5px 0}
+.zok-jp-search-choice{display:flex;align-items:center;gap:5px;padding:7px 8px;background:#102e47;border-radius:7px;margin:3px 0;min-width:0}
+.zok-jp-search-choice strong{font-size:13px;line-height:1.3}.zok-jp-search-choice small{font-size:11px;color:#b5c7d7;line-height:1.3;margin-top:3px}.zok-jp-search-choice .zok-jp-star{flex:0 0 auto}
