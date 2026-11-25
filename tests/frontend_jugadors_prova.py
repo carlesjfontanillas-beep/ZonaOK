@@ -111,6 +111,26 @@ class Players(unittest.TestCase):
         self.assertFalse(self.errors,self.errors)
         p.reload()
         p.get_by_text("Encara no hi ha catàleg carregat.",exact=True).wait_for()
+    def test_players_bottom_nav(self):
+        p=self.page
+        p.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_V1',JSON.stringify({clubs:['FC Barcelona'],teams:['TEAM|FC BARCELONA|ALEVI OR 3'],teamNames:{'TEAM|FC BARCELONA|ALEVI OR 3':'Nom de prova'}}));localStorage.setItem('ZONAOK_FAVORITS_ONBOARDING_V1','1')")
+        p.goto(self.base+"/jugadors.html?demo=1")
+        nav=p.locator(".zok-jp-bottom")
+        nav.get_by_role("button",name="FC Barcelona",exact=True).wait_for()
+        nav.get_by_role("button",name="Nom de prova",exact=True).wait_for()
+        self.assertEqual(nav.locator("#zok-nav-jugadors").get_attribute("aria-current"),"page")
+        self.assertTrue(nav.evaluate("(n)=>getComputedStyle(n).position==='fixed' && n.getBoundingClientRect().bottom<=innerHeight+1"))
+        p.locator("#jp-all").click()
+        p.locator("#jp-list .zok-jp-row-main").first.click()
+        nav.locator("#zok-nav-jugadors").click()
+        p.locator("#jp-search-panel").wait_for()
+        nav.get_by_role("button",name="Classificacions",exact=True).click()
+        p.wait_for_url("**/index.html?*tab=classificacions")
+        p.locator('.zok-bottom-nav [data-tab="classificacions"].active').wait_for()
+        p.goto(self.base+"/jugadors.html")
+        p.locator("#zok-nav-resultats-7dies").click()
+        p.wait_for_url("**/index.html?*tab=resultats")
+        p.locator("body.zok-recent-mode").wait_for()
     def test_navigation(self):
         p=self.page
         p.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_ONBOARDING_V1','1')")
