@@ -372,14 +372,12 @@
           row.append(picker);
         }
         if (key === 'teams' && checkbox.checked) {
-          const name = document.createElement('input');
-          name.type = 'text'; name.className = 'zok-favorite-child-name';
-          name.maxLength = 32; name.autocomplete = 'given-name';
-          name.placeholder = 'Nom del fill o la filla';
-          name.setAttribute('aria-label', `Nom personalitzat per a ${label}`);
-          name.value = clean(selected.teamNames[id] || '');
-          name.addEventListener('input', () => { selected.teamNames[id] = name.value.slice(0, 32); save(); });
-          row.append(name);
+          const pickerHost=document.createElement('div');
+          pickerHost.className='zok-jp-team-picker';
+          pickerHost.dataset.teamId=id;
+          pickerHost.dataset.teamLabel=label;
+          pickerHost.dataset.originalName=clean(selected.teamNames[id]||'');
+          row.append(pickerHost);
         }
         list.append(row);
       }
@@ -393,6 +391,7 @@
       nodes.groups.append(section);
     }
     renderCount();
+    window.dispatchEvent(new CustomEvent('zonaok:team-pickers-rendered'));
   }
   async function discoverClubLogos() {
     const safeLogo = value => /^https:\/\/sidgad\.cloud\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(String(value||''));

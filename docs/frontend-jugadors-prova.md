@@ -1,0 +1,3 @@
+# Frontend jugadors — prova aïllada
+
+Branca de proves, no main. Fitxa amb 5 pestanyes, filtre de vinculació, cercador amb club/equip/categoria/posició, favorits per defecte, botó inferior després de Resultats. Fotos reduïdes a 384×384 JPEG i guardades a IndexedDB local; cap càrrega remota. Preferències de prova separades de ZONAOK_FAVORITS_V1. El selector d'equips mostra el nom existent i associa només jugadors ficticis si coincideix exactament l'equip i grup, sense modificar el nom ni ID de producció. Quan hi hagi API autoritzada, substituir adaptador fictici i migrar explícitament les preferències; mai servir master privat des de Pages. El rànquing és només de mostra. Estadístiques desconegudes apareixen amb —.
