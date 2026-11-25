@@ -50,12 +50,13 @@ with sync_playwright() as p:
         page.goto(url+'/'+filename,wait_until='domcontentloaded')
         page.wait_for_selector('.zok-bottom-nav')
         page.wait_for_selector(selector)
-        for width in (320,390,430):
+        for width in (320,375,390,430):
             page.set_viewport_size({'width':width,'height':844})
             data=page.evaluate("""(selector)=>{const mast=document.querySelector('main.app>.mast'),actions=mast.querySelector('.zok-header-actions'),title=document.querySelector(selector),bounds=mast.getBoundingClientRect();return {position:getComputedStyle(mast).position,top:bounds.top,right:actions.getBoundingClientRect().right,controls:actions.children.length,color:getComputedStyle(title).color,uppercase:getComputedStyle(title).textTransform}}""",selector)
             assert data['position']=='fixed' and abs(data['top'])<1 and data['right']<=width+1,(filename,width,data)
             assert data['controls']==4 and data['color']=='rgb(251, 194, 82)' and data['uppercase']=='uppercase',(filename,width,data)
             assert page.locator('.zok-nav-fixed .navbtn').count()==3
+            assert page.locator('.mast #refresh-home').is_visible()
         page.evaluate("document.body.style.minHeight='200vh';window.scrollTo(0,400)")
         assert abs(page.locator('main.app > .mast').bounding_box()['y'])<1
         print('Disseny comú:',filename)

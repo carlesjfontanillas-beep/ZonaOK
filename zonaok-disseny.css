@@ -60,4 +60,7 @@ body .zok-nav-scroll .navgrid{display:flex!important;grid-template-columns:none!
 body .zok-nav-fixed{display:flex!important;flex:0 0 auto!important;gap:5px!important}
 body .zok-bottom-nav :is(.zok-nav-fixed,.zok-nav-scroll) .navbtn{flex:0 0 54px!important;width:54px!important;min-width:54px!important}
 body .zok-nav-divider{width:1px;flex:0 0 1px;align-self:stretch;background:#9dbbd044}
-@media(max-width:360px){body main.app > .mast,body main.app > .mast.zok-notifications-mast{padding-inline:10px!important;gap:3px!important}body main.app > .mast > .zok-header-actions{gap:3px!important}body main.app > .mast :is(.zok-favorites-top,.zok-home-top){padding-inline:6px!important;font-size:12px}body main.app > .mast .zok-favorites-top strong{font-size:12px}body main.app > .mast .zok-push-top{width:34px;min-width:34px;flex-basis:34px}body main.app > .mast #refresh-home{width:25px;min-width:25px;flex-basis:25px}}
+@media(max-width:400px){body main.app > .mast,body main.app > .mast.zok-notifications-mast{padding-inline:10px!important;gap:3px!important}body main.app > .mast > .zok-header-actions{gap:3px!important}body main.app > .mast :is(.zok-favorites-top,.zok-home-top){padding-inline:6px!important;font-size:12px}body main.app > .mast .zok-favorites-top strong{font-size:12px}body main.app > .mast .zok-push-top{width:34px;min-width:34px;flex-basis:34px}body main.app > .mast #refresh-home{width:25px;min-width:25px;flex-basis:25px}}
+
+body.zok-ui-home main.app .zok-ui-home-section .section-head h2{font-size:var(--zok-ui-title)!important}
+body.zok-recent-mode main.app > .mast #refresh-home{display:inline-grid!important}
