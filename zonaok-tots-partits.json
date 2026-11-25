@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-25T16:02:42Z",
+  "updatedAt": "2026-11-25T16:03:48Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-25T05:42:56Z",
@@ -96,11 +96,11 @@
       "nextFastOffset": 48
     },
     "directe": {
-      "capturedAt": "2026-11-24T21:04:07Z",
-      "mergedAt": "2026-11-24T21:04:09Z",
+      "capturedAt": "2026-11-25T16:03:46Z",
+      "mergedAt": "2026-11-25T16:03:48Z",
       "new": 0,
-      "updated": 34,
-      "unmatched": 498,
+      "updated": 12,
+      "unmatched": 272,
       "ambiguousOrInvalid": 0,
       "unchanged": 0
     },
@@ -125626,10 +125626,10 @@
       "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "scoreUpdatedAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-22",
@@ -126898,10 +126898,10 @@
       "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "scoreUpdatedAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-22",
@@ -129788,10 +129788,10 @@
       "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "scoreUpdatedAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-22",
@@ -130526,16 +130526,16 @@
       "competition": "OK LIGA PLATA NORTE",
       "leagueId": "4775",
       "matchId": "",
-      "homeScore": 6,
-      "awayScore": 2,
+      "homeScore": 9,
+      "awayScore": 3,
       "actaUrl": "",
-      "status": "SENSE COMENÇAR",
+      "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "scoreUpdatedAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-24",
@@ -130610,14 +130610,16 @@
       "competition": "OK LIGA IBERDROLA",
       "leagueId": "4775",
       "matchId": "",
-      "homeScore": null,
-      "awayScore": null,
+      "homeScore": 0,
+      "awayScore": 0,
       "actaUrl": "",
       "status": "NOT STARTED",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z",
+      "scoreSource": "En directe",
+      "scoreUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-25",
@@ -130627,14 +130629,16 @@
       "competition": "OK LIGA IBERDROLA",
       "leagueId": "4775",
       "matchId": "",
-      "homeScore": null,
-      "awayScore": null,
+      "homeScore": 0,
+      "awayScore": 0,
       "actaUrl": "",
       "status": "NOT STARTED",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z",
+      "scoreSource": "En directe",
+      "scoreUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-25",
@@ -130647,11 +130651,11 @@
       "homeScore": null,
       "awayScore": null,
       "actaUrl": "",
-      "status": "NOT STARTED",
+      "status": "SENSE COMENÇAR",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-25",
@@ -130664,11 +130668,11 @@
       "homeScore": null,
       "awayScore": null,
       "actaUrl": "",
-      "status": "NOT STARTED",
+      "status": "SENSE COMENÇAR",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-25",
@@ -130681,11 +130685,11 @@
       "homeScore": null,
       "awayScore": null,
       "actaUrl": "",
-      "status": "NOT STARTED",
+      "status": "SENSE COMENÇAR",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-25",
@@ -130698,11 +130702,11 @@
       "homeScore": null,
       "awayScore": null,
       "actaUrl": "",
-      "status": "NOT STARTED",
+      "status": "SENSE COMENÇAR",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-25",
@@ -130715,11 +130719,11 @@
       "homeScore": null,
       "awayScore": null,
       "actaUrl": "",
-      "status": "NOT STARTED",
+      "status": "SENSE COMENÇAR",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-25",
@@ -130732,11 +130736,11 @@
       "homeScore": null,
       "awayScore": null,
       "actaUrl": "",
-      "status": "NOT STARTED",
+      "status": "SENSE COMENÇAR",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-24T21:04:07Z",
-      "directeUpdatedAt": "2026-11-24T21:04:07Z"
+      "lastDirecteAt": "2026-11-25T16:03:46Z",
+      "directeUpdatedAt": "2026-11-25T16:03:46Z"
     },
     {
       "iso": "2026-11-25",
@@ -273956,7 +273960,7 @@
   ],
   "stats": {
     "total": 12293,
-    "withScores": 5726,
+    "withScores": 5728,
     "withActaLinks": 2009,
     "verifiedActes": 0
   },
