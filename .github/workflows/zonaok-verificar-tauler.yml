@@ -1,0 +1,33 @@
+name: 'ZonaOK - Verificar tauler actualitzacions'
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'zonaok-actualitzacions.js'
+      - 'zonaok-actualitzacions.css'
+      - 'tests/test_dashboard.cjs'
+      - '.github/workflows/zonaok-verificar-tauler.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check zonaok-actualitzacions.js
+      - run: node tests/test_dashboard.cjs
+      - name: Comprovar dades reals publicades
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),zlib=require('zlib'),assert=require('assert/strict');
+          const {summarize}=require('./zonaok-actualitzacions.js');
+          const doc=JSON.parse(fs.readFileSync('zonaok-tots-partits.json')), standings=JSON.parse(fs.readFileSync('zonaok-classificacions.json')), master=JSON.parse(zlib.gunzipSync(fs.readFileSync('imports/jugadors-master.json.gz')));
+          const s=summarize(doc,standings,master);
+          assert.equal(s.categories.reduce((n,c)=>n+c.total,0),s.total);
+          assert.equal(s.categories.reduce((n,c)=>n+c.verified,0),s.verified);
+          console.log(JSON.stringify({...s,categories:s.categories.length}));
+          NODE

@@ -487,43 +487,20 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
   <section class="section">
     <div class="section-head">
       <div><span class="overline">ACTUALITZACI&#xD3; &#xB7; FECAPA</span><h2>Actualitzar dades</h2></div>
-      <span class="section-tag" id="total-count">0 partits</span>
+      <span class="section-tag" id="zok-dashboard-total">— partits</span><span id="total-count" hidden style="display:none!important"></span>
     </div>
-    <div class="import-card">
-      <div class="context-actions">
-        
-        
-        
-        
-        
-        <button id="reload-shared" class="secondary">Llegir JSON GitHub</button>
-        <button id="export-shared" class="secondary">Descarregar còpia JSON</button>
-        <button id="export-actes-json" class="secondary">Actes a GitHub</button>
-        <button id="publish-shared" class="secondary">GitHub ↗</button>
-      </div>
-      <div class="zok-quick-imports" aria-labelledby="zok-quick-import-title">
-        <div class="zok-quick-import-heading">
-          <strong id="zok-quick-import-title">Importacions ràpides</strong>
-          <span>Tria les dades que vols actualitzar.</span>
-        </div>
-        <div class="zok-quick-import-grid">
-          <a href="https://github.com/carlesjfontanillas-beep/ZonaOK/actions/workflows/zonaok-auto-agenda.yml?ref=main" target="_blank" rel="noopener noreferrer">Agenda TOTAL <span>↗</span></a>
-          <a href="https://github.com/carlesjfontanillas-beep/ZonaOK/actions/workflows/zonaok-auto-directe.yml?ref=main" target="_blank" rel="noopener noreferrer">En directe / resultats <span>↗</span></a>
-          <a href="https://github.com/carlesjfontanillas-beep/ZonaOK/actions/workflows/zonaok-auto-actes.yml?ref=main" target="_blank" rel="noopener noreferrer">Comprovar actes <span>↗</span></a>
-          <a href="https://github.com/carlesjfontanillas-beep/ZonaOK/actions/workflows/zonaok-classificacions-auto.yml?ref=main" target="_blank" rel="noopener noreferrer">Classificacions <span>↗</span></a>
-        </div>
-        <p>Obriràs GitHub Actions en mode ràpid. Prem <strong>Run workflow</strong> per iniciar; les dades es publiquen només si passen les validacions.</p>
-      </div>
-      <p class="helper">Les dades esportives es consulten sempre als JSON publicats a GitHub.</p>
-      <div class="context-actions">
-        
-        
-        
-      </div>
-      <div id="import-summary" class="import-summary"></div>
-      <div class="context-actions" style="display:none!important" hidden>
-        <button id="guide-button" class="secondary">Com importar?</button>
-        <button id="clear-button" class="secondary">Recarregar JSON</button>
+    <div class="import-card zok-dashboard">
+      <div class="zok-dashboard-heading"><strong>Estat de les dades FECAPA</strong><button id="zok-dashboard-refresh" type="button" class="secondary">↻ Recarregar resum</button></div>
+      <p id="zok-dashboard-status" class="helper" role="status" aria-live="polite">Carregant el resum…</p>
+      <div id="zok-dashboard-sources" class="zok-dashboard-sources"></div>
+      <p class="zok-dashboard-hint">Els botons Flash obren GitHub Actions. Prem <strong>Run workflow</strong> amb l'opció ràpida preseleccionada.</p>
+      <div id="zok-dashboard-overview" class="zok-dashboard-overview"></div>
+      <div id="zok-dashboard-categories"></div>
+      <!-- Compatibilitat interna: controls antics retirats de la interfície. -->
+      <div hidden style="display:none!important">
+        <button id="reload-shared" type="button"></button><button id="export-shared" type="button"></button>
+        <button id="export-actes-json" type="button"></button><button id="publish-shared" type="button"></button>
+        <div id="import-summary"></div><button id="guide-button" type="button"></button><button id="clear-button" type="button"></button>
       </div>
     </div>
   </section>
@@ -2816,5 +2793,7 @@ window.ZonaOKRefreshSources=async function(){
   <script defer src="zonaok-resultats-7dies.js?v=20261125-acta1"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
   <script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script>
+  <link rel="stylesheet" href="zonaok-actualitzacions.css?v=20261125-dashboard1">
+  <script defer src="zonaok-actualitzacions.js?v=20261125-dashboard1"></script>
 </body>
 </html>
