@@ -1,9 +1,9 @@
 /* Exclusivament dades sintètiques. Mai fetch a ZonaOK-Dades ni credencials. */
 (()=>{
 'use strict';
-// Mode de catàleg compartit entre pàgines: temporalment mostra per defecte.
-const MODE_KEY='zonaok.jugadors.mode.v1';
-let mode='2';
+// El catàleg real és el predeterminat; les dades sintètiques només s'activen a petició.
+const MODE_KEY='zonaok.jugadors.mode.v2';
+let mode='0';
 try{const saved=localStorage.getItem(MODE_KEY);if(['0','1','2'].includes(saved))mode=saved}catch{}
 const requested=new URLSearchParams(location.search).get('demo');
 if(['0','1','2'].includes(requested)){mode=requested;try{localStorage.setItem(MODE_KEY,mode)}catch{}}
