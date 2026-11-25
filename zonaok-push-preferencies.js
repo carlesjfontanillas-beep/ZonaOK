@@ -15,12 +15,19 @@
       targets: Array.isArray(p.targets) ? p.targets.filter(v => typeof v === 'string') : []};
   }
   let prefs = defaults();
+  const queries = Object.create(null);
+  const normalizeSearch = value => String(value ?? '').normalize('NFD')
+    .replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('ca')
+    .replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+  const placeholders = {clubs:'Cerca un club…',teams:'Cerca un equip o categoria…',categories:'Cerca una categoria…',competitions:'Cerca una competició…'};
   function save() {
     try { localStorage.setItem(key, JSON.stringify(prefs)); status.textContent = 'Preferències desades en aquest dispositiu. Enviaments encara desactivats.'; }
     catch (_) { status.textContent = 'No s’han pogut desar les preferències.'; }
   }
   function renderTargets() {
     const fav = read('ZONAOK_FAVORITS_V1');
+    const focusedGroup = document.activeElement?.dataset?.pushSearch;
+    const cursor = focusedGroup ? document.activeElement.value.length : null;
     host.replaceChildren();
     const catalog = window.ZonaOKPushFavoriteCatalog?.() || {};
     const teamLabels = new Map((catalog.teams || []).map(option => [option.id, option.label]));
@@ -31,7 +38,16 @@
       const values = [...new Set([...saved, ...available, ...((group === 'categories' || group === 'competitions') ? previous : [])].filter(v => typeof v === 'string' && v))];
       const card = document.createElement('section'); card.className = 'zok-favorite-group zok-push-card';
       const heading = document.createElement('h2'); heading.textContent = title; card.append(heading);
+      const searchWrap = document.createElement('div'); searchWrap.className = 'zok-push-search-wrap';
+      const search = document.createElement('input');
+      search.type = 'search'; search.className = 'zok-push-search'; search.placeholder = placeholders[group];
+      search.setAttribute('aria-label', placeholders[group].replace('…','')); search.autocomplete = 'off';
+      search.dataset.pushSearch = group; search.value = queries[group] || '';
+      const counter = document.createElement('small'); counter.className = 'zok-push-search-count';
+      counter.setAttribute('aria-live','polite');
+      searchWrap.append(search,counter); card.append(searchWrap);
       const list = document.createElement('div'); list.className = 'zok-favorite-list zok-push-list';
+      const rows = [];
       card.append(list); host.append(card);
       if (!values.length) {
         const empty = document.createElement('p'); empty.className = 'zok-favorite-empty';
@@ -51,6 +67,28 @@
           save();
         });
         label.append(input,span); list.append(label);
+        rows.push({label, text: normalizeSearch(name + ' ' + id)});
+      }
+      const noMatches = document.createElement('p'); noMatches.className = 'zok-favorite-empty';
+      noMatches.textContent = 'No s’ha trobat cap coincidència.'; noMatches.hidden = true; list.append(noMatches);
+      function applyFilter() {
+        const tokens = normalizeSearch(search.value).split(' ').filter(Boolean);
+        let visible = 0;
+        for (const row of rows) {
+          const match = tokens.every(token => row.text.includes(token));
+          row.label.hidden = !match;
+          if (match) visible++;
+        }
+        counter.textContent = visible + ' / ' + rows.length;
+        noMatches.hidden = !rows.length || visible > 0;
+      }
+      search.addEventListener('input', () => {
+        queries[group] = search.value; applyFilter(); list.scrollTop = 0;
+      });
+      applyFilter();
+      if (focusedGroup === group) {
+        search.focus({preventScroll:true});
+        try { search.setSelectionRange(cursor,cursor); } catch (_) {}
       }
     }
   }
