@@ -63,7 +63,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install 'playwright>=1.55,<2'
+          python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
           python -m playwright install --with-deps chromium
       - name: Proves de fusió conservadora
         if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}

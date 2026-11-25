@@ -1,0 +1,61 @@
+name: 'ZonaOK - Verificació i recuperació importacions 20261125'
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/zonaok-verificar-dependencies-20261125.yml'
+permissions:
+  contents: read
+  actions: write
+jobs:
+  recuperar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verificar totes les proves
+        run: |
+          python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
+          python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Executar importacions corregides en serie
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          failed=0
+          for wf in zonaok-auto-directe.yml zonaok-auto-agenda.yml zonaok-auto-actes.yml zonaok-classificacions-auto.yml; do
+            echo "::group::$wf"
+            before=$(gh run list --workflow "$wf" --branch main --event workflow_dispatch --limit 30 --json databaseId --jq '.[].databaseId')
+            if ! gh workflow run "$wf" --ref main; then
+              echo "::error::No s'ha pogut iniciar $wf"
+              failed=1
+              echo "::endgroup::"
+              continue
+            fi
+            id=""
+            for attempt in $(seq 1 24); do
+              candidates=$(gh run list --workflow "$wf" --branch main --event workflow_dispatch --limit 30 --json databaseId --jq '.[].databaseId')
+              for candidate in $candidates; do
+                if ! grep -Fxq "$candidate" <<< "$before"; then id="$candidate"; break; fi
+              done
+              if [ -n "$id" ]; then break; fi
+              sleep 5
+            done
+            if [ -z "$id" ]; then
+              echo "::error::No s'ha localitzat l'execució nova de $wf"
+              failed=1
+            else
+              echo "https://github.com/$GH_REPO/actions/runs/$id"
+              if ! gh run watch "$id" --exit-status --interval 15; then
+                echo "::error::Ha fallat $wf (run $id)"
+                failed=1
+              fi
+            fi
+            echo "::endgroup::"
+          done
+          exit "$failed"
