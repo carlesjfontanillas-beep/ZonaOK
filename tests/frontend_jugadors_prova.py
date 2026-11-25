@@ -34,6 +34,14 @@ class Players(unittest.TestCase):
         p.get_by_role("button",name="Afegir a favorits").click()
         p.locator("#jp-favs").click()
         p.get_by_role("button",name="Jugador de mostra A",exact=False).click()
+        p.locator("#jp-profile select").select_option(label="Tots els equips")
+        self.assertEqual(p.locator(".zok-jp-stat").nth(0).locator("b").inner_text(),"15")
+        self.assertEqual(p.locator(".zok-jp-stat").nth(1).locator("b").inner_text(),"26")
+        p.get_by_role("button",name="Rànquings",exact=True).click()
+        p.get_by_text("1. Jugador de mostra A · 26 G",exact=True).wait_for()
+        p.locator("#jp-profile select").select_option(value="4789|99001")
+        p.get_by_role("button",name="Resum",exact=True).click()
+        self.assertEqual(p.locator(".zok-jp-stat").nth(1).locator("b").inner_text(),"24")
         for t in ["Partits","Equips","Estadístiques","Rànquings","Resum"]:
             p.get_by_role("button",name=t,exact=True).click()
         # A tiny, valid PNG from Chromium itself; no personal photo.
