@@ -66,13 +66,13 @@
   <section class="hero zok-favorites-hero">
     <div class="overline">EL TEU ESPAI</div>
     <h1>Notificacions</h1>
-    <p>Configura els avisos dels partits que vols seguir.</p>
+    <p>Activa una prova en aquest dispositiu. Encara no s’envien notificacions esportives generals.</p>
   </section>
   <section class="section zok-favorite-group" id="zok-push-settings" aria-label="Notificacions push">
     <details open>
       <summary class="zok-push-summary">
         <svg class="zok-push-bell" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
-        <span class="zok-push-title">Notificacions<small>En preparació</small></span>
+        <span class="zok-push-title">Notificacions<small>Prova al dispositiu · avisos generals desactivats</small></span>
         <svg class="zok-push-chevron" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
       </summary>
       <div class="zok-push-content">
@@ -96,10 +96,11 @@
           <div class="zok-push-activation">
             <p role="status" data-push-capability></p>
             <div class="zok-push-actions">
-              <button class="secondary" type="button" disabled>Activar notificacions</button>
-              <button class="secondary" type="button" disabled>Notificació de prova</button>
+              <button class="secondary" type="button" data-push-enable>Activar notificacions</button>
+              <button class="secondary" type="button" data-push-test hidden>Notificació de prova</button>
+              <button class="secondary" type="button" data-push-disable hidden>Desactivar aquest dispositiu</button>
             </div>
-            <p role="status" aria-live="polite" data-push-status>Enviaments desactivats. Pots desar les teves preferències.</p>
+            <p role="status" aria-live="polite" data-push-status>Activa-les només en aquest dispositiu; el permís es demana quan prems el botó. Només s’envia una prova, no avisos esportius generals.</p>
           </div>
         </section>
       </div>
@@ -108,5 +109,52 @@
 
   <p class="footer">Les preferències es desen en aquest dispositiu. No cal crear cap compte.</p>
 </main>
+
+<script type="module">
+  import { pushStatus, enablePush, testPush, disablePush, syncPushPreferences } from './zonaok-push-client.js';
+  const config = {
+    api: 'https://zonaok-push.carles-j-fontanillas.workers.dev',
+    publicKey: 'BOCyjlpx0e7o6RNcjowDmf5ceBwoO4shUh0JcmIYxCruRzauTVwMOhANs8puiJ0YaW50_gxUMbqynarl71YyT5s'
+  };
+  const root = document.querySelector('#zok-push-settings');
+  const status = root.querySelector('[data-push-status]');
+  const enable = root.querySelector('[data-push-enable]');
+  const test = root.querySelector('[data-push-test]');
+  const disable = root.querySelector('[data-push-disable]');
+  function preferences() {
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem('ZONAOK_PUSH_PREFS_V1') || '{}') || {}; } catch (_) {}
+    return {
+      events: [...root.querySelectorAll('[data-push-event]:checked')].map(input => input.dataset.pushEvent),
+      targets: Array.isArray(saved.targets) ? saved.targets : []
+    };
+  }
+  function render(message) {
+    const state = pushStatus();
+    if (message) status.textContent = message;
+    else if (!state.supported) status.textContent = 'Aquest navegador no admet Web Push. A l’iPhone/iPad, instal·la ZonaOK a la pantalla d’inici i obre-la des d’allà.';
+    else if (state.configuredDevice) status.textContent = 'Aquest dispositiu està registrat. La prova s’enviarà només aquí; els avisos esportius generals estan desactivats.';
+    else if (state.permission === 'denied') status.textContent = 'El permís està bloquejat als ajustos del navegador.';
+    else status.textContent = 'Encara no està activat. En prémer “Activar notificacions”, el navegador et demanarà permís.';
+    enable.hidden = !state.supported || state.configuredDevice || state.permission === 'denied';
+    test.hidden = !state.configuredDevice;
+    disable.hidden = !state.configuredDevice;
+  }
+  async function run(button, action, success) {
+    button.disabled = true;
+    try { await action(); render(success); }
+    catch (error) { render(error?.message || 'No s’ha pogut completar l’acció.'); }
+    finally { button.disabled = false; }
+  }
+  enable.addEventListener('click', () => run(enable, () => enablePush(config, preferences()), 'Dispositiu activat per a la prova.'));
+  test.addEventListener('click', () => run(test, () => testPush(config), 'Petició de prova acceptada. Comprova el centre de notificacions d’aquest dispositiu.'));
+  disable.addEventListener('click', () => run(disable, () => disablePush(config), 'Notificacions desactivades en aquest dispositiu.'));
+  root.addEventListener('change', () => {
+    if (pushStatus().configuredDevice) syncPushPreferences(config, preferences()).catch(() => {
+      status.textContent = 'Les preferències no s’han pogut sincronitzar. La prova d’aquest dispositiu continua disponible.';
+    });
+  });
+  render();
+</script>
 </body>
 </html>
