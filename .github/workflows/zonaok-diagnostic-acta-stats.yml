@@ -1,0 +1,48 @@
+name: ZonaOK - verificar estructura estadistiques acta FECAPA
+on:
+  push:
+    paths:
+      - '.github/workflows/zonaok-diagnostic-acta-stats.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install 'playwright>=1.55,<2'
+      - run: python -m playwright install --with-deps chromium
+      - name: Inspeccionar acta oficial FECAPA
+        run: |
+          xvfb-run -a python - <<'PY'
+          import sys, asyncio, json
+          sys.path.insert(0,'scripts')
+          from playwright.async_api import async_playwright
+          from zonaok_fecapa_players import chromium_context
+          from zonaok_actes_jugadors_probe import CAPTURE, PROBE
+          JS = r"""()=>{const s=document.querySelector('.sidgad-match-modal');if(!s)return {};const visible=e=>e.getClientRects().length>0;return {tabs:[...s.querySelectorAll('.sidgad-modal-tab-btn')].map(x=>x.innerText),tables:[...s.querySelectorAll('table')].filter(visible).map(t=>({class:t.className,headers:[...t.querySelectorAll('thead tr')].map(r=>[...r.cells].map(c=>({txt:c.innerText,html:c.innerHTML.slice(0,1000),cls:c.className}))),sample:[...t.rows].filter(r=>r.querySelector('td')&&(/JUBANY/i.test(r.innerText)||r.querySelector('a[href*="jugador=70072"]'))).map(r=>[...r.cells].map(c=>({txt:/JUBANY/i.test(c.innerText)?'[player]':c.innerText,cls:c.className,html:/JUBANY/i.test(c.innerText)?'[player]':c.innerHTML.slice(0,1000)})))})),statBlocks:[...s.querySelectorAll('.sidgad-match-stats-table-like')].filter(visible).map(x=>({classes:[...new Set([...x.querySelectorAll('*')].flatMap(e=>[...e.classList]))],headers:[...x.querySelectorAll('[class*="head"]')].map(e=>({cls:e.className,txt:e.innerText.slice(0,100),html:e.innerHTML.slice(0,1000)}))}))}}"""
+          async def main():
+              async with async_playwright() as pw:
+                  browser,ctx=await chromium_context(pw)
+                  try:
+                      page=await ctx.new_page()
+                      await page.goto('https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152375',wait_until='domcontentloaded',timeout=30000)
+                      await page.wait_for_selector('.sidgad-match-modal .sidgad-roster-table',timeout=25000)
+                      modal=page.locator('.sidgad-match-modal:visible')
+                      tabs=modal.locator('.sidgad-modal-tab-btn:visible')
+                      for i in range(await tabs.count()):
+                          await tabs.nth(i).click()
+                          await page.wait_for_timeout(2500)
+                          print('DOM',i,json.dumps(await page.evaluate(JS),ensure_ascii=False))
+                          result=await page.evaluate(CAPTURE,{'league':'4786','mode':'summary' if i==0 else 'official'})
+                          print('CAPTURE',i, len(result['rows']),[r.get('stats') for r in result['rows'] if r.get('playerId')=='70072'])
+                  finally: await ctx.close();await browser.close()
+          asyncio.run(main())
+          PY
