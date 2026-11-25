@@ -22,3 +22,5 @@ jobs:
       - run: node --check jugadors.js
       - run: node --check zonaok-player-totals.js
       - run: node tests/test_player_totals.cjs
+      - name: Diagnòstic de les dades FECAPA publicades
+        run: node tests/audit_player_totals.cjs

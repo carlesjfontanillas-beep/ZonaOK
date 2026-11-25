@@ -12,11 +12,11 @@ const category=m=>{
 };
 const uniqueMembers=rows=>[...new Map(rows.map(m=>[memberKey(m),m])).values()];
 const uniqueActs=rows=>[...new Map(rows.filter(a=>a.matchId&&a.leagueId).map(a=>[a.seasonId+'|'+a.leagueId+'|'+a.matchId,a])).values()];
-function groupActs(members,acts){
+function groupActs(members,acts,universe=members){
  const keys=new Set(members.map(memberKey));
  const leagues=new Map();
- for(const m of members){if(!leagues.has(m.leagueId))leagues.set(m.leagueId,[]);leagues.get(m.leagueId).push(m)}
- return uniqueActs(acts.filter(a=>keys.has(memberKey(a))||(!a.teamFilterId&&leagues.get(a.leagueId)?.length===1)));
+ for(const m of universe){if(!leagues.has(m.leagueId))leagues.set(m.leagueId,[]);leagues.get(m.leagueId).push(m)}
+ return uniqueActs(acts.filter(a=>keys.has(memberKey(a))||(!a.teamFilterId&&leagues.get(a.leagueId)?.length===1&&keys.has(memberKey(leagues.get(a.leagueId)[0])))));
 }
 function totals(selected,allRows,allActs){
  const chosen=uniqueMembers(selected),universe=uniqueMembers(allRows),acts=uniqueActs(allActs);
@@ -27,13 +27,15 @@ function totals(selected,allRows,allActs){
   let sum=0,known=0,incomplete=false;
   for(const [cat,members] of cats){
    const all=universe.filter(m=>category(m).key===cat);
-   const catActs=groupActs(all,acts),selectedActs=groupActs(members,acts);
+   const catActs=groupActs(all,acts),selectedActs=groupActs(members,acts,all);
    const values=all.map(m=>m.sports?.[field]).filter(num);
    // Coincident category totals are counted once. Divergent values are not
    // summed blindly; they may be team totals, different snapshots or scopes.
-   const official=values.length&&(all.length===1||values.length>=2)&&values.every(v=>v===values[0])?values[0]:undefined;
+   let official=values.length&&(all.length===1||values.length>=2)&&values.every(v=>v===values[0])?values[0]:undefined;
    const playedValues=all.map(m=>m.sports?.played).filter(num);
    const catPlayed=playedValues.length&&(all.length===1||playedValues.length>=2)&&playedValues.every(v=>v===playedValues[0])?playedValues[0]:undefined;
+   if(num(catPlayed)&&catActs.length>catPlayed)official=undefined;
+   if(field!=='played'&&num(official)&&catActs.reduce((sum,a)=>sum+(num(a.stats?.[field])?a.stats[field]:0),0)>official)official=undefined;
    const complete= num(catPlayed)&&catActs.length===catPlayed&&catActs.every(a=>
      all.filter(m=>memberKey(m)===memberKey(a)||(!a.teamFilterId&&m.leagueId===a.leagueId)).length===1);
    const whole=members.length===all.length;
