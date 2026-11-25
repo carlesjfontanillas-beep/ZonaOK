@@ -2,7 +2,7 @@ import sys,unittest
 from datetime import datetime,timezone
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
-from zonaok_jugadors_blocks import plan_matches,plan_rosters,LIMITS
+from zonaok_jugadors_blocks import plan_matches,plan_rosters,plan_stats,STATS_REVISION,LIMITS
 
 class TestBlocks(unittest.TestCase):
     def setUp(self):
@@ -32,6 +32,19 @@ class TestBlocks(unittest.TestCase):
         self.assertEqual(len(p),10)
         state={k:{"status":"verified","checkedAt":self.clock.isoformat()} for k in p}
         self.assertEqual(len(plan_rosters(leagues,state,set(),self.clock)),2)
+    def test_stats_backfill_includes_old_verified_and_resumes(self):
+        rows={"4786|152375":{"iso":"2026-10-18","fingerprint":"v1"},**self.rows}
+        captured=set(rows)
+        state={k:{"status":"verified","fingerprint":"v1"} for k in rows}
+        first=plan_stats(rows,state,captured,self.clock)
+        self.assertEqual(len(first),100)
+        self.assertEqual(first[0][0],"4786|152375")
+        for k,_ in first:state[k]["statsRevision"]=STATS_REVISION
+        self.assertEqual(len(plan_stats(rows,state,captured,self.clock)),51)
+    def test_stats_backfill_respects_retry_delay(self):
+        key="1|1"
+        state={key:{"status":"pending","fingerprint":"v1","statsAttemptRevision":STATS_REVISION,"checkedAt":self.clock.isoformat()}}
+        self.assertEqual(plan_stats(self.rows,state,{key},self.clock),[])
     def test_flash_only_recent(self):
         rows={"1|1":{"iso":"2026-11-25","fingerprint":"v1"},**self.rows}
         rows["1|1"]={"iso":"2026-11-25","fingerprint":"v1"}
