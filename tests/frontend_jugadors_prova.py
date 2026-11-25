@@ -231,6 +231,23 @@ class Players(unittest.TestCase):
         self.assertEqual(p.locator(".zok-jp-rank-current td").all_text_contents(),["2","Jugador de mostra A","FC Barcelona","24","12"])
         self.assertEqual(p.get_by_text("Jugador altra categoria",exact=True).count(),0)
         self.assertFalse(self.errors,self.errors)
+    def test_same_header(self):
+        p=self.page
+        p.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_ONBOARDING_V1','1')")
+        p.goto(self.base+"/index.html")
+        head=p.locator("main.app > .mast")
+        head.get_by_role("button",name="Inici",exact=True).wait_for()
+        self.assertTrue(head.locator(".strap").is_hidden())
+        expected=head.evaluate("(n)=>({brand:getComputedStyle(n.querySelector('.brand')).fontSize,items:[...n.querySelectorAll('.zok-header-actions > *')].map(x=>[x.className,x.getAttribute('aria-label'),Math.round(x.getBoundingClientRect().height)])})")
+        p.goto(self.base+"/jugadors.html?demo=2")
+        head=p.locator("main.app > .mast")
+        self.assertTrue(head.locator(".strap").is_hidden())
+        actual=head.evaluate("(n)=>({brand:getComputedStyle(n.querySelector('.brand')).fontSize,items:[...n.querySelectorAll('.zok-header-actions > *')].map(x=>[x.className,x.getAttribute('aria-label'),Math.round(x.getBoundingClientRect().height)])})")
+        self.assertEqual(expected,actual)
+        head.locator("#refresh-home").click()
+        p.wait_for_url("**/index.html?*tab=import")
+        p.locator("body.zok-ui-import").wait_for()
+        self.assertFalse(self.errors,self.errors)
     def test_navigation(self):
         p=self.page
         p.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_ONBOARDING_V1','1')")
