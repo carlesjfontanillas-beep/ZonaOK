@@ -151,14 +151,19 @@ else if(tab==='Equips'){
  for(const x of selected){
   const acts=uniqueMatches([x],id).filter(a=>key(a)===key(x)||(!a.teamFilterId&&a.leagueId===x.leagueId&&rows.filter(m=>m.leagueId===x.leagueId).length===1));
   const totals=profileTotals([x],acts,rows,allMatches),line=el('div','zok-jp-team-cards');
-  const teamCard=card(el('strong','',x.teamName),el('p','zok-jp-gold',x.groupName),el('p','zok-jp-note',(totals.sp.played??'—')+' PJ · '+(x.position==='goalkeeper'?'🥅 Porter':(totals.sp.goals??'—')+' gols')+' · '+x.seasonName));
+  const teamHead=el('div','zok-jp-team-head'),played=el('strong','zok-jp-team-pj',(totals.sp.played??'—')+' PJ'+(totals.partial.includes('played')&&Number.isInteger(totals.sp.played)?'*':''));
+  teamHead.append(el('strong','zok-jp-team-name',x.teamName),played);
+  const teamCard=card(teamHead,el('p','zok-jp-gold',x.groupName),el('p','zok-jp-note',(x.position==='goalkeeper'?'🥅 Porter · ':'')+x.seasonName));
   for(const [k,label,color] of [['yellowCards','Grogues','yellow'],['blueCards','Blaves','blue'],['redCards','Vermelles','red']]){
    const item=el('span','zok-jp-team-card-count'),symbol=el('span','zok-jp-card-symbol '+color);symbol.setAttribute('aria-hidden','true');
    const value=totals.sp[k],partial=totals.partial.includes(k)&&Number.isInteger(value);
-   item.append(symbol,el('span','',label+': '+(value??'—')+(partial?'*':'')));line.append(item);
+   const shown=(value??'—')+(partial?'*':'');
+   item.setAttribute('aria-label',label+': '+shown);item.title=label+': '+shown;
+   item.append(symbol,el('span','zok-jp-team-card-label',label+':'),el('span','zok-jp-team-card-value',shown));line.append(item);
   }
-  teamCard.append(line);
-  if(['yellowCards','blueCards','redCards'].some(k=>totals.partial.includes(k)&&Number.isInteger(totals.sp[k])))teamCard.append(el('p','zok-jp-note','* Dades parcials de les actes disponibles.'));
+  const goals=el('strong','zok-jp-team-goals',(totals.sp.goals??'—')+' gols'+(totals.partial.includes('goals')&&Number.isInteger(totals.sp.goals)?'*':''));
+  line.append(goals);teamCard.append(line);
+  if(['played','goals','yellowCards','blueCards','redCards'].some(k=>totals.partial.includes(k)&&Number.isInteger(totals.sp[k])))teamCard.append(el('p','zok-jp-note','* Dades parcials de les actes disponibles.'));
   root.append(teamCard);
  }
 }
