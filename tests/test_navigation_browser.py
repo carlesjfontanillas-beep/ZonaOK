@@ -29,6 +29,21 @@ with sync_playwright() as p:
         print(tab,count)
     assert page.evaluate('async()=>await window.ZonaOKRefreshMatches()') is True
     assert page.locator('#results-list .match').count()>0
+    # Classificacions: navegar i verificar els grups exactes dels favorits.
+    page.evaluate('async()=>await window.ZonaOKReloadClassificacions()')
+    page.evaluate("window.ZonaOKSelectSection('classificacions')")
+    page.wait_for_function("document.querySelectorAll('#results-list .standings').length === 2")
+    names=page.locator('#results-list > h3').all_text_contents()
+    import unicodedata
+    norm=lambda x: ''.join(c for c in unicodedata.normalize('NFD',x.upper()) if not unicodedata.combining(c))
+    assert {norm(x) for x in names}=={'ALEVI OR 3','INFANTIL OR 10'},names
+    page.locator('#standing-all').evaluate('(el)=>el.click()')
+    assert page.locator('#results-list .standings').count()>2
+    page.evaluate("window.ZonaOKSelectSection('favteam1')")
+    assert page.locator('#results-list .match').count()>0
+    page.evaluate("window.ZonaOKSelectSection('classificacions')")
+    assert page.locator('#results-list .standings').count()==2
+    assert page.locator('#standing-favorites').get_attribute('aria-pressed')=='true'
     assert not errors,errors
     browser.close()
 server.shutdown()
