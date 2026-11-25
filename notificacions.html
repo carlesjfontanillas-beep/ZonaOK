@@ -109,11 +109,11 @@
     </details>
   </section>
 
-  <p class="footer">Les preferències es desen en aquest dispositiu. No cal crear cap compte.</p>
+  <p class="footer">Les preferències es recuperen per dispositiu quan les notificacions estan activades. No cal crear cap compte.</p>
 </main>
 
 <script type="module">
-  import { pushStatus, enablePush, testPush, disablePush, syncPushPreferences } from './zonaok-push-client.js';
+  import { pushStatus, enablePush, testPush, disablePush, syncPushPreferences, restorePushPreferences } from './zonaok-push-client.js';
   const config = {
     api: 'https://zonaok-push.carles-j-fontanillas.workers.dev',
     publicKey: 'BOCyjlpx0e7o6RNcjowDmf5ceBwoO4shUh0JcmIYxCruRzauTVwMOhANs8puiJ0YaW50_gxUMbqynarl71YyT5s'
@@ -151,11 +151,30 @@
   enable.addEventListener('click', () => run(enable, () => enablePush(config, preferences()), 'Dispositiu activat per a la prova.'));
   test.addEventListener('click', () => run(test, () => testPush(config), 'Petició de prova acceptada. Comprova el centre de notificacions d’aquest dispositiu.'));
   disable.addEventListener('click', () => run(disable, () => disablePush(config), 'Notificacions desactivades en aquest dispositiu.'));
+  let preferencesChangedBeforeRestore = false;
   root.addEventListener('change', () => {
+    preferencesChangedBeforeRestore = true;
     if (pushStatus().configuredDevice) syncPushPreferences(config, preferences()).catch(() => {
       status.textContent = 'Les preferències no s’han pogut sincronitzar. La prova d’aquest dispositiu continua disponible.';
     });
   });
+  async function restorePreferences() {
+    try {
+      const saved = await restorePushPreferences(config);
+      if (!saved) { render(); return; }
+      if (preferencesChangedBeforeRestore) {
+        await syncPushPreferences(config, preferences()).catch(() => {});
+      } else {
+        try { localStorage.setItem('ZONAOK_PUSH_PREFS_V1', JSON.stringify(saved)); } catch (_) {}
+        window.dispatchEvent(new CustomEvent('zonaok:push-preferences-restored', {detail: saved}));
+        render('Preferències recuperades d’aquest dispositiu.');
+      }
+    } catch (_) {
+      render('No s’han pogut recuperar les preferències del servidor. Les opcions locals es mantenen.');
+    }
+  }
+  window.addEventListener('pageshow', () => { void restorePreferences(); });
+  void restorePreferences();
   render();
 </script>
 </body>
