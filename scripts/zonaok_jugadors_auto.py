@@ -4,7 +4,7 @@ import argparse, asyncio, json, re, os, tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlencode, urlparse, parse_qs
-from zonaok_fecapa_unificat import chromium_context
+from zonaok_fecapa_players import chromium_context
 
 BASE="https://www.hoqueipatins.fecapa.cat/"
 SCHEMA="zonaok-jugadors-v1"
