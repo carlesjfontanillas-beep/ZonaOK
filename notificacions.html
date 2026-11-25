@@ -54,7 +54,7 @@
     #zok-push-settings .zok-push-refresh{justify-self:start}
   </style>
   <script defer src="favorits.js?v=20261125-push6-page"></script>
-  <script defer src="zonaok-push-preferencies.js?v=20261125-push6-page"></script>
+  <script defer src="zonaok-push-preferencies.js?v=20261125-serverprefs1"></script>
 </head>
 <body>
 <main class="app zok-favorites-app">
@@ -113,7 +113,7 @@
 </main>
 
 <script type="module">
-  import { pushStatus, enablePush, testPush, disablePush, syncPushPreferences, restorePushPreferences } from './zonaok-push-client.js';
+  import { pushStatus, enablePush, testPush, disablePush, syncPushPreferences, restorePushPreferences } from './zonaok-push-client.js?v=20261125-serverprefs1';
   const config = {
     api: 'https://zonaok-push.carles-j-fontanillas.workers.dev',
     publicKey: 'BOCyjlpx0e7o6RNcjowDmf5ceBwoO4shUh0JcmIYxCruRzauTVwMOhANs8puiJ0YaW50_gxUMbqynarl71YyT5s'
