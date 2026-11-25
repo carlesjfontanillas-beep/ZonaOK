@@ -191,6 +191,6 @@ else if(tab==='Equips'){
 }
 else if(tab==='Rànquings')renderCategoryRanking(selected,id)}
 $('jp-favs').onclick=()=>{scope='favorites';searchInput.value='';renderList()};$('jp-all').onclick=()=>{scope='all';searchInput.value='';renderList()};searchInput.oninput=renderList;searchInput.addEventListener('keydown',e=>{if(e.key==='Escape'){searchInput.value='';renderList()}else if(e.key==='Enter'&&!suggestions.hidden){const first=suggestions.querySelector('.zok-jp-row-main');if(first){e.preventDefault();first.click()}}});['jp-club','jp-team','jp-category','jp-position'].forEach(k=>$(k).onchange=()=>{filterOptions();renderList()});filterOptions();renderList();
-window.addEventListener('zonaok:jugadors-loaded',()=>{rankHistory=[];active=null;profile.hidden=true;search.hidden=false;filterOptions();renderList()});
+window.addEventListener('zonaok:jugadors-loaded',()=>{filterOptions();if(active&&byId(active)&&D.list(active).length){renderProfile();return}rankHistory=[];active=null;profile.hidden=true;search.hidden=false;renderList()});
 window.addEventListener('pageshow',e=>{if(e.persisted)active?renderProfile():renderList()});
 })();

@@ -72,7 +72,7 @@ function render(s){
  const cats=$('zok-dashboard-categories');cats.replaceChildren(el('h3','','Partits per categoria'),el('p','zok-dashboard-hint','Resultats = amb marcador · Actes = verificades. Prem una categoria per veure els grups.'));
  if(s.total===null)cats.append(el('p','helper','No s’ha pogut carregar el catàleg de partits.'));else cats.append(table(s.categories));
 }
-let pending=false;
+let pending=false,lastData=[null,null,null];
 async function json(path,gzip=false){
  const response=await fetch(path,{cache:'no-cache',credentials:'same-origin'});
  if(!response.ok)throw Error('HTTP '+response.status);
@@ -84,8 +84,10 @@ async function refresh(){
  try{
   const names=['Partits','Classificacions','Jugadors'];
   const res=await Promise.allSettled([json('zonaok-tots-partits.json'),json('zonaok-classificacions.json'),json('imports/jugadors-master.json.gz',true)]);
-  const data=res.map(x=>x.status==='fulfilled'?x.value:null),failed=res.map((x,i)=>x.status==='rejected'?names[i]:null).filter(Boolean);
-  const s=summarize(...data);render(s);
+  const valid=(x,i)=>x.status==='fulfilled'&&(i===0?Array.isArray(x.value?.matches):i===1?!!x.value?.competitions:!!x.value?.players);
+  const failed=res.map((x,i)=>valid(x,i)?null:names[i]).filter(Boolean);
+  lastData=res.map((x,i)=>valid(x,i)?x.value:lastData[i]);
+  const s=summarize(...lastData);render(s);
   status.textContent=(s.updatedAt?'Catàleg de partits publicat: '+date(s.updatedAt):'Data del catàleg no disponible')+(failed.length?' · Sense lectura: '+failed.join(', '):'');
   return failed.length===0;
  }catch(e){status.textContent='No s’ha pogut actualitzar el resum. Torna a provar.';return false}

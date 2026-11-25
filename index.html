@@ -2512,7 +2512,7 @@ const btnActes=$$('#import-actes-json');if(btnActes)btnActes.hidden=true;
 const exportActes=$$('#export-actes-json');if(exportActes)exportActes.hidden=true;
 window.ZonaOKRender=()=>{store=load();render();};
 let pendingRefresh=null;
-window.ZonaOKRefreshSources=async function(){
+window.ZonaOKRefreshMatches=window.ZonaOKRefreshSources=async function(){
    if(pendingRefresh)return pendingRefresh;
    pendingRefresh=(async()=>{
      // Ordre estricte: Agenda es carrega abans d'Actes, sense cap escriptura concurrent.
@@ -2694,6 +2694,7 @@ window.ZonaOKRefreshSources=async function(){
     return Boolean(other||classes);
   };
   window.ZonaOKReloadClassificacions=loadStandings;
+  window.ZonaOKRefreshVisible=()=>document.body.dataset.zokUiTab==='classificacions'?loadStandings():window.ZonaOKRefreshMatches();
   const tab=document.querySelector('[data-tab="classificacions"]');
   if(tab)tab.addEventListener('click',()=>{loadStandings();});
   // Si el carregador inicial d'Agenda no s'ha executat, encara podem
@@ -2704,11 +2705,11 @@ window.ZonaOKRefreshSources=async function(){
   },{once:true});
 })();
 </script>
-<script defer src="zonaok-gestos.js?v=20261125-gestos1"></script>
+<script defer src="zonaok-gestos.js?v=20261125-relectura1"></script>
   <script defer src="zonaok-resultats-7dies.js?v=20261125-gestos1"></script>
   <script defer src="zonaok-golejadors.js?v=20261124-match-card-fix"></script>
   <script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script>
   <link rel="stylesheet" href="zonaok-actualitzacions.css?v=20261125-dashboard1">
-  <script defer src="zonaok-actualitzacions.js?v=20261125-gestos1"></script>
+  <script defer src="zonaok-actualitzacions.js?v=20261125-relectura1"></script>
 </body>
 </html>

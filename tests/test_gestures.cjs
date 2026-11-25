@@ -6,3 +6,10 @@ assert.equal(axis(5,-60,true,true),'native');assert.equal(axis(5,60,true,false),
 assert.equal(axis(60,5,false,true),'native');assert.equal(axis(20,20,true,true),'');
 assert.equal(axis(40,40,true,true),'native');assert.equal(action('week',60,70),'');
 assert.equal(action('pull',80,75),'');console.log('13 proves de gestos correctes');
+
+const {refreshTarget}=require('../zonaok-gestos.js');
+assert.equal(refreshTarget({players:true}),'ZonaOKRefreshPlayers');
+assert.equal(refreshTarget({recent:true}),'ZonaOKRefreshRecent');
+assert.equal(refreshTarget({dashboard:true}),'ZonaOKRefreshDashboard');
+assert.equal(refreshTarget({}),'ZonaOKRefreshVisible');
+console.log('4 proves de recàrrega contextual correctes');

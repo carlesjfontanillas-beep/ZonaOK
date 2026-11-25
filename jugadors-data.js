@@ -44,6 +44,7 @@ function mount(){
  host.replaceChildren();host.hidden=true;
  const status=document.createElement('p');status.className='zok-jp-import-status zok-jp-note';status.setAttribute('role','status');status.hidden=true;
  host.closest('.zok-jp-search-line')?.after(status);
+ let pending=null;
  async function loadPublished(){
   status.hidden=false;status.classList.remove('zok-jp-error');status.textContent='Carregant dades reals de jugadors…';
   try{
@@ -55,13 +56,15 @@ function mount(){
     if(typeof DecompressionStream==='undefined')throw Error('Navegador sense suport gzip.');
     return new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json();
    });
-   const catalogPromise=fetch('zonaok-tots-partits.json',options).then(r=>r.ok?r.json():{}).catch(()=>({}));
+   const catalogPromise=fetch('zonaok-tots-partits.json',options).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(c=>{if(!Array.isArray(c?.matches)||!c.matches.length)throw Error('Catàleg de partits no vàlid');return c});
    const [master,catalog]=await Promise.all([masterPromise,catalogPromise]);
    const n=ingest(master,catalog);
    status.textContent=n.players+' jugadors disponibles'+(n.coverageVerified?'':' · Cobertura parcial');
-  }catch(e){status.textContent='No s’han pogut carregar les dades reals. Comprova la connexió i torna a provar.';status.classList.add('zok-jp-error')}
+   return true;
+  }catch(e){status.textContent=loaded?'Error de lectura · Dades anteriors conservades':'No s’han pogut carregar les dades reals. Comprova la connexió i torna a provar.';status.classList.add('zok-jp-error');return false}
  }
- loadPublished();
+ window.ZonaOKRefreshPlayers=()=>{if(!pending)pending=loadPublished().finally(()=>{pending=null});return pending};
+ window.ZonaOKRefreshPlayers();
 }
 if(document.readyState==='complete')mount();else document.addEventListener('DOMContentLoaded',mount,{once:true});
 })();

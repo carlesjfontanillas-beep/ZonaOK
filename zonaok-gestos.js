@@ -13,9 +13,15 @@ function action(kind,dx,dy){
  if(kind==='pull'&&dy>=72&&dy>Math.abs(dx)*1.25)return 'refresh';
  return '';
 }
-if(typeof module!=='undefined'&&module.exports){module.exports={axis,action};return}
+function refreshTarget(flags){
+ if(flags.players)return 'ZonaOKRefreshPlayers';
+ if(flags.recent)return 'ZonaOKRefreshRecent';
+ if(flags.dashboard)return 'ZonaOKRefreshDashboard';
+ return 'ZonaOKRefreshVisible';
+}
+if(typeof module!=='undefined'&&module.exports){module.exports={axis,action,refreshTarget};return}
 const mount=()=>{
- const main=document.querySelector('main.app');if(!main||!root.ZonaOKWeekGesture)return;
+ const main=document.querySelector('main.app');if(!main||(!root.ZonaOKWeekGesture&&!main.classList.contains('zok-jp-app')))return;
  const status=document.createElement('div');status.id='zok-pull-status';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
  const css=document.createElement('style');css.textContent=`
  #zok-pull-status{position:fixed;top:max(9px,env(safe-area-inset-top));left:50%;transform:translate(-50%,-150%);z-index:9999;background:#06243e;color:#f6fbff;border:1px solid #6e9db6;border-radius:22px;padding:9px 15px;font-size:13px;font-weight:700;transition:transform .12s ease;max-width:92vw;text-align:center;pointer-events:none}
@@ -29,10 +35,9 @@ const mount=()=>{
  async function refresh(){
   if(refreshing)return;refreshing=true;clearTimeout(timer);show('Actualitzant dades…');
   try{
-   let fn=document.body.classList.contains('zok-recent-mode')?root.ZonaOKRefreshRecent:
-    document.body.classList.contains('zok-ui-import')?root.ZonaOKRefreshDashboard:root.ZonaOKRefreshSources;
-   const ok=typeof fn==='function'&&await fn();
-   show(ok?'Dades actualitzades':'No s’han pogut actualitzar totes les dades');
+   const target=refreshTarget({players:main.classList.contains('zok-jp-app'),recent:document.body.classList.contains('zok-recent-mode'),dashboard:document.body.classList.contains('zok-ui-import')});
+   const fn=root[target],ok=typeof fn==='function'&&await fn();
+   show(ok?'Dades de GitHub recarregades':'No s’han pogut recarregar totes les dades');
   }catch(_){show('Error de connexió · Es manté la vista actual')}
   finally{refreshing=false;timer=setTimeout(hide,2400)}
  }
@@ -43,7 +48,7 @@ const mount=()=>{
   gesture=null;if(e.touches.length!==1||document.querySelector('dialog[open]')||e.target.closest?.(ignore)||nestedScroll(e.target))return;
   const t=e.touches[0];if(t.clientX<20||t.clientX>innerWidth-20)return;
   const control=e.target.closest?.('a,button,[role="button"]:not(.match),.zok-week-nav');
-  const week=!control&&root.ZonaOKWeekGesture.enabled(),pull=!control&&!refreshing&&top();
+  const week=!control&&root.ZonaOKWeekGesture?.enabled(),pull=!control&&!refreshing&&top();
   if(week||pull)gesture={id:t.identifier,x:t.clientX,y:t.clientY,week,pull,kind:''};
  },{passive:true});
  main.addEventListener('touchmove',e=>{
@@ -63,7 +68,7 @@ const mount=()=>{
   const dx=t.clientX-g.x,dy=t.clientY-g.y,kind=g.kind||axis(dx,dy,g.week,g.pull&&top()),result=action(kind,dx,dy);
   if(result==='refresh'&&!top()){hide();return}
   if(!result){hide();return}
-  if((result==='next'||result==='previous')&&!root.ZonaOKWeekGesture.enabled()){hide();return}
+  if((result==='next'||result==='previous')&&!root.ZonaOKWeekGesture?.enabled()){hide();return}
   if(e.cancelable)e.preventDefault();blockedUntil=performance.now()+350;blockedPoint={x:t.clientX,y:t.clientY};
   if(result==='refresh')void refresh();else{hide();requestAnimationFrame(()=>root.ZonaOKWeekGesture.change(result==='next'?1:-1))}
  },{passive:false});
