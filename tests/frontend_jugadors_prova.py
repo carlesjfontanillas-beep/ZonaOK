@@ -97,6 +97,9 @@ class Players(unittest.TestCase):
     def test_real_contract(self):
         p=self.page;p.goto(self.base+"/jugadors.html")
         p.get_by_text("Encara no hi ha catàleg carregat.",exact=True).wait_for()
+        self.assertFalse(p.locator(".zok-jp-demo").count())
+        self.assertTrue(p.locator(".zok-jp-search-line").evaluate("(n)=>n.contains(document.querySelector('#jp-search')) && n.contains(document.querySelector('#jp-data-status button'))"))
+        self.assertFalse(p.locator("#jp-data-status input[type=file]").is_visible())
         p.locator("#jp-all").click()
         self.assertEqual(p.locator("#jp-list article").count(),0)
         master={"schema":"zonaok-jugadors-v1","source":"FECAPA","seasonId":"41","players":{"123":{"playerId":"123","name":"Porter de prova contracte","birthYear":2013,"firstSeenAt":"2026-11-01","lastSeenAt":"2026-11-25","nameVariants":[]}},"memberships":{"41|4786|1234|123":{"playerId":"123","seasonId":"41","leagueId":"4786","teamFilterId":"1234","teamName":"CP SANT CELONI B","clubName":"CP Sant Celoni","teamId":None,"clubId":"281","groupName":"INFANTIL OR 10","position":"goalkeeper","firstSeenAt":"2026-11-01","lastSeenAt":"2026-11-25","profileUrl":"https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=plantillas","sports":{"played":1,"number":1}}},"matchAppearances":{"41|4786|4321|away|123":{"seasonId":"41","leagueId":"4786","matchId":"4321","playerId":"123","teamFilterId":"1234","side":"away","teamName":"CP SANT CELONI B","position":"goalkeeper","participation":"listed","shirtNumber":1,"checkedAt":"2026-11-25","source":"FECAPA:acta_resum","actaUrl":"https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=4321"}}}
