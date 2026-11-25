@@ -27,18 +27,18 @@ function renderSuggestions(rows){
  else if(rows.length>8)suggestions.append(el('p','zok-jp-note','Escriu més lletres per afinar la cerca.'));
 }
 async function renderList(){
- const token=++renderToken,q=D.norm(searchInput.value),favs=read().favorites,list=$('jp-list'),count=$('jp-count');
+ const token=++renderToken,q=D.norm(searchInput.value),favs=new Set(read().favorites),list=$('jp-list'),count=$('jp-count');
  $('jp-favs').setAttribute('aria-pressed',String(scope==='favorites'));$('jp-all').setAttribute('aria-pressed',String(scope==='all'));
  list.replaceChildren();suggestions.replaceChildren();suggestions.hidden=true;count.hidden=false;list.hidden=false;
- if(!D.loaded){count.textContent='0 jugadors';list.append(el('p','zok-jp-note','Encara no hi ha catàleg carregat.'));return}
+ if(!D.loaded){count.textContent='';list.append(el('p','zok-jp-note','Carregant el catàleg…'));return}
  if(q){
   const words=q.split(/\s+/),rows=D.players.filter(p=>(words.length===1?D.norm(p.name).includes(q):words.every(w=>D.norm(p.name).split(/\s+/).some(n=>n.startsWith(w))))&&filteredMemberships(p.playerId).length).sort((a,b)=>a.name.localeCompare(b.name,'ca',{sensitivity:'base'}));
   list.hidden=true;count.hidden=true;renderSuggestions(rows);return;
  }
- const rows=D.players.filter(p=>(scope==='all'||favs.includes(p.playerId))&&filteredMemberships(p.playerId).length).sort((a,b)=>a.name.localeCompare(b.name,'ca',{sensitivity:'base'}));
+ const rows=D.players.filter(p=>(scope==='all'||favs.has(p.playerId))&&filteredMemberships(p.playerId).length).sort((a,b)=>a.name.localeCompare(b.name,'ca',{sensitivity:'base'}));
  count.textContent=rows.length+' jugadors'+(rows.length>100?' · primers 100, afina la cerca':'')+(scope==='favorites'?' favorits':D.preview?' de mostra':'');
- if(!rows.length){list.append(el('p','zok-jp-note',scope==='favorites'&&!favs.length?'Encara no tens jugadors favorits. Cerca un nom i marca una estrella.':'Cap jugador coincideix amb els filtres.'));return}
- for(const p of rows.slice(0,100)){const row=el('article','zok-jp-row'),m=filteredMemberships(p.playerId)[0],b=btn('',()=>open(p.playerId),'zok-jp-row-main');const name=el('strong','',p.name);if(filteredMemberships(p.playerId).some(x=>x.position==='goalkeeper'))name.append(el('span','zok-jp-keeper','🥅 Porter'));b.append(name,el('small','',m.clubName+' · '+m.groupName+' · '+(m.position==='goalkeeper'?'Porter':m.position==='field'?'Pista':'Posició no verificada')));const a=await avatar(p.playerId);if(token!==renderToken)return;row.append(a,b,star(p.playerId,renderList));list.append(row)}}
+ if(!rows.length){list.append(el('p','zok-jp-note',scope==='favorites'&&!favs.size?'Encara no tens jugadors favorits. Cerca un nom i marca una estrella.':'Cap jugador coincideix amb els filtres.'));return}
+ for(const p of rows.slice(0,100)){const row=el('article','zok-jp-row'),m=filteredMemberships(p.playerId)[0],b=btn('',()=>open(p.playerId),'zok-jp-row-main');const name=el('strong','',p.name);if(filteredMemberships(p.playerId).some(x=>x.position==='goalkeeper'))name.append(el('span','zok-jp-keeper','🥅 Porter'));b.append(name,el('small','',m.clubName+' · '+m.groupName+' · '+(m.position==='goalkeeper'?'Porter':m.position==='field'?'Pista':'Posició no verificada')));const placeholder=el('div','zok-jp-avatar','♙');placeholder.setAttribute('aria-hidden','true');if(token!==renderToken)return;row.append(placeholder,b,star(p.playerId,renderList));list.append(row);avatar(p.playerId).then(a=>{if(token===renderToken&&placeholder.isConnected)placeholder.replaceWith(a)})}}
 function stat(label,v){const n=el('div','zok-jp-stat');n.append(el('b','',v===undefined||v===null?'—':String(v)),el('small','',label));return n}
 function card(...nodes){const n=el('article','zok-jp-card');n.append(...nodes);return n}
 function open(id,fromRanking=false){if(!byId(id))return;if(!fromRanking)rankHistory=[];active=id;tab='Resum';membershipKey=ALL;rankingCategory='';search.hidden=true;profile.hidden=false;renderProfile();window.scrollTo(0,0)}
@@ -61,7 +61,7 @@ function profileNumbers(rows,matches){
  for(const a of matches){if(Number.isInteger(a.shirtNumber)&&a.shirtNumber>=0)numbers.add(a.shirtNumber)}
  return [...numbers].sort((a,b)=>a-b).join(' / ')||'—';
 }
-function uniqueMatches(rows,id){const allowed=new Set(rows.map(key)),seen=new Map();for(const a of D.appearances){if(a.playerId===id&&(allowed.has(key(a))||(rows.length===D.list(id).length&&rows.some(m=>m.leagueId===a.leagueId)&&!a.teamFilterId))){const k=a.seasonId+'|'+a.leagueId+'|'+a.matchId;if(!seen.has(k))seen.set(k,a)}}return [...seen.values()].sort((a,b)=>String(b.fixture.date).localeCompare(String(a.fixture.date)))}
+function uniqueMatches(rows,id){const allowed=new Set(rows.map(key)),seen=new Map();for(const a of (D.matchesFor?.(id)||D.appearances)){if(a.playerId===id&&(allowed.has(key(a))||(rows.length===D.list(id).length&&rows.some(m=>m.leagueId===a.leagueId)&&!a.teamFilterId))){const k=a.seasonId+'|'+a.leagueId+'|'+a.matchId;if(!seen.has(k))seen.set(k,a)}}return [...seen.values()].sort((a,b)=>String(b.fixture.date).localeCompare(String(a.fixture.date)))}
 // Categoria sencera: conserva el nivell i l'edat, treu únicament el sufix de grup.
 const category=Totals.category;
 function rankGroups(rows){

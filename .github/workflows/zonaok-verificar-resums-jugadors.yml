@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: '22'
       - run: node --check jugadors.js
+      - run: node --check jugadors-data.js
+      - name: Rendiment i index de partits amb dades reals
+        run: node tests/test_player_loading.cjs
       - run: node --check zonaok-player-totals.js
       - run: node tests/test_player_totals.cjs
       - name: Diagnòstic de les dades FECAPA publicades

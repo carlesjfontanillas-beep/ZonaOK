@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),zlib=require('node:zlib'),perf=require('node:perf_hooks').performance;
+const context={window:{ZonaOKJugadorsDemo:{norm:x=>String(x||'').normalize('NFD').replace(/\p{M}/gu,'').toUpperCase(),teamMatches:()=>false},dispatchEvent:()=>{}},document:{getElementById:()=>({}),readyState:'loading',addEventListener:()=>{}},Event:class{},URL,console};
+vm.createContext(context);vm.runInContext(fs.readFileSync('jugadors-data.js','utf8'),context);
+const master=JSON.parse(zlib.gunzipSync(fs.readFileSync('imports/jugadors-master.json.gz'))),catalog=JSON.parse(fs.readFileSync('zonaok-tots-partits.json'));
+const start=perf.now(),api=context.window.ZonaOKJugadors,result=api.ingest(master,catalog),elapsed=perf.now()-start;
+assert.ok(result.players>0&&result.memberships>0&&result.appearances>0);
+assert.equal(api.players.reduce((n,p)=>n+api.matchesFor(p.playerId).length,0),result.appearances);
+for(const p of api.players.slice(0,30))assert.ok(api.matchesFor(p.playerId).every(a=>a.playerId===p.playerId));
+const known=api.matchesFor('70072');assert.ok(known.length>0);
+console.log(JSON.stringify({ingestMs:Math.round(elapsed),...result}));

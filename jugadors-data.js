@@ -10,26 +10,34 @@ function read(){if(preview)return demo.read();try{const v=JSON.parse(localStorag
 function write(v){if(preview)return demo.write(v);localStorage.setItem(KEY,JSON.stringify(v));window.dispatchEvent(new Event('zonaok:jugadors-preferences'))}
 function fav(pid,on){const s=read();s.favorites=on?[...new Set([...s.favorites,pid])]:s.favorites.filter(x=>x!==pid);write(s)}
 function assign(team,pid){const s=read();if(pid){s.teamPlayers[team]=pid;s.favorites=[...new Set([...s.favorites,pid])]}else delete s.teamPlayers[team];write(s);if(!preview)window.dispatchEvent(new CustomEvent('zonaok:jugador-equip',{detail:{teamId:team,playerId:pid,name:players.find(p=>p.playerId===pid)?.name||''}}))}
-let membershipIndex=new Map();const list=pid=>membershipIndex.get(pid)||[];
+let membershipIndex=new Map(),appearanceIndex=new Map();const list=pid=>membershipIndex.get(pid)||[],matchesFor=pid=>appearanceIndex.get(pid)||[];
 function teamMatches(m,teamId){return demo.teamMatches(m,teamId)}
 function officialUrl(v,league,match){try{const u=new URL(v);return u.origin==='https://www.hoqueipatins.fecapa.cat'&&u.searchParams.get('liga')===league&&(!match||u.searchParams.get('partido')===match)?u.href:''}catch{return ''}}
 function ingest(master,catalog){
  if(!obj(master)||master.schema!=='zonaok-jugadors-v1'||master.source!=='FECAPA'||!id(master.seasonId)||!obj(master.players)||!obj(master.memberships)||!obj(master.matchAppearances))throw Error('El JSON no correspon al contracte de jugadors ZonaOK.');
- const pmap=new Map(),ms=new Map(),as=new Map(),fixtures=new Map();
+ const pmap=new Map(),ms=new Map(),as=new Map(),fixtures=new Map(),fixtureMeta=new Map();
+ const today=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Madrid'});
  for(const f of (Array.isArray(catalog?.rows)?catalog.rows:Array.isArray(catalog?.matches)?catalog.matches:[])){const l=String(f.leagueId||''),m=String(f.matchId||'');if(!id(l)||!id(m))continue;const k=l+'|'+m;if(fixtures.has(k)){fixtures.set(k,null);continue}fixtures.set(k,f)}
  for(const [k,p] of Object.entries(master.players)){if(!obj(p)||k!==p.playerId||!id(k)||!clean(p.name))continue;pmap.set(k,{playerId:k,name:clean(p.name),birthYear:num(p.birthYear)&&!p.birthYearConflict?p.birthYear:undefined})}
  for(const m of Object.values(master.memberships)){if(!obj(m)||!pmap.has(m.playerId)||!id(m.leagueId)||!id(m.teamFilterId)||m.seasonId!==master.seasonId)continue;const k=m.playerId+'|'+m.leagueId+'|'+m.teamFilterId;if(ms.has(k))continue;ms.set(k,{playerId:m.playerId,leagueId:m.leagueId,teamFilterId:m.teamFilterId,seasonId:m.seasonId,teamName:clean(m.teamName)||'Equip desconegut',clubName:clean(m.clubName)||'Club desconegut',leagueName:clean(m.leagueName),groupName:clean(m.groupName)||clean(m.leagueName)||'Competició '+m.leagueId,seasonName:clean(m.seasonName)||'Temporada '+m.seasonId,position:['goalkeeper','field'].includes(m.position)?m.position:undefined,sports:{...stats(m.sports),...stats(m.profileStats)},profileUrl:officialUrl(m.profileUrl,m.leagueId),clubCrestId:/^\d+(?:_\d+)?$/.test(m.clubCrestId||'')?m.clubCrestId:undefined})}
  const byPlayerLeague=new Map();for(const m of ms.values()){const k=m.playerId+'|'+m.leagueId;if(!byPlayerLeague.has(k))byPlayerLeague.set(k,[]);byPlayerLeague.get(k).push(m)}
  const positionsByMember=new Map();
- for(const a of Object.values(master.matchAppearances)){if(!obj(a)||!pmap.has(a.playerId)||a.seasonId!==master.seasonId||!id(a.leagueId)||!id(a.matchId)||!['home','away'].includes(a.side)||!['listed','played'].includes(a.participation))continue;const k=a.seasonId+'|'+a.leagueId+'|'+a.matchId+'|'+a.playerId; if(as.has(k))continue;const exact=ms.get(a.playerId+'|'+a.leagueId+'|'+a.teamFilterId);const candidates=(byPlayerLeague.get(a.playerId+'|'+a.leagueId)||[]).filter(m=>norm(m.teamName)===norm(a.teamName));const membership=exact||(candidates.length===1?candidates[0]:null);const f=fixtures.get(a.leagueId+'|'+a.matchId),closed=f&&num(f.homeScore)&&num(f.awayScore)&&!/\b(?:EN JOC|EN DIRECTE|LIVE|PLAYING|IN PROGRESS|AJORNAT|SUSPES|CANCELADO)\b/.test(norm(f.status))&&(/^(?:FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)$/.test(norm(f.status))||(/^\d{4}-\d{2}-\d{2}$/.test(clean(f.iso))&&clean(f.iso)<new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Madrid'})&&(f.actaState==='available'||(['Agenda','En directe'].includes(f.scoreSource)&&clean(f.scoreUpdatedAt)))));
+ for(const a of Object.values(master.matchAppearances)){if(!obj(a)||!pmap.has(a.playerId)||a.seasonId!==master.seasonId||!id(a.leagueId)||!id(a.matchId)||!['home','away'].includes(a.side)||!['listed','played'].includes(a.participation))continue;const k=a.seasonId+'|'+a.leagueId+'|'+a.matchId+'|'+a.playerId; if(as.has(k))continue;const exact=ms.get(a.playerId+'|'+a.leagueId+'|'+a.teamFilterId);const candidates=exact?[]:(byPlayerLeague.get(a.playerId+'|'+a.leagueId)||[]).filter(m=>norm(m.teamName)===norm(a.teamName));const membership=exact||(candidates.length===1?candidates[0]:null);
+ const fk=a.leagueId+'|'+a.matchId;
+ if(!fixtureMeta.has(fk)){
+  const f=fixtures.get(fk),status=norm(f?.status);
+  const closed=f&&num(f.homeScore)&&num(f.awayScore)&&!/\b(?:EN JOC|EN DIRECTE|LIVE|PLAYING|IN PROGRESS|AJORNAT|SUSPES|CANCELADO)\b/.test(status)&&(/^(?:FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)$/.test(status)||(/^\d{4}-\d{2}-\d{2}$/.test(clean(f.iso))&&clean(f.iso)<today&&(f.actaState==='available'||(['Agenda','En directe'].includes(f.scoreSource)&&clean(f.scoreUpdatedAt)))));
+  fixtureMeta.set(fk,{f,closed});
+ }
+ const {f,closed}=fixtureMeta.get(fk);
  if(membership&&['goalkeeper','field'].includes(a.position)){const mk=membership.playerId+'|'+membership.leagueId+'|'+membership.teamFilterId;if(!positionsByMember.has(mk))positionsByMember.set(mk,new Set());positionsByMember.get(mk).add(a.position)}
  as.set(k,{playerId:a.playerId,leagueId:a.leagueId,matchId:a.matchId,teamFilterId:membership?.teamFilterId,seasonId:a.seasonId,side:a.side,teamName:clean(a.teamName)||membership?.teamName||'',shirtNumber:num(a.shirtNumber)?a.shirtNumber:undefined,position:['goalkeeper','field'].includes(a.position)?a.position:undefined,captain:typeof a.captain==='boolean'?a.captain:undefined,participation:a.participation,stats:stats(a.stats),actaUrl:officialUrl(a.actaUrl,a.leagueId,a.matchId),fixture:{date:clean(f?.iso)||'Data no disponible',rival:clean(f?.[a.side==='home'?'away':'home'])||'Rival no disponible',result:closed?f.homeScore+' : '+f.awayScore:'— : —',...(closed?{homeScore:f.homeScore,awayScore:f.awayScore}:{})}});
  }
  // Derive position only when the appearances in that exact membership agree.
  for(const m of ms.values()){if(m.position)continue;const positions=positionsByMember.get(m.playerId+'|'+m.leagueId+'|'+m.teamFilterId)||new Set();if(positions.size===1)m.position=[...positions][0]}
- const memberIds=new Set([...ms.values()].map(m=>m.playerId));players.splice(0,players.length,...[...pmap.values()].filter(p=>memberIds.has(p.playerId)));memberships.splice(0,memberships.length,...ms.values());membershipIndex=new Map();for(const m of memberships){if(!membershipIndex.has(m.playerId))membershipIndex.set(m.playerId,[]);membershipIndex.get(m.playerId).push(m)}appearances.splice(0,appearances.length,...as.values());loaded=true;window.dispatchEvent(new Event('zonaok:jugadors-loaded'));return {players:players.length,memberships:memberships.length,appearances:appearances.length,coverageVerified:master.coverageVerified===true};
+ const memberIds=new Set([...ms.values()].map(m=>m.playerId));players.splice(0,players.length,...[...pmap.values()].filter(p=>memberIds.has(p.playerId)));memberships.splice(0,memberships.length,...ms.values());membershipIndex=new Map();for(const m of memberships){if(!membershipIndex.has(m.playerId))membershipIndex.set(m.playerId,[]);membershipIndex.get(m.playerId).push(m)}appearances.length=0;appearanceIndex=new Map();for(const a of as.values()){appearances.push(a);if(!appearanceIndex.has(a.playerId))appearanceIndex.set(a.playerId,[]);appearanceIndex.get(a.playerId).push(a)}loaded=true;window.dispatchEvent(new Event('zonaok:jugadors-loaded'));return {players:players.length,memberships:memberships.length,appearances:appearances.length,coverageVerified:master.coverageVerified===true};
 }
-const api=preview?{...demo,preview:true,get loaded(){return true}}:{players,memberships,appearances,norm,read,write,fav,assign,list,teamMatches,ingest,preview:false,get loaded(){return loaded}};
+const api=preview?{...demo,preview:true,get loaded(){return true}}:{players,memberships,appearances,norm,read,write,fav,assign,list,matchesFor,teamMatches,ingest,preview:false,get loaded(){return loaded}};
 window.ZonaOKJugadors=api;
 function mount(){
  const host=document.getElementById('jp-data-status');if(!host)return;
@@ -39,10 +47,16 @@ function mount(){
  async function loadPublished(){
   status.hidden=false;status.classList.remove('zok-jp-error');status.textContent='Carregant dades reals de jugadors…';
   try{
-   const response=await fetch('imports/jugadors-master.json.gz',{cache:'no-cache',credentials:'same-origin'});
-   if(!response.ok)throw Error('HTTP '+response.status);
-   if(typeof DecompressionStream==='undefined')throw Error('Navegador sense suport gzip.');const master=await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json();let catalog={};
-   try{const r=await fetch('zonaok-tots-partits.json',{cache:'no-cache',credentials:'same-origin'});if(r.ok)catalog=await r.json()}catch{}
+   const options={cache:'no-cache',credentials:'same-origin'};
+   // Les dues lectures independents comencen alhora. El navegador revalida
+   // els fitxers i pot reutilitzar la resposta HTTP si no ha canviat.
+   const masterPromise=fetch('imports/jugadors-master.json.gz',options).then(async response=>{
+    if(!response.ok)throw Error('HTTP '+response.status);
+    if(typeof DecompressionStream==='undefined')throw Error('Navegador sense suport gzip.');
+    return new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).json();
+   });
+   const catalogPromise=fetch('zonaok-tots-partits.json',options).then(r=>r.ok?r.json():{}).catch(()=>({}));
+   const [master,catalog]=await Promise.all([masterPromise,catalogPromise]);
    const n=ingest(master,catalog);
    status.textContent=n.players+' jugadors disponibles'+(n.coverageVerified?'':' · Cobertura parcial');
   }catch(e){status.textContent='No s’han pogut carregar les dades reals. Comprova la connexió i torna a provar.';status.classList.add('zok-jp-error')}
