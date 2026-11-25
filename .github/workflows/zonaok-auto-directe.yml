@@ -32,6 +32,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 # Agenda, Directe i Actes comparteixen el JSON; executar-los en serie.
 concurrency:
@@ -92,6 +93,8 @@ jobs:
       - name: Publicar només si l'usuari ho activa
         if: ${{ (inputs.publish == true || github.event_name == 'schedule') && (github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true') }}
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
@@ -108,7 +111,41 @@ jobs:
             if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
             if git diff --cached --quiet; then echo 'Sense canvis nous'; exit 0; fi
             git commit -m 'ZonaOK AUTO: directe actualitzar JSON unificat'
-            if git push origin HEAD:main; then exit 0; fi
+            if git push origin HEAD:main; then
+              python scripts/zonaok_jugadors_trigger.py --catalog zonaok-tots-partits.json --state imports/jugadors-maintenance-state.json --previous-ref HEAD^ > player-trigger.txt
+              if grep -q '^run=true
+            echo 'Canvi concurrent a main, es reintenta la fusio...'
+            sleep 2
+          done
+          echo "ERROR: no s'ha pogut publicar després de 4 intents" >&2
+          exit 1
+      - name: Resum de captura i fusio
+        if: always()
+        shell: bash
+        run: |
+          for f in diagnostic-directe-auto.json fusio-directe-auto.json; do
+            if [ -f "$f" ]; then
+              echo "## $f" >> "$GITHUB_STEP_SUMMARY"
+              echo '```json' >> "$GITHUB_STEP_SUMMARY"
+              head -c 8000 "$f" >> "$GITHUB_STEP_SUMMARY"
+              printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+            fi
+          done
+      - name: Desar diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zonaok-directe-diagnostic
+          if-no-files-found: ignore
+          path: |
+            diagnostic-directe-auto.json
+            captura-directe-auto.json
+            fusio-directe-auto.json
+ player-trigger.txt; then
+                gh workflow run jugadors-public.yml --repo carlesjfontanillas-beep/ZonaOK --ref main -f mode=flash
+              fi
+              exit 0
+            fi
             echo 'Canvi concurrent a main, es reintenta la fusio...'
             sleep 2
           done
