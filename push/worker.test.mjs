@@ -173,6 +173,28 @@ test("registration, preference update, encrypted push test, cooldown and unsubsc
   assert.equal((await worker.fetch(request("/test", { method: "POST", token, body: {} }), env)).status, 401);
 });
 
+
+test("registration safely restores a lost local token only for the identical subscription keys", async () => {
+  const client = await makeSubscription();
+  const registered = await worker.fetch(request("/subscriptions", { method: "POST", body: { subscription: client.value } }), env);
+  assert.equal(registered.status, 201);
+  const { token: originalToken } = await json(registered);
+  const originalHash = db.db.prepare("SELECT token_hash FROM subscriptions WHERE endpoint = ?").get(client.value.endpoint).token_hash;
+
+  const mismatched = structuredClone(client.value);
+  mismatched.keys.auth = b64url(crypto.getRandomValues(new Uint8Array(16)));
+  const rejected = await worker.fetch(request("/subscriptions", { method: "POST", body: { subscription: mismatched } }), env);
+  assert.equal(rejected.status, 409);
+  assert.equal(db.db.prepare("SELECT token_hash FROM subscriptions WHERE endpoint = ?").get(client.value.endpoint).token_hash, originalHash);
+
+  const recovered = await worker.fetch(request("/subscriptions", { method: "POST", body: { subscription: client.value } }), env);
+  assert.equal(recovered.status, 200);
+  const { token: recoveredToken } = await json(recovered);
+  assert.notEqual(recoveredToken, originalToken);
+  assert.equal((await worker.fetch(request("/preferences", { method: "POST", token: originalToken, body: { preferences: {} } }), env)).status, 401);
+  assert.equal((await worker.fetch(request("/preferences", { method: "POST", token: recoveredToken, body: { preferences: {} } }), env)).status, 200);
+});
+
 test("registration rejects unsafe endpoints and limits new devices", async () => {
   const unsafe = await makeSubscription("https://169.254.169.254/latest/meta-data/");
   const blocked = await worker.fetch(request("/subscriptions", { method: "POST", body: { subscription: unsafe.value } }), env);
