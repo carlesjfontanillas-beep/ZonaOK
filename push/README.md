@@ -10,7 +10,17 @@ El manifest existent ja usa display standalone. A iOS/iPadOS cal instal·lar a l
 - zonaok-push-client.js: mòdul opt-in, subscripció, actualització preferències, baixa i petició de prova. Encara no es carrega a cap pàgina.
 - push/schema.sql: esquema D1 proposat; no desplegat. Les credencials del dispositiu s'han de conservar al backend com a hash i els endpoints només a D1 privat.
 
-## Contracte pendent del Worker
+## Backend de prova desplegat
+
+- Worker: `zonaok-push` a Cloudflare Workers; D1 privat: `zonaok-push-db`.
+- API disponible: `GET /health`, `POST /subscriptions`, `POST /preferences`, `POST /unsubscribe` i `POST /test`.
+- VAPID privada guardada com a secret de Worker; clau pública i origen de Pages configurats al servei.
+- CORS limitat a l'origen de GitHub Pages. El Worker valida mida i esquema, exigeix token per a canvis, limita altes i proves, filtra endpoints push i no segueix redireccions.
+- La ruta de salut pública ha respost amb D1 i VAPID configurats. Les proves locals verifiquen subscripció, preferències, baixa, xifratge push i límits (3 proves aprovades).
+- `notificacions.html` ja és a aquesta branca i demana permís només després d'una acció explícita. La prova de notificació es limita al dispositiu registrat.
+- Encara falta verificar una entrega real en un dispositiu instal·lat. Fins aleshores no s'activa cap enviament esportiu general ni es publica res a `main`.
+
+## Abast esportiu encara pendent
 HTTPS, CORS restringit a l'origen real de Pages, preflight i validació estricta de mida/esquema. Sense tokens GitHub al client.
 - POST /subscriptions: subscription i preferences; retorna token opac aleatori. Si ja existeix un endpoint, exigir credencial vàlida abans de modificar-lo.
 - POST /preferences: preferences, Bearer token; modifica només subscripció pròpia.
@@ -40,4 +50,4 @@ Adaptador de JSON pendent de verificar camps reals i frescor de fonts. No inferi
 6. Simular línia base, reexecució, retard de dades, correcció de marcador, final confirmat, múltiples favorits, preferències i errors de lliurament.
 7. Activar un únic dispositiu de prova abans de publicar i habilitar enviaments generals.
 
-Estat: esborrany de codi i esquema, no integrat, no provat en execució, no publicat a main.
+Estat: backend de prova desplegat i verificat a /health; pàgina integrada a push-preparacio; prova d'entrega en dispositiu i activació esportiva encara pendents.
