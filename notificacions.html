@@ -158,7 +158,10 @@
       status.textContent = 'Les preferències no s’han pogut sincronitzar. La prova d’aquest dispositiu continua disponible.';
     });
   });
+  let restoringPreferences = false;
   async function restorePreferences() {
+    if (restoringPreferences) return;
+    restoringPreferences = true;
     try {
       const saved = await restorePushPreferences(config);
       if (!saved) { render(); return; }
@@ -171,6 +174,8 @@
       }
     } catch (_) {
       render('No s’han pogut recuperar les preferències del servidor. Les opcions locals es mantenen.');
+    } finally {
+      restoringPreferences = false;
     }
   }
   window.addEventListener('pageshow', () => { void restorePreferences(); });
