@@ -933,6 +933,28 @@ def canonicalize(r):
     return row
 
 
+def directe_team_alias(full, short):
+    """Sigles de FECAPA: només amb data, hora, local i visitant unívocs."""
+    a,b=norm(full),norm(short)
+    if a==b:return bool(a)
+    tokens=a.split()
+    if not tokens:return False
+    compact=b.replace(' ','')
+    if not re.fullmatch(r'[A-Z0-9]{2,12}',compact):return False
+    forms=set()
+    if len(tokens)>1:
+        forms.add(''.join(x if re.fullmatch(r'[A-Z0-9]',x) else x[0] for x in tokens))
+        if tokens[0] in ('HC','CH','CP','CHP','FC','CE','UE','RC','AC'):
+            forms.add(tokens[0]+''.join(x[0] for x in tokens[1:]))
+    # No confondre Barça i veterans, ni equips A/B.
+    known={'BARCA':{'BAR','FCB'},'FC BARCELONA':{'BAR','FCB','BARCA'},
+           'FC BARCELONA VETERANS':{'FCBETRANS','FCBETERANS','FCBV'},
+           'CP SANT CELONI':{'CPSC'},'CP SANT CELONI A':{'CPSCA'},
+           'CP SANT CELONI B':{'CPSCB'},'HOQUEI CLUB CASTELLAR':{'HCC'},
+           'HC VALLS':{'HCV'}}
+    return compact in forms or compact in known.get(a,set())
+
+
 def match_index(rows,incoming,mode):
     lid=clean(incoming.get('leagueId'));mid=clean(incoming.get('matchId'))
     if lid and mid:
@@ -953,6 +975,15 @@ def match_index(rows,incoming,mode):
               and norm(r.get('home'))==norm(incoming.get('home'))
               and norm(r.get('away'))==norm(incoming.get('away'))]
         if len(weak)==1:return weak[0]
+        if len(weak)>1:return None
+    if mode=='directe' and not candidates:
+        # FECAPA mostra sigles i l'Agenda noms complets. No alterar mai
+        # equips, categoria ni horaris per aquesta equivalència.
+        aliases=[i for i,r in enumerate(rows) if compatible_id(r)
+                 and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
+                 and directe_team_alias(r.get('home'),incoming.get('home'))
+                 and directe_team_alias(r.get('away'),incoming.get('away'))]
+        if len(aliases)==1:return aliases[0]
     return None
 
 
