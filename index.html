@@ -1354,7 +1354,34 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
   function openFavoriteRanking(league,fav){
  if(window.ZonaOKRankingDialog?.open)window.ZonaOKRankingDialog.close();
  if(!document.getElementById('zok-ranking-style')){
- const style=document.createElement('style');style.id='zok-ranking-style';style.textContent='.zok-ranking-dialog[open]{display:flex;flex-direction:column}.zok-ranking-dialog{position:fixed;inset:0;margin:auto;width:min(96vw,1000px);height:min(92dvh,900px);padding:0;overflow:hidden;border:1px solid #34536d;border-radius:18px;background:#f4f7fa;color:#082238;box-shadow:0 20px 70px #000a}.zok-ranking-dialog::backdrop{background:#03172bdd}.zok-ranking-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:#061f38;color:#fff}.zok-ranking-head button{background:transparent;color:#fff;border:0;font-size:26px;padding:0 8px}.zok-ranking-meta{padding:10px 12px;background:#e3eaf0;font-size:12px;line-height:1.45}.zok-ranking-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}.zok-ranking-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;white-space:nowrap;color:#082238}.zok-ranking-table th,.zok-ranking-table td{padding:7px 8px;border-bottom:1px solid #d6e0e9;text-align:right;background:#f4f7fa}.zok-ranking-table th{position:sticky;top:0;background:#d5e2ee;z-index:2}.zok-ranking-table th:first-child,.zok-ranking-table td:first-child{position:sticky;left:0;min-width:32px;width:32px;box-sizing:border-box;z-index:1}.zok-ranking-table th:first-child{z-index:3;background:#d5e2ee}.zok-ranking-table th:nth-child(2),.zok-ranking-table td:nth-child(2){text-align:left;min-width:130px;max-width:190px;white-space:normal;position:sticky;left:32px;z-index:1}.zok-ranking-table th:nth-child(2){z-index:3;background:#d5e2ee}.zok-ranking-table tr.zok-ranking-top td{font-weight:800}.zok-ranking-table tr.zok-ranking-favorite td{background:#ffedbf;color:#082238;font-weight:800}.zok-ranking-group{display:block;font-size:10px;opacity:.75}.zok-ranking-foot{padding:8px 12px;background:#061f38;color:#fff;font-size:11px;line-height:1.4}@media(max-width:480px){.zok-ranking-dialog{height:94dvh}.zok-ranking-table th,.zok-ranking-table td{padding:6px}}';document.head.append(style);
+ const style=document.createElement('style');style.id='zok-ranking-style';style.textContent=`.zok-ranking-dialog{position:fixed;inset:0;margin:auto;width:min(96vw,1000px);max-width:96vw;height:min(92dvh,900px);max-height:94dvh;box-sizing:border-box;padding:0;overflow:hidden;border:1px solid #52738a;border-radius:16px;background:#0c263c;color:#ecf5ff;box-shadow:0 20px 70px #000a;color-scheme:dark;font:inherit}
+.zok-ranking-dialog[open]{display:flex;flex-direction:column}
+.zok-ranking-dialog::backdrop{background:#03172bd9}
+.zok-ranking-head{display:flex;flex:none;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:#12344d;border-bottom:1px solid #52738a}
+.zok-ranking-head strong{color:#fbc252;font-size:clamp(14px,4.2vw,19px);line-height:1.2;min-width:0}
+.zok-ranking-head button{flex:0 0 34px;min-width:34px;height:36px;border:1px solid #7597b0;border-radius:9px;background:#183d5b;color:#fff;font-size:24px;line-height:1;padding:0;display:grid;place-items:center;cursor:pointer}
+.zok-ranking-head button:focus-visible{outline:2px solid #fbc252;outline-offset:2px}
+.zok-ranking-meta{flex:none;margin:9px 10px 8px;padding:9px 10px;border:1px solid #45627a;border-radius:11px;background:#173950;font-size:12px;line-height:1.4;color:#ecf5ff}
+.zok-ranking-meta strong{display:block;color:#fbc252;font-size:14px;margin-bottom:3px}
+.zok-ranking-meta .zok-ranking-selected{font-weight:750;color:#ffe1a1}
+.zok-ranking-meta .zok-ranking-source{color:#b9cddd;font-size:10px;line-height:1.35;margin-top:4px}
+.zok-ranking-scroll{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;margin:0 8px;border:1px solid #45627a;border-radius:10px;scrollbar-width:thin;scrollbar-color:#52738a #0c263c}
+.zok-ranking-table{--rank-width:33px;width:100%;border-collapse:separate;border-spacing:0;font-size:12px;white-space:nowrap;color:#ecf5ff;font-variant-numeric:tabular-nums}
+.zok-ranking-table th,.zok-ranking-table td{box-sizing:border-box;padding:7px 7px;border-bottom:1px solid #34536d;text-align:right;background:#102d45}
+.zok-ranking-table tbody tr:nth-child(even) td{background:#14364e}
+.zok-ranking-table th{position:sticky;top:0;background:#214966;color:#d6e7f3;font-size:11px;font-weight:750;z-index:3;border-bottom:1px solid #52738a}
+.zok-ranking-table th:first-child,.zok-ranking-table td:first-child{position:sticky;left:0;width:var(--rank-width);min-width:var(--rank-width);max-width:var(--rank-width);text-align:center;z-index:1}
+.zok-ranking-table th:nth-child(2),.zok-ranking-table td:nth-child(2){text-align:left;min-width:124px;width:160px;max-width:180px;white-space:normal;overflow-wrap:anywhere;position:sticky;left:var(--rank-width);z-index:1;box-shadow:2px 0 0 #52738a55}
+.zok-ranking-table th:first-child,.zok-ranking-table th:nth-child(2){z-index:4;background:#214966}
+.zok-ranking-table td:nth-child(3){color:#fbc252;font-weight:750}
+.zok-ranking-table tr.zok-ranking-top td{font-weight:800}
+.zok-ranking-table tr.zok-ranking-top td:first-child{color:#fbc252}
+.zok-ranking-table tr.zok-ranking-favorite td{background:#554525;color:#ffe3a8;font-weight:800;border-bottom-color:#a17c35}
+.zok-ranking-table tr.zok-ranking-favorite td:first-child{box-shadow:inset 3px 0 #fbc252}
+.zok-ranking-group{display:block;color:#9fbed2;font-size:10px;line-height:1.25;margin-top:2px;font-weight:500}
+.zok-ranking-table tr.zok-ranking-favorite .zok-ranking-group{color:#eed6a3}
+.zok-ranking-foot{flex:none;padding:9px 12px 10px;background:#0c263c;color:#b9cddd;font-size:10px;line-height:1.4}
+@media(max-width:480px){.zok-ranking-dialog{height:94dvh}.zok-ranking-table{--rank-width:29px;font-size:11px}.zok-ranking-table th,.zok-ranking-table td{padding:6px 5px}.zok-ranking-table th:nth-child(2),.zok-ranking-table td:nth-child(2){min-width:108px;width:115px;max-width:135px}.zok-ranking-group{font-size:9px}.zok-ranking-scroll{margin:0 6px}}`;document.head.append(style);
  }
  const d=el('dialog','zok-ranking-dialog'),head=el('div','zok-ranking-head'),title=el('strong','','📊 RÀNQUING'),close=el('button','','×'),meta=el('div','zok-ranking-meta','Carregant classificacions FECAPA…'),scroll=el('div','zok-ranking-scroll'),foot=el('div','zok-ranking-foot','Rànquing ZonaOK (no oficial). PTS/PJ · desempat DG/PJ i GF/PJ. No ajusta la dificultat dels rivals.');
  d.setAttribute('aria-label','Rànquing de la competició');close.type='button';close.setAttribute('aria-label','Tancar');close.addEventListener('click',()=>d.close());head.append(title,close);d.append(head,meta,scroll,foot);document.body.append(d);window.ZonaOKRankingDialog=d;d.addEventListener('close',()=>{d.remove();if(window.ZonaOKRankingDialog===d)window.ZonaOKRankingDialog=null});d.showModal();
@@ -1363,7 +1390,7 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
   if(!d.isConnected)return;
   const result=buildFavoriteRanking(data,league,fav),favorite=result.rows.find(r=>r.favorite),dt=new Date(result.capturedAt),stamp=Number.isNaN(dt.getTime())?'—':dt.toLocaleString('ca-ES',{timeZone:'Europe/Madrid',dateStyle:'short',timeStyle:'short'});
   title.textContent='📊 RÀNQUING · '+result.competition;
-  meta.replaceChildren(el('strong','',result.rows.length+' equips · '+result.groups.length+' grups importats'),el('div','',favorite?(favorite.team+' · '+(favorite.rank===null?'sense posició':favorite.rank+'a posició')):'Equip favorit no identificat exactament.'),el('div','','Dades FECAPA: '+stamp+' · Cobertura segons l’última importació; pot ser parcial.'));
+  meta.replaceChildren(el('strong','',result.rows.length+' equips · '+result.groups.length+' grups importats'),el('div','zok-ranking-selected',favorite?(favorite.team+' · '+(favorite.rank===null?'sense posició':favorite.rank+'a posició')):'Equip favorit no identificat exactament.'),el('div','zok-ranking-source','Dades FECAPA: '+stamp+' · Cobertura segons l’última importació; pot ser parcial.'));
   const table=el('table','zok-ranking-table'),thead=el('thead'),header=el('tr'),body=el('tbody');
   ['#','Equip / grup','Coef.','PJ','PG','PE','PP','PTS','GF','GC','DG','DG/PJ','GF/PJ'].forEach(v=>{const th=el('th','',v);th.scope='col';header.append(th)});thead.append(header);
   const fmt=(v,digits=0)=>v===null?'—':v.toLocaleString('ca-ES',{minimumFractionDigits:digits,maximumFractionDigits:digits});
