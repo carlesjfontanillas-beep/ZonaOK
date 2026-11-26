@@ -5,3 +5,25 @@
 .zok-prediction-dialog .zok-af-event strong{text-align:right;font-size:12px}
 .zok-prediction-dialog .zok-af-score>.zok-af-team{font-size:12px}
 .zok-pred-retro{width:100%;margin:12px 0;background:#183d5b;color:#fbc252;border:1px solid #7597b0;border-radius:9px;padding:10px;font-weight:800}
+
+/* Comparativa compacta: blau = local, daurat = visitant. */
+.zok-pred-comparison{border:1px solid #45627a;border-radius:12px;background:#102e47;padding:10px;display:grid;gap:8px;min-width:0}
+.zok-pred-legend,.zok-pred-compare-values,.zok-pred-forms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.zok-pred-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;min-width:0;overflow-wrap:anywhere;line-height:1.2}
+.zok-pred-legend-item:last-child{justify-content:flex-end;text-align:right}
+.zok-pred-swatch{display:block;width:9px;height:9px;flex:0 0 9px;border-radius:3px}
+.zok-pred-swatch.home,.zok-pred-fill.home{background:#75b9ed}
+.zok-pred-swatch.away,.zok-pred-fill.away{background:#fbc252}
+.zok-pred-compare-metric{min-width:0}
+.zok-pred-compare-metric h4{margin:0 0 3px;text-align:center;color:#c7dce9;font-size:11px;font-weight:650}
+.zok-pred-compare-side{min-width:0;display:grid;gap:3px}
+.zok-pred-compare-side b{color:#75b9ed;font-size:13px;font-variant-numeric:tabular-nums;text-align:right;line-height:1}
+.zok-pred-compare-side.away b{color:#fbc252;text-align:left}
+.zok-pred-track{height:8px;background:#28465c;border-radius:5px;overflow:hidden;display:flex}
+.zok-pred-compare-side.home .zok-pred-track{justify-content:flex-end}
+.zok-pred-fill{display:block;height:100%;border-radius:5px}
+.zok-pred-form{display:flex;gap:3px;justify-content:flex-end}
+.zok-pred-form:last-child{justify-content:flex-start}
+.zok-pred-form-dot{display:grid;place-items:center;flex:0 1 19px;height:19px;border-radius:4px;font-size:10px;font-weight:850;color:#10283c}
+.zok-pred-form-dot.V{background:#65bd95}.zok-pred-form-dot.E{background:#fbc252}.zok-pred-form-dot.D{background:#e58283}
+.zok-pred-context{margin:0;font-size:10px;line-height:1.4;color:#b9cddd;text-align:center}
