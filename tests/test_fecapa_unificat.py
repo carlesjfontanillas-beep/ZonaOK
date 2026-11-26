@@ -35,6 +35,26 @@ class TestUnified(unittest.TestCase):
         self.assertEqual(len(b['matches']),2)
         self.assertEqual(next(x for x in b['matches'] if x['matchId']=='151001')['homeScore'],3)
         self.assertIsNone(next(x for x in b['matches'] if x['matchId']=='151002')['homeScore'])
+    def test_directe_valls_castellar_aliases_and_final(self):
+        old={**row(mid='',league='',home='HC VALLS',away='HOQUEI CLUB CASTELLAR'),
+             'iso':'2026-11-26','time':'19:30','competition':'3ª CATALANA GRUP E'}
+        a,_=m.merge_unified(packet('agenda',[old]),self.empty,'agenda')
+        upd={**old,'home':'HCV','away':'HCC','competition':'3ª CATALANA',
+             'homeScore':1,'awayScore':1,'status':'FINAL'}
+        b,stats=m.merge_unified(packet('directe',[upd],at='2026-11-26T20:00:00Z'),a,'directe')
+        self.assertEqual(stats['updated'],1)
+        self.assertEqual((b['matches'][0]['homeScore'],b['matches'][0]['awayScore']),(1,1))
+        self.assertEqual(b['matches'][0]['home'],'HC VALLS')
+        self.assertEqual(b['matches'][0]['competition'],'3ª CATALANA GRUP E')
+    def test_directe_aliases_reject_ambiguous_conflicting_or_wrong_hour(self):
+        old={**row(mid='151001',league='4789',home='HC VALLS',away='HOQUEI CLUB CASTELLAR')}
+        upd={**old,'leagueId':'','matchId':'','home':'HCV','away':'HCC','competition':'3ª CATALANA'}
+        self.assertIsNone(m.match_index([old,{**old,'matchId':'151002'}],upd,'directe'))
+        self.assertIsNone(m.match_index([old],{**upd,'leagueId':'4789','matchId':'151002'},'directe'))
+        self.assertIsNone(m.match_index([old],{**upd,'time':'17:05'},'directe'))
+        self.assertIsNone(m.match_index([old],{**upd,'away':'XYZ'},'directe'))
+        self.assertFalse(m.directe_team_alias('CP SANT CELONI A','CPSCB'))
+        self.assertFalse(m.directe_team_alias('FC BARCELONA VETERANS','FCB'))
     def test_older_directe_does_not_replace_newer_result(self):
         a,_=m.merge_unified(packet('agenda',[row()]),self.empty,'agenda')
         new={**row(),'homeScore':4,'awayScore':2}
