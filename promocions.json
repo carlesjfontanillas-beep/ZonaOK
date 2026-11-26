@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "enabled": false,
+  "returnAfterSeconds": 60,
+  "campaigns": [
+    {
+      "id": "promocio-5",
+      "opening": 5,
+      "enabled": false,
+      "startsAt": null,
+      "endsAt": null,
+      "title": "",
+      "message": "",
+      "image": "",
+      "imageAlt": "",
+      "buttonText": "",
+      "buttonUrl": ""
+    },
+    {
+      "id": "promocio-15",
+      "opening": 15,
+      "enabled": false,
+      "startsAt": null,
+      "endsAt": null,
+      "title": "",
+      "message": "",
+      "image": "",
+      "imageAlt": "",
+      "buttonText": "",
+      "buttonUrl": ""
+    }
+  ]
+}
