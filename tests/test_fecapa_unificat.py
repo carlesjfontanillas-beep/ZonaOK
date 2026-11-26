@@ -55,6 +55,26 @@ class TestUnified(unittest.TestCase):
         self.assertIsNone(m.match_index([old],{**upd,'away':'XYZ'},'directe'))
         self.assertFalse(m.directe_team_alias('CP SANT CELONI A','CPSCB'))
         self.assertFalse(m.directe_team_alias('FC BARCELONA VETERANS','FCB'))
+    def test_official_club_alias_table_persists_and_matches(self):
+        logo=lambda n:f'https://sidgad.cloud/fecapa/images/logos_clubes/{n}.png'
+        old={**row(mid='',league='',home='CLUB PATI EXEMPLE A',away='HOQUEI MOSTRA B'),
+             'homeLogo':logo(501),'awayLogo':logo(502)}
+        a,_=m.merge_unified(packet('agenda',[old]),self.empty,'agenda')
+        upd={**old,'home':'XYZ','away':'QWE','homeScore':2,'awayScore':3,'status':'FINAL'}
+        b,stats=m.merge_unified(packet('directe',[upd],at='2026-11-23T19:00:00Z'),a,'directe')
+        self.assertEqual(stats['updated'],1)
+        self.assertEqual(b['matches'][0]['homeScore'],2)
+        self.assertEqual(b['clubAliases']['501'],['CLUB PATI EXEMPLE A','XYZ'])
+        self.assertEqual(b['clubAliases']['502'],['HOQUEI MOSTRA B','QWE'])
+        index=m.club_alias_index(b['clubAliases'])
+        self.assertTrue(m.directe_team_alias('CLUB PATI EXEMPLE A','XYZ',index))
+        self.assertFalse(m.directe_team_alias('CLUB PATI EXEMPLE A','CPEA',index))
+        self.assertFalse(m.official_logo_id('https://example.com/501.png'))
+    def test_club_alias_conflicting_logo_is_not_used(self):
+        table={'501':['CLUB PATI EXEMPLE A','XYZ'],'502':['XYZ','HOQUEI MOSTRA B']}
+        index=m.club_alias_index(table)
+        self.assertFalse(m.directe_team_alias('CLUB PATI EXEMPLE A','XYZ',index))
+        self.assertFalse(m.directe_team_alias('HOQUEI MOSTRA B','XYZ',index))
     def test_older_directe_does_not_replace_newer_result(self):
         a,_=m.merge_unified(packet('agenda',[row()]),self.empty,'agenda')
         new={**row(),'homeScore':4,'awayScore':2}
