@@ -1,33 +1,71 @@
 {
   "schema": 1,
-  "enabled": false,
+  "enabled": true,
   "returnAfterSeconds": 60,
   "campaigns": [
     {
-      "id": "promocio-5",
-      "opening": 5,
-      "enabled": false,
+      "enabled": true,
       "startsAt": null,
       "endsAt": null,
-      "title": "",
-      "message": "",
-      "image": "",
-      "imageAlt": "",
-      "buttonText": "",
-      "buttonUrl": ""
+      "id": "benvinguda-1",
+      "opening": 1,
+      "kind": "welcome",
+      "title": "Com funciona?",
+      "message": "Personalitza ZonaOK en tres passos.",
+      "steps": [
+        {
+          "icon": "share",
+          "title": "Guarda l’app al teu mòbil",
+          "message": "A Safari, toca Compartir i «Afegir a la pantalla d’inici»."
+        },
+        {
+          "icon": "star",
+          "title": "Tria els teus favorits",
+          "message": "Escull clubs, equips o jugadors i, si vols, activa les notificacions."
+        },
+        {
+          "icon": "layers",
+          "title": "Tot el hoquei català",
+          "message": "La informació de FECAPA, ordenada i classificada al teu gust."
+        }
+      ],
+      "dismissText": "Entesos!"
     },
     {
-      "id": "promocio-15",
-      "opening": 15,
-      "enabled": false,
+      "enabled": true,
       "startsAt": null,
       "endsAt": null,
-      "title": "",
-      "message": "",
-      "image": "",
-      "imageAlt": "",
-      "buttonText": "",
-      "buttonUrl": ""
+      "opening": 10,
+      "title": "T’agrada ZonaOK?",
+      "message": "Si vols, ajuda’ns a fer-la créixer.",
+      "id": "suport-10",
+      "kind": "support",
+      "bizumPhone": "619793035",
+      "dismissText": "Gràcies!"
+    },
+    {
+      "enabled": true,
+      "startsAt": null,
+      "endsAt": null,
+      "opening": 25,
+      "title": "Veiem que t’agrada!",
+      "message": "Gràcies per fer servir ZonaOK. Ens vols ajudar?",
+      "id": "suport-25",
+      "kind": "support",
+      "bizumPhone": "619793035",
+      "dismissText": "Gràcies!"
+    },
+    {
+      "enabled": true,
+      "startsAt": null,
+      "endsAt": null,
+      "opening": 50,
+      "title": "Gràcies per fer servir ZonaOK!",
+      "message": "Ens vols ajudar a continuar?",
+      "id": "suport-50",
+      "kind": "support",
+      "bizumPhone": "619793035",
+      "dismissText": "Gràcies!"
     }
   ]
 }
