@@ -58,8 +58,19 @@ function predict(row,rows,asOf){
  return {ok:true,cutoff,nHome:hs.length,nAway:as.length,leagueCount:league.length,common:common.length,direct:direct.length,homeRating:Math.round(rating(h)),awayRating:Math.round(rating(a)),homeForm:H.form,awayForm:A.form,homePoints:H.pts,awayPoints:A.pts,lh,la,coverage:Math.min(hs.length,as.length)>=10&&league.length>=35?'Àmplia':Math.min(hs.length,as.length)>=5?'Mitjana':'Baixa',...distribution(lh,la)};
 }
 // Estimate goal shares using prior team matches with reconciled individual goals.
+// Escenari coherent amb el marcador modal, amb reserva per a altres golejadors.
+function allocateGoals(players,total){
+ const n=Number.isInteger(total)&&total>=0?total:0;
+ const weights=players.map(x=>Math.max(0,Number(x.share)||0)),sum=weights.reduce((a,b)=>a+b,0),den=Math.max(1,sum);
+ const shares=[...weights.map(w=>w/den),Math.max(0,1-sum/den)];
+ const parts=shares.map((share,i)=>({i,goals:Math.floor(n*share),remainder:n*share-Math.floor(n*share)}));
+ const remaining=n-parts.reduce((a,x)=>a+x.goals,0);
+ const order=parts.slice().sort((a,b)=>b.remainder-a.remainder||a.i-b.i);
+ for(let i=0;i<remaining;i++)order[i%order.length].goals++;
+ return {players:players.map((x,i)=>({...x,predictedGoals:parts[i].goals})),otherGoals:parts[players.length].goals};
+}
 function scorers(row,p,master,catalog){
- const empty=()=>({home:[],away:[]});
+ const empty=()=>({home:[],away:[],homeOther:0,awayOther:0});
  if(master?.schema!=='zonaok-jugadors-v1'||master.source!=='FECAPA'||!master.players||!master.matchAppearances||!Array.isArray(catalog?.matches))return empty();
  const leagueId=r=>String(r.leagueId||r.league||r.liga||'');
  const matchId=r=>String(r.matchId||r.id||'');
@@ -82,7 +93,7 @@ function scorers(row,p,master,catalog){
   const k=key(x)+'|'+x.side;if(!entries.has(k))entries.set(k,new Map());
   const m=entries.get(k);if(m.has(x.playerId)){m.set(x.playerId,null);continue}m.set(x.playerId,x);
  }
- function side(team,expected){
+ function side(team,expected,modal){
   const games=[];
   for(const [k,f] of fixtures){if(!f)continue;const side=norm(f.home)===team?'home':norm(f.away)===team?'away':'';if(!side)continue;
    const m=entries.get(k+'|'+side);if(!m||m.size<4||[...m.values()].some(x=>!x))continue;
@@ -92,18 +103,23 @@ function scorers(row,p,master,catalog){
    games.push({f,xs:known,goals})
   }
   games.sort((x,y)=>(x.f.iso+(x.f.time||'')).localeCompare(y.f.iso+(y.f.time||'')));
-  if(games.length<3)return [];
+  if(games.length<3)return {players:[],otherGoals:0};
   const recent=new Set(games.slice(-3).flatMap(x=>x.xs.map(a=>a.playerId)));
   const all=new Map();let total=0;
   games.forEach((game,i)=>{const w=i>=games.length-5?1.5:1;total+=game.goals*w;
    for(const x of game.xs){const old=all.get(x.playerId)||{id:x.playerId,goals:0,weighted:0};old.goals+=x.stats.goals;old.weighted+=w*x.stats.goals;all.set(x.playerId,old)}
   });
-  if(total<=0)return [];
-  return [...all.values()].filter(x=>x.goals>0&&recent.has(x.id)&&typeof master.players[x.id]?.name==='string'&&master.players[x.id].name.trim()).map(x=>({id:x.id,name:master.players[x.id].name,prob:1-Math.exp(-expected*x.weighted/(total+2)),goals:x.goals})).sort((x,y)=>y.prob-x.prob||x.name.localeCompare(y.name,'ca')).slice(0,5);
+  if(total<=0)return {players:[],otherGoals:0};
+  const candidates=[...all.values()].filter(x=>x.goals>0&&recent.has(x.id)&&typeof master.players[x.id]?.name==='string'&&master.players[x.id].name.trim()).map(x=>({id:x.id,name:master.players[x.id].name,share:x.weighted/(total+2),prob:1-Math.exp(-expected*x.weighted/(total+2)),goals:x.goals})).sort((x,y)=>y.prob-x.prob||x.name.localeCompare(y.name,'ca'));
+  if(!candidates.length)return {players:[],otherGoals:0};
+  const allocated=allocateGoals(candidates,modal);
+  const players=allocated.players.sort((x,y)=>y.predictedGoals-x.predictedGoals||y.prob-x.prob||x.name.localeCompare(y.name,'ca')).slice(0,5);
+  return {players,otherGoals:Math.max(0,modal-players.reduce((s,x)=>s+x.predictedGoals,0))};
  }
- return {home:side(h,p.lh),away:side(a,p.la)};
+ const H=side(h,p.lh,p.top[0].h),A=side(a,p.la,p.top[0].a);
+ return {home:H.players,away:A.players,homeOther:H.otherGoals,awayOther:A.otherGoals};
 }
-const api={predict,pending,distribution,history,scorers};
+const api={predict,pending,distribution,history,scorers,allocateGoals};
 if(typeof module!=='undefined'&&module.exports){module.exports=api;return}
 const el=(tag,cls,t)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(t!==undefined)n.textContent=t;return n};
 let dataPromise=null;
@@ -138,17 +154,24 @@ function renderScorers(host,row,p,d){
  host.append(el('p','zok-af-muted','Carregant golejadors…'));
  scorerData().then(([master,catalog])=>{
   if(!d.open)return;const lists=scorers(row,p,master,catalog);host.replaceChildren();
-  for(const [side,name] of [['home',row.home],['away',row.away]]){
-   const section=el('section','zok-pred-scorer-team');section.append(el('h4','',name));
+  const max=Math.max(1,...lists.home.map(x=>x.predictedGoals),...lists.away.map(x=>x.predictedGoals),lists.homeOther,lists.awayOther);
+  const label=n=>n===1?'1 gol':n+' gols';
+  function bar(section,name,goals,prob,first){
+   const item=el('div','zok-pred-scorer'),info=el('div','zok-pred-scorer-info'),stats=el('div','zok-pred-scorer-values'),track=el('div','zok-pred-scorer-track'),fill=el('span','zok-pred-scorer-fill'+(first?' first':''));
+   stats.append(el('b','',label(goals)));if(prob!==null){const small=el('small','',pct(prob));small.title='Probabilitat estimada de marcar almenys un gol';stats.append(small)}
+   info.append(el('strong','',name),stats);
+   fill.style.width=clamp(goals/max*100,0,100)+'%';track.append(fill);track.setAttribute('aria-hidden','true');
+   item.append(info,track);section.append(item);
+  }
+  for(const [side,name,total,other] of [['home',row.home,p.top[0].h,lists.homeOther],['away',row.away,p.top[0].a,lists.awayOther]]){
+   const section=el('section','zok-pred-scorer-team'),head=el('div','zok-pred-scorer-heading');head.append(el('h4','',name),el('b','',label(total)));section.append(head);
    const list=lists[side];
    if(!list.length){section.append(el('p','zok-af-muted','No hi ha prou actes amb gols individuals verificables.'));host.append(section);continue}
-   for(const [i,x] of list.entries()){
-    const item=el('div','zok-pred-scorer'),info=el('div','zok-pred-scorer-info'),track=el('div','zok-pred-scorer-track'),fill=el('span','zok-pred-scorer-fill'+(i===0?' first':''));
-    info.append(el('strong','',x.name),el('b','',pct(x.prob)));fill.style.width=clamp(x.prob*100,0,100)+'%';track.append(fill);track.setAttribute('aria-hidden','true');item.append(info,track);section.append(item)
-   }
+   for(const [i,x] of list.entries())bar(section,x.name,x.predictedGoals,x.prob,i===0);
+   if(other>0)bar(section,'Altres golejadors',other,null,false);
    host.append(section)
   }
-  if(lists.home.length||lists.away.length)host.append(el('p','zok-af-muted','Probabilitat estimada de marcar almenys un gol. Alineacions no confirmades.'));
+  if(lists.home.length||lists.away.length)host.append(el('p','zok-af-muted','Repartiment orientatiu dels gols del marcador previst. El percentatge indica la probabilitat de marcar almenys un gol. Alineacions no confirmades.'));
  }).catch(()=>{if(d.open)host.replaceChildren(el('p','zok-af-muted','No s’han pogut carregar les estadístiques individuals.'))});
 }
 function show(row,retro=false){

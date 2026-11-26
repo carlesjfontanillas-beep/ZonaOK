@@ -28,3 +28,11 @@
 .zok-pred-scorer-track{height:7px;margin-top:3px;background:#28465c;border-radius:4px;overflow:hidden}
 .zok-pred-scorer-fill{display:block;height:100%;background:#75b9ed;border-radius:4px}
 .zok-pred-scorer-fill.first{background:#fbc252}
+
+.zok-pred-scorer-heading{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.zok-pred-scorer-heading>b{color:#fbc252;font-size:13px;white-space:nowrap}
+.zok-pred-scorer-info{align-items:center}
+.zok-pred-scorer-values{display:flex;gap:7px;align-items:baseline;flex:none}
+.zok-pred-scorer-values>b{font-size:15px}
+.zok-pred-scorer-values>small{font-size:10px;color:#b9cddd;white-space:nowrap;min-width:36px;text-align:right}
+.zok-pred-scorer-track{height:11px;margin-top:4px}
