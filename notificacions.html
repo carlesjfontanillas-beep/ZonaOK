@@ -32,6 +32,7 @@
     #zok-push-settings .zok-push-content{display:grid;gap:12px;padding:0;border:0;background:transparent}
     #zok-push-settings .zok-push-card{min-width:0;box-shadow:none;border-radius:18px}
     #zok-push-settings .zok-push-card h2{font-size:13px;padding:11px 13px}
+    #zok-push-settings .zok-push-always-open>h2{min-height:48px;padding:14px 15px;box-sizing:border-box;background:#153c56;color:#eaf5ff;font-size:16px;font-weight:800;cursor:default}
     #zok-push-settings .zok-push-choice{min-height:40px;padding:8px 13px;box-sizing:border-box}
     #zok-push-settings .zok-push-choice input{margin:0;accent-color:#ffbb79}
     #zok-push-settings .zok-push-choice span{min-width:0;overflow-wrap:anywhere}
@@ -115,8 +116,8 @@
         <p class="zok-push-intro" role="status" data-push-catalog-status>Carregant el catàleg…</p>
         <button class="secondary zok-push-refresh" type="button" data-push-refresh>Actualitza el catàleg</button>
         <p class="zok-push-intro">Els avisos de jugadors s’incorporaran quan les seves dades estiguin verificades.</p>
-        <details class="zok-favorite-group zok-push-card zok-push-foldable">
-          <summary class="zok-push-fold-summary">Activació<span class="zok-push-fold-arrow" aria-hidden="true"></span></summary>
+        <section class="zok-favorite-group zok-push-card zok-push-always-open">
+          <h2>Activació</h2>
           <div class="zok-push-activation">
             <p role="status" data-push-capability></p>
             <div class="zok-push-actions">
@@ -126,7 +127,7 @@
             </div>
             <p role="status" aria-live="polite" data-push-status>Activa-les només en aquest dispositiu; el permís es demana quan prems el botó. Només s’envia una prova, no avisos esportius generals.</p>
           </div>
-        </details>
+        </section>
       </div>
   </section>
 
