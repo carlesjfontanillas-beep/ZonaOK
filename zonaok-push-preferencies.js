@@ -39,6 +39,7 @@
     const fav = read('ZONAOK_FAVORITS_V1');
     const focusedGroup = document.activeElement?.dataset?.pushSearch;
     const cursor = focusedGroup ? document.activeElement.value.length : null;
+    const previousCards = new Map([...host.querySelectorAll('details[data-push-group]')].map(card => [card.dataset.pushGroup,{open:card.open,scrollTop:card.scrollTop}]));
     host.replaceChildren();
     const catalog = window.ZonaOKPushFavoriteCatalog?.() || {};
     const teamLabels = new Map((catalog.teams || []).map(option => [option.id, option.label]));
@@ -53,8 +54,10 @@
         Number(marked.has(b)) - Number(marked.has(a)) ||
         Number(favoriteIds.has(b)) - Number(favoriteIds.has(a)) ||
         displayName(a).localeCompare(displayName(b),'ca',{sensitivity:'base',numeric:true}));
-      const card = document.createElement('section'); card.className = 'zok-favorite-group zok-push-card';
-      const heading = document.createElement('h2'); heading.textContent = title; card.append(heading);
+      const card = document.createElement('details'); card.className = 'zok-favorite-group zok-push-card zok-push-foldable';
+      card.dataset.pushGroup = group; card.open = previousCards.get(group)?.open || false;
+      const heading = document.createElement('summary'); heading.className = 'zok-push-fold-summary'; heading.textContent = title;
+      const arrow = document.createElement('span'); arrow.className = 'zok-push-fold-arrow'; arrow.setAttribute('aria-hidden','true'); heading.append(arrow); card.append(heading);
       const searchWrap = document.createElement('div'); searchWrap.className = 'zok-push-search-wrap';
       const search = document.createElement('input');
       search.type = 'search'; search.className = 'zok-push-search'; search.placeholder = placeholders[group];
@@ -100,10 +103,11 @@
         noMatches.hidden = !rows.length || visible > 0;
       }
       search.addEventListener('input', () => {
-        queries[group] = search.value; applyFilter(); list.scrollTop = 0;
+        queries[group] = search.value; applyFilter(); card.scrollTop = 0;
       });
       applyFilter();
-      if (focusedGroup === group) {
+      if (card.open) card.scrollTop = previousCards.get(group)?.scrollTop || 0;
+      if (focusedGroup === group && card.open) {
         search.focus({preventScroll:true});
         try { search.setSelectionRange(cursor,cursor); } catch (_) {}
       }
@@ -119,6 +123,16 @@
       prefs.events = prefs.events.filter(v => v !== event);
       if (input.checked) prefs.events.push(event);
       save();
+    });
+  });
+  // Només en obrir manualment un bloc: mostrar la capçalera sota la barra fixa.
+  root.addEventListener('click', event => {
+    const heading = event.target.closest('.zok-push-fold-summary');
+    if (!heading) return;
+    const card = heading.parentElement;
+    requestAnimationFrame(() => {
+      if (card.open) card.scrollIntoView({block:'start',behavior:'auto'});
+      else card.scrollTop = 0;
     });
   });
   function refresh() { renderTargets(); }

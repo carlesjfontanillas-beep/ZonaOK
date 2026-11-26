@@ -52,9 +52,28 @@
     #zok-push-settings button{min-width:0;white-space:normal;font-size:11px}
     #zok-push-settings button:disabled{opacity:.55;cursor:not-allowed}
     #zok-push-settings .zok-push-refresh{justify-self:start}
+    /* Mateix comportament i fletxa daurada que a Favorits. */
+    #zok-push-settings .zok-push-foldable{
+      max-height:calc(100vh - var(--zok-ui-header-height,64px) - var(--zok-ui-bottom-height,66px) - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 20px);
+      max-height:calc(100dvh - var(--zok-ui-header-height,64px) - var(--zok-ui-bottom-height,66px) - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 20px);
+      overflow-y:auto;overflow-x:hidden;min-width:0;scroll-padding-top:52px
+    }
+    #zok-push-settings .zok-push-fold-summary{
+      position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;
+      min-height:48px;padding:14px 15px;box-sizing:border-box;list-style:none;
+      background:#153c56;color:#eaf5ff;font-size:16px;font-weight:800;cursor:pointer;touch-action:manipulation
+    }
+    #zok-push-settings .zok-push-fold-summary::-webkit-details-marker{display:none}
+    #zok-push-settings .zok-push-fold-summary::marker{content:""}
+    #zok-push-settings .zok-push-foldable[open]>.zok-push-fold-summary{border-bottom:1px solid #8cc5e722}
+    #zok-push-settings .zok-push-fold-arrow{width:10px;height:10px;flex:0 0 10px;margin:0 3px 4px 1px;border:solid #ffc17c;border-width:0 2px 2px 0;transform:rotate(45deg);box-sizing:border-box}
+    #zok-push-settings .zok-push-foldable[open]>.zok-push-fold-summary>.zok-push-fold-arrow{transform:rotate(225deg);margin-top:7px}
+    #zok-push-settings .zok-push-fold-summary:focus-visible{outline:2px solid #ffc17c;outline-offset:-4px}
+    #zok-push-settings .zok-push-targets .zok-push-foldable>.zok-push-list{max-height:none;overflow:visible}
+    @media(max-height:360px){#zok-push-settings .zok-push-foldable{max-height:none}}
   </style>
   <script defer src="favorits.js?v=20261125-push6-page"></script>
-  <script defer src="zonaok-push-preferencies.js?v=20261126-liveincidents1"></script>
+  <script defer src="zonaok-push-preferencies.js?v=20261126-boxes1"></script>
 <script src="zonaok-nav-shared.js?v=20261125-color-icona1"></script>
 <link rel="stylesheet" href="zonaok-disseny.css?v=20261126-disseny2">
 <script defer src="zonaok-disseny.js?v=20261126-disseny1"></script>
@@ -86,8 +105,8 @@
       </summary>
       <div class="zok-push-content">
         <p class="zok-push-intro">Tria els avisos de tot el catàleg. No cal que els clubs, equips o competicions siguin favorits.</p>
-        <section class="zok-favorite-group zok-push-card">
-          <h2>Tipus d’avís</h2>
+        <details class="zok-favorite-group zok-push-card zok-push-foldable" open>
+          <summary class="zok-push-fold-summary">Tipus d’avís<span class="zok-push-fold-arrow" aria-hidden="true"></span></summary>
           <div class="zok-push-list">
             <label class="zok-favorite-option zok-push-choice"><input type="checkbox" data-push-event="start"><span>Inici del partit</span></label>
             <label class="zok-favorite-option zok-push-choice"><input type="checkbox" data-push-event="goal"><span>Gols <small>Nacional Catalana M/F</small></span></label>
@@ -96,14 +115,14 @@
             <label class="zok-favorite-option zok-push-choice"><input type="checkbox" data-push-event="finish"><span>Final i resultat definitiu</span></label>
             <label class="zok-favorite-option zok-push-choice"><input type="checkbox" data-push-event="scheduleChange"><span>Canvi d’horari</span></label>
           </div>
-        </section>
+        </details>
         <div class="zok-push-subheading">Els meus avisos</div>
         <div data-push-targets class="zok-push-targets"></div>
         <p class="zok-push-intro" role="status" data-push-catalog-status>Carregant el catàleg…</p>
         <button class="secondary zok-push-refresh" type="button" data-push-refresh>Actualitza el catàleg</button>
         <p class="zok-push-intro">Els avisos de jugadors s’incorporaran quan les seves dades estiguin verificades.</p>
-        <section class="zok-favorite-group zok-push-card">
-          <h2>Activació</h2>
+        <details class="zok-favorite-group zok-push-card zok-push-foldable">
+          <summary class="zok-push-fold-summary">Activació<span class="zok-push-fold-arrow" aria-hidden="true"></span></summary>
           <div class="zok-push-activation">
             <p role="status" data-push-capability></p>
             <div class="zok-push-actions">
@@ -113,7 +132,7 @@
             </div>
             <p role="status" aria-live="polite" data-push-status>Activa-les només en aquest dispositiu; el permís es demana quan prems el botó. Només s’envia una prova, no avisos esportius generals.</p>
           </div>
-        </section>
+        </details>
       </div>
     </details>
   </section>
