@@ -5,7 +5,7 @@
   if (!root) return;
   const key = 'ZONAOK_PUSH_PREFS_V1';
   const groups = [['clubs','Clubs'],['teams','Equips'],['categories','Categories'],['competitions','Competicions']];
-  const events = ['start','goal','card','finish'];
+  const events = ['start','goal','card','directFoul','finish','scheduleChange'];
   const status = root.querySelector('[data-push-status]');
   const host = root.querySelector('[data-push-targets]');
   function read(key) { try { return JSON.parse(localStorage.getItem(key) || '{}') || {}; } catch (_) { return {}; } }
