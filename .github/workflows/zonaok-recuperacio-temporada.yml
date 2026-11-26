@@ -15,7 +15,7 @@ concurrency:
 jobs:
   recuperacio:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 40
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
@@ -26,14 +26,17 @@ jobs:
           ref: main
           persist-credentials: false
       - name: Planificar lots pendents
+        id: plan
         shell: bash
         run: |
           python - <<'PY' > "$RUNNER_TEMP/recuperacio.tsv"
-          import json, re, sys
+          import json, re, sys, os
           from pathlib import Path
           from datetime import datetime, timedelta, timezone
+          from zoneinfo import ZoneInfo
           sys.path.insert(0, 'scripts')
           from zonaok_fecapa_unificat import eligible_acta, score_tuple
+          from zonaok_jugadors_trigger import key as player_key, fingerprint, norm
           doc=json.loads(Path('zonaok-tots-partits.json').read_text())
           sources=doc.get('sources',{})
           rows=doc.get('matches',[])
@@ -42,20 +45,54 @@ jobs:
           now=datetime.now(timezone.utc)
           def emit(workflow,*args):
               print('\t'.join((workflow,*args)))
-          if not agenda.get('fullCompleted') or agenda.get('pendingLeagueIds'):
+          today=now.astimezone(ZoneInfo('Europe/Madrid')).date().isoformat()
+          # Un cursor acabat no demostra cobertura. Excloure nomes ajornaments
+          # i cancel·lacions explicits; la resta queda pendent de verificacio.
+          excluded=re.compile(r'\b(ajornat|ajornada|aplazado|aplazada|suspes|suspesa|suspendido|suspendida|cancelat|cancelada|cancelado|anullat|anulat|anulado)\b')
+          past=[r for r in rows if re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(r.get('iso',''))) and r['iso']<today and not excluded.search(norm(r.get('status')))]
+          scored=[r for r in past if score_tuple(r)]
+          missing_scores=sum(not score_tuple(r) for r in past)
+          missing_ids=sum(not player_key(r) for r in past)
+          missing_acts=sum(not player_key(r) or r.get('actaState')!='available' for r in scored)
+          state=json.loads(Path('imports/jugadors-maintenance-state.json').read_text())
+          matches=state.get('matches',{})
+          rosters=state.get('rosters',{})
+          missing_players=sum(not player_key(r) or matches.get(player_key(r),{}).get('status')!='verified' or matches.get(player_key(r),{}).get('statsRevision')!=4 or matches.get(player_key(r),{}).get('fingerprint')!=fingerprint(r) for r in scored)
+          standings=json.loads(Path('zonaok-classificacions.json').read_text()).get('competitions',{})
+          standing_ids={str(r.get('leagueId') or '') for r in standings.values() if isinstance(r,dict) and r.get('standings')}
+          leagues={str(r.get('leagueId') or '') for r in rows}|standing_ids
+          leagues={x for x in leagues if re.fullmatch(r'\d{4,6}',x)}
+          missing_rosters=sum(rosters.get(l,{}).get('status')!='verified' for l in leagues)
+          missing_standings=len(leagues-standing_ids)
+          agenda_pending=not agenda.get('fullCompleted') or bool(agenda.get('pendingLeagueIds'))
+          pending=bool(not past or not leagues or agenda_pending or missing_scores or missing_ids or missing_acts or missing_players or missing_rosters or missing_standings)
+          counts=dict(historical=len(past),missing_scores=missing_scores,missing_ids=missing_ids,missing_acts=missing_acts,missing_players=missing_players,missing_rosters=missing_rosters,missing_standings=missing_standings,agenda_pending=agenda_pending)
+          print(json.dumps(counts),file=sys.stderr)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as out:
+              print('pending='+str(pending).lower(),file=out)
+          if not pending:
+              print('Cobertura historica comprovada al cataleg conegut.',file=sys.stderr)
+              sys.exit(0)
+          if agenda_pending:
               emit('zonaok-auto-agenda.yml','scope=full','limit=20','offset=auto','publish=true')
+          elif missing_ids or missing_scores:
+              emit('zonaok-auto-agenda.yml','scope=fast','limit=20','offset=auto','publish=true')
           eligible=[r for r in rows if score_tuple(r) and eligible_acta(r,'full')]
           last=tuple(actes.get('nextFullKey') or [])
           key=lambda r:(r.get('iso') or '',str(r.get('leagueId')),str(r.get('matchId')))
-          if eligible and not actes.get('fullCompleted') and (len(last)!=3 or any(key(r)>last for r in eligible)):
+          if missing_acts and eligible and not actes.get('fullCompleted') and (len(last)!=3 or any(key(r)>last for r in eligible)):
               emit('zonaok-auto-actes.yml','scope=full','limit=40','offset=auto','publish=true')
-          elif any(eligible_acta(r,'fast',now) for r in eligible):
+          elif missing_acts and any(eligible_acta(r,'fast',now) for r in eligible):
               emit('zonaok-auto-actes.yml','scope=fast','limit=40','offset=auto','publish=true')
-          if now.hour%6==0 and now.minute<40 or __import__('os').environ.get('EVENT_NAME')!='schedule':
+          if missing_scores or missing_ids or missing_acts or agenda_pending:
               emit('zonaok-auto-directe.yml','scope=full','publish=true')
-          # Jugadors: el mateix planificador de blocs decideix entre estadistiques,
-          # actes, plantilles i reintents. No es publica si el bloc no te canvis.
-          emit('jugadors-public.yml','mode=auto')
+          if missing_players or missing_rosters or agenda_pending:
+              emit('jugadors-public.yml','mode=auto')
+          if missing_standings:
+              # Rotar lots independents, sense sobreescriure classificacions valides.
+              slot=int(now.timestamp()//1800)
+              offset=(slot%13)*20
+              emit('zonaok-classificacions-auto.yml','scope=full','limit=20',f'offset={offset}','publish=true')
           PY
       - name: Activar imports sense duplicar execucions en curs
         shell: bash
@@ -76,3 +113,18 @@ jobs:
             gh workflow run "$workflow" --ref main "${args[@]}"
             echo "$workflow: lot sol·licitat"
           done < "$RUNNER_TEMP/recuperacio.tsv"
+      - name: Reprendre el cicle mentre quedin dades pendents
+        if: ${{ !cancelled() && steps.plan.outputs.pending == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Cadencia limitada a un cicle cada 30 minuts aproximadament.
+          # El cron segueix actiu com a via alternativa.
+          sleep 1800
+          other=$(gh run list --workflow zonaok-recuperacio-temporada.yml --branch main --limit 30 --json databaseId,status --jq "[.[] | select(.databaseId != $GITHUB_RUN_ID and .status != \"completed\")] | length")
+          if [ "$other" = "0" ]; then
+            gh workflow run zonaok-recuperacio-temporada.yml --ref main
+            echo "Nou cicle sol·licitat: la cobertura encara no esta certificada"
+          else
+            echo "Ja hi ha un altre cicle pendent"
+          fi
