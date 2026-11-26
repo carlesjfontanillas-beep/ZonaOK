@@ -113,7 +113,7 @@ function scorers(row,p,master,catalog){
   const candidates=[...all.values()].filter(x=>x.goals>0&&recent.has(x.id)&&typeof master.players[x.id]?.name==='string'&&master.players[x.id].name.trim()).map(x=>({id:x.id,name:master.players[x.id].name,share:x.weighted/(total+2),prob:1-Math.exp(-expected*x.weighted/(total+2)),goals:x.goals})).sort((x,y)=>y.prob-x.prob||x.name.localeCompare(y.name,'ca'));
   if(!candidates.length)return {players:[],otherGoals:0};
   const allocated=allocateGoals(candidates,modal);
-  const players=allocated.players.sort((x,y)=>y.predictedGoals-x.predictedGoals||y.prob-x.prob||x.name.localeCompare(y.name,'ca')).slice(0,5);
+  const players=allocated.players.sort((x,y)=>y.predictedGoals-x.predictedGoals||y.prob-x.prob||x.name.localeCompare(y.name,'ca')).slice(0,8);
   return {players,otherGoals:Math.max(0,modal-players.reduce((s,x)=>s+x.predictedGoals,0))};
  }
  const H=side(h,p.lh,p.top[0].h),A=side(a,p.la,p.top[0].a);
@@ -178,11 +178,12 @@ function renderScorers(host,row,p,d){
   if(!d.open)return;const lists=scorers(row,p,master,catalog);host.replaceChildren();
   const max=Math.max(1,...lists.home.map(x=>x.predictedGoals),...lists.away.map(x=>x.predictedGoals),lists.homeOther,lists.awayOther);
   const label=n=>n===1?'1 gol':n+' gols';
-  function bar(chart,name,goals,prob,first){
+  function bar(chart,name,goals,prob,first,compact){
    const item=el('div','zok-pred-scorer-column'),plot=el('div','zok-pred-scorer-plot'),stack=el('div','zok-pred-scorer-stack'),count=el('b','zok-pred-scorer-count',String(goals)),fill=el('span','zok-pred-scorer-fill'+(first?' first':''));
    fill.style.height=clamp(goals/max*100,0,100)+'%';
    plot.append(fill,count);plot.setAttribute('aria-hidden','true');
-   stack.append(el('strong','zok-pred-scorer-name',name));
+   const words=String(name).trim().split(/\s+/),short=compact&&words.length>2?words[0]+' '+words[1]+' '+words.slice(2).map(w=>w.charAt(0)+'.').join(' '):name;
+   const playerLabel=el('strong','zok-pred-scorer-name',short);playerLabel.title=name;stack.append(playerLabel);
    if(prob!==null){const small=el('small','zok-pred-scorer-prob',pct(prob));small.title='Probabilitat estimada de marcar almenys un gol';stack.append(small)}
    item.append(plot,stack);
    item.setAttribute('aria-label',name+': '+label(goals)+(prob===null?'':', '+pct(prob)+' de marcar almenys un gol'));
@@ -192,10 +193,13 @@ function renderScorers(host,row,p,d){
    const section=el('section','zok-pred-scorer-team'),head=el('div','zok-pred-scorer-heading');head.append(el('h4','',name),el('b','',label(total)));section.append(head);
    const list=lists[side];
    if(!list.length){section.append(el('p','zok-af-muted','No hi ha prou actes amb gols individuals verificables.'));host.append(section);continue}
-   const chart=el('div','zok-pred-scorer-columns');chart.style.gridTemplateColumns='repeat('+(list.length+(other>0?1:0))+', minmax(0, 1fr))';chart.setAttribute('aria-label','Gràfica de gols previstos · '+name);
-   for(const [i,x] of list.entries())bar(chart,x.name,x.predictedGoals,x.prob,i===0);
-   if(other>0)bar(chart,'Altres golejadors',other,null,false);
-   section.append(chart);host.append(section)
+   const compact=list.length>6;
+   const chart=el('div','zok-pred-scorer-columns'+(compact?' zok-pred-eight':''));
+   chart.style.gridTemplateColumns='repeat('+list.length+', minmax(0, 1fr))';chart.setAttribute('aria-label','Gràfica de gols previstos · '+name);
+   for(const [i,x] of list.entries())bar(chart,x.name,x.predictedGoals,x.prob,i===0,compact);
+   section.append(chart);
+   if(other>0)section.append(el('p','zok-pred-other-goals','Altres golejadors · '+label(other)));
+   host.append(section)
   }
   if(lists.home.length||lists.away.length)host.append(el('p','zok-af-muted','Gols previstos · % de marcar almenys un gol. Alineacions no confirmades.'));
   requestAnimationFrame(()=>fitPrediction(d));

@@ -77,3 +77,10 @@
 .zok-prediction-dialog.zok-pred-tight .zok-pred-results{padding:3px 5px;gap:1px}
 .zok-prediction-dialog.zok-pred-tight .zok-pred-scorer-team{padding:3px 4px;gap:2px}
 .zok-prediction-dialog.zok-pred-tight .zok-af-muted{margin:2px 0}
+
+/* Fins a 8 jugadors identificats sense reservar columna a altres golejadors. */
+.zok-prediction-dialog .zok-pred-eight{gap:2px}
+.zok-prediction-dialog .zok-pred-eight .zok-pred-scorer-name{font-size:clamp(8px,2.4vw,10px);line-height:1.12;overflow-wrap:anywhere}
+.zok-prediction-dialog .zok-pred-eight .zok-pred-scorer-prob{font-size:9px}
+.zok-prediction-dialog .zok-pred-eight .zok-pred-scorer-fill{width:72%}
+.zok-prediction-dialog .zok-pred-other-goals{margin:0;text-align:right;font-size:10px;line-height:1.15;color:#b9cddd}
