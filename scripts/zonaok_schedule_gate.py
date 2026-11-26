@@ -29,6 +29,7 @@ LIVE_CRONS = {
 LEGACY_LIVE_CRON = "1-59/5 * * * *"
 WINDOW = timedelta(minutes=150)
 # La cua de GitHub pot executar el torn de les 23:30 uns minuts més tard.
+DIRECTE_LEAD = timedelta(minutes=30)
 DIRECTE_GRACE = timedelta(minutes=15)
 FINAL_STATUS = re.compile(r"\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b", re.I)
 
@@ -104,7 +105,7 @@ def pending_idp_count(path: Path, now: datetime) -> int:
                and re.fullmatch(r"\d{4,6}", str(row.get("leagueId") or "")))
 
 
-def fixture_window_count(path: Path, now: datetime, *, grace: timedelta = timedelta(0)) -> int:
+def fixture_window_count(path: Path, now: datetime, *, lead: timedelta = timedelta(0), grace: timedelta = timedelta(0)) -> int:
     count = 0
     local_now = now.astimezone(MADRID)
     for row in read_matches(path):
@@ -119,7 +120,7 @@ def fixture_window_count(path: Path, now: datetime, *, grace: timedelta = timede
             ).replace(tzinfo=MADRID)
         except (TypeError, ValueError):
             continue
-        if timedelta(0) <= local_now - start <= WINDOW + grace:
+        if -lead <= local_now - start <= WINDOW + grace:
             count += 1
     return count
 
@@ -143,7 +144,7 @@ def should_run(mode: str, cron: str, now: datetime, matches: Path) -> tuple[bool
         return False, "invalid_cet_cest_daily_slot"
     if cron not in (LIVE_CRONS[mode], LEGACY_LIVE_CRON):
         return False, "unrecognized_schedule"
-    in_window = fixture_window_count(matches, now, grace=DIRECTE_GRACE if mode == "directe" else timedelta(0))
+    in_window = fixture_window_count(matches, now, lead=DIRECTE_LEAD if mode == "directe" else timedelta(0), grace=DIRECTE_GRACE if mode == "directe" else timedelta(0))
     if mode in ("actes", "classificacions"):
         pending = pending_acta_count(matches, now)
         if pending:
