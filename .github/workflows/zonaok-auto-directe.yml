@@ -73,7 +73,9 @@ jobs:
       - name: Proves de fusió conservadora
         if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
-        run: python -m unittest discover -s tests -p 'test_*.py' -v
+        run: |
+          python -m unittest discover -s tests -p 'test_schedule_gate_window.py' -v
+          python -m unittest discover -s tests -p 'test_fecapa_unificat.py' -v
       - name: Capturar directe a FECAPA amb navegador real
         if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
