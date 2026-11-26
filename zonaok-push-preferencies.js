@@ -136,7 +136,6 @@
     });
   });
   function refresh() { renderTargets(); }
-  root.querySelector('details').addEventListener('toggle', refresh);
   const catalogStatus = root.querySelector('[data-push-catalog-status]');
   const refreshButton = root.querySelector('[data-push-refresh]');
   window.addEventListener('zonaok:push-catalog-ready', () => {
