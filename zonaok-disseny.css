@@ -47,19 +47,20 @@ body main.app :is(.zok-standing-filters,.zok-recent-filters,.zok-jp-filters,.zok
 body main.app :is(.zok-standing-filters,.zok-recent-filters,.zok-jp-filters,.zok-favorites-controls) :is(input[type="search"],select){font-family:inherit;font-size:16px!important;min-height:42px;background:#183d5b;color:var(--zok-ui-text);border:1px solid #7597b0;border-radius:11px}
 body main.app :is(.zok-standing-scope,.zok-period-tabs,.zok-jp-segment,.zok-jp-profile-tabs) button{border-radius:11px;min-height:37px;font-size:13px;font-weight:750}
 body main.app :is(.zok-standing-scope,.zok-period-tabs,.zok-jp-segment,.zok-jp-profile-tabs) button[aria-pressed="true"]{background:var(--zok-ui-gold);color:#10283c;border-color:var(--zok-ui-gold)}
-body .bottom.zok-bottom-nav{position:fixed;z-index:10;display:flex!important;align-items:stretch!important;gap:5px!important;padding:5px 6px calc(env(safe-area-inset-bottom) + 5px)!important;background:#071a2ef5;box-shadow:0 -6px 20px #00101fa6}
+body .bottom.zok-bottom-nav{--zok-nav-fixed-size:clamp(34px,calc((100vw - 49px) / 8),54px);position:fixed;z-index:10;display:flex!important;align-items:stretch!important;gap:5px!important;padding:5px 6px calc(env(safe-area-inset-bottom) + 5px)!important;background:#071a2ef5;box-shadow:0 -6px 20px #00101fa6}
 body .zok-bottom-nav .bottom-title,body .zok-bottom-nav .navbtn strong,body .zok-bottom-nav .navbtn small{display:none!important}
-body .zok-bottom-nav .navbtn{height:54px!important;min-height:54px!important;border-radius:11px!important;padding:3px 0!important;gap:0!important;justify-content:center!important;align-items:center!important}
+body .zok-bottom-nav .navbtn{height:50px!important;min-height:50px!important;border-radius:11px!important;padding:3px 0!important;gap:0!important;justify-content:center!important;align-items:center!important}
 body .zok-bottom-nav .navbtn>span{font-size:23px;line-height:1;display:grid;place-items:center}
 body .zok-bottom-nav .navbtn>.club-icon{width:31px;height:31px}
 body .zok-bottom-nav .navbtn>.club-icon img{width:27px;height:27px;object-fit:contain}
 body .zok-bottom-nav .navbtn>.nav-person b{display:block!important}
 body .zok-nav-scroll{flex:1 1 auto!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x}
 body .zok-nav-scroll::-webkit-scrollbar{display:none}
-body .zok-nav-scroll .navgrid{display:flex!important;grid-template-columns:none!important;width:max-content!important;min-width:100%!important;gap:4px!important}
-body .zok-nav-fixed{display:flex!important;flex:0 0 auto!important;gap:5px!important}
-body .zok-bottom-nav :is(.zok-nav-fixed,.zok-nav-scroll) .navbtn{flex:0 0 54px!important;width:54px!important;min-width:54px!important}
-body .zok-nav-divider{width:1px;flex:0 0 1px;align-self:stretch;background:#9dbbd044}
+body .zok-nav-scroll .navgrid{display:flex!important;grid-template-columns:none!important;width:100%!important;min-width:0!important;gap:4px!important}
+body .zok-nav-fixed{display:flex!important;flex:0 0 auto!important;gap:4px!important}
+body .zok-bottom-nav .zok-nav-fixed .navbtn{flex:0 0 var(--zok-nav-fixed-size)!important;width:var(--zok-nav-fixed-size)!important;min-width:var(--zok-nav-fixed-size)!important}
+body .zok-bottom-nav .zok-nav-scroll .navbtn{--zok-fav-size:clamp(30px,calc((100% - 18px) / 5),54px);flex:0 0 var(--zok-fav-size)!important;width:var(--zok-fav-size)!important;min-width:var(--zok-fav-size)!important}
+body .zok-nav-divider{width:1px!important;flex:0 0 1px!important;align-self:stretch;background:#9dbbd044;margin:0!important}
 @media(max-width:400px){body main.app > .mast,body main.app > .mast.zok-notifications-mast{padding-inline:10px!important;gap:3px!important}body main.app > .mast > .zok-header-actions{gap:3px!important}body main.app > .mast :is(.zok-favorites-top,.zok-home-top){padding-inline:6px!important;font-size:12px}body main.app > .mast .zok-favorites-top strong{font-size:12px}body main.app > .mast .zok-push-top{width:34px;min-width:34px;flex-basis:34px}body main.app > .mast #refresh-home{width:25px;min-width:25px;flex-basis:25px}}
 
 body.zok-ui-home main.app .zok-ui-home-section .section-head h2{font-size:var(--zok-ui-title)!important}
