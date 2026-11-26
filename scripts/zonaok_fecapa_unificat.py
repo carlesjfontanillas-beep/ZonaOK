@@ -933,29 +933,69 @@ def canonicalize(r):
     return row
 
 
-def directe_team_alias(full, short):
-    """Sigles de FECAPA: només amb data, hora, local i visitant unívocs."""
+# Equivalències explícites revisades. No es creen sigles per inicials.
+DIRECTE_CONFIRMED_ALIASES = {
+    'BARCA': {'BAR','FCB'}, 'FC BARCELONA': {'BAR','FCB','BARCA'},
+    'FC BARCELONA VETERANS': {'FCBETRANS','FCBETERANS','FCBV'},
+    'CP SANT CELONI': {'CPSC'}, 'CP SANT CELONI A': {'CPSCA'},
+    'CP SANT CELONI B': {'CPSCB'},
+    'HOQUEI CLUB CASTELLAR': {'HCC'}, 'HC VALLS': {'HCV'},
+}
+
+
+def official_logo_id(url):
+    # L'identificador d'escut és evidència oficial de club, no ID d'equip.
+    m=re.fullmatch(r'https://sidgad\\.cloud/fecapa/images/logos_clubes/([1-9]\\d*)(?:_\\d+)?\\.(?:png|gif)',clean(url),re.I)
+    return m[1] if m else ''
+
+
+def build_club_alias_table(previous, packet):
+    """Catàleg acumulatiu. Una sigla amb més d'un escut no es resol sola."""
+    entries={}
+    def add(label, club):
+        label=clean(label)
+        if not label or not re.fullmatch(r'[1-9]\\d*',str(club)):return
+        entries.setdefault(str(club),set()).add(label)
+    prior=previous.get('clubAliases',{})
+    if isinstance(prior,dict):
+        for club,labels in prior.items():
+            if isinstance(labels,list):
+                for label in labels:
+                    if isinstance(label,str):add(label,club)
+    for doc in (previous,packet):
+        logos=doc.get('clubLogos',{})
+        if isinstance(logos,dict):
+            for label,url in logos.items():add(label,official_logo_id(url))
+        for row in doc.get('matches',doc.get('rows',[])):
+            if not isinstance(row,dict):continue
+            for side in ('home','away'):
+                add(row.get(side),official_logo_id(row.get(side+'Logo')))
+    return {club:sorted(labels,key=lambda x:(norm(x),x)) for club,labels in sorted(entries.items(),key=lambda x:int(x[0]))}
+
+
+def club_alias_index(table):
+    index={}
+    for club,labels in table.items():
+        for label in labels:index.setdefault(norm(label),set()).add(club)
+    return index
+
+
+def directe_team_alias(full, short, index=None):
+    """Equivalència explícita o mateix escut oficial inequívoc."""
     a,b=norm(full),norm(short)
     if a==b:return bool(a)
-    tokens=a.split()
-    if not tokens:return False
+    if not a or not b:return False
     compact=b.replace(' ','')
-    if not re.fullmatch(r'[A-Z0-9]{2,12}',compact):return False
-    forms=set()
-    if len(tokens)>1:
-        forms.add(''.join(x if re.fullmatch(r'[A-Z0-9]',x) else x[0] for x in tokens))
-        if tokens[0] in ('HC','CH','CP','CHP','FC','CE','UE','RC','AC'):
-            forms.add(tokens[0]+''.join(x[0] for x in tokens[1:]))
-    # No confondre Barça i veterans, ni equips A/B.
-    known={'BARCA':{'BAR','FCB'},'FC BARCELONA':{'BAR','FCB','BARCA'},
-           'FC BARCELONA VETERANS':{'FCBETRANS','FCBETERANS','FCBV'},
-           'CP SANT CELONI':{'CPSC'},'CP SANT CELONI A':{'CPSCA'},
-           'CP SANT CELONI B':{'CPSCB'},'HOQUEI CLUB CASTELLAR':{'HCC'},
-           'HC VALLS':{'HCV'}}
-    return compact in forms or compact in known.get(a,set())
+    if compact in DIRECTE_CONFIRMED_ALIASES.get(a,set()):return True
+    # Si una sigla revisada pertany a un altre equip, no la reinterpretis.
+    owners={name for name,aliases in DIRECTE_CONFIRMED_ALIASES.items() if compact in aliases}
+    if owners and a not in owners:return False
+    index=index or {}
+    aa,bb=index.get(a,set()),index.get(b,set())
+    return len(aa)==len(bb)==1 and aa==bb
 
 
-def match_index(rows,incoming,mode):
+def match_index(rows,incoming,mode,alias_index=None):
     lid=clean(incoming.get('leagueId'));mid=clean(incoming.get('matchId'))
     if lid and mid:
         exact=[i for i,r in enumerate(rows) if clean(r.get('leagueId'))==lid and clean(r.get('matchId'))==mid]
@@ -981,8 +1021,8 @@ def match_index(rows,incoming,mode):
         # equips, categoria ni horaris per aquesta equivalència.
         aliases=[i for i,r in enumerate(rows) if compatible_id(r)
                  and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
-                 and directe_team_alias(r.get('home'),incoming.get('home'))
-                 and directe_team_alias(r.get('away'),incoming.get('away'))]
+                 and directe_team_alias(r.get('home'),incoming.get('home'),alias_index)
+                 and directe_team_alias(r.get('away'),incoming.get('away'),alias_index)]
         if len(aliases)==1:return aliases[0]
     return None
 
@@ -1004,6 +1044,8 @@ def merge_unified(packet,previous,mode):
     if not incoming:
         return previous,{'new':0,'updated':0,'unmatched':0,'unchanged':0,
                          'ambiguousOrInvalid':0,'skipEmpty':True}
+    alias_table=build_club_alias_table(previous,packet)
+    alias_index=club_alias_index(alias_table)
     rows=[canonicalize(r) for r in previous['matches']]
     counts={'new':0,'updated':0,'unmatched':0,'ambiguousOrInvalid':0,'unchanged':0}
     for raw in incoming:
@@ -1028,7 +1070,7 @@ def merge_unified(packet,previous,mode):
                 old['actaState']='available' if r.get('actaState')=='available' else 'pending'
             old['actaCheckedAt']=r['actaCheckedAt'];counts['updated']+=1
             continue
-        idx=match_index(rows,r,mode)
+        idx=match_index(rows,r,mode,alias_index)
         if idx is None:
             if mode!='agenda':counts['unmatched']+=1;continue
             rows.append(canonicalize(r));counts['new']+=1;continue
@@ -1081,7 +1123,7 @@ def merge_unified(packet,previous,mode):
                 re.fullmatch(r'https://sidgad\.cloud/fecapa/images/logos_clubes/\d+(?:_\d+)?\.(?:png|gif)',url,re.I)):
                 club_logos[clean(name)]=url
     result={**previous,'schema':'zonaok-partits-total-v1','season':SEASON,'updatedAt':utc_now(),
-            'sources':sources,'matches':rows,'clubLogos':club_logos,'stats':{'total':len(rows),'withScores':sum(score_tuple(x) for x in rows),
+            'sources':sources,'matches':rows,'clubLogos':club_logos,'clubAliases':alias_table,'stats':{'total':len(rows),'withScores':sum(score_tuple(x) for x in rows),
                       'withActaLinks':sum(bool(x.get('actaUrl')) for x in rows),
                       'verifiedActes':sum(x.get('actaState')=='available' for x in rows)}}
     return result,counts
@@ -1091,7 +1133,7 @@ def write_compatibility(doc):
     """Miralls temporals: l'app antiga encara llegeix JSON separats."""
     rows=doc['matches'];now=utc_now()
     base={'schema':'zonaok-all-v1','season':SEASON,'publishedAt':now,'source':'FECAPA-PLAYWRIGHT'}
-    agenda={**base,'kind':'agenda','rows':rows,'capturedAt':now,'clubLogos':doc.get('clubLogos',{})}
+    agenda={**base,'kind':'agenda','rows':rows,'capturedAt':now,'clubLogos':doc.get('clubLogos',{}),'clubAliases':doc.get('clubAliases',{})}
     Path('zonaok-tots-agenda.json').write_text(json.dumps(agenda,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     today_local=datetime.now(ZoneInfo('Europe/Madrid'))
     cutoff=(today_local-timedelta(days=7)).strftime('%Y-%m-%d')
