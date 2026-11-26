@@ -156,20 +156,24 @@ function renderScorers(host,row,p,d){
   if(!d.open)return;const lists=scorers(row,p,master,catalog);host.replaceChildren();
   const max=Math.max(1,...lists.home.map(x=>x.predictedGoals),...lists.away.map(x=>x.predictedGoals),lists.homeOther,lists.awayOther);
   const label=n=>n===1?'1 gol':n+' gols';
-  function bar(section,name,goals,prob,first){
-   const item=el('div','zok-pred-scorer'),info=el('div','zok-pred-scorer-info'),stats=el('div','zok-pred-scorer-values'),track=el('div','zok-pred-scorer-track'),fill=el('span','zok-pred-scorer-fill'+(first?' first':''));
-   stats.append(el('b','',label(goals)));if(prob!==null){const small=el('small','',pct(prob));small.title='Probabilitat estimada de marcar almenys un gol';stats.append(small)}
-   info.append(el('strong','',name),stats);
-   fill.style.width=clamp(goals/max*100,0,100)+'%';track.append(fill);track.setAttribute('aria-hidden','true');
-   item.append(info,track);section.append(item);
+  function bar(chart,name,goals,prob,first){
+   const item=el('div','zok-pred-scorer-column'),plot=el('div','zok-pred-scorer-plot'),stack=el('div','zok-pred-scorer-stack'),count=el('b','zok-pred-scorer-count',String(goals)),fill=el('span','zok-pred-scorer-fill'+(first?' first':''));
+   fill.style.height=clamp(goals/max*100,0,100)+'%';
+   plot.append(fill,count);plot.setAttribute('aria-hidden','true');
+   stack.append(el('strong','zok-pred-scorer-name',name));
+   if(prob!==null){const small=el('small','zok-pred-scorer-prob',pct(prob));small.title='Probabilitat estimada de marcar almenys un gol';stack.append(small)}
+   item.append(plot,stack);
+   item.setAttribute('aria-label',name+': '+label(goals)+(prob===null?'':', '+pct(prob)+' de marcar almenys un gol'));
+   chart.append(item);
   }
   for(const [side,name,total,other] of [['home',row.home,p.top[0].h,lists.homeOther],['away',row.away,p.top[0].a,lists.awayOther]]){
    const section=el('section','zok-pred-scorer-team'),head=el('div','zok-pred-scorer-heading');head.append(el('h4','',name),el('b','',label(total)));section.append(head);
    const list=lists[side];
    if(!list.length){section.append(el('p','zok-af-muted','No hi ha prou actes amb gols individuals verificables.'));host.append(section);continue}
-   for(const [i,x] of list.entries())bar(section,x.name,x.predictedGoals,x.prob,i===0);
-   if(other>0)bar(section,'Altres golejadors',other,null,false);
-   host.append(section)
+   const chart=el('div','zok-pred-scorer-columns');chart.style.gridTemplateColumns='repeat('+(list.length+(other>0?1:0))+', minmax(59px, 1fr))';chart.setAttribute('aria-label','Gràfica de gols previstos · '+name);
+   for(const [i,x] of list.entries())bar(chart,x.name,x.predictedGoals,x.prob,i===0);
+   if(other>0)bar(chart,'Altres golejadors',other,null,false);
+   section.append(chart);host.append(section)
   }
   if(lists.home.length||lists.away.length)host.append(el('p','zok-af-muted','Repartiment orientatiu dels gols del marcador previst. El percentatge indica la probabilitat de marcar almenys un gol. Alineacions no confirmades.'));
  }).catch(()=>{if(d.open)host.replaceChildren(el('p','zok-af-muted','No s’han pogut carregar les estadístiques individuals.'))});

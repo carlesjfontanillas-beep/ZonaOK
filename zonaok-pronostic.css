@@ -19,20 +19,19 @@
 .zok-pred-result-note{margin:0;text-align:center;font-size:11px;color:#b9cddd}
 
 
-.zok-pred-scorers{display:grid;gap:8px}
-.zok-pred-scorer-team{border:1px solid #45627a;border-radius:12px;padding:10px;background:#102e47;display:grid;gap:8px}
-.zok-pred-scorer-team h4{margin:0 0 2px;font-size:13px;color:#fbc252;overflow-wrap:anywhere}
-.zok-pred-scorer-info{display:flex;align-items:baseline;gap:8px;justify-content:space-between;font-size:12px}
-.zok-pred-scorer-info strong{min-width:0;overflow-wrap:anywhere}
-.zok-pred-scorer-info b{white-space:nowrap;color:#fbc252;font-variant-numeric:tabular-nums}
-.zok-pred-scorer-track{height:7px;margin-top:3px;background:#28465c;border-radius:4px;overflow:hidden}
-.zok-pred-scorer-fill{display:block;height:100%;background:#75b9ed;border-radius:4px}
-.zok-pred-scorer-fill.first{background:#fbc252}
 
+/* Golejadors: gràfica vertical, escala compartida entre els dos equips. */
+.zok-pred-scorers{display:grid;gap:8px;min-width:0}
+.zok-pred-scorer-team{border:1px solid #45627a;border-radius:12px;padding:10px;background:#102e47;display:grid;gap:9px;min-width:0}
+.zok-pred-scorer-team h4{margin:0;font-size:13px;color:#fbc252;overflow-wrap:anywhere;min-width:0}
 .zok-pred-scorer-heading{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .zok-pred-scorer-heading>b{color:#fbc252;font-size:13px;white-space:nowrap}
-.zok-pred-scorer-info{align-items:center}
-.zok-pred-scorer-values{display:flex;gap:7px;align-items:baseline;flex:none}
-.zok-pred-scorer-values>b{font-size:15px}
-.zok-pred-scorer-values>small{font-size:10px;color:#b9cddd;white-space:nowrap;min-width:36px;text-align:right}
-.zok-pred-scorer-track{height:11px;margin-top:4px}
+.zok-pred-scorer-columns{display:grid;gap:5px;align-items:start;overflow-x:auto;min-width:0;padding:4px 0 6px;scrollbar-width:thin}
+.zok-pred-scorer-column{display:grid;grid-template-rows:108px auto;min-width:0;gap:5px;text-align:center}
+.zok-pred-scorer-plot{height:108px;box-sizing:border-box;position:relative;display:flex;flex-direction:column-reverse;align-items:center;border-bottom:1px solid #52738a;padding-top:22px;background:repeating-linear-gradient(to top,transparent 0,transparent calc(25% - 1px),#52738a29 calc(25% - 1px),#52738a29 25%)}
+.zok-pred-scorer-fill{display:block;width:60%;max-width:38px;flex-shrink:0;background:#75b9ed;border-radius:5px 5px 0 0}
+.zok-pred-scorer-fill.first{background:#fbc252}
+.zok-pred-scorer-count{color:#fbc252;font-size:15px;line-height:20px;flex-shrink:0;font-variant-numeric:tabular-nums}
+.zok-pred-scorer-stack{display:flex;flex-direction:column;align-items:center;gap:3px}
+.zok-pred-scorer-name{font-size:10px;line-height:1.2;overflow-wrap:anywhere;word-break:normal;max-width:100%;text-align:center}
+.zok-pred-scorer-prob{color:#b9cddd;font-size:10px;white-space:nowrap;font-variant-numeric:tabular-nums}
