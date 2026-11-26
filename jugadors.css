@@ -139,3 +139,6 @@
 
 /* Títols principals coherents amb Clubs, Equips i Resultats. */
 #jp-search-panel .section-head h2,.zok-jp-hero h2{color:#fbc252!important;text-transform:uppercase;font-size:clamp(22px,5.6vw,28px)!important;font-weight:850}
+
+/* Porters: matís daurat discret sobre el blau original. */
+.zok-jp-row.zok-jp-row-keeper,.zok-jp-search-choice.zok-jp-row-keeper{background:linear-gradient(110deg,#343b3c 0%,#253b48 52%,#102e47 100%);border-color:#a88b506b;}
