@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-26T19:41:51.489517+00:00",
+  "capturedAt": "2026-11-26T20:14:01.701707+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -29831,8 +29831,8 @@
       "category": "FASE DE GRUPS LLIGA CATALANA PLATA",
       "competition": "FASE DE GRUPS LLIGA CATALANA PLATA",
       "leagueId": "4856",
-      "capturedAt": "2026-11-24T17:30:27.489612+00:00",
-      "standingsAt": "2026-11-24T17:30:27.489612+00:00",
+      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
+      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4856&vista=clasificaciones",
       "standings": [
         {
@@ -29912,6 +29912,590 @@
             "PP": "2",
             "GF": "11",
             "GC": "11",
+            "DIF": "0"
+          }
+        }
+      ]
+    },
+    "4858:fase-de-grups-frit-ravich-lliga-catalana": {
+      "name": "FASE DE GRUPS FRIT RAVICH LLIGA CATALANA",
+      "category": "FASE DE GRUPS FRIT RAVICH LLIGA CATALANA",
+      "competition": "FASE DE GRUPS FRIT RAVICH LLIGA CATALANA",
+      "leagueId": "4858",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4858&vista=clasificaciones",
+      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
+      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "IGUALADA HC",
+          "played": "3",
+          "points": "9",
+          "gf": "16",
+          "ga": "9",
+          "difference": "7",
+          "stats": {
+            "GRUPO GRUP A": "IGUALADA HC",
+            "PTS": "9",
+            "PJ": "3",
+            "PG": "3",
+            "PE": "0",
+            "PP": "0",
+            "GF": "16",
+            "GC": "9",
+            "DIF": "7"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "CE NOIA FREIXENET",
+          "played": "3",
+          "points": "6",
+          "gf": "15",
+          "ga": "7",
+          "difference": "8",
+          "stats": {
+            "GRUPO GRUP A": "CE NOIA FREIXENET",
+            "PTS": "6",
+            "PJ": "3",
+            "PG": "2",
+            "PE": "0",
+            "PP": "1",
+            "GF": "15",
+            "GC": "7",
+            "DIF": "8"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "PONS LLEIDA",
+          "played": "3",
+          "points": "3",
+          "gf": "7",
+          "ga": "11",
+          "difference": "-4",
+          "stats": {
+            "GRUPO GRUP A": "PONS LLEIDA",
+            "PTS": "3",
+            "PJ": "3",
+            "PG": "1",
+            "PE": "0",
+            "PP": "2",
+            "GF": "7",
+            "GC": "11",
+            "DIF": "-4"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "AMETLLER ORIGEN CP VILAFRANCA",
+          "played": "3",
+          "points": "0",
+          "gf": "2",
+          "ga": "13",
+          "difference": "-11",
+          "stats": {
+            "GRUPO GRUP A": "AMETLLER ORIGEN CP VILAFRANCA",
+            "PTS": "0",
+            "PJ": "3",
+            "PG": "0",
+            "PE": "0",
+            "PP": "3",
+            "GF": "2",
+            "GC": "13",
+            "DIF": "-11"
+          }
+        }
+      ]
+    },
+    "4858:fases-finals-frit-ravich-lliga-catalana": {
+      "name": "FASES FINALS FRIT RAVICH LLIGA CATALANA",
+      "category": "FASES FINALS FRIT RAVICH LLIGA CATALANA",
+      "competition": "FASES FINALS FRIT RAVICH LLIGA CATALANA",
+      "leagueId": "4858",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4858&vista=clasificaciones",
+      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
+      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "BARÇA",
+          "played": "2",
+          "points": "6",
+          "gf": "6",
+          "ga": "0",
+          "difference": "6",
+          "stats": {
+            "PTS": "6",
+            "PJ": "2",
+            "PG": "2",
+            "PE": "0",
+            "PP": "0",
+            "GF": "6",
+            "GC": "0",
+            "DIF": "6"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "IGUALADA HC",
+          "played": "1",
+          "points": "1",
+          "gf": "2",
+          "ga": "2",
+          "difference": "0",
+          "stats": {
+            "PTS": "1",
+            "PJ": "1",
+            "PG": "0",
+            "PE": "1",
+            "PP": "0",
+            "GF": "2",
+            "GC": "2",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CALAFELL LA MENORQUINA",
+          "played": "2",
+          "points": "1",
+          "gf": "2",
+          "ga": "3",
+          "difference": "-1",
+          "stats": {
+            "PTS": "1",
+            "PJ": "2",
+            "PG": "0",
+            "PE": "1",
+            "PP": "1",
+            "GF": "2",
+            "GC": "3",
+            "DIF": "-1"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CLUB PATÍ VOLTREGÀ",
+          "played": "1",
+          "points": "0",
+          "gf": "0",
+          "ga": "5",
+          "difference": "-5",
+          "stats": {
+            "PTS": "0",
+            "PJ": "1",
+            "PG": "0",
+            "PE": "0",
+            "PP": "1",
+            "GF": "0",
+            "GC": "5",
+            "DIF": "-5"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "REUS DEPORTIU BRASILIA",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "SHUM FRIT RAVICH",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "CH LLORET VILA ESPORTIVA",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "AMETLLER ORIGEN CP VILAFRANCA",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "PONS LLEIDA",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CH CALDES RECAM LÀSER",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "PAS ALCOI",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "12",
+          "team": "CE NOIA FREIXENET",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        }
+      ]
+    },
+    "4860:fase-de-grups-lliga-catalana-femenina": {
+      "name": "FASE DE GRUPS LLIGA CATALANA FEMENINA",
+      "category": "FASE DE GRUPS LLIGA CATALANA FEMENINA",
+      "competition": "FASE DE GRUPS LLIGA CATALANA FEMENINA",
+      "leagueId": "4860",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4860&vista=clasificaciones",
+      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
+      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "GENERALI HC PALAU",
+          "played": "3",
+          "points": "9",
+          "gf": "16",
+          "ga": "4",
+          "difference": "12",
+          "stats": {
+            "GRUPO GRUP A": "GENERALI HC PALAU",
+            "PTS": "9",
+            "PJ": "3",
+            "PG": "3",
+            "PE": "0",
+            "PP": "0",
+            "GF": "16",
+            "GC": "4",
+            "DIF": "12"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "FENIE ENERGIA CERDANYOLA CCH",
+          "played": "3",
+          "points": "6",
+          "gf": "9",
+          "ga": "9",
+          "difference": "0",
+          "stats": {
+            "GRUPO GRUP A": "FENIE ENERGIA CERDANYOLA CCH",
+            "PTS": "6",
+            "PJ": "3",
+            "PG": "2",
+            "PE": "0",
+            "PP": "1",
+            "GF": "9",
+            "GC": "9",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "VICIO PHC SANT CUGAT",
+          "played": "3",
+          "points": "1",
+          "gf": "8",
+          "ga": "12",
+          "difference": "-4",
+          "stats": {
+            "GRUPO GRUP A": "VICIO PHC SANT CUGAT",
+            "PTS": "1",
+            "PJ": "3",
+            "PG": "0",
+            "PE": "1",
+            "PP": "2",
+            "GF": "8",
+            "GC": "12",
+            "DIF": "-4"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CH MATARÓ",
+          "played": "3",
+          "points": "1",
+          "gf": "6",
+          "ga": "14",
+          "difference": "-8",
+          "stats": {
+            "GRUPO GRUP A": "CH MATARÓ",
+            "PTS": "1",
+            "PJ": "3",
+            "PG": "0",
+            "PE": "1",
+            "PP": "2",
+            "GF": "6",
+            "GC": "14",
+            "DIF": "-8"
+          }
+        }
+      ]
+    },
+    "4860:fases-finals-lliga-catalana-femenina": {
+      "name": "FASES FINALS LLIGA CATALANA FEMENINA",
+      "category": "FASES FINALS LLIGA CATALANA FEMENINA",
+      "competition": "FASES FINALS LLIGA CATALANA FEMENINA",
+      "leagueId": "4860",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=4860&vista=clasificaciones",
+      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
+      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "ORKLA BIGUES I RIELLS",
+          "played": "2",
+          "points": "6",
+          "gf": "8",
+          "ga": "3",
+          "difference": "5",
+          "stats": {
+            "PTS": "6",
+            "PJ": "2",
+            "PG": "2",
+            "PE": "0",
+            "PP": "0",
+            "GF": "8",
+            "GC": "3",
+            "DIF": "5"
+          }
+        },
+        {
+          "pos": "2",
+          "team": "FENIE ENERGIA CERDANYOLA CCH",
+          "played": "2",
+          "points": "3",
+          "gf": "9",
+          "ga": "8",
+          "difference": "1",
+          "stats": {
+            "PTS": "3",
+            "PJ": "2",
+            "PG": "1",
+            "PE": "0",
+            "PP": "1",
+            "GF": "9",
+            "GC": "8",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "GENERALI HC PALAU",
+          "played": "1",
+          "points": "0",
+          "gf": "0",
+          "ga": "1",
+          "difference": "-1",
+          "stats": {
+            "PTS": "0",
+            "PJ": "1",
+            "PG": "0",
+            "PE": "0",
+            "PP": "1",
+            "GF": "0",
+            "GC": "1",
+            "DIF": "-1"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "CLUB PATÍ VOLTREGÀ",
+          "played": "1",
+          "points": "0",
+          "gf": "1",
+          "ga": "6",
+          "difference": "-5",
+          "stats": {
+            "PTS": "0",
+            "PJ": "1",
+            "PG": "0",
+            "PE": "0",
+            "PP": "1",
+            "GF": "1",
+            "GC": "6",
+            "DIF": "-5"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "MARTINELIA MANLLEU",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "VICIO PHC SANT CUGAT",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "7",
+          "team": "LLEIDANET ALPICAT",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
+            "DIF": "0"
+          }
+        },
+        {
+          "pos": "8",
+          "team": "CH MATARÓ",
+          "played": "0",
+          "points": "0",
+          "gf": "0",
+          "ga": "0",
+          "difference": "0",
+          "stats": {
+            "PTS": "0",
+            "PJ": "0",
+            "PG": "0",
+            "PE": "0",
+            "PP": "0",
+            "GF": "0",
+            "GC": "0",
             "DIF": "0"
           }
         }
