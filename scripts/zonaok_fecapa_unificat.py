@@ -945,7 +945,7 @@ DIRECTE_CONFIRMED_ALIASES = {
 
 def official_logo_id(url):
     # L'identificador d'escut és evidència oficial de club, no ID d'equip.
-    m=re.fullmatch(r'https://sidgad\\.cloud/fecapa/images/logos_clubes/([1-9]\\d*)(?:_\\d+)?\\.(?:png|gif)',clean(url),re.I)
+    m=re.fullmatch(r'https://sidgad\.cloud/fecapa/images/logos_clubes/([1-9]\d*)(?:_\d+)?\.(?:png|gif)',clean(url),re.I)
     return m[1] if m else ''
 
 
@@ -954,7 +954,7 @@ def build_club_alias_table(previous, packet):
     entries={}
     def add(label, club):
         label=clean(label)
-        if not label or not re.fullmatch(r'[1-9]\\d*',str(club)):return
+        if not label or not re.fullmatch(r'[1-9]\d*',str(club)):return
         entries.setdefault(str(club),set()).add(label)
     prior=previous.get('clubAliases',{})
     if isinstance(prior,dict):
@@ -1004,7 +1004,7 @@ def load_standings_aliases(path=Path('zonaok-classificacions.json')):
     for g in doc.get('competitions',{}).values():
         if not isinstance(g,dict):continue
         lid=clean(g.get('leagueId'))
-        if not re.fullmatch(r'\\d{4,6}',lid):continue
+        if not re.fullmatch(r'\d{4,6}',lid):continue
         for r in g.get('standings',[]):
             if not isinstance(r,dict) or r.get('shortTeamSource')!='FECAPA-classificacions-vertical':continue
             a,b=norm(r.get('team')),norm(r.get('shortTeam'))
