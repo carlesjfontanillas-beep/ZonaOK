@@ -995,7 +995,24 @@ def directe_team_alias(full, short, index=None):
     return len(aa)==len(bb)==1 and aa==bb
 
 
-def match_index(rows,incoming,mode,alias_index=None):
+def load_standings_aliases(path=Path('zonaok-classificacions.json')):
+    """Equivalències directes verificades entre les dues vistes de FECAPA."""
+    pairs={}
+    try:
+        doc=json.loads(path.read_text(encoding='utf-8'))
+    except (OSError,ValueError):return pairs
+    for g in doc.get('competitions',{}).values():
+        if not isinstance(g,dict):continue
+        lid=clean(g.get('leagueId'))
+        if not re.fullmatch(r'\\d{4,6}',lid):continue
+        for r in g.get('standings',[]):
+            if not isinstance(r,dict) or r.get('shortTeamSource')!='FECAPA-classificacions-vertical':continue
+            a,b=norm(r.get('team')),norm(r.get('shortTeam'))
+            if a and b:pairs.setdefault((a,b),set()).add(lid)
+    return pairs
+
+
+def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
     lid=clean(incoming.get('leagueId'));mid=clean(incoming.get('matchId'))
     if lid and mid:
         exact=[i for i,r in enumerate(rows) if clean(r.get('leagueId'))==lid and clean(r.get('matchId'))==mid]
@@ -1017,12 +1034,24 @@ def match_index(rows,incoming,mode,alias_index=None):
         if len(weak)==1:return weak[0]
         if len(weak)>1:return None
     if mode=='directe' and not candidates:
+        pairs=standing_aliases or {}
+        def team_ok(r,side):
+            full,short=r.get(side),incoming.get(side)
+            a,b=norm(full),norm(short)
+            if a and a==b:return True
+            league=clean(r.get('leagueId')) or lid
+            verified=pairs.get((a,b),set())
+            if verified and (not league or league in verified):return True
+            # Si tenim una equivalència explícita de la classificació per
+            # aquest nom i lliga, l'escut sol no pot contradir-la.
+            if any(name==a and (not league or league in leagues)
+                   for (name,_),leagues in pairs.items()):return False
+            return directe_team_alias(full,short,alias_index)
         # FECAPA mostra sigles i l'Agenda noms complets. No alterar mai
         # equips, categoria ni horaris per aquesta equivalència.
         aliases=[i for i,r in enumerate(rows) if compatible_id(r)
                  and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
-                 and directe_team_alias(r.get('home'),incoming.get('home'),alias_index)
-                 and directe_team_alias(r.get('away'),incoming.get('away'),alias_index)]
+                 and team_ok(r,'home') and team_ok(r,'away')]
         if len(aliases)==1:return aliases[0]
     return None
 
@@ -1046,6 +1075,7 @@ def merge_unified(packet,previous,mode):
                          'ambiguousOrInvalid':0,'skipEmpty':True}
     alias_table=build_club_alias_table(previous,packet)
     alias_index=club_alias_index(alias_table)
+    standing_aliases=load_standings_aliases() if mode=='directe' else {}
     rows=[canonicalize(r) for r in previous['matches']]
     counts={'new':0,'updated':0,'unmatched':0,'ambiguousOrInvalid':0,'unchanged':0}
     for raw in incoming:
@@ -1070,7 +1100,7 @@ def merge_unified(packet,previous,mode):
                 old['actaState']='available' if r.get('actaState')=='available' else 'pending'
             old['actaCheckedAt']=r['actaCheckedAt'];counts['updated']+=1
             continue
-        idx=match_index(rows,r,mode,alias_index)
+        idx=match_index(rows,r,mode,alias_index,standing_aliases)
         if idx is None:
             if mode!='agenda':counts['unmatched']+=1;continue
             rows.append(canonicalize(r));counts['new']+=1;continue
