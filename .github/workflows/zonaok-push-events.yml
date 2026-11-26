@@ -5,6 +5,11 @@ on:
     branches: [main]
     paths:
       - zonaok-tots-partits.json
+  workflow_run:
+    workflows:
+      - 'ZonaOK - En directe TOTAL AUTO (Chromium Playwright)'
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: read
@@ -16,6 +21,7 @@ concurrency:
 
 jobs:
   avisos:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
