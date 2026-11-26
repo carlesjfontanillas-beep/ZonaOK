@@ -2,6 +2,15 @@ name: ZonaOK - avisos FECAPA
 
 on:
   workflow_dispatch:
+    inputs:
+      test_scenario:
+        description: "Prova buida o partit fictici Barça de Nacional Catalana M"
+        required: true
+        type: choice
+        options:
+          - empty
+          - barca_nc
+        default: empty
   push:
     branches: [main]
     paths:
@@ -35,8 +44,11 @@ jobs:
           python-version: '3.12'
       - name: Validar detector
         run: python -m unittest discover -s tests -p 'test_push_*.py' -v
+      - name: Preparar partit fictici Barça Nacional Catalana
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario == 'barca_nc' }}
+        run: python scripts/zonaok_push_test_batch.py --run-id "$GITHUB_RUN_ID" --events push-batch.json --incidents push-live-incidents.json
       - name: Preparar prova buida sense avisos
-        if: ${{ github.event_name == 'workflow_dispatch' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario != 'barca_nc' }}
         run: printf '%s\n' '{"schema":"zonaok-push-event-batch-v1","season":"2026/2027","events":[]}' > push-batch.json
       - name: Detectar només canvis nous de captura FECAPA
         if: ${{ github.event_name != 'workflow_dispatch' }}
@@ -115,6 +127,17 @@ jobs:
             python -m playwright install --with-deps chromium
             python scripts/zonaok_push_live_incidents.py capture --input push-live-selection.json --started push-detection.json --output push-live-incidents.json
           fi
+          request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
+          token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
+          curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
+            -X POST 'https://zonaok-push.carles-j-fontanillas.workers.dev/sports-incidents' \
+            -H 'Content-Type: application/json' -H "Authorization: Bearer ${token}" \
+            --data-binary @push-live-incidents.json
+      - name: Enviar incidències fictícies Barça Nacional Catalana
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario == 'barca_nc' }}
+        shell: bash
+        run: |
+          set -euo pipefail
           request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
           token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
           curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
