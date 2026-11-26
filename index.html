@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ca">
-<head>
+<head><script src="zonaok-admin-device.js?v=20261126-admin-device1"></script>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -2575,6 +2575,7 @@ window.ZonaOKRefreshMatches=window.ZonaOKRefreshSources=async function(){
    const classes=['zok-ui-home','zok-ui-detail','zok-ui-import'];
    const weekHero=document.getElementById('zok-week-hero'),homeHeading=document.querySelector('.zok-home-heading'),detailHeading=results.querySelector('.section-head');
    function mode(state,tab){
+     if(state==='import'&&!window.ZonaOKAdminDevice?.allowed()){state='home';tab='home'}
      // Un únic selector, amb els mateixos botons i listeners en tots els menús.
      if(weekHero&&homeHeading&&detailHeading){
        const anchor=state==='detail'&&tab!=='classificacions'?detailHeading:homeHeading;
@@ -2590,6 +2591,7 @@ window.ZonaOKRefreshMatches=window.ZonaOKRefreshSources=async function(){
    yellow.setAttribute('aria-label','Obrir o tancar les eines d’actualització');
    let previousState='home',previousTab='home';
    yellow.onclick=()=>{
+     if(!window.ZonaOKAdminDevice?.allowed())return;
      if(document.body.classList.contains('zok-ui-import')){
        mode(previousState,previousTab);
      }else{
