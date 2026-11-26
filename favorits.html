@@ -24,6 +24,75 @@
   <link rel="manifest" href="manifest.webmanifest?v=20261126-ios-icon1">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-zonaok.png">
+  <style id="zok-favorites-accordion">
+    /* Blocs de Favorits: capçalera sempre accessible, alçada disponible entre les barres. */
+    .zok-favorites-app .zok-favorite-group.zok-foldable{
+      max-height:calc(100vh - var(--zok-ui-header-height,64px) - var(--zok-ui-bottom-height,66px) - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 20px);
+      max-height:calc(100dvh - var(--zok-ui-header-height,64px) - var(--zok-ui-bottom-height,66px) - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 20px);
+      overflow-y:auto;overflow-x:hidden;min-width:0;
+    }
+    .zok-favorites-app .zok-foldable > h2{
+      position:sticky;top:0;z-index:2;display:block;padding:0;margin:0;
+      background:#153c56;border-bottom:1px solid #8cc5e722;
+    }
+    .zok-favorites-app .zok-foldable.zok-folded > h2{border-bottom:0}
+    .zok-favorites-app .zok-foldable.zok-folded > :not(h2){display:none!important}
+    .zok-favorites-app .zok-foldable > .zok-favorite-list{max-height:none;overflow:visible}
+    .zok-favorites-app .zok-foldable > h2 > .zok-fold-toggle{
+      appearance:none;-webkit-appearance:none;display:flex;align-items:center;gap:12px;width:100%;
+      min-height:48px;padding:14px 15px;box-sizing:border-box;
+      border:0;border-radius:0;background:transparent;box-shadow:none;color:inherit;
+      font:inherit;text-align:left;cursor:pointer;touch-action:manipulation;
+    }
+    .zok-favorites-app .zok-fold-title{flex:1;min-width:0}
+    .zok-favorites-app .zok-fold-toggle small{flex:none}
+    .zok-favorites-app .zok-fold-arrow{width:10px;height:10px;flex:0 0 10px;margin:0 3px 4px 1px;border:solid #ffc17c;border-width:0 2px 2px 0;transform:rotate(45deg);box-sizing:border-box}
+    .zok-favorites-app .zok-fold-toggle[aria-expanded="true"] .zok-fold-arrow{transform:rotate(225deg);margin-top:7px}
+    .zok-favorites-app .zok-fold-toggle:focus-visible{outline:2px solid #ffc17c;outline-offset:-4px}
+    @media(max-height:360px){.zok-favorites-app .zok-favorite-group.zok-foldable{max-height:none}}
+  </style>
+  <script id="zok-favorites-accordion-init">
+    document.addEventListener('DOMContentLoaded',function initFavoriteAccordion(){
+  const root=document.getElementById('favorites-groups');
+  if(!root)return;
+  const open=new Set(['Clubs']);
+  const positions=new Map();
+  function enhance(){
+    for(const section of root.children){
+      if(!section.classList.contains('zok-favorite-group')||section.classList.contains('zok-foldable'))continue;
+      const heading=section.querySelector(':scope > h2');
+      if(!heading)continue;
+      const count=heading.querySelector('small');
+      const key=Array.from(heading.childNodes).filter(n=>n.nodeType===3).map(n=>n.textContent).join('').trim();
+      if(!key)continue;
+      const button=document.createElement('button');
+      button.type='button';button.className='zok-fold-toggle';
+      const title=document.createElement('span');
+      title.className='zok-fold-title';title.textContent=key;
+      const arrow=document.createElement('span');
+      arrow.className='zok-fold-arrow';arrow.setAttribute('aria-hidden','true');
+      button.append(title);if(count)button.append(count);button.append(arrow);
+      heading.replaceChildren(button);
+      function apply(){
+        const expanded=open.has(key);
+        section.classList.toggle('zok-folded',!expanded);
+        button.setAttribute('aria-expanded',String(expanded));
+      }
+      section.classList.add('zok-foldable');apply();
+      if(open.has(key))section.scrollTop=positions.get(key)||0;
+      section.addEventListener('scroll',()=>{if(open.has(key))positions.set(key,section.scrollTop)},{passive:true});
+      button.addEventListener('click',()=>{
+        if(open.has(key)){open.delete(key);positions.delete(key);section.scrollTop=0;}
+        else{open.add(key);}
+        apply();
+        if(open.has(key))section.scrollIntoView({block:'start',behavior:'auto'});
+      });
+    }
+  }
+  new MutationObserver(enhance).observe(root,{childList:true});
+  enhance();
+},{once:true});
+  </script>
 </head>
 <body>
 <main class="app zok-favorites-app">
