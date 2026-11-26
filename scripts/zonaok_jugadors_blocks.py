@@ -25,7 +25,7 @@ def plan_matches(rows, state, captured, phase, clock):
     for key,r in rows.items():
         old=state.get(key,{})
         same=old.get("fingerprint")==r["fingerprint"]
-        if same and old.get("status")=="verified":
+        if same and old.get("status")=="verified" and (phase!="flash" or old.get("statsRevision")==STATS_REVISION):
             continue
         retry=same and old.get("status")=="pending"
         if phase=="retry":
@@ -33,13 +33,14 @@ def plan_matches(rows, state, captured, phase, clock):
         elif phase=="flash":
             if r["iso"] < (clock.date()-timedelta(days=7)).isoformat():continue
             if retry and not due(old,0.25,clock):continue
-            if key in captured and not old:continue
         elif retry:
             continue
         result.append((key,r))
-    # Missing historical matches first. Initial schema validation does not prove
-    # every acta was complete: older captured snapshots are checked last.
-    return sorted(result,key=lambda x:(x[0] in captured,state.get(x[0],{}).get("checkedAt",""),x[1]["iso"],x[0]))[:LIMITS[phase]]
+    # Recent fixtures first, newest first; historical work keeps its resumable order.
+    cutoff=(clock.date()-timedelta(days=7)).isoformat()
+    recent=sorted((x for x in result if x[1]["iso"]>=cutoff),key=lambda x:(x[1]["iso"],x[0]),reverse=True)
+    historical=sorted((x for x in result if x[1]["iso"]<cutoff),key=lambda x:(x[0] in captured,state.get(x[0],{}).get("checkedAt",""),x[1]["iso"],x[0]))
+    return (recent+historical)[:LIMITS[phase]]
 
 def plan_stats(rows, state, captured, clock):
     """Recheck existing appearances once with the new FECAPA stat reader.
@@ -55,7 +56,10 @@ def plan_stats(rows, state, captured, clock):
         if old.get("status")=="pending" and old.get("fingerprint")==r["fingerprint"] and old.get("statsAttemptRevision")==STATS_REVISION and not due(old,6,clock):
             continue
         pending.append((key,r))
-    return sorted(pending,key=lambda x:(x[0]!="4786|152375",state.get(x[0],{}).get("checkedAt",""),x[1]["iso"],x[0]))[:LIMITS["stats"]]
+    cutoff=(clock.date()-timedelta(days=7)).isoformat()
+    recent=sorted((x for x in pending if x[1]["iso"]>=cutoff),key=lambda x:(x[1]["iso"],x[0]),reverse=True)
+    historical=sorted((x for x in pending if x[1]["iso"]<cutoff),key=lambda x:(x[0]!="4786|152375",state.get(x[0],{}).get("checkedAt",""),x[1]["iso"],x[0]))
+    return (recent+historical)[:LIMITS["stats"]]
 
 def plan_rosters(leagues,state,represented,clock):
     pending=[]
