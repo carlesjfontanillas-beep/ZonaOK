@@ -468,7 +468,7 @@
       if (catalogOnly) return;
       nodes.status.textContent = location.protocol === 'file:'
         ? 'Previsualització local: Safari pot separar les seleccions de Favorits i Inici.'
-        : 'Clubs, equips i escuts carregats de l’agenda total FECAPA.';
+        : '';
       discoverClubLogos();
     } catch (error) {
       console.error('Favorits: error carregant catàleg', error);
