@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-25T20:25:42Z",
+  "updatedAt": "2026-11-26T06:43:40Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-25T20:25:19Z",
@@ -142,11 +142,11 @@
       "nextFastOffset": 96
     },
     "directe": {
-      "capturedAt": "2026-11-25T20:18:16Z",
-      "mergedAt": "2026-11-25T20:18:18Z",
+      "capturedAt": "2026-11-26T06:43:38Z",
+      "mergedAt": "2026-11-26T06:43:40Z",
       "new": 0,
-      "updated": 12,
-      "unmatched": 272,
+      "updated": 9,
+      "unmatched": 290,
       "ambiguousOrInvalid": 0,
       "unchanged": 0
     },
@@ -130597,10 +130597,10 @@
       "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-25T20:18:16Z",
+      "lastDirecteAt": "2026-11-26T06:43:38Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-25T20:18:16Z",
-      "directeUpdatedAt": "2026-11-25T20:18:16Z"
+      "scoreUpdatedAt": "2026-11-26T06:43:38Z",
+      "directeUpdatedAt": "2026-11-26T06:43:38Z"
     },
     {
       "iso": "2026-11-24",
@@ -130681,10 +130681,10 @@
       "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-25T20:18:16Z",
-      "directeUpdatedAt": "2026-11-25T20:18:16Z",
+      "lastDirecteAt": "2026-11-26T06:43:38Z",
+      "directeUpdatedAt": "2026-11-26T06:43:38Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-25T20:18:16Z"
+      "scoreUpdatedAt": "2026-11-26T06:43:38Z"
     },
     {
       "iso": "2026-11-25",
@@ -130700,10 +130700,10 @@
       "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-25T20:18:16Z",
-      "directeUpdatedAt": "2026-11-25T20:18:16Z",
+      "lastDirecteAt": "2026-11-26T06:43:38Z",
+      "directeUpdatedAt": "2026-11-26T06:43:38Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-25T20:18:16Z"
+      "scoreUpdatedAt": "2026-11-26T06:43:38Z"
     },
     {
       "iso": "2026-11-25",
@@ -130716,13 +130716,13 @@
       "homeScore": 2,
       "awayScore": 1,
       "actaUrl": "",
-      "status": "SENSE COMENÇAR",
+      "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-25T20:18:16Z",
-      "directeUpdatedAt": "2026-11-25T20:18:16Z",
+      "lastDirecteAt": "2026-11-26T06:43:38Z",
+      "directeUpdatedAt": "2026-11-26T06:43:38Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-25T20:18:16Z"
+      "scoreUpdatedAt": "2026-11-26T06:43:38Z"
     },
     {
       "iso": "2026-11-25",
@@ -130732,16 +130732,16 @@
       "competition": "OK LIGA IBERDROLA",
       "leagueId": "4775",
       "matchId": "",
-      "homeScore": 2,
-      "awayScore": 1,
+      "homeScore": 6,
+      "awayScore": 3,
       "actaUrl": "",
-      "status": "SENSE COMENÇAR",
+      "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-25T20:18:16Z",
-      "directeUpdatedAt": "2026-11-25T20:18:16Z",
+      "lastDirecteAt": "2026-11-26T06:43:38Z",
+      "directeUpdatedAt": "2026-11-26T06:43:38Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-25T20:18:16Z"
+      "scoreUpdatedAt": "2026-11-26T06:43:38Z"
     },
     {
       "iso": "2026-11-25",
@@ -130751,16 +130751,16 @@
       "competition": "OK LIGA IBERDROLA",
       "leagueId": "4775",
       "matchId": "",
-      "homeScore": 1,
+      "homeScore": 3,
       "awayScore": 0,
       "actaUrl": "",
-      "status": "SENSE COMENÇAR",
+      "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-25T20:18:16Z",
-      "directeUpdatedAt": "2026-11-25T20:18:16Z",
+      "lastDirecteAt": "2026-11-26T06:43:38Z",
+      "directeUpdatedAt": "2026-11-26T06:43:38Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-25T20:18:16Z"
+      "scoreUpdatedAt": "2026-11-26T06:43:38Z"
     },
     {
       "iso": "2026-11-25",
@@ -130770,16 +130770,16 @@
       "competition": "OK LIGA IBERDROLA",
       "leagueId": "4775",
       "matchId": "",
-      "homeScore": 0,
-      "awayScore": 0,
+      "homeScore": 8,
+      "awayScore": 1,
       "actaUrl": "",
-      "status": "SENSE COMENÇAR",
+      "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-25T20:18:16Z",
-      "directeUpdatedAt": "2026-11-25T20:18:16Z",
+      "lastDirecteAt": "2026-11-26T06:43:38Z",
+      "directeUpdatedAt": "2026-11-26T06:43:38Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-25T20:18:16Z"
+      "scoreUpdatedAt": "2026-11-26T06:43:38Z"
     },
     {
       "iso": "2026-11-25",
@@ -130789,16 +130789,16 @@
       "competition": "OK LIGA IBERDROLA",
       "leagueId": "4775",
       "matchId": "",
-      "homeScore": 0,
-      "awayScore": 0,
+      "homeScore": 2,
+      "awayScore": 1,
       "actaUrl": "",
-      "status": "SENSE COMENÇAR",
+      "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-25T20:18:16Z",
-      "directeUpdatedAt": "2026-11-25T20:18:16Z",
+      "lastDirecteAt": "2026-11-26T06:43:38Z",
+      "directeUpdatedAt": "2026-11-26T06:43:38Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-25T20:18:16Z"
+      "scoreUpdatedAt": "2026-11-26T06:43:38Z"
     },
     {
       "iso": "2026-11-25",
@@ -130808,16 +130808,16 @@
       "competition": "OK LIGA IBERDROLA",
       "leagueId": "4775",
       "matchId": "",
-      "homeScore": 0,
-      "awayScore": 0,
+      "homeScore": 1,
+      "awayScore": 2,
       "actaUrl": "",
-      "status": "SENSE COMENÇAR",
+      "status": "FINAL",
       "venue": "",
       "lastAgendaAt": "2026-11-23T23:33:03Z",
-      "lastDirecteAt": "2026-11-25T20:18:16Z",
-      "directeUpdatedAt": "2026-11-25T20:18:16Z",
+      "lastDirecteAt": "2026-11-26T06:43:38Z",
+      "directeUpdatedAt": "2026-11-26T06:43:38Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-25T20:18:16Z"
+      "scoreUpdatedAt": "2026-11-26T06:43:38Z"
     },
     {
       "iso": "2026-11-25",
