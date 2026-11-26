@@ -85,6 +85,38 @@ def detect(before, after, *, since, now):
         if event=="finish":
             item["fixture"].update(homeScore=r["homeScore"],awayScore=r["awayScore"])
         output.append(item)
+    # Schedule changes match by stable FECAPA ids, not date/time. Require a
+    # unique row on each side so duplicate catalog records cannot notify.
+    def ids(rows):
+        counts=Counter((str(r.get("leagueId") or ""),str(r.get("matchId") or "")) for r in rows)
+        result={}
+        for r in rows:
+            key=(str(r.get("leagueId") or ""),str(r.get("matchId") or ""))
+            if all(key) and counts[key]==1: result[key]=r
+        return result
+    old_ids,current_ids=ids(previous),ids(current)
+    for key,r in current_ids.items():
+        p=old_ids.get(key)
+        if not p or (p.get("iso"),p.get("time"))==(r.get("iso"),r.get("time")):
+            continue
+        if any(norm(p.get(k))!=norm(r.get(k)) for k in ("competition","home","away")):
+            continue
+        captured=observed(r)
+        if not captured or not (since<captured<=now) or (observed(p) and captured<=observed(p)):
+            continue
+        if norm(r.get("status")) in FINAL|LIVE:
+            continue
+        try:
+            start=datetime.strptime(r["iso"]+" "+r["time"],"%Y-%m-%d %H:%M").replace(tzinfo=MADRID)
+            if start<=now.astimezone(MADRID):
+                continue
+        except (ValueError,TypeError,KeyError):
+            continue
+        event_id=hashlib.sha256(json.dumps([after.get("season"),key[0],key[1],"scheduleChange",p.get("iso"),p.get("time"),r.get("iso"),r.get("time")],ensure_ascii=False).encode()).hexdigest()
+        item={"eventId":event_id,"event":"scheduleChange","source":"FECAPA","observedAt":captured.isoformat(),
+              "fixture":{k:r.get(k,"") for k in ("iso","time","competition","home","away","leagueId","matchId","homeLogo","awayLogo","round")}}
+        item["fixture"].update(previousIso=p.get("iso"),previousTime=p.get("time"))
+        output.append(item)
     return output
 
 def main():
@@ -98,3 +130,4 @@ def main():
     print(json.dumps({"dryRun":True,"events":events},ensure_ascii=False))
 if __name__=="__main__":
     main()
+
