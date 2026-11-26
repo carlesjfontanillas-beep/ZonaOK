@@ -29,15 +29,27 @@ function star(id,callback){const on=read().favorites.includes(id),b=btn(on?'★'
 const FILTERS=[
  ['jp-club','clubName','Tots els clubs'],
  ['jp-team','teamName','Tots els equips'],
- ['jp-category','groupName','Totes les categories'],
+ ['jp-category','competition','Totes les competicions'],
  ['jp-position','position','Totes']
 ];
 const filterUI=new Map();
 const positionOptions=[{value:'field',label:'Pista'},{value:'goalkeeper',label:'Porter'}];
+// Nom de competició, no de grup: la fitxa conserva groupName intacte.
+function competitionLabel(m){
+ const raw=String(m.groupName||m.leagueName||'').trim();
+ const label=window.ZonaOKPlayerTotals.category(m).label;
+ return label.replace(/(\bPB[- ]INICIACI[ÓO])\s+\d+$/i,'$1').replace(/\bFASE\s*(\d+)\b/gi,'FASE $1').trim()||raw;
+}
+function filterValue(m,key){return key==='competition'?competitionLabel(m):m[key]}
+function competitionChoices(rows){
+ const values=new Map();
+ for(const m of rows){const label=competitionLabel(m),key=D.norm(label);if(key&&!values.has(key))values.set(key,label)}
+ return choiceList([...values.values()]);
+}
 function matchesFilter(id,value){
  const state=filterUI.get(id),q=D.norm(state.input.value||'');
  if(!q)return true;
- if(state.selected!==null)return String(value??'')===state.selected;
+ if(state.selected!==null)return id==='jp-category'?D.norm(value)===D.norm(state.selected):String(value??'')===state.selected;
  const label=id==='jp-position'?(positionOptions.find(x=>x.value===value)?.label||''):String(value??'');
  return q.split(/\s+/).every(w=>D.norm(label).includes(w));
 }
@@ -105,14 +117,14 @@ function filterOptions(resetInvalid=false){
  team.options=choiceList(clubRows.map(m=>m.teamName));
  if(resetInvalid&&team.input.value&&!clubRows.some(m=>matchesFilter(team.id,m.teamName)))clearFilter(team);
  const teamRows=clubRows.filter(m=>matchesFilter(team.id,m.teamName));
- category.options=choiceList(teamRows.map(m=>m.groupName));
- if(resetInvalid&&category.input.value&&!teamRows.some(m=>matchesFilter(category.id,m.groupName)))clearFilter(category);
+ category.options=competitionChoices(teamRows);
+ if(resetInvalid&&category.input.value&&!teamRows.some(m=>matchesFilter(category.id,competitionLabel(m))))clearFilter(category);
  position.options=positionOptions;
  for(const state of filterUI.values())if(document.activeElement===state.input)drawFilter(state);
 }
-function filteredMemberships(id){return D.list(id).filter(m=>FILTERS.every(([f,k])=>matchesFilter(f,m[k])))}
+function filteredMemberships(id){return D.list(id).filter(m=>FILTERS.every(([f,k])=>matchesFilter(f,filterValue(m,k))))}
 const searchInput=$('jp-search'),suggestions=$('jp-suggestions');
-let renderToken=0;
+let renderToken=0,listLimit=100,listSignature='';
 function renderSuggestions(rows){
  suggestions.replaceChildren();suggestions.hidden=false;
  suggestions.append(el('p','zok-jp-note',rows.length+' coincidències al catàleg'));
@@ -127,6 +139,7 @@ function renderSuggestions(rows){
 }
 async function renderList(){
  const token=++renderToken,q=D.norm(searchInput.value),favs=new Set(read().favorites),list=$('jp-list'),count=$('jp-count');
+ const signature=JSON.stringify([scope,q,...[...filterUI.values()].map(s=>[s.input.value,s.selected])]);if(signature!==listSignature){listSignature=signature;listLimit=100;}
  $('jp-favs').setAttribute('aria-pressed',String(scope==='favorites'));$('jp-all').setAttribute('aria-pressed',String(scope==='all'));
  list.replaceChildren();suggestions.replaceChildren();suggestions.hidden=true;count.hidden=false;list.hidden=false;
  if(!D.loaded){count.textContent='';list.append(el('p','zok-jp-note','Carregant el catàleg…'));return}
@@ -135,9 +148,11 @@ async function renderList(){
   list.hidden=true;count.hidden=true;renderSuggestions(rows);return;
  }
  const rows=D.players.filter(p=>(scope==='all'||favs.has(p.playerId))&&filteredMemberships(p.playerId).length).sort((a,b)=>a.name.localeCompare(b.name,'ca',{sensitivity:'base'}));
- count.textContent=rows.length+' jugadors'+(rows.length>100?' · primers 100, afina la cerca':'')+(scope==='favorites'?' favorits':D.preview?' de mostra':'');
+ count.textContent=rows.length+' jugadors'+(rows.length>listLimit?' · mostrant '+listLimit+' de '+rows.length:'')+(scope==='favorites'?' favorits':D.preview?' de mostra':'');
  if(!rows.length){list.append(el('p','zok-jp-note',scope==='favorites'&&!favs.size?'Encara no tens jugadors favorits. Cerca un nom i marca una estrella.':'Cap jugador coincideix amb els filtres.'));return}
- for(const p of rows.slice(0,100)){const row=el('article','zok-jp-row'),m=filteredMemberships(p.playerId)[0],b=btn('',()=>open(p.playerId),'zok-jp-row-main');const name=el('strong','',p.name);if(filteredMemberships(p.playerId).some(x=>x.position==='goalkeeper')){row.classList.add('zok-jp-row-keeper');name.append(el('span','zok-jp-keeper','🥅 Porter'));}b.append(name,el('small','',m.clubName+' · '+m.groupName+' · '+(m.position==='goalkeeper'?'Porter':m.position==='field'?'Pista':'Posició no verificada')));const placeholder=el('div','zok-jp-avatar','♙');placeholder.setAttribute('aria-hidden','true');if(token!==renderToken)return;row.append(placeholder,b,star(p.playerId,renderList));list.append(row);avatar(p.playerId).then(a=>{if(token===renderToken&&placeholder.isConnected)placeholder.replaceWith(a)})}}
+ for(const p of rows.slice(0,listLimit)){const row=el('article','zok-jp-row'),m=filteredMemberships(p.playerId)[0],b=btn('',()=>open(p.playerId),'zok-jp-row-main');const name=el('strong','',p.name);if(filteredMemberships(p.playerId).some(x=>x.position==='goalkeeper')){row.classList.add('zok-jp-row-keeper');name.append(el('span','zok-jp-keeper','🥅 Porter'));}b.append(name,el('small','',m.clubName+' · '+m.groupName+' · '+(m.position==='goalkeeper'?'Porter':m.position==='field'?'Pista':'Posició no verificada')));const placeholder=el('div','zok-jp-avatar','♙');placeholder.setAttribute('aria-hidden','true');if(token!==renderToken)return;row.append(placeholder,b,star(p.playerId,renderList));list.append(row);avatar(p.playerId).then(a=>{if(token===renderToken&&placeholder.isConnected)placeholder.replaceWith(a)})}
+ if(rows.length>listLimit){const more=btn('Mostra '+Math.min(100,rows.length-listLimit)+' jugadors més',()=>{listLimit+=100;renderList()});more.style.cssText='display:block;width:100%;margin:12px 0';list.append(more)}
+}
 const CARD_COLORS={Grogues:'yellow',Blaves:'blue',Vermelles:'red'};
 function cardSymbol(color){const n=el('span','zok-jp-card-symbol '+color);n.setAttribute('aria-hidden','true');return n}
 function stat(label,v){const n=el('div','zok-jp-stat'),shown=v===undefined||v===null?'—':String(v);n.append(el('b','',shown));
