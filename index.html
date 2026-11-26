@@ -447,7 +447,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
 <main class="app">
   <header class="mast">
     <div>
-      <div class="brand">ZONA<span>OK</span></div>
+      <a class="brand zok-brand-home" href="index.html?v=20261126-logo-home1" aria-label="ZONAOK · Inici" title="Inici" style="display:block;color:inherit;text-decoration:none">ZONA<span>OK</span></a>
       <div class="strap">ELS TEUS PARTITS &#xB7; EL TEU HOQUEI</div>
     </div>
     <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261125-cataleg1" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><a class="zok-push-top" href="notificacions.html?v=20261125-serverprefs1" aria-label="Obrir Notificacions" title="Notificacions"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button><button id="refresh-home" type="button" class="primary" title="Obrir eines d’actualització" aria-label="Obrir o tancar les eines d’actualització">&#x21BB;</button></div>
@@ -2609,6 +2609,7 @@ window.ZonaOKRefreshMatches=window.ZonaOKRefreshSources=async function(){
        // V19: grupalevi i grupinfantil obren TOTA la temporada; sense clics artificials.
        // La setmana només filtra Inici, Barça i CP Sant Celoni.
    });
+   document.querySelector('.zok-brand-home')?.addEventListener('click',event=>{if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;const home=document.querySelector('.zok-header-actions [data-tab="home"]');if(home){event.preventDefault();home.click()}});
    document.querySelector('.zok-header-actions')?.addEventListener('click',event=>{const b=event.target.closest('[data-tab="home"]');if(b){event.preventDefault();mode('home','home');window.ZonaOKSelectSection?.('home')}});
    document.getElementById('close-results')?.addEventListener('click',()=>mode('home','home'));
    // En les pestanyes dels clubs deixem visible la barra de setmanes original.
