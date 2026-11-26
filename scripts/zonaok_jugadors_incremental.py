@@ -101,6 +101,35 @@ TEAM_STATS_CAPTURE=r"""()=>{
  return out;
 }"""
 
+OFFICIAL_DETAILS_CAPTURE=r"""()=>{
+ const visible=e=>e&&e.getClientRects().length&&getComputedStyle(e).visibility!=='hidden';
+ const modals=[...document.querySelectorAll('.sidgad-match-modal')].filter(visible);
+ if(modals.length!==1)return {};
+ const scope=modals[0],txt=e=>String(e?.innerText||'').trim().replace(/\s+/g,' ');
+ const norm=x=>x.normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
+ const header={},staff={home:[],away:[]},periods=[];
+ const meta={'competicio':'competition','temporada':'season','instal·lacio':'venue','localitat':'town','data - hora':'dateTime','jornada':'round','hora d\'inici':'startTime','arbitre 1':'referee1','arbitre 2':'referee2','arbitre auxiliar':'assistantReferee','cronometrador':'timekeeper','delegat de pista':'rinkDelegate','delegat fcp':'federationDelegate','delegat d\'acta':'reportDelegate','policia / seguretat':'security','servei medic':'medical'};
+ const roles=/^(entrenador|2n entrenador|delegat|auxiliar)$/i;
+ let side=null;
+ for(const table of scope.querySelectorAll('.sidgad-acta-hoja table')){
+  if(!visible(table))continue;
+  for(const r of table.rows){
+   if(!visible(r))continue;
+   const c=[...r.cells].map(txt);
+   if(table.matches('.sidgad-acta-equipos')){
+    if(norm(c[0]||'')==='local'){side='home';continue}
+    if(norm(c[0]||'')==='visitant'){side='away';continue}
+    if(side&&roles.test(c[1]||'')&&c[2])staff[side].push({role:c[1],name:c[2]});
+   }else if(table.matches('.sidgad-acta-resumen')){
+    if(/^(?:[1-9]\d*|penals|total)$/i.test(c[0]||'')&&(c[1]||c[2]))periods.push({period:c[0],score:c[1]||'',fouls:c[2]||''});
+   }else{
+    for(let i=0;i<c.length-1;i++){const key=meta[norm(c[i])];if(key&&c[i+1]&&!meta[norm(c[i+1])])header[key]=c[i+1];}
+   }
+  }
+ }
+ return {header,staff,periods};
+}"""
+
 async def closed_acta(ctx,league,match,details=None):
     page=await ctx.new_page()
     try:
@@ -121,7 +150,7 @@ async def closed_acta(ctx,league,match,details=None):
                         if norm(label) in {"faltes","faltas","faltes d'equip","faltas de equipo"}:
                             found={k:int(v) for k,v in values.items() if v.isdigit()}
                             old=details.get("fouls",{})
-                            details["fouls"]={**old,**{k:v for k,v in found.items() if k not in old or old[k]==v}}
+                            details["fouls"]={**old,**found}
             except Exception:
                 pass
         summary=await stable_rows(page,league,"summary")
@@ -133,14 +162,15 @@ async def closed_acta(ctx,league,match,details=None):
         await page.wait_for_selector(".sidgad-match-modal .sidgad-acta-hoja",timeout=12000)
         if details is not None:
             try:
-                fouls=await page.evaluate(FOULS_CAPTURE)
-                if fouls:
-                    old=details.get("fouls",{})
-                    merged={**old,**fouls}
-                    for side in old.keys() & fouls.keys():
-                        if old[side]!=fouls[side]:merged.pop(side,None)
-                    if merged:details.update(source="FECAPA",fouls=merged)
-                    else:details.pop('fouls',None)
+                official_details=await page.evaluate(OFFICIAL_DETAILS_CAPTURE)
+                if official_details:
+                    details.update(source="FECAPA", **official_details)
+                    total=next((p["fouls"] for p in official_details.get("periods",[]) if norm(p["period"])=="total"),"")
+                    match_total=re.fullmatch(r"\s*(\d+)\s*[-:]\s*(\d+)\s*",total)
+                    if match_total:
+                        fallback=dict(zip(("home","away"),map(int,match_total.groups())))
+                        details["officialFouls"]=fallback
+                        details["fouls"]={**fallback,**details.get("fouls",{})}
             except Exception:
                 pass
         official=await stable_rows(page,league,"official")
