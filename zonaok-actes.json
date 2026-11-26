@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-26T21:00:21Z",
+  "generatedAt": "2026-11-26T21:06:07Z",
   "source": "FECAPA-PLAYWRIGHT",
   "fixtures": [
     {
@@ -238,6 +238,249 @@
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5014&vista=calendar&partido=159979"
     },
     {
+      "league": "5073",
+      "id": "163237",
+      "iso": "2026-09-17",
+      "time": "10:00",
+      "home": "PORTUGAL F",
+      "away": "FRANÇA F",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163237"
+    },
+    {
+      "league": "5073",
+      "id": "163238",
+      "iso": "2026-09-17",
+      "time": "12:15",
+      "home": "ALEMANYA",
+      "away": "CATALUNYA F",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163238"
+    },
+    {
+      "league": "5070",
+      "id": "163227",
+      "iso": "2026-09-17",
+      "time": "14:30",
+      "home": "PORTUGAL M",
+      "away": "ANGOLA",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163227"
+    },
+    {
+      "league": "5073",
+      "id": "163239",
+      "iso": "2026-09-17",
+      "time": "16:45",
+      "home": "ALEMANYA",
+      "away": "FRANÇA F",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163239"
+    },
+    {
+      "league": "5073",
+      "id": "163240",
+      "iso": "2026-09-17",
+      "time": "18:30",
+      "home": "PORTUGAL F",
+      "away": "CATALUNYA F",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163240"
+    },
+    {
+      "league": "5070",
+      "id": "163228",
+      "iso": "2026-09-17",
+      "time": "20:45",
+      "home": "FRANÇA M",
+      "away": "CATALUNYA M",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163228"
+    },
+    {
+      "league": "5073",
+      "id": "163241",
+      "iso": "2026-09-18",
+      "time": "10:00",
+      "home": "ALEMANYA",
+      "away": "PORTUGAL F",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163241"
+    },
+    {
+      "league": "5076",
+      "id": "163262",
+      "iso": "2026-09-18",
+      "time": "10:00",
+      "home": "CATALUNYA",
+      "away": "LA VENDEENNE",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163262"
+    },
+    {
+      "league": "5076",
+      "id": "163263",
+      "iso": "2026-09-18",
+      "time": "11:15",
+      "home": "CH FARNERS",
+      "away": "REUS DEPORTIU",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163263"
+    },
+    {
+      "league": "5070",
+      "id": "163229",
+      "iso": "2026-09-18",
+      "time": "12:15",
+      "home": "CATALUNYA M",
+      "away": "ANGOLA",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163229"
+    },
+    {
+      "league": "5076",
+      "id": "163264",
+      "iso": "2026-09-18",
+      "time": "12:45",
+      "home": "CP CONGRÉS",
+      "away": "HC ALPICAT",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163264"
+    },
+    {
+      "league": "5076",
+      "id": "163265",
+      "iso": "2026-09-18",
+      "time": "14:00",
+      "home": "COMUNITAT VALENCIANA",
+      "away": "CERDANYOLA CH",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163265"
+    },
+    {
+      "league": "5070",
+      "id": "163230",
+      "iso": "2026-09-18",
+      "time": "14:30",
+      "home": "FRANÇA M",
+      "away": "PORTUGAL M",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163230"
+    },
+    {
+      "league": "5076",
+      "id": "163266",
+      "iso": "2026-09-18",
+      "time": "16:00",
+      "home": "CH FARNERS",
+      "away": "CATALUNYA",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163266"
+    },
+    {
+      "league": "5073",
+      "id": "163242",
+      "iso": "2026-09-18",
+      "time": "16:45",
+      "home": "FRANÇA F",
+      "away": "CATALUNYA F",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163242"
+    },
+    {
+      "league": "5076",
+      "id": "163267",
+      "iso": "2026-09-18",
+      "time": "17:15",
+      "home": "LA VENDEENNE",
+      "away": "REUS DEPORTIU",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163267"
+    },
+    {
+      "league": "5076",
+      "id": "163268",
+      "iso": "2026-09-18",
+      "time": "18:30",
+      "home": "CP CONGRÉS",
+      "away": "COMUNITAT VALENCIANA",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163268"
+    },
+    {
+      "league": "5070",
+      "id": "163231",
+      "iso": "2026-09-18",
+      "time": "19:00",
+      "home": "CATALUNYA M",
+      "away": "PORTUGAL M",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163231"
+    },
+    {
+      "league": "5076",
+      "id": "163269",
+      "iso": "2026-09-18",
+      "time": "19:45",
+      "home": "CERDANYOLA CH",
+      "away": "HC ALPICAT",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163269"
+    },
+    {
+      "league": "5070",
+      "id": "163232",
+      "iso": "2026-09-18",
+      "time": "21:15",
+      "home": "ANGOLA",
+      "away": "FRANÇA M",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163232"
+    },
+    {
+      "league": "5076",
+      "id": "163274",
+      "iso": "2026-09-19",
+      "time": "09:00",
+      "home": "LA VENDEENNE",
+      "away": "CH FARNERS",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163274"
+    },
+    {
+      "league": "5076",
+      "id": "163275",
+      "iso": "2026-09-19",
+      "time": "10:15",
+      "home": "REUS DEPORTIU",
+      "away": "CATALUNYA",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163275"
+    },
+    {
+      "league": "5073",
+      "id": "163252",
+      "iso": "2026-09-19",
+      "time": "11:00",
+      "home": "PORTUGAL F",
+      "away": "ALEMANYA",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163252"
+    },
+    {
+      "league": "5076",
+      "id": "163276",
+      "iso": "2026-09-19",
+      "time": "11:30",
+      "home": "CERDANYOLA CH",
+      "away": "CP CONGRÉS",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163276"
+    },
+    {
+      "league": "5076",
+      "id": "163277",
+      "iso": "2026-09-19",
+      "time": "12:45",
+      "home": "HC ALPICAT",
+      "away": "COMUNITAT VALENCIANA",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163277"
+    },
+    {
+      "league": "5073",
+      "id": "163253",
+      "iso": "2026-09-19",
+      "time": "14:00",
+      "home": "CATALUNYA F",
+      "away": "FRANÇA F",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163253"
+    },
+    {
+      "league": "5076",
+      "id": "163282",
+      "iso": "2026-09-19",
+      "time": "15:30",
+      "home": "REUS DEPORTIU",
+      "away": "CERDANYOLA CH",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163282"
+    },
+    {
       "league": "4776",
       "id": "147113",
       "iso": "2026-09-19",
@@ -245,6 +488,24 @@
       "home": "VICIO PHC SANT CUGAT",
       "away": "CH LLORET FITEL NETWORK",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147113"
+    },
+    {
+      "league": "5070",
+      "id": "163245",
+      "iso": "2026-09-19",
+      "time": "16:15",
+      "home": "PORTUGAL M",
+      "away": "FRANÇA M",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163245"
+    },
+    {
+      "league": "5076",
+      "id": "163283",
+      "iso": "2026-09-19",
+      "time": "17:00",
+      "home": "LA VENDEENNE",
+      "away": "COMUNITAT VALENCIANA",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163283"
     },
     {
       "league": "4776",
@@ -263,6 +524,24 @@
       "home": "CHP SANT FELIU",
       "away": "HOQUEI PATINS TONA",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147267"
+    },
+    {
+      "league": "5070",
+      "id": "163246",
+      "iso": "2026-09-19",
+      "time": "18:30",
+      "home": "ANGOLA",
+      "away": "CATALUNYA M",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163246"
+    },
+    {
+      "league": "5076",
+      "id": "163284",
+      "iso": "2026-09-19",
+      "time": "18:30",
+      "home": "CATALUNYA",
+      "away": "HC ALPICAT",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163284"
     },
     {
       "league": "4776",
@@ -337,6 +616,15 @@
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146805"
     },
     {
+      "league": "5076",
+      "id": "163285",
+      "iso": "2026-09-19",
+      "time": "20:00",
+      "home": "CH FARNERS",
+      "away": "CP CONGRÉS",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5076&vista=calendar&partido=163285"
+    },
+    {
       "league": "4776",
       "id": "147119",
       "iso": "2026-09-19",
@@ -344,6 +632,24 @@
       "home": "CP RIUDEBITLLES",
       "away": "HCSENTMENAT",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147119"
+    },
+    {
+      "league": "5073",
+      "id": "163254",
+      "iso": "2026-09-20",
+      "time": "10:00",
+      "home": "ALEMANYA",
+      "away": "FRANÇA F",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163254"
+    },
+    {
+      "league": "5073",
+      "id": "163256",
+      "iso": "2026-09-20",
+      "time": "12:00",
+      "home": "PORTUGAL F",
+      "away": "CATALUNYA F",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=calendar&partido=163256"
     },
     {
       "league": "4776",
@@ -380,6 +686,24 @@
       "home": "CPI ESPANYOL",
       "away": "MARTINELIA MANLLEU",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146808"
+    },
+    {
+      "league": "5070",
+      "id": "163247",
+      "iso": "2026-09-20",
+      "time": "14:30",
+      "home": "FRANÇA M",
+      "away": "ANGOLA",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163247"
+    },
+    {
+      "league": "5070",
+      "id": "163248",
+      "iso": "2026-09-20",
+      "time": "16:30",
+      "home": "PORTUGAL M",
+      "away": "CATALUNYA M",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=calendar&partido=163248"
     },
     {
       "league": "4776",
@@ -21595,6 +21919,15 @@
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147130"
     },
     {
+      "league": "5062",
+      "id": "164070",
+      "iso": "2026-10-19",
+      "time": "21:15",
+      "home": "METALL-LÒGIC FDCASSANENC",
+      "away": "FARNERS",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164070"
+    },
+    {
       "league": "5045",
       "id": "163988",
       "iso": "2026-10-19",
@@ -21710,6 +22043,15 @@
       "home": "CE NOIA VETERANS",
       "away": "CE ARENYS DE MUNT",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=163682"
+    },
+    {
+      "league": "5062",
+      "id": "164069",
+      "iso": "2026-10-21",
+      "time": "22:00",
+      "home": "CH LLORET",
+      "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR B",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164069"
     },
     {
       "league": "4774",
@@ -22142,6 +22484,15 @@
       "home": "VICIO PHC SANT CUGAT B",
       "away": "CH MATARÓ",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=164241"
+    },
+    {
+      "league": "5062",
+      "id": "164075",
+      "iso": "2026-10-23",
+      "time": "22:20",
+      "home": "CH PALAFRUGELL",
+      "away": "METALL-LÒGIC FDCASSANENC",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164075"
     },
     {
       "league": "4815",
@@ -27805,6 +28156,15 @@
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=calendar&partido=163914"
     },
     {
+      "league": "5062",
+      "id": "164071",
+      "iso": "2026-10-27",
+      "time": "22:15",
+      "home": "CLUB PATÍ MALGRAT GRUP ESCOBAR A",
+      "away": "CH PALAFRUGELL",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164071"
+    },
+    {
       "league": "5045",
       "id": "163981",
       "iso": "2026-10-27",
@@ -27839,6 +28199,15 @@
       "home": "MARTINELIA MANLLEU",
       "away": "VICIO PHC SANT CUGAT",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4792&vista=calendar&partido=156109"
+    },
+    {
+      "league": "5062",
+      "id": "164074",
+      "iso": "2026-10-28",
+      "time": "21:30",
+      "home": "FARNERS",
+      "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR B",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164074"
     },
     {
       "league": "5045",
@@ -33241,6 +33610,15 @@
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151694"
     },
     {
+      "league": "5062",
+      "id": "164079",
+      "iso": "2026-11-02",
+      "time": "21:15",
+      "home": "METALL-LÒGIC FDCASSANENC",
+      "away": "SHUM FRIT RAVICH",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164079"
+    },
+    {
       "league": "5045",
       "id": "163996",
       "iso": "2026-11-02",
@@ -33304,6 +33682,15 @@
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=calendar&partido=163830"
     },
     {
+      "league": "5062",
+      "id": "164078",
+      "iso": "2026-11-03",
+      "time": "22:15",
+      "home": "CLUB PATÍ MALGRAT GRUP ESCOBAR B",
+      "away": "CH PALAFRUGELL",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164078"
+    },
+    {
       "league": "5046",
       "id": "163829",
       "iso": "2026-11-03",
@@ -33347,6 +33734,15 @@
       "home": "CH MATARÓ",
       "away": "STICK CLUB BARCELONA",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=164244"
+    },
+    {
+      "league": "5062",
+      "id": "164077",
+      "iso": "2026-11-04",
+      "time": "22:00",
+      "home": "CH LLORET",
+      "away": "FARNERS",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164077"
     },
     {
       "league": "4790",
@@ -44842,6 +45238,15 @@
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=calendar&partido=163841"
     },
     {
+      "league": "5062",
+      "id": "164084",
+      "iso": "2026-11-16",
+      "time": "21:30",
+      "home": "METALL-LÒGIC FDCASSANENC",
+      "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR A",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164084"
+    },
+    {
       "league": "5045",
       "id": "163990",
       "iso": "2026-11-16",
@@ -50798,6 +51203,15 @@
       "home": "CLUB HOQUEI LES FRANQUESES",
       "away": "CLUB HOQUEI PREMIA B",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=calendar&partido=163813"
+    },
+    {
+      "league": "5062",
+      "id": "164082",
+      "iso": "2026-11-25",
+      "time": "22:00",
+      "home": "CH LLORET",
+      "away": "CH PALAFRUGELL",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=calendar&partido=164082"
     }
   ]
 }
