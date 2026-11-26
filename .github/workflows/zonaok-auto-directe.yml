@@ -1,6 +1,10 @@
 name: 'ZonaOK - En directe TOTAL AUTO (Chromium Playwright)'
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/zonaok-auto-directe.yml'
   workflow_dispatch:
     inputs:
       scope:
@@ -91,7 +95,7 @@ jobs:
             --mode directe --capture captura-directe-auto.json \
             --output zonaok-tots-partits.json --compat --report fusio-directe-auto.json
       - name: Publicar només si l'usuari ho activa
-        if: ${{ (inputs.publish == true || github.event_name == 'schedule') && (github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true') }}
+        if: ${{ (inputs.publish == true || github.event_name == 'schedule' || github.event_name == 'push') && (github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true') }}
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
