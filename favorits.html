@@ -24,6 +24,14 @@
   <link rel="manifest" href="manifest.webmanifest?v=20261126-ios-icon1">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-zonaok.png">
+  <style id="zok-favorites-compact-search">
+    body main.app.zok-favorites-app .zok-page-heading{margin-bottom:6px}
+    .zok-favorites-app .zok-favorites-status-line{margin:4px 0;font-size:11px;min-height:0}
+    .zok-favorites-app .zok-favorites-status-line:has(#favorites-status:empty){display:none}
+    .zok-favorites-app .zok-favorites-controls{margin-top:6px}
+    .zok-favorites-app .zok-favorites-search-head{grid-column:1/-1;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+    .zok-favorites-app .zok-favorites-search-head #favorites-count{font-size:11px;color:#adc6dc;white-space:nowrap}
+  </style>
   <style id="zok-favorites-accordion">
     /* Blocs de Favorits: capçalera sempre accessible, alçada disponible entre les barres. */
     .zok-favorites-app .zok-favorite-group.zok-foldable{
@@ -105,9 +113,9 @@
     <h1>Favorits</h1>
     <p>Escull els clubs, equips, Jugadors, categories o competicions que vols seguir i així les tindràs a mà.</p>
   </section>
-  <section class="keyline" aria-live="polite"><span id="favorites-status">Carregant dades de ZonaOK…</span><span id="favorites-count">0 seleccionats</span></section>
+  <section class="keyline zok-favorites-status-line" aria-live="polite"><span id="favorites-status">Carregant dades de ZonaOK…</span></section>
   <section class="section zok-favorites-controls">
-    <label for="favorites-search">Cerca a la llista</label>
+    <div class="zok-favorites-search-head"><label for="favorites-search">Cerca a la llista</label><span id="favorites-count" aria-live="polite">0 seleccionats</span></div>
     <input id="favorites-search" type="search" placeholder="Escriu per filtrar…" autocomplete="off">
     <div class="zok-favorites-actions">
       <button id="favorites-scope-toggle" type="button" class="secondary" hidden>Mostra totes les opcions</button>
