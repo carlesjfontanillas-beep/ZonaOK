@@ -15,6 +15,23 @@
       targets: Array.isArray(p.targets) ? p.targets.filter(v => typeof v === 'string') : []};
   }
   let prefs = defaults();
+  // Seleccionats primer; dins de cada grup es conserva l'ordre habitual.
+  const selectedFirst = (a,b) => Number(b.input.checked) - Number(a.input.checked) || a.rank - b.rank;
+  function reorderRows(list, rows, end = null) {
+    const ordered = [...rows].sort(selectedFirst);
+    let next = end;
+    for (let i = ordered.length - 1; i >= 0; i--) {
+      const node = ordered[i].label;
+      if (node.nextSibling !== next) list.insertBefore(node,next);
+      next = node;
+    }
+  }
+  function reorderEvents() {
+    const rows = [...root.querySelectorAll('[data-push-event]')].map(input => ({
+      input,label:input.closest('label'),rank:events.indexOf(input.dataset.pushEvent)
+    })).filter(row=>row.label);
+    if (rows.length) reorderRows(rows[0].label.parentElement,rows);
+  }
   // Les preferències del servidor prevalen en aquest dispositiu quan la Push subscription es recupera.
   window.addEventListener('zonaok:push-preferences-restored', event => {
     const saved = event.detail && typeof event.detail === 'object' ? event.detail : {};
@@ -23,6 +40,7 @@
       targets: Array.isArray(saved.targets) ? saved.targets.filter(v => typeof v === 'string') : prefs.targets
     };
     root.querySelectorAll('[data-push-event]').forEach(input => { input.checked = prefs.events.includes(input.dataset.pushEvent); });
+    reorderEvents();
     try { localStorage.setItem(key, JSON.stringify(prefs)); } catch (_) {}
     renderTargets();
   });
@@ -47,11 +65,9 @@
       const saved = Array.isArray(fav[group]) ? fav[group] : [];
       const available = (catalog[group] || []).map(option => typeof option === 'string' ? option : option?.id);
       const previous = prefs.targets.flatMap(value => { try { const [kind,id] = JSON.parse(value); return kind === group && typeof id === 'string' ? [id] : []; } catch (_) { return []; } });
-      const marked = new Set(previous);
       const favoriteIds = new Set(saved);
       const displayName = id => group === 'teams' ? (teamLabels.get(id) || id.split('|').slice(1).reverse().join(' · ')) : id;
       const values = [...new Set([...saved, ...available, ...previous].filter(v => typeof v === 'string' && v))].sort((a,b) =>
-        Number(marked.has(b)) - Number(marked.has(a)) ||
         Number(favoriteIds.has(b)) - Number(favoriteIds.has(a)) ||
         displayName(a).localeCompare(displayName(b),'ca',{sensitivity:'base',numeric:true}));
       const card = document.createElement('details'); card.className = 'zok-favorite-group zok-push-card zok-push-foldable';
@@ -74,7 +90,7 @@
         empty.textContent = 'Encara no hi ha dades del catàleg disponibles.';
         list.append(empty);
       }
-      for (const id of values) {
+      for (const [rank,id] of values.entries()) {
         const target = JSON.stringify([group,id]);
         const label = document.createElement('label'); label.className = 'zok-favorite-option zok-push-choice';
         const input = document.createElement('input'); input.type = 'checkbox'; input.checked = prefs.targets.includes(target);
@@ -85,9 +101,10 @@
           prefs.targets = prefs.targets.filter(v => v !== target);
           if (input.checked) prefs.targets.push(target);
           save();
+          reorderRows(list,rows,noMatches);
         });
         label.append(input,span); list.append(label);
-        rows.push({label, text: normalizeSearch(name + ' ' + id)});
+        rows.push({label,input,rank,text: normalizeSearch(name + ' ' + id)});
       }
       const noMatches = document.createElement('p'); noMatches.className = 'zok-favorite-empty';
       noMatches.textContent = 'No s’ha trobat cap coincidència.'; noMatches.hidden = true; list.append(noMatches);
@@ -105,6 +122,7 @@
       search.addEventListener('input', () => {
         queries[group] = search.value; applyFilter(); card.scrollTop = 0;
       });
+      reorderRows(list,rows,noMatches);
       applyFilter();
       if (card.open) card.scrollTop = previousCards.get(group)?.scrollTop || 0;
       if (focusedGroup === group && card.open) {
@@ -123,8 +141,10 @@
       prefs.events = prefs.events.filter(v => v !== event);
       if (input.checked) prefs.events.push(event);
       save();
+      reorderEvents();
     });
   });
+  reorderEvents();
   // Només en obrir manualment un bloc: mostrar la capçalera sota la barra fixa.
   root.addEventListener('click', event => {
     const heading = event.target.closest('.zok-push-fold-summary');
