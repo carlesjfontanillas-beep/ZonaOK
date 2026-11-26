@@ -67,7 +67,7 @@ def league_from_url(value: str) -> str | None:
 
 # La mateixa lògica de lectura i desplaçament de la drecera V5 (ara navegador real).
 # Cada grup es rebutja sencer si una fila és inconsistent.
-JS_EXTRACT = r"""() => {
+JS_EXTRACT = r"""(mobile=false) => {
   const clean = x => String(x ?? '').replace(/\s+/g, ' ').trim();
   const norm = x => clean(x).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
@@ -99,7 +99,9 @@ JS_EXTRACT = r"""() => {
       const cells = [...tr.cells];
       const cell=i=>i<0?'':clean(cells[i]?.innerText||cells[i]?.textContent||'');
       const pos=cell(0);
-      const team=clean(tr.querySelector('.sidgad-clasif-nombre')?.textContent)||cell(1);
+      const nameNode=tr.querySelector('.sidgad-clasif-nombre');
+      const team=mobile ? (clean(nameNode?.innerText)||clean(cells[1]?.innerText)) :
+        (clean(nameNode?.textContent)||cell(1));
       if (!/^\d{1,2}$/.test(pos)||!team) continue;
       const shifts=[...new Set([cells.length-headers.length,1,0,2,3])]
         .filter(n=>n>=0&&n<=3);
@@ -267,6 +269,53 @@ async def inspect_catalogue(page, discover: Discovery, diagnostic: dict, locatio
         diagnostic["warnings"].append("Catàleg no llegible "+location+": "+str(exc)[:150])
 
 
+
+def pair_mobile_names(wide, mobile):
+    """Només relacionar files del mateix grup amb posició i estadístiques iguals."""
+    narrow={}
+    for group in mobile:
+        narrow.setdefault(norm(group.get('name')),[]).append(group)
+    pairs=0
+    for group in wide:
+        candidates=narrow.get(norm(group.get('name')),[])
+        if len(candidates)!=1:continue
+        rows=group.get('rows',[])
+        short_rows=candidates[0].get('rows',[])
+        if len(rows)!=len(short_rows):continue
+        short_by_pos={str(r.get('pos')):r for r in short_rows}
+        if len(short_by_pos)!=len(rows):continue
+        fields=('played','points','gf','ga','difference')
+        if any(str(r.get('pos')) not in short_by_pos or
+               any(str(r.get(k))!=str(short_by_pos[str(r['pos'])].get(k)) for k in fields) or
+               r.get('stats')!=short_by_pos[str(r['pos'])].get('stats') for r in rows):continue
+        for r in rows:
+            short=clean(short_by_pos[str(r['pos'])].get('team'))
+            if re.fullmatch(r'[A-ZÀ-Ü0-9][A-ZÀ-Ü0-9 .-]{0,14}',short) and len(norm(short).replace(' ',''))>=2:
+                r['shortTeam']=short
+                r['shortTeamSource']='FECAPA-classificacions-vertical'
+                pairs+=1
+    return pairs
+
+
+async def read_mobile_names(page,groups,warnings):
+    """Reutilitza la mateixa pàgina; no altera les classificacions si falla."""
+    previous=page.viewport_size
+    try:
+        await page.set_viewport_size({'width':390,'height':844})
+        for _ in range(3):
+            await page.wait_for_timeout(500)
+            narrow=await page.evaluate(JS_EXTRACT,True)
+            pairs=pair_mobile_names(groups,narrow.get('groups',[]))
+            if pairs:
+                warnings.append(f'Sigles comprovades en vertical: {pairs}')
+                return
+        warnings.append('Sense equivalències verticals verificables; conservem els noms complets')
+    except Exception as exc:
+        warnings.append('Lectura vertical no disponible: '+str(exc)[:120])
+    finally:
+        if previous:await page.set_viewport_size(previous)
+
+
 async def read_league(context, league: str, expected_groups: int, max_tries: int = 3) -> tuple[list, list, list]:
     """One fresh tab per attempt prevents stale DOM from the previous league.
 
@@ -299,15 +348,18 @@ async def read_league(context, league: str, expected_groups: int, max_tries: int
                     signature=current
                     latest=groups
                     if len(groups)>=max(1,expected_groups) and stable>=3:
+                        await read_mobile_names(page,groups,warnings)
                         return groups, errors, warnings+err[:5]
                 if poll==23:
                     errors.append(f"Intent {attempt}: {len(groups)} grups; esperats >= {max(1,expected_groups)}"+
                                   ("; "+"; ".join(err[:2]) if err else ""))
             # On a newly discovered league, a single valid group can be genuine.
             if latest and not expected_groups and stable>=3:
+                await read_mobile_names(page,latest,warnings)
                 return latest, errors, warnings
             if best and len(best)>=expected_groups and expected_groups>0:
                 # It may have loaded at the deadline; do not discard consistent rows.
+                await read_mobile_names(page,best,warnings)
                 return best, errors, warnings
         except Exception as exc:
             errors.append(f"Intent {attempt}: {str(exc)[:180]}")
@@ -519,6 +571,13 @@ def merge_packet(capture: dict, existing: dict) -> tuple[dict,dict]:
             if not pos.isdigit():raise ValueError('Posició invàlida: '+key)
             positions.append(int(pos))
         if len(set(positions))!=len(positions):raise ValueError('Posició duplicada: '+key)
+        # No perdre sigles verificades si el viewport vertical falla en un lot.
+        prior_teams={norm(r.get('team')):r for r in (prior.get('standings',[]) if isinstance(prior,dict) else []) if isinstance(r,dict)}
+        for r in rows:
+            old_team=prior_teams.get(norm(r.get('team')),{})
+            if not r.get('shortTeam') and old_team.get('shortTeamSource')=='FECAPA-classificacions-vertical':
+                r['shortTeam']=old_team['shortTeam']
+                r['shortTeamSource']=old_team['shortTeamSource']
         sorted_rows=sorted(rows,key=lambda r:int(r['pos']))
         previous_meta=dict(prior) if isinstance(prior,dict) else {}
         # La identitat del grup, la categoria i l'URL preexistents no canvien.
@@ -536,9 +595,16 @@ def merge_packet(capture: dict, existing: dict) -> tuple[dict,dict]:
     result={**existing,"schema":"zonaok-classificacions-v2",
             "capturedAt": packet["capturedAt"] if updated else existing.get("capturedAt",packet["capturedAt"]),
             "competitions":dict(sorted(output.items()))}
+    result['teamAliases']=[
+        {'leagueId':str(g.get('leagueId','')),'group':g.get('name',''),'team':r['team'],'shortTeam':r['shortTeam']}
+        for g in output.values() if isinstance(g,dict)
+        for r in g.get('standings',[]) if isinstance(r,dict)
+        and r.get('shortTeam') and r.get('shortTeamSource')=='FECAPA-classificacions-vertical'
+    ]
     stats={"updatedGroups":updated,"preservedNewer":preserved,
            "preservedByKey":len(old.keys()-incoming.keys()),"totalGroups":len(output),
-           "totalTeams":sum(len(v.get("standings",[])) for v in output.values() if isinstance(v,dict))}
+           "totalTeams":sum(len(v.get("standings",[])) for v in output.values() if isinstance(v,dict)),
+           "verifiedTeamAliases":len(result["teamAliases"])}
     return result,stats
 
 
