@@ -65,7 +65,8 @@ with sync_playwright() as p:
     page.wait_for_selector('.zok-af-dialog[open]')
     assert page.locator('.zok-af-dialog iframe').count()==0
     assert page.locator('.zok-af-official').get_attribute('href').endswith('partido=999999999')
-    assert page.locator('.zok-af-fouls').inner_text().count('—')==2
+    # Els camps buits no es mostren; el zero explícit es valida al probe inferior.
+    assert page.locator('.zok-af-fouls').count()==0
     for tab in ('Jugadors','Incidències','Arbitratge','Resum'):
         page.locator('.zok-af-tabs button',has_text=tab).click()
     page.locator('.zok-af-close').click()
