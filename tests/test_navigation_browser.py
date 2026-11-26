@@ -17,6 +17,12 @@ with sync_playwright() as p:
     page.on('pageerror',lambda error: errors.append(str(error)))
     state={'clubs':['BARÇA','CP SANT CELONI'],'teams':['team|BARÇA|ALEVÍ OR 3','team|CP SANT CELONI B|INFANTIL OR 10'],'teamNames':{'team|BARÇA|ALEVÍ OR 3':'MAGÍ','team|CP SANT CELONI B|INFANTIL OR 10':'TON'}}
     page.add_init_script("localStorage.setItem('ZONAOK_FAVORITS_V1',"+json.dumps(json.dumps(state))+");")
+    # La navegació habitual representa un usuari que ja ha vist les campanyes.
+    # No desactivar el codi de promocions: només preparar les preferències
+    # del navegador de prova, independentment de les campanyes publicades.
+    campaigns=json.loads(Path('promocions.json').read_text(encoding='utf-8')).get('campaigns',[])
+    promo_state={'opens':1,'shown':[c['id'] for c in campaigns if isinstance(c,dict) and isinstance(c.get('id'),str)]}
+    page.add_init_script("if (!localStorage.getItem('ZONAOK_PROMOCIONS_V1')) localStorage.setItem('ZONAOK_PROMOCIONS_V1',"+json.dumps(json.dumps(promo_state))+");")
     page.goto(url+'/index.html',wait_until='domcontentloaded')
     page.wait_for_function('window.ZonaOKFullAgendaRows?.length > 1000',timeout=90000)
     page.wait_for_function('typeof window.ZonaOKSelectSection === "function"')
@@ -112,6 +118,17 @@ with sync_playwright() as p:
         page.evaluate("document.body.style.minHeight='200vh';window.scrollTo(0,400)")
         assert abs(page.locator('main.app > .mast').bounding_box()['y'])<1
         print('Disseny comú:',filename)
+    # Comprovar també que la benvinguda real es pot obrir i tancar.
+    welcome=next((c for c in campaigns if c.get('opening')==1),None)
+    if welcome:
+        preview=browser.new_page(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)
+        preview.route('**/*',lambda route: route.continue_() if route.request.url.startswith(url) else route.abort())
+        preview.goto(url+'/index.html?promo=1',wait_until='domcontentloaded')
+        preview.wait_for_selector('#zok-promo-dialog[open]',timeout=30000)
+        assert preview.locator('#zok-promo-title').inner_text()==welcome['title'].strip()
+        preview.locator('#zok-promo-dialog .zp-dismiss').click()
+        preview.wait_for_selector('#zok-promo-dialog',state='detached')
+        preview.close()
     browser.close()
 server.shutdown()
 print('Navegació i recàrrega real correctes')
