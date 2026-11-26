@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ca"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#061d33"><title>Jugadors · ZonaOK</title><link rel="stylesheet" href="style.css?v=20261118-season"><link rel="stylesheet" href="jugadors.css?v=20261126-titols1"><script defer src="jugadors-dades-prova.js?v=20261125-cerca-nav2"></script><script defer src="jugadors-data.js?v=20261126-acta-camps1"></script><script src="zonaok-acta-links.js?v=20261125-acta1"></script><script defer src="zonaok-player-totals.js?v=20261125-categories1"></script><script defer src="jugadors.js?v=20261126-grups-concrets1"></script><script src="zonaok-nav-shared.js?v=20261125-color-icona1"></script><script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script><script defer src="zonaok-gestos.js?v=20261125-relectura1"></script><link rel="stylesheet" href="zonaok-nav-shared.css?v=20261125-ranking-nav3"><link rel="stylesheet" href="zonaok-push-header.css?v=20261125-push6-page">
+<html lang="ca"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#061d33"><title>Jugadors · ZonaOK</title><link rel="stylesheet" href="style.css?v=20261118-season"><link rel="stylesheet" href="jugadors.css?v=20261126-titols1"><script defer src="jugadors-dades-prova.js?v=20261125-cerca-nav2"></script><script defer src="jugadors-data.js?v=20261126-acta-camps1"></script><script src="zonaok-acta-links.js?v=20261125-acta1"></script><script defer src="zonaok-player-totals.js?v=20261125-categories1"></script><script defer src="jugadors.js?v=20261126-filtres-cerca1"></script><script src="zonaok-nav-shared.js?v=20261125-color-icona1"></script><script defer src="jugadors-nav.js?v=20261125-ranking-nav3"></script><script defer src="zonaok-gestos.js?v=20261125-relectura1"></script><link rel="stylesheet" href="zonaok-nav-shared.css?v=20261125-ranking-nav3"><link rel="stylesheet" href="zonaok-push-header.css?v=20261125-push6-page">
 <link rel="stylesheet" href="zonaok-disseny.css?v=20261126-botoneres1">
 <script defer src="zonaok-disseny.js?v=20261126-disseny1"></script>
 <link rel="stylesheet" href="zonaok-acta-fitxa.css?v=20261126-faltes-compactes1"><script defer src="zonaok-acta-fitxa.js?v=20261126-actes-completes4"></script>
@@ -10,6 +10,17 @@
   <link rel="manifest" href="manifest.webmanifest?v=20261126-ios-icon1">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-zonaok.png">
+<style id="zok-jp-searchable-filters">
+body main.app .zok-jp-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0}
+body main.app .zok-jp-filters label{display:grid;gap:6px;min-width:0}
+body main.app .zok-jp-filters .zok-suggest-wrap{position:relative;min-width:0}
+body main.app .zok-jp-filters input[type="search"]{width:100%;min-height:42px;padding:10px 8px}
+body main.app .zok-jp-filters .zok-suggestions{display:none;position:absolute;z-index:35;top:calc(100% + 4px);left:0;right:0;max-height:220px;overflow:auto;overscroll-behavior:contain;padding:4px;border:1px solid #7597b0;border-radius:10px;background:#183d5b;box-shadow:0 8px 24px #001522aa}
+body main.app .zok-jp-filters .zok-suggestions.open{display:grid}
+body main.app .zok-jp-filters .zok-suggestions button{padding:9px 10px;border:0;border-radius:7px;background:transparent;color:#fff;text-align:left;font:inherit;font-size:12px;white-space:normal;overflow-wrap:anywhere;cursor:pointer}
+body main.app .zok-jp-filters .zok-suggestions button:hover,body main.app .zok-jp-filters .zok-suggestions button.zok-filter-active,body main.app .zok-jp-filters .zok-suggestions button:focus-visible{background:#2869c7}
+body main.app .zok-jp-filters .zok-jp-filter-hint{margin:3px 6px;color:#b9dbec;font-size:11px;line-height:1.35}
+</style>
 </head>
 <body><main class="app zok-jp-app"><header class="mast">
     <div>

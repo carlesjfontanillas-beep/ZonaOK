@@ -26,9 +26,91 @@ async function avatar(id,big=false){
 async function imageBlob(file){if(!file||!file.type.startsWith('image/')||file.size>15_000_000)throw Error('Selecciona una imatge de menys de 15 MB.');const url=URL.createObjectURL(file);try{const img=new Image();img.src=url;await img.decode();const c=document.createElement('canvas');c.width=c.height=384;const side=Math.min(img.width,img.height);c.getContext('2d').drawImage(img,(img.width-side)/2,(img.height-side)/2,side,side,0,0,384,384);return await new Promise((ok,no)=>c.toBlob(b=>b?ok(b):no(Error('No es pot preparar la foto.')),'image/jpeg',.82))}finally{URL.revokeObjectURL(url)}}
 function btn(label,fn,cls='zok-jp-btn'){const n=el('button',cls,label);n.type='button';n.onclick=fn;return n}
 function star(id,callback){const on=read().favorites.includes(id),b=btn(on?'★':'☆',()=>{try{D.fav(id,!read().favorites.includes(id));callback()}catch{alert('No s’ha pogut desar el favorit.')}},'zok-jp-star');b.setAttribute('aria-label',on?'Treure de favorits':'Afegir a favorits');b.setAttribute('aria-pressed',String(on));return b}
-function options(id,label,values){const n=$(id),old=n.value;n.replaceChildren();const add=(v,t)=>{const o=el('option','',t);o.value=v;n.append(o)};add('',label);[...new Set(values)].sort((a,b)=>a.localeCompare(b,'ca')).forEach(v=>add(v,v));if([...n.options].some(o=>o.value===old))n.value=old}
-function filterOptions(){const club=$('jp-club').value;options('jp-club','Tots els clubs',D.memberships.map(m=>m.clubName));const rows=D.memberships.filter(m=>!club||m.clubName===club);options('jp-team','Tots els equips',rows.map(m=>m.teamName));options('jp-category','Totes les categories',rows.filter(m=>!$('jp-team').value||m.teamName===$('jp-team').value).map(m=>m.groupName))}
-function filteredMemberships(id){return D.list(id).filter(m=>[['jp-club','clubName'],['jp-team','teamName'],['jp-category','groupName'],['jp-position','position']].every(([f,k])=>!$(f).value||$(f).value===m[k]))}
+const FILTERS=[
+ ['jp-club','clubName','Tots els clubs'],
+ ['jp-team','teamName','Tots els equips'],
+ ['jp-category','groupName','Totes les categories'],
+ ['jp-position','position','Totes']
+];
+const filterUI=new Map();
+const positionOptions=[{value:'field',label:'Pista'},{value:'goalkeeper',label:'Porter'}];
+function matchesFilter(id,value){
+ const state=filterUI.get(id),q=D.norm(state.input.value||'');
+ if(!q)return true;
+ if(state.selected!==null)return String(value??'')===state.selected;
+ const label=id==='jp-position'?(positionOptions.find(x=>x.value===value)?.label||''):String(value??'');
+ return q.split(/\s+/).every(w=>D.norm(label).includes(w));
+}
+function choiceList(values){
+ return [...new Set(values.filter(v=>typeof v==='string'&&v.trim()))].sort((a,b)=>a.localeCompare(b,'ca',{sensitivity:'base'})).map(value=>({value,label:value}));
+}
+function closeFilter(state){
+ state.menu.classList.remove('open');state.input.setAttribute('aria-expanded','false');
+ state.input.removeAttribute('aria-activedescendant');state.index=-1;
+}
+function drawFilter(state,showAll=false){
+ const q=showAll?'':D.norm(state.input.value||'');
+ const matches=state.options.filter(o=>!q||q.split(/\s+/).every(w=>D.norm(o.label).includes(w)));
+ const shown=matches.slice(0,40);
+ const choices=[{value:'',label:state.placeholder},...shown];
+ state.menu.replaceChildren();state.index=-1;state.input.removeAttribute('aria-activedescendant');
+ choices.forEach((o,i)=>{
+  const b=el('button','',o.label);b.type='button';b.id=state.id+'-option-'+i;b.setAttribute('role','option');
+  b.setAttribute('aria-selected',String(state.selected===o.value||(!state.input.value&&!o.value)));
+  b.addEventListener('pointerdown',e=>e.preventDefault());
+  b.addEventListener('mousedown',e=>e.preventDefault());
+  b.addEventListener('click',()=>chooseFilter(state,o));
+  state.menu.append(b);
+ });
+ if(!matches.length&&q)state.menu.append(el('p','zok-jp-filter-hint','Cap opció coincideix.'));
+ if(matches.length>40)state.menu.append(el('p','zok-jp-filter-hint','Escriu més lletres per afinar la cerca.'));
+ const open=document.activeElement===state.input;
+ state.menu.classList.toggle('open',open);state.input.setAttribute('aria-expanded',String(open));
+}
+function clearFilter(state){state.input.value='';state.selected=null}
+function chooseFilter(state,o){
+ state.input.value=o.value?o.label:'';state.selected=o.value||null;
+ filterOptions(true);renderList();closeFilter(state);state.input.blur();
+}
+function mountFilters(){
+ for(const [id,key,placeholder] of FILTERS){
+  const previous=$(id),label=previous.parentElement,wrap=el('div','zok-suggest-wrap'),input=el('input'),menu=el('div','zok-suggestions');
+  input.type='search';input.id=id;input.placeholder=placeholder;input.autocomplete='off';input.setAttribute('aria-label',label.firstChild.textContent.trim());input.setAttribute('role','combobox');input.setAttribute('aria-autocomplete','list');input.setAttribute('aria-expanded','false');input.setAttribute('aria-controls',id+'-options');
+  menu.id=id+'-options';menu.setAttribute('role','listbox');
+  const state={id,key,placeholder,input,menu,options:[],selected:null,index:-1};
+  filterUI.set(id,state);previous.replaceWith(wrap);wrap.append(input,menu);
+  input.addEventListener('focus',()=>drawFilter(state,state.selected!==null));
+  input.addEventListener('click',()=>{if(!menu.classList.contains('open'))drawFilter(state,state.selected!==null)});
+  input.addEventListener('input',()=>{state.selected=null;filterOptions();renderList()});
+  input.addEventListener('blur',()=>closeFilter(state));
+  input.addEventListener('keydown',e=>{
+   if(e.key==='Escape'){closeFilter(state);return}
+   if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+    e.preventDefault();if(!menu.classList.contains('open'))drawFilter(state,state.selected!==null);
+    const buttons=[...menu.querySelectorAll('button')];if(!buttons.length)return;
+    state.index=state.index<0?(e.key==='ArrowDown'?(input.value?Math.min(1,buttons.length-1):0):buttons.length-1):Math.max(0,Math.min(buttons.length-1,state.index+(e.key==='ArrowDown'?1:-1)));
+    buttons.forEach((b,i)=>b.classList.toggle('zok-filter-active',i===state.index));const b=buttons[state.index];input.setAttribute('aria-activedescendant',b.id);b.scrollIntoView({block:'nearest'});return
+   }
+   if(e.key==='Enter'&&menu.classList.contains('open')){
+    const buttons=[...menu.querySelectorAll('button')],b=buttons[state.index>=0?state.index:(input.value?1:0)];
+    if(b){e.preventDefault();b.click()}
+   }
+  });
+ }
+}
+function filterOptions(resetInvalid=false){
+ const [club,team,category,position]=FILTERS.map(([id])=>filterUI.get(id));
+ club.options=choiceList(D.memberships.map(m=>m.clubName));
+ const clubRows=D.memberships.filter(m=>matchesFilter(club.id,m.clubName));
+ team.options=choiceList(clubRows.map(m=>m.teamName));
+ if(resetInvalid&&team.input.value&&!clubRows.some(m=>matchesFilter(team.id,m.teamName)))clearFilter(team);
+ const teamRows=clubRows.filter(m=>matchesFilter(team.id,m.teamName));
+ category.options=choiceList(teamRows.map(m=>m.groupName));
+ if(resetInvalid&&category.input.value&&!teamRows.some(m=>matchesFilter(category.id,m.groupName)))clearFilter(category);
+ position.options=positionOptions;
+ for(const state of filterUI.values())if(document.activeElement===state.input)drawFilter(state);
+}
+function filteredMemberships(id){return D.list(id).filter(m=>FILTERS.every(([f,k])=>matchesFilter(f,m[k])))}
 const searchInput=$('jp-search'),suggestions=$('jp-suggestions');
 let renderToken=0;
 function renderSuggestions(rows){
@@ -190,7 +272,7 @@ else if(tab==='Equips'){
  }
 }
 else if(tab==='Rànquings')renderCategoryRanking(selected,id)}
-$('jp-favs').onclick=()=>{scope='favorites';searchInput.value='';renderList()};$('jp-all').onclick=()=>{scope='all';searchInput.value='';renderList()};searchInput.oninput=renderList;searchInput.addEventListener('keydown',e=>{if(e.key==='Escape'){searchInput.value='';renderList()}else if(e.key==='Enter'&&!suggestions.hidden){const first=suggestions.querySelector('.zok-jp-row-main');if(first){e.preventDefault();first.click()}}});['jp-club','jp-team','jp-category','jp-position'].forEach(k=>$(k).onchange=()=>{filterOptions();renderList()});filterOptions();renderList();
+$('jp-favs').onclick=()=>{scope='favorites';searchInput.value='';renderList()};$('jp-all').onclick=()=>{scope='all';searchInput.value='';renderList()};searchInput.oninput=renderList;searchInput.addEventListener('keydown',e=>{if(e.key==='Escape'){searchInput.value='';renderList()}else if(e.key==='Enter'&&!suggestions.hidden){const first=suggestions.querySelector('.zok-jp-row-main');if(first){e.preventDefault();first.click()}}});mountFilters();filterOptions();renderList();
 function openRequestedPlayer(){const id=new URLSearchParams(location.search).get('playerId');if(id&&byId(id)&&!active){open(id);return true}return false}
 window.ZonaOKOpenActaPlayer=id=>{if(!byId(id))return false;open(id);return true};
 openRequestedPlayer();
