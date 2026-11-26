@@ -1,0 +1,78 @@
+name: ZonaOK - Recuperacio de dades de temporada
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/zonaok-recuperacio-temporada.yml']
+  workflow_dispatch:
+  schedule:
+    - cron: '27,57 * * * *'
+permissions:
+  contents: read
+  actions: write
+concurrency:
+  group: zonaok-recuperacio-temporada
+  cancel-in-progress: false
+jobs:
+  recuperacio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      EVENT_NAME: ${{ github.event_name }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Planificar lots pendents
+        shell: bash
+        run: |
+          python - <<'PY' > "$RUNNER_TEMP/recuperacio.tsv"
+          import json, re, sys
+          from pathlib import Path
+          from datetime import datetime, timedelta, timezone
+          sys.path.insert(0, 'scripts')
+          from zonaok_fecapa_unificat import eligible_acta, score_tuple
+          doc=json.loads(Path('zonaok-tots-partits.json').read_text())
+          sources=doc.get('sources',{})
+          rows=doc.get('matches',[])
+          agenda=sources.get('agenda',{})
+          actes=sources.get('actes',{})
+          now=datetime.now(timezone.utc)
+          def emit(workflow,*args):
+              print('\t'.join((workflow,*args)))
+          if not agenda.get('fullCompleted') or agenda.get('pendingLeagueIds'):
+              emit('zonaok-auto-agenda.yml','scope=full','limit=20','offset=auto','publish=true')
+          eligible=[r for r in rows if score_tuple(r) and eligible_acta(r,'full')]
+          last=tuple(actes.get('nextFullKey') or [])
+          key=lambda r:(r.get('iso') or '',str(r.get('leagueId')),str(r.get('matchId')))
+          if eligible and not actes.get('fullCompleted') and (len(last)!=3 or any(key(r)>last for r in eligible)):
+              emit('zonaok-auto-actes.yml','scope=full','limit=40','offset=auto','publish=true')
+          elif any(eligible_acta(r,'fast',now) for r in eligible):
+              emit('zonaok-auto-actes.yml','scope=fast','limit=40','offset=auto','publish=true')
+          if now.hour%6==0 and now.minute<40 or __import__('os').environ.get('EVENT_NAME')!='schedule':
+              emit('zonaok-auto-directe.yml','scope=full','publish=true')
+          # Jugadors: el mateix planificador de blocs decideix entre estadistiques,
+          # actes, plantilles i reintents. No es publica si el bloc no te canvis.
+          emit('jugadors-public.yml','mode=auto')
+          PY
+      - name: Activar imports sense duplicar execucions en curs
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS=$'\t' read -r workflow fields; do
+            [ -n "$workflow" ] || continue
+            active=$(gh run list --workflow "$workflow" --branch main --limit 30 --json status --jq '[.[] | select(.status != "completed")] | length')
+            if [ "$active" != "0" ]; then
+              echo "$workflow: ja en curs o en cua"
+              continue
+            fi
+            IFS=$'\t' read -r -a params <<< "$fields"
+            args=()
+            for item in "${params[@]}"; do
+              [ -z "$item" ] || args+=(-f "$item")
+            done
+            gh workflow run "$workflow" --ref main "${args[@]}"
+            echo "$workflow: lot sol·licitat"
+          done < "$RUNNER_TEMP/recuperacio.tsv"
