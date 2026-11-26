@@ -84,8 +84,9 @@ jobs:
               emit('zonaok-auto-actes.yml','scope=full','limit=40','offset=auto','publish=true')
           elif missing_acts and any(eligible_acta(r,'fast',now) for r in eligible):
               emit('zonaok-auto-actes.yml','scope=fast','limit=40','offset=auto','publish=true')
-          if missing_scores or missing_ids or missing_acts or agenda_pending:
-              emit('zonaok-auto-directe.yml','scope=full','publish=true')
+          # En directe es reserva als marcadors recents. Els calendaris de
+          # lliga (Agenda) i Actes mantenen la recuperació històrica.
+          emit('zonaok-auto-directe.yml','scope=fast','publish=true')
           if missing_players or missing_rosters or agenda_pending:
               emit('jugadors-public.yml','mode=auto')
           if missing_standings:
