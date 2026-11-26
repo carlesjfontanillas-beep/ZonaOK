@@ -62,6 +62,7 @@ function open(row,url){
    if([...sides.home,...sides.away].some(p=>Object.keys(colors).some(k=>int(p.stats?.[k]))))content.append(el('p','zok-af-muted','* Suma parcial de les targetes individuals disponibles.'));
    addFacts(content,'Dades del partit',[['Estat',f.status],['Temporada',h.season],['Localitat',h.town],['Hora real d’inici',h.startTime],['Àrbitre',h.referee1],['Segon àrbitre',h.referee2]]);
    addStaff(content,details,home,away);
+   if(root.ZonaOKPrediction&&int(f.homeScore)&&int(f.awayScore)&&f.iso){content.append(button('▥ Comparar amb estimació prèvia',()=>root.ZonaOKPrediction.show(f,true),'zok-pred-retro'));}
    if(details.periods?.some(p=>p.period.toLowerCase()!=='total'&&p.score))addFacts(content,'Parcials',details.periods.filter(p=>p.period.toLowerCase()!=='total').map(p=>['Període '+p.period,p.score]));
   }else if(current==='Jugadors'){
    for(const side of ['home','away']){

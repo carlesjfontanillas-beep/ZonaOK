@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="ca">
-<head><script src="zonaok-admin-device.js?v=20261126-admin-device1"></script>
+<head><link rel="stylesheet" href="zonaok-pronostic.css?v=20261126-pronostic1"><script src="zonaok-pronostic.js?v=20261126-pronostic1"></script><script src="zonaok-admin-device.js?v=20261126-admin-device1"></script>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -434,7 +434,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
 <link rel="stylesheet" href="zonaok-push-header.css?v=20261125-push6-page">
 <link rel="stylesheet" href="zonaok-disseny.css?v=20261126-nav-fit5-r2">
 <script defer src="zonaok-disseny.js?v=20261126-disseny1"></script>
-<link rel="stylesheet" href="zonaok-acta-fitxa.css?v=20261126-faltes-compactes1"><script defer src="zonaok-acta-fitxa.js?v=20261126-actes-completes4"></script>
+<link rel="stylesheet" href="zonaok-acta-fitxa.css?v=20261126-faltes-compactes1"><script defer src="zonaok-acta-fitxa.js?v=20261126-pronostic1"></script>
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1501,7 +1501,7 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
   }
   function inferLeague(r){const n=norm(r.competition);if(/ALEVI OR 0?3/.test(n))return '4789';if(/INFANTIL OR 0?10/.test(n))return '4786';if(/JUVENIL OR 0?6/.test(n))return '4784';return String(r.league||'');}
   function card(r,compact){
-    const actaUrl=window.ZonaOKActes?.url(r,inferLeague(r))||window.ZonaOKActaLinks.savedUrl(r);
+    const prediction=window.ZonaOKPrediction?.pending(r);const actaUrl=prediction?'':(window.ZonaOKActes?.url(r,inferLeague(r))||window.ZonaOKActaLinks.savedUrl(r));
     const c=el('article','match zok-v5 zok-v5-neutral'+(compact?' zok-compact':''));
     applyFavoriteCardColor(c,r);
     c.dataset.zokV5='1';
@@ -1529,6 +1529,7 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
       acta.addEventListener('click',ev=>{ev.stopPropagation();window.ZonaOKActes?.open({...r,actaUrl},inferLeague(r));});actions.append(acta);
       actions.classList.add('zok-has-acta');
     }
+    if(prediction){actions.append(window.ZonaOKPrediction.button(r));actions.classList.add('zok-has-acta');}
     const calendar=el('button','zok-calendar-btn','▦ Calendari');calendar.type='button';calendar.title='Afegir al calendari';
     calendar.setAttribute('aria-label','Afegir al calendari: '+r.home+' contra '+r.away);calendar.addEventListener('click',()=>addCalendar(r));actions.append(calendar);
     if(actions.childNodes.length)c.append(actions);
@@ -1874,13 +1875,13 @@ r.append(a,mk('span','',resumPartits+' \u00B7 '+(item?.standings?.length||0)+' e
 function formatTimestamp(iso){try{return new Intl.DateTimeFormat('ca-ES',{dateStyle:'short',timeStyle:'short',timeZone:'Europe/Madrid'}).format(new Date(iso))}catch(_){return 'Data desconeguda'}}
 function safeImage(src){try{const u=new URL(src);return u.protocol==='https:'&&(/(^|\.)hoqueipatins\.fecapa\.cat$/i.test(u.hostname)||(u.hostname==='sidgad.cloud'&&u.pathname.startsWith('/fecapa/images/logos_clubes/')))?u.href:''}catch(_){return ''}}
 function dateStatus(r){const now=localDate();if(r.status)return r.status+' \u00B7 lectura Safari';if(r.homeScore!==null&&r.awayScore!==null)return 'Marcador FECAPA';return r.iso>now?'Programat':'Sense resultat confirmat'}
-function createCard(r,id){const actaUrl=savedActaLink(r,id);const c=mk('article','match gray');window.ZonaOKApplyFavoriteCardColor?.(c,r);
+function createCard(r,id){const prediction=window.ZonaOKPrediction?.pending(r);const actaUrl=prediction?'':savedActaLink(r,id);const c=mk('article','match gray');window.ZonaOKApplyFavoriteCardColor?.(c,r);
 const top=mk('div','match-top'),pill=mk('span','pill',r.competition||LEAGUES[id]?.name||'FECAPA'),tag=mk('span','tag',dateStatus(r));top.append(pill,tag);c.append(top);
 const dt=mk('div','match-date');dt.append(mk('strong','',r.time||'Hora pendent'),mk('small','',niceDate(r.iso)));c.append(dt);
 const teams=mk('div','teams');const side=(name,logo)=>{name=name==='BAR'?'BAR\u00C7A':name==='CPSC'?'CP SANT CELONI':name;logo=logo||window.ZonaOKFavoriteLogoFor?.(name)||'';const d=mk('div','side'),crest=mk('div','crest');if(safeImage(logo)){const img=mk('img');img.src=safeImage(logo);img.alt='Escut de '+name;img.loading='lazy';img.onerror=()=>{crest.replaceChildren(mk('span','crest-fallback','\u{1F3D2}'))};crest.append(img)}else crest.append(mk('span','crest-fallback',name?name.trim().charAt(0).toUpperCase():'\u{1F3D2}'));d.append(crest,mk('strong','',name||'Equip no identificat'));return d};
 const mid=mk('div','middle');mid.append(mk('div','score',r.homeScore!==null&&r.awayScore!==null?`${r.homeScore} : ${r.awayScore}`:'\u2014 : \u2014'));mid.append(mk('small','score-note',r.homeScore!==null?'Resultat':'Pendent'));teams.append(side(window.ZonaOKStateTeamName?.(r.home,r,'home')??r.home,r.homeLogo),mid,side(window.ZonaOKStateTeamName?.(r.away,r,'away')??r.away,r.awayLogo));c.append(teams);
 const loc=mk('div','venue');loc.append(mk('strong','','\u{1F4CD} '+(r.venue||'Pista pendent de verificar a FECAPA')));if(!r.venue)loc.append(mk('div','', 'No s\u2019ha llegit cap pista per a aquest partit'));c.append(loc);
-const buttons=mk('div','match-actions');const maps=mk('a','light','↗ Google Maps');maps.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue||((r.home||'')+' '+(r.away||'')));maps.target='_blank';maps.rel='noopener';buttons.append(maps);if(actaUrl){const acta=mk('button','zok-acta-action','⌕ Acta');acta.type='button';acta.onclick=()=>openActaDialog(r,id);acta.setAttribute('aria-label','Obrir l’acta del partit sense sortir de ZonaOK');buttons.append(acta);buttons.classList.add('zok-has-acta')}const cal=mk('button','zok-calendar-btn','▦ Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);buttons.append(cal);c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));if(actaUrl){c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Obrir fitxa del partit '+r.home+' - '+r.away);c.addEventListener('click',e=>{if(e.target.closest?.('button,a,input,select,textarea'))return;openActaDialog(r,id)});c.addEventListener('keydown',e=>{if(e.target!==c||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();openActaDialog(r,id)})}return c}
+const buttons=mk('div','match-actions');const maps=mk('a','light','↗ Google Maps');maps.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(r.venue||((r.home||'')+' '+(r.away||'')));maps.target='_blank';maps.rel='noopener';buttons.append(maps);if(actaUrl){const acta=mk('button','zok-acta-action','⌕ Acta');acta.type='button';acta.onclick=()=>openActaDialog(r,id);acta.setAttribute('aria-label','Obrir l’acta del partit sense sortir de ZonaOK');buttons.append(acta);buttons.classList.add('zok-has-acta')}if(prediction){buttons.append(window.ZonaOKPrediction.button(r));buttons.classList.add('zok-has-acta')}const cal=mk('button','zok-calendar-btn','▦ Calendari');cal.disabled=!r.iso||!r.time;cal.onclick=()=>exportICS(r);buttons.append(cal);c.append(buttons);if(r.capturedAt)c.append(mk('small','helper','Lectura: '+formatTimestamp(r.capturedAt)));if(actaUrl){c.classList.add('zok-acta-available');c.tabIndex=0;c.setAttribute('role','button');c.setAttribute('aria-label','Obrir fitxa del partit '+r.home+' - '+r.away);c.addEventListener('click',e=>{if(e.target.closest?.('button,a,input,select,textarea'))return;openActaDialog(r,id)});c.addEventListener('keydown',e=>{if(e.target!==c||(e.key!=='Enter'&&e.key!==' '))return;e.preventDefault();openActaDialog(r,id)})}return c}
 function zonaokFavoriteTeamWeekRows(i){const f=zonaokFavoriteTeam(i);if(!f)return [];const {start,end}=chosenWeek();return clubRows().filter(r=>r.iso>=start&&r.iso<=end&&normalize(r.competition)===f.category&&(normalize(r.home)===f.team||normalize(r.away)===f.team)).sort((a,b)=>(a.iso+a.time).localeCompare(b.iso+b.time))}
 function favoriteHelpCard(title,message){const card=mk('article','zok-favorite-empty-card');card.append(mk('h3','',title),mk('p','',message));const link=mk('a','','Configura Favorits');link.href='favorits.html';card.append(link);return card}
 function renderHome(){
