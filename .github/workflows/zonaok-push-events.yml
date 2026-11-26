@@ -69,7 +69,7 @@ jobs:
           with open('push-detection.json', encoding='utf-8') as handle:
               detection = json.load(handle)
           events = detection.get('events', [])
-          assert all(item.get('source') == 'FECAPA' and item.get('event') in ('start', 'finish') for item in events)
+          assert all(item.get('source') == 'FECAPA' and item.get('event') in ('start', 'finish', 'scheduleChange') for item in events)
           with open('push-batch.json', 'w', encoding='utf-8') as handle:
               json.dump({'schema':'zonaok-push-event-batch-v1', 'season':'2026/2027', 'events':events}, handle, ensure_ascii=False)
           PY
@@ -84,3 +84,40 @@ jobs:
             -H 'Content-Type: application/json' \
             -H "Authorization: Bearer ${token}" \
             --data-binary @push-batch.json
+      - name: Seleccionar només partits amb preferències d’incidències actives
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/zonaok_push_live_incidents.py candidates --input zonaok-tots-partits.json --output push-live-candidates.json
+          request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
+          token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
+          curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
+            -X POST 'https://zonaok-push.carles-j-fontanillas.workers.dev/sports-candidates' \
+            -H 'Content-Type: application/json' -H "Authorization: Bearer ${token}" \
+            --data-binary @push-live-candidates.json > push-live-selection.json
+          python - <<'PY'
+          import json
+          result=json.load(open('push-live-selection.json', encoding='utf-8'))
+          assert result.get('schema') == 'zonaok-push-live-selection-v1'
+          assert all(x.get('fixture',{}).get('competition') in ('NACIONAL CATALANA MASCULINA','NACIONAL CATALANA FEMENINA') for x in result.get('matches',[]))
+          PY
+      - name: Capturar incidències verificades dels partits seleccionats
+        if: ${{ github.event_name != 'workflow_dispatch' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          selected="$(python -c 'import json; print(len(json.load(open("push-live-selection.json"))["matches"]))')"
+          if [ "$selected" -eq 0 ]; then
+            printf '%s\n' '{"schema":"zonaok-push-live-incidents-v1","season":"2026/2027","matches":[]}' > push-live-incidents.json
+          else
+            python -m pip install 'playwright>=1.55,<2'
+            python -m playwright install --with-deps chromium
+            python scripts/zonaok_push_live_incidents.py capture --input push-live-selection.json --started push-detection.json --output push-live-incidents.json
+          fi
+          request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
+          token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
+          curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
+            -X POST 'https://zonaok-push.carles-j-fontanillas.workers.dev/sports-incidents' \
+            -H 'Content-Type: application/json' -H "Authorization: Bearer ${token}" \
+            --data-binary @push-live-incidents.json
