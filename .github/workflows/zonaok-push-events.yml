@@ -1,0 +1,75 @@
+name: ZonaOK - avisos FECAPA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - zonaok-tots-partits.json
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: zonaok-push-events
+  cancel-in-progress: false
+
+jobs:
+  avisos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validar detector
+        run: python -m unittest discover -s tests -p 'test_push_events.py' -v
+      - name: Detectar només canvis nous de captura FECAPA
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git cat-file -e "${GITHUB_SHA}^:zonaok-tots-partits.json" 2>/dev/null; then
+            git show "${GITHUB_SHA}^:zonaok-tots-partits.json" > push-before.json
+            PUSH_SINCE="$(python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          with open('push-before.json', encoding='utf-8') as handle:
+              doc = json.load(handle)
+          value = doc.get('sources', {}).get('directe', {}).get('capturedAt')
+          if not value:
+              value = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
+          print(value)
+          PY
+          )"
+          else
+            cp zonaok-tots-partits.json push-before.json
+            PUSH_SINCE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          fi
+          python scripts/zonaok_push_events.py \
+            --before push-before.json \
+            --after zonaok-tots-partits.json \
+            --since "$PUSH_SINCE" > push-detection.json
+          python - <<'PY'
+          import json
+          with open('push-detection.json', encoding='utf-8') as handle:
+              detection = json.load(handle)
+          events = detection.get('events', [])
+          assert all(item.get('source') == 'FECAPA' and item.get('event') in ('start', 'finish') for item in events)
+          with open('push-batch.json', 'w', encoding='utf-8') as handle:
+              json.dump({'schema':'zonaok-push-event-batch-v1', 'season':'2026/2027', 'events':events}, handle, ensure_ascii=False)
+          PY
+      - name: Enviar esdeveniments amb identitat GitHub de curta durada
+        shell: bash
+        run: |
+          set -euo pipefail
+          request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
+          token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
+          curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
+            -X POST 'https://zonaok-push.carles-j-fontanillas.workers.dev/sports-events' \
+            -H 'Content-Type: application/json' \
+            -H "Authorization: Bearer ${token}" \
+            --data-binary @push-batch.json
