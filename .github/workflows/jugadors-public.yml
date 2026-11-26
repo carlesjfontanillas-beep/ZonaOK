@@ -93,7 +93,8 @@ jobs:
           case "$MODE" in
             auto) block flash 4; block auto 20 ;;
             flash) block flash 4 ;;
-            acts|rosters|retry|stats) block "$MODE" 20 ;;
+            stats) block flash 4; block stats 20 ;;
+            acts|rosters|retry) block "$MODE" 20 ;;
             *) exit 2 ;;
           esac
           python scripts/verify_public_master.py data/jugadors-master.json
