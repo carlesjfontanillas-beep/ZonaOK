@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       test_scenario:
-        description: "Prova buida o partit fictici Barça de Nacional Catalana M"
+        description: "Prova buida o flux complet d’un partit fictici Barça NC M"
         required: true
         type: choice
         options:
@@ -42,12 +42,35 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validar detector
+      - name: Validar detector i parser d’incidències
         run: python -m unittest discover -s tests -p 'test_push_*.py' -v
-      - name: Preparar partit fictici Barça Nacional Catalana
+      - name: Preparar catàlegs i acta ficticis Barça NC M
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario == 'barca_nc' }}
-        run: python scripts/zonaok_push_test_batch.py --run-id "$GITHUB_RUN_ID" --events push-batch.json --incidents push-live-incidents.json
-      - name: Preparar prova buida sense avisos
+        run: >-
+          python scripts/zonaok_push_test_batch.py --run-id "$GITHUB_RUN_ID"
+          --before push-test-before.json --live push-test-live.json
+          --final push-test-final.json --acta push-test-acta.json
+      - name: Detectar inici i canvi d’horari amb el detector habitual
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario == 'barca_nc' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          since_before="$(python -c 'import json; print(json.load(open("push-test-before.json"))["matches"][0]["lastDirecteAt"])')"
+          since_live="$(python -c 'import json; print(json.load(open("push-test-live.json"))["matches"][0]["lastDirecteAt"])')"
+          python scripts/zonaok_push_events.py --before push-test-before.json --after push-test-live.json --since "$since_before" > push-test-start.json
+          python scripts/zonaok_push_events.py --before push-test-live.json --after push-test-final.json --since "$since_live" > push-test-finish.json
+          python - <<'PY'
+          import json
+          first=json.load(open('push-test-start.json', encoding='utf-8'))['events']
+          second=json.load(open('push-test-finish.json', encoding='utf-8'))['events']
+          events=first+second
+          assert {item['event'] for item in events} == {'start','finish','scheduleChange'}, events
+          for item in events: item['test']=True
+          json.dump({'dryRun':True,'events':events}, open('push-detection.json','w',encoding='utf-8'), ensure_ascii=False)
+          json.dump({'schema':'zonaok-push-event-batch-v1','season':'2026/2027','events':events}, open('push-batch.json','w',encoding='utf-8'), ensure_ascii=False)
+          print('Detector produït: inici, final i canvi d’horari ficticis; tots marcats PROVA.')
+          PY
+      - name: Preparar lot buit sense enviar avisos
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario != 'barca_nc' }}
         run: printf '%s\n' '{"schema":"zonaok-push-event-batch-v1","season":"2026/2027","events":[]}' > push-batch.json
       - name: Detectar només canvis nous de captura FECAPA
@@ -72,10 +95,7 @@ jobs:
             cp zonaok-tots-partits.json push-before.json
             PUSH_SINCE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
           fi
-          python scripts/zonaok_push_events.py \
-            --before push-before.json \
-            --after zonaok-tots-partits.json \
-            --since "$PUSH_SINCE" > push-detection.json
+          python scripts/zonaok_push_events.py --before push-before.json --after zonaok-tots-partits.json --since "$PUSH_SINCE" > push-detection.json
           python - <<'PY'
           import json
           with open('push-detection.json', encoding='utf-8') as handle:
@@ -85,7 +105,8 @@ jobs:
           with open('push-batch.json', 'w', encoding='utf-8') as handle:
               json.dump({'schema':'zonaok-push-event-batch-v1', 'season':'2026/2027', 'events':events}, handle, ensure_ascii=False)
           PY
-      - name: Enviar esdeveniments amb identitat GitHub de curta durada
+      - name: Enviar esdeveniments detectats pel canal habitual
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.test_scenario == 'barca_nc' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -93,15 +114,15 @@ jobs:
           token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
           curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
             -X POST 'https://zonaok-push.carles-j-fontanillas.workers.dev/sports-events' \
-            -H 'Content-Type: application/json' \
-            -H "Authorization: Bearer ${token}" \
+            -H 'Content-Type: application/json' -H "Authorization: Bearer ${token}" \
             --data-binary @push-batch.json
-      - name: Seleccionar només partits amb preferències d’incidències actives
-        if: ${{ github.event_name != 'workflow_dispatch' }}
+      - name: Seleccionar partits amb preferències d’incidències actives
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.test_scenario == 'barca_nc' }}
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/zonaok_push_live_incidents.py candidates --input zonaok-tots-partits.json --output push-live-candidates.json
+          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then catalog=push-test-live.json; else catalog=zonaok-tots-partits.json; fi
+          python scripts/zonaok_push_live_incidents.py candidates --input "$catalog" --output push-live-candidates.json
           request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
           token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
           curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
@@ -113,8 +134,36 @@ jobs:
           result=json.load(open('push-live-selection.json', encoding='utf-8'))
           assert result.get('schema') == 'zonaok-push-live-selection-v1'
           assert all(x.get('fixture',{}).get('competition') in ('NACIONAL CATALANA MASCULINA','NACIONAL CATALANA FEMENINA') for x in result.get('matches',[]))
+          print('Partits seleccionats per preferències:', len(result.get('matches',[])))
           PY
-      - name: Capturar incidències verificades dels partits seleccionats
+      - name: Parsejar incidències fictícies amb el parser habitual
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario == 'barca_nc' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, 'scripts')
+          from zonaok_push_live_incidents import parse_incidents
+          selection=json.load(open('push-live-selection.json', encoding='utf-8'))
+          acta=json.load(open('push-test-acta.json', encoding='utf-8'))
+          fixture=acta['fixture']
+          key=f"{fixture['leagueId']}|{fixture['matchId']}"
+          starts={str(e.get('fixture',{}).get('leagueId'))+'|'+str(e.get('fixture',{}).get('matchId')) for e in json.load(open('push-detection.json', encoding='utf-8'))['events'] if e.get('event')=='start'}
+          selected=any(str(x.get('fixture',{}).get('leagueId'))+'|'+str(x.get('fixture',{}).get('matchId'))==key for x in selection.get('matches',[]))
+          matches=[]
+          if selected:
+              observed=datetime.now(timezone.utc).isoformat().replace('+00:00','Z')
+              incidents=parse_incidents(acta['text'], fixture, observed_at=observed)
+              matches=[{'fixture':fixture,'observedAt':observed,'startedNow':key in starts,'test':True,'incidents':incidents}]
+          payload={'schema':'zonaok-push-live-incidents-v1','season':'2026/2027','matches':matches}
+          Path('push-live-incidents.json').write_text(json.dumps(payload,ensure_ascii=False)+'\n',encoding='utf-8')
+          print('Incidències fictícies parsejades:', len(matches[0]['incidents']) if matches else 0)
+          PY
+      - name: Capturar incidències FECAPA dels partits seleccionats
         if: ${{ github.event_name != 'workflow_dispatch' }}
         shell: bash
         run: |
@@ -127,14 +176,8 @@ jobs:
             python -m playwright install --with-deps chromium
             python scripts/zonaok_push_live_incidents.py capture --input push-live-selection.json --started push-detection.json --output push-live-incidents.json
           fi
-          request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
-          token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
-          curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
-            -X POST 'https://zonaok-push.carles-j-fontanillas.workers.dev/sports-incidents' \
-            -H 'Content-Type: application/json' -H "Authorization: Bearer ${token}" \
-            --data-binary @push-live-incidents.json
-      - name: Enviar incidències fictícies Barça Nacional Catalana
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario == 'barca_nc' }}
+      - name: Enviar incidències detectades pel canal habitual
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.test_scenario == 'barca_nc' }}
         shell: bash
         run: |
           set -euo pipefail
