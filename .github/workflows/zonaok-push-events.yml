@@ -24,7 +24,7 @@ jobs:
   avisos:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validar detector
-        run: python -m unittest discover -s tests -p 'test_push_events.py' -v
+        run: python -m unittest discover -s tests -p 'test_push_*.py' -v
       - name: Preparar prova buida sense avisos
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: printf '%s\n' '{"schema":"zonaok-push-event-batch-v1","season":"2026/2027","events":[]}' > push-batch.json
