@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-26T12:43:24Z",
+  "updatedAt": "2026-11-26T12:44:14Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-26T10:14:47Z",
@@ -167,18 +167,18 @@
       "unchanged": 0
     },
     "actes": {
-      "capturedAt": "2026-11-26T10:16:54Z",
-      "mergedAt": "2026-11-26T10:16:56Z",
+      "capturedAt": "2026-11-26T12:44:12Z",
+      "mergedAt": "2026-11-26T12:44:14Z",
       "new": 0,
       "updated": 40,
       "unmatched": 0,
       "ambiguousOrInvalid": 0,
       "unchanged": 0,
-      "nextFullOffset": 40,
+      "nextFullOffset": 95,
       "nextFullKey": [
         "2026-09-26",
-        "4778",
-        "147417"
+        "4782",
+        "151074"
       ],
       "fullCompleted": false
     }
@@ -3672,7 +3672,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:48Z"
     },
     {
       "iso": "2026-09-26",
@@ -4703,7 +4704,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:17:23Z",
+      "actaCheckedAt": "2026-11-26T12:44:09Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -5144,7 +5145,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:17:34Z",
+      "actaCheckedAt": "2026-11-26T12:43:21Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -6015,7 +6016,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:58Z"
     },
     {
       "iso": "2026-09-26",
@@ -6243,7 +6245,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:17:52Z",
+      "actaCheckedAt": "2026-11-26T12:44:07Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -6267,7 +6269,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:17:54Z",
+      "actaCheckedAt": "2026-11-26T12:43:17Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -6291,7 +6293,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:29Z"
     },
     {
       "iso": "2026-09-26",
@@ -6563,7 +6566,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:52Z"
     },
     {
       "iso": "2026-09-26",
@@ -6889,7 +6893,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:44Z"
     },
     {
       "iso": "2026-09-26",
@@ -7026,7 +7031,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:18:07Z",
+      "actaCheckedAt": "2026-11-26T12:44:06Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -7211,7 +7216,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:18:11Z",
+      "actaCheckedAt": "2026-11-26T12:43:14Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -7235,7 +7240,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:49Z"
     },
     {
       "iso": "2026-09-26",
@@ -7328,7 +7334,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:57Z"
     },
     {
       "iso": "2026-09-26",
@@ -7418,7 +7425,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:42Z"
     },
     {
       "iso": "2026-09-26",
@@ -7441,7 +7449,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:27Z"
     },
     {
       "iso": "2026-09-26",
@@ -7737,7 +7746,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:18:19Z",
+      "actaCheckedAt": "2026-11-26T12:44:10Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -7808,7 +7817,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:46Z"
     },
     {
       "iso": "2026-09-26",
@@ -7925,7 +7935,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:18:25Z",
+      "actaCheckedAt": "2026-11-26T12:43:22Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -7949,7 +7959,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:28Z"
     },
     {
       "iso": "2026-09-26",
@@ -7972,7 +7983,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:56Z"
     },
     {
       "iso": "2026-09-26",
@@ -7995,7 +8007,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:44:03Z"
     },
     {
       "iso": "2026-09-26",
@@ -8199,7 +8212,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:43Z"
     },
     {
       "iso": "2026-09-26",
@@ -8222,7 +8236,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:32Z"
     },
     {
       "iso": "2026-09-26",
@@ -8245,7 +8260,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:44:01Z"
     },
     {
       "iso": "2026-09-26",
@@ -8454,7 +8470,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:38Z"
     },
     {
       "iso": "2026-09-26",
@@ -8477,7 +8494,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:50Z"
     },
     {
       "iso": "2026-09-26",
@@ -8500,7 +8518,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:53Z"
     },
     {
       "iso": "2026-09-26",
@@ -8523,7 +8542,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:54Z"
     },
     {
       "iso": "2026-09-26",
@@ -8546,7 +8566,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:44:02Z"
     },
     {
       "iso": "2026-09-26",
@@ -8664,7 +8685,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:39Z"
     },
     {
       "iso": "2026-09-26",
@@ -8735,7 +8757,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:25Z"
     },
     {
       "iso": "2026-09-26",
@@ -8758,7 +8781,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:31Z"
     },
     {
       "iso": "2026-09-26",
@@ -8781,7 +8805,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:44:00Z"
     },
     {
       "iso": "2026-09-26",
@@ -8804,7 +8829,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:44:05Z"
     },
     {
       "iso": "2026-09-26",
@@ -9058,7 +9084,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:18:42Z",
+      "actaCheckedAt": "2026-11-26T12:43:18Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -9082,7 +9108,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:18:44Z",
+      "actaCheckedAt": "2026-11-26T12:43:20Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
@@ -9106,7 +9132,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:35Z"
     },
     {
       "iso": "2026-09-26",
@@ -9129,7 +9156,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:36Z"
     },
     {
       "iso": "2026-09-26",
@@ -9152,7 +9180,8 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-26T10:14:47Z",
-      "actaState": "pending"
+      "actaState": "pending",
+      "actaCheckedAt": "2026-11-26T12:43:33Z"
     },
     {
       "iso": "2026-09-26",
@@ -9221,7 +9250,7 @@
       "scoreSource": "Agenda",
       "directeUpdatedAt": "",
       "actaState": "pending",
-      "actaCheckedAt": "2026-11-23T23:18:47Z",
+      "actaCheckedAt": "2026-11-26T12:43:24Z",
       "lastAgendaAt": "2026-11-26T10:14:47Z"
     },
     {
