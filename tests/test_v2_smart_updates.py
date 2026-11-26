@@ -34,6 +34,26 @@ def team(pos,name,played=4,points=10):
             'stats':{'PTS':str(points),'PJ':str(played),'PG':'3','PE':'1','PP':'0','GF':'15','GC':'5','DIF':'10'}}
 
 class TestSmartSync(unittest.TestCase):
+    def test_mobile_standings_pairing_and_duplicate_codes(self):
+        wide=[{'name':'GRUP E','rows':[team(1,'HC VALLS'),team(2,'HOQUEI CLUB CASTELLAR')]}]
+        narrow=[{'name':'GRUP E','rows':[team(1,'HCV'),team(2,'HCC')]}]
+        self.assertEqual(c.pair_mobile_names(wide,narrow),2)
+        self.assertEqual(wide[0]['rows'][1]['shortTeam'],'HCC')
+        other=[{'name':'GRUP E','rows':[team(1,'HC VALLS'),team(2,'HOQUEI CLUB CASTELLAR')]}]
+        narrow[0]['rows'][1]['points']='99'
+        self.assertEqual(c.pair_mobile_names(other,narrow),0)
+        self.assertNotIn('shortTeam',other[0]['rows'][0])
+    def test_duplicate_standing_aliases_require_unique_league_context(self):
+        old={**fixture(),'home':'CLUB PATI EXEMPLE','away':'HOQUEI MOSTRA'}
+        incoming={**old,'home':'CPE','away':'HM','leagueId':'','matchId':''}
+        pairs={('CLUB PATI EXEMPLE','CPE'):{'4789'},
+               ('CLUB PATI ESTRELLA','CPE'):{'4790'},
+               ('HOQUEI MOSTRA','HM'):{'4789'}}
+        self.assertEqual(m.match_index([old],incoming,'directe',standing_aliases=pairs),0)
+        no_league={**old,'leagueId':'','matchId':''}
+        self.assertIsNone(m.match_index([no_league],incoming,'directe',standing_aliases=pairs))
+        pairs[('CLUB PATI ESTRELLA','CPE')].add('4789')
+        self.assertIsNone(m.match_index([old],incoming,'directe',standing_aliases=pairs))
     def test_final_with_verified_acta_is_frozen_after_7_days(self):
         prior=fixture((m.local_today()-timedelta(days=14)).isoformat())
         row={**prior,'homeScore':9,'awayScore':9}
