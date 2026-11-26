@@ -57,7 +57,16 @@ function predict(row,rows,asOf){
  const la=clamp(Math.sqrt(Math.max(.05,A.gf*H.ga))*meanA/mean*Math.exp(-adj),.12,35);
  return {ok:true,cutoff,nHome:hs.length,nAway:as.length,leagueCount:league.length,common:common.length,direct:direct.length,homeRating:Math.round(rating(h)),awayRating:Math.round(rating(a)),homeForm:H.form,awayForm:A.form,homePoints:H.pts,awayPoints:A.pts,lh,la,coverage:Math.min(hs.length,as.length)>=10&&league.length>=35?'Àmplia':Math.min(hs.length,as.length)>=5?'Mitjana':'Baixa',...distribution(lh,la)};
 }
-const api={predict,pending,distribution,history};
+function outcomeBands(lh,la){
+ const h=poisson(lh),a=poisson(la),goals=[0,0,0,0],margin=[0,0,0,0];
+ for(let i=0;i<h.length;i++)for(let j=0;j<a.length;j++){
+  const p=h[i]*a[j],total=i+j,d=Math.abs(i-j);
+  goals[total<=3?0:total<=6?1:total<=9?2:3]+=p;
+  margin[d===0?0:d===1?1:d<=3?2:3]+=p;
+ }
+ return {goals,margin};
+}
+const api={predict,pending,distribution,history,outcomeBands};
 if(typeof module!=='undefined'&&module.exports){module.exports=api;return}
 const el=(tag,cls,t)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(t!==undefined)n.textContent=t;return n};
 let dataPromise=null;
@@ -76,6 +85,16 @@ function resultsChart(p){
  chart.append(el('p','zok-pred-result-note','Altres marcadors: '+pct(clamp(1-p.top.reduce((s,x)=>s+x.p,0),0,1))));
  return chart;
 }
+function bandChart(labels,values,aria){
+ const box=el('section','zok-pred-bands');box.setAttribute('aria-label',aria);
+ const max=Math.max(...values);
+ labels.forEach((label,i)=>{
+  const item=el('div','zok-pred-band-line'),track=el('div','zok-pred-band-track'),fill=el('span','zok-pred-band-fill'+(values[i]===max?' first':''));
+  fill.style.width=clamp(values[i]*100,0,100)+'%';track.append(fill);track.setAttribute('aria-hidden','true');
+  item.append(el('span','',label),track,el('b','',pct(values[i])));box.append(item);
+ });
+ return box;
+}
 function show(row,retro=false){
  const d=el('dialog','zok-af-dialog zok-prediction-dialog');d.setAttribute('aria-label','Pronòstic ZonaOK');
  const head=el('header','zok-af-header'),title=el('div');title.append(el('small','','ZONAOK · FECAPA'),el('strong','','PRONÒSTIC DEL PARTIT'));const close=el('button','zok-af-close','×');close.type='button';close.setAttribute('aria-label','Tancar pronòstic');close.onclick=()=>d.close();head.append(title,close);
@@ -85,6 +104,9 @@ function show(row,retro=false){
  const bar=el('div','zok-pred-bar');for(const [v,c] of [[p.home,'#53b58a'],[p.draw,'#fbc252'],[p.away,'#df777b']]){const n=el('span');n.style.width=v*100+'%';n.style.background=c;bar.append(n)}content.append(bar);
  const grid=el('div','zok-pred-probs');for(const [label,v] of [['Victòria local',p.home],['Empat',p.draw],['Victòria visitant',p.away]]){const n=el('div','zok-af-metric');n.append(el('b','',pct(v)),el('small','',label));grid.append(n)}content.append(grid);
  content.append(el('h3','','Marcadors més probables'),resultsChart(p));
+ const bands=outcomeBands(p.lh,p.la);
+ content.append(el('h3','','Total de gols del partit'),bandChart(['0–3 gols','4–6 gols','7–9 gols','10 o més'],bands.goals,'Distribució del total de gols'));
+ content.append(el('h3','','Diferència final de gols'),bandChart(['Empat','1 gol','2–3 gols','4 o més'],bands.margin,'Distribució de la diferència absoluta entre els marcadors'));
  if(retro&&scored(row))line(content,'Resultat real FECAPA',row.homeScore+' : '+row.awayScore);
  content.append(el('p','zok-af-muted',(retro?'Estimació retrospectiva, no arxivada abans del partit. ':'')+'Pronòstic orientatiu i experimental. Probabilitats no calibrades. Font: FECAPA.'));
  }).catch(()=>{if(d.open)content.replaceChildren(el('p','zok-af-muted','No s’han pogut carregar les dades de FECAPA. Torna-ho a provar.'))});
