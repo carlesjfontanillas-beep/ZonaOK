@@ -35,3 +35,45 @@
 .zok-pred-scorer-stack{display:flex;flex-direction:column;align-items:center;gap:3px}
 .zok-pred-scorer-name{font-size:10px;line-height:1.2;overflow-wrap:anywhere;word-break:normal;max-width:100%;text-align:center}
 .zok-pred-scorer-prob{color:#b9cddd;font-size:10px;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+
+/* Pronòstic en una sola pantalla: no afecta la fitxa de l'acta. */
+.zok-prediction-dialog{--zok-pred-plot-height:clamp(48px,8.5dvh,72px);height:min(96dvh,950px);max-height:96dvh}
+.zok-prediction-dialog .zok-af-header{padding:5px 9px;gap:5px}
+.zok-prediction-dialog .zok-af-header small{font-size:8px}
+.zok-prediction-dialog .zok-af-header strong{font-size:13px}
+.zok-prediction-dialog .zok-af-close{height:34px;min-width:34px}
+.zok-prediction-dialog .zok-af-body{padding:7px 9px;overflow-x:hidden}
+.zok-prediction-dialog .zok-af-top h2{font-size:17px;margin:0 0 2px;line-height:1.15}
+.zok-prediction-dialog .zok-af-muted{font-size:10px;line-height:1.25;margin:3px 0}
+.zok-prediction-dialog .zok-af-score{padding:5px 4px;margin:4px 0;gap:5px}
+.zok-prediction-dialog .zok-af-score>b{font-size:clamp(25px,7vw,32px)}
+.zok-prediction-dialog .zok-af-score>.zok-af-team{font-size:11px;line-height:1.15}
+.zok-prediction-dialog .zok-pred-bar{height:7px;margin:5px 0}
+.zok-prediction-dialog .zok-pred-probs{gap:4px}
+.zok-prediction-dialog .zok-pred-probs .zok-af-metric{padding:3px 2px;line-height:1.1}
+.zok-prediction-dialog .zok-pred-probs b{font-size:clamp(16px,5vw,22px)}
+.zok-prediction-dialog .zok-pred-probs small{font-size:10px;line-height:1.1}
+.zok-prediction-dialog .zok-af-content h3{font-size:13px;line-height:1.15;margin:7px 0 4px}
+.zok-prediction-dialog .zok-pred-results{padding:5px 7px;gap:3px}
+.zok-prediction-dialog .zok-pred-result-line{grid-template-columns:37px minmax(0,1fr) 39px;gap:5px}
+.zok-prediction-dialog .zok-pred-result-score{font-size:12px;line-height:1.2}
+.zok-prediction-dialog .zok-pred-result-percent{font-size:11px;line-height:1.2}
+.zok-prediction-dialog .zok-pred-result-track{height:9px}
+.zok-prediction-dialog .zok-pred-result-axis{margin:0 44px 0 42px;font-size:9px;line-height:1.1}
+.zok-prediction-dialog .zok-pred-result-note{font-size:10px;line-height:1.1}
+.zok-prediction-dialog .zok-pred-scorers{gap:4px}
+.zok-prediction-dialog .zok-pred-scorer-team{padding:5px 6px;gap:3px}
+.zok-prediction-dialog .zok-pred-scorer-team h4,.zok-prediction-dialog .zok-pred-scorer-heading>b{font-size:11px;line-height:1.15}
+.zok-prediction-dialog .zok-pred-scorer-columns{gap:3px;padding:0;overflow:visible}
+.zok-prediction-dialog .zok-pred-scorer-column{grid-template-rows:var(--zok-pred-plot-height) auto;gap:2px}
+.zok-prediction-dialog .zok-pred-scorer-plot{height:var(--zok-pred-plot-height);padding-top:16px}
+.zok-prediction-dialog .zok-pred-scorer-count{font-size:12px;line-height:15px}
+.zok-prediction-dialog .zok-pred-scorer-stack{gap:1px}
+.zok-prediction-dialog .zok-pred-scorer-name{font-size:10px;line-height:1.1}
+.zok-prediction-dialog .zok-pred-scorer-prob{font-size:9px;line-height:1.1}
+.zok-prediction-dialog.zok-pred-tight .zok-af-body{padding:4px 6px}
+.zok-prediction-dialog.zok-pred-tight .zok-af-content h3{margin:4px 0 2px}
+.zok-prediction-dialog.zok-pred-tight .zok-pred-results{padding:3px 5px;gap:1px}
+.zok-prediction-dialog.zok-pred-tight .zok-pred-scorer-team{padding:3px 4px;gap:2px}
+.zok-prediction-dialog.zok-pred-tight .zok-af-muted{margin:2px 0}

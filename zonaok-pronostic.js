@@ -150,6 +150,28 @@ function scorerData(){
  }
  return scorerCache;
 }
+// Ajustem l'alçada de les gràfiques a l'espai real del diàleg.
+// En pantalles molt petites o amb text ampliat es conserva el scroll accessible.
+function fitPrediction(d){
+ if(!d.open)return;
+ const body=d.querySelector('.zok-af-body'),plots=[...d.querySelectorAll('.zok-pred-scorer-plot')];
+ if(!body)return;
+ d.classList.remove('zok-pred-tight');
+ d.style.removeProperty('--zok-pred-plot-height');
+ const shrink=()=>{
+  const overflow=body.scrollHeight-body.clientHeight;
+  if(overflow<=1||!plots.length)return;
+  const rows=d.querySelectorAll('.zok-pred-scorer-columns').length||1;
+  const current=plots[0].getBoundingClientRect().height;
+  d.style.setProperty('--zok-pred-plot-height',Math.max(34,Math.floor(current-overflow/rows-2))+'px');
+ };
+ shrink();
+ if(body.scrollHeight>body.clientHeight+1){
+  d.classList.add('zok-pred-tight');
+  shrink();
+ }
+ body.scrollTop=0;
+}
 function renderScorers(host,row,p,d){
  host.append(el('p','zok-af-muted','Carregant golejadors…'));
  scorerData().then(([master,catalog])=>{
@@ -170,18 +192,19 @@ function renderScorers(host,row,p,d){
    const section=el('section','zok-pred-scorer-team'),head=el('div','zok-pred-scorer-heading');head.append(el('h4','',name),el('b','',label(total)));section.append(head);
    const list=lists[side];
    if(!list.length){section.append(el('p','zok-af-muted','No hi ha prou actes amb gols individuals verificables.'));host.append(section);continue}
-   const chart=el('div','zok-pred-scorer-columns');chart.style.gridTemplateColumns='repeat('+(list.length+(other>0?1:0))+', minmax(59px, 1fr))';chart.setAttribute('aria-label','Gràfica de gols previstos · '+name);
+   const chart=el('div','zok-pred-scorer-columns');chart.style.gridTemplateColumns='repeat('+(list.length+(other>0?1:0))+', minmax(0, 1fr))';chart.setAttribute('aria-label','Gràfica de gols previstos · '+name);
    for(const [i,x] of list.entries())bar(chart,x.name,x.predictedGoals,x.prob,i===0);
    if(other>0)bar(chart,'Altres golejadors',other,null,false);
    section.append(chart);host.append(section)
   }
-  if(lists.home.length||lists.away.length)host.append(el('p','zok-af-muted','Repartiment orientatiu dels gols del marcador previst. El percentatge indica la probabilitat de marcar almenys un gol. Alineacions no confirmades.'));
- }).catch(()=>{if(d.open)host.replaceChildren(el('p','zok-af-muted','No s’han pogut carregar les estadístiques individuals.'))});
+  if(lists.home.length||lists.away.length)host.append(el('p','zok-af-muted','Gols previstos · % de marcar almenys un gol. Alineacions no confirmades.'));
+  requestAnimationFrame(()=>fitPrediction(d));
+ }).catch(()=>{if(d.open){host.replaceChildren(el('p','zok-af-muted','No s’han pogut carregar les estadístiques individuals.'));requestAnimationFrame(()=>fitPrediction(d))}});
 }
 function show(row,retro=false){
  const d=el('dialog','zok-af-dialog zok-prediction-dialog');d.setAttribute('aria-label','Pronòstic ZonaOK');
  const head=el('header','zok-af-header'),title=el('div');title.append(el('small','','ZONAOK · FECAPA'),el('strong','','PRONÒSTIC DEL PARTIT'));const close=el('button','zok-af-close','×');close.type='button';close.setAttribute('aria-label','Tancar pronòstic');close.onclick=()=>d.close();head.append(title,close);
- const body=el('div','zok-af-body'),summary=el('div','zok-af-top'),content=el('div','zok-af-content');summary.append(el('h2','',row.competition||'Partit'),el('p','zok-af-muted',[row.iso,row.time].filter(Boolean).join(' · ')));body.append(summary,content);d.append(head,body);content.append(el('p','zok-af-muted','Calculant amb els resultats FECAPA…'));document.body.append(d);d.addEventListener('close',()=>d.remove(),{once:true});d.showModal();
+ const body=el('div','zok-af-body'),summary=el('div','zok-af-top'),content=el('div','zok-af-content');summary.append(el('h2','',row.competition||'Partit'),el('p','zok-af-muted',[row.iso,row.time].filter(Boolean).join(' · ')));body.append(summary,content);d.append(head,body);content.append(el('p','zok-af-muted','Calculant amb els resultats FECAPA…'));document.body.append(d);const resize=()=>requestAnimationFrame(()=>fitPrediction(d));window.addEventListener('resize',resize);window.visualViewport?.addEventListener('resize',resize);d.addEventListener('close',()=>{window.removeEventListener('resize',resize);window.visualViewport?.removeEventListener('resize',resize);d.remove()},{once:true});d.showModal();
  data().then(rows=>{if(!d.open)return;const p=predict(row,rows);content.replaceChildren();if(!p.ok){content.append(el('h3','','Pronòstic no disponible'),el('p','zok-af-muted','No hi ha prou dades disponibles per a aquest partit.'));return}
  const score=el('div','zok-af-score');score.append(el('strong','zok-af-team',row.home),el('b','',p.top[0].h+' : '+p.top[0].a),el('strong','zok-af-team',row.away));content.append(score,el('p','zok-af-muted','Marcador exacte més probable · '+pct(p.top[0].p)));
  const bar=el('div','zok-pred-bar');for(const [v,c] of [[p.home,'#53b58a'],[p.draw,'#fbc252'],[p.away,'#df777b']]){const n=el('span');n.style.width=v*100+'%';n.style.background=c;bar.append(n)}content.append(bar);
@@ -189,7 +212,8 @@ function show(row,retro=false){
  content.append(el('h3','','Marcadors més probables'),resultsChart(p));
  const scorersHost=el('div','zok-pred-scorers');content.append(el('h3','','Golejadors més probables'),scorersHost);renderScorers(scorersHost,row,p,d);
  if(retro&&scored(row))line(content,'Resultat real FECAPA',row.homeScore+' : '+row.awayScore);
- content.append(el('p','zok-af-muted',(retro?'Estimació retrospectiva, no arxivada abans del partit. ':'')+'Pronòstic orientatiu i experimental. Probabilitats no calibrades. Font: FECAPA.'));
+ content.append(el('p','zok-af-muted',(retro?'Estimació retrospectiva, no arxivada abans del partit. ':'')+'Pronòstic orientatiu · FECAPA. Probabilitats no calibrades.'));
+ requestAnimationFrame(()=>fitPrediction(d));
  }).catch(()=>{if(d.open)content.replaceChildren(el('p','zok-af-muted','No s’han pogut carregar les dades de FECAPA. Torna-ho a provar.'))});
 }
 function button(row){const b=el('button','zok-acta-action zok-prediction-action','▥ Pronòstic');b.type='button';b.setAttribute('aria-label','Pronòstic de '+row.home+' contra '+row.away);b.onclick=e=>{e.stopPropagation();show(row)};return b}
