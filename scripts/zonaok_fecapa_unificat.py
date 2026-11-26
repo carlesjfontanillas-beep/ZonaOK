@@ -1041,14 +1041,17 @@ def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
             if a and a==b:return True
             league=clean(r.get('leagueId')) or lid
             verified=pairs.get((a,b),set())
-            if verified and (not league or league in verified):return True
-            # Si tenim una equivalència explícita de la classificació per
-            # aquest nom i lliga, l'escut sol no pot contradir-la.
+            # No resoldre una sigla duplicada globalment sense lliga.
+            # Amb lliga, exigir un únic nom complet dins d'aquella lliga.
+            owners={name for (name,code),leagues in pairs.items()
+                    if code==b and (not league or league in leagues)}
+            if owners:
+                return owners=={a} and bool(verified) and (not league or league in verified)
+            # Un nom que ja té una sigla oficial no admet altres sigles
+            # deduïdes només per compartir escut.
             if any(name==a and (not league or league in leagues)
                    for (name,_),leagues in pairs.items()):return False
             return directe_team_alias(full,short,alias_index)
-        # FECAPA mostra sigles i l'Agenda noms complets. No alterar mai
-        # equips, categoria ni horaris per aquesta equivalència.
         aliases=[i for i,r in enumerate(rows) if compatible_id(r)
                  and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
                  and team_ok(r,'home') and team_ok(r,'away')]
