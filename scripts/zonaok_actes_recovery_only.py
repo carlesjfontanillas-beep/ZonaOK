@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Single-writer FECAPA acta recovery: recover official IDs, then closed acta content."""
-import asyncio, json, re, time, sys, copy
+import asyncio, json, re, time, sys, copy, os
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse, parse_qs
@@ -14,8 +14,15 @@ from zonaok_jugadors_blocks import run_matches, STATS_REVISION
 from zonaok_jugadors_auto import load, save, verify_master, enrich_names
 from zonaok_jugadors_total_master import link_memberships
 
-STATE=Path("imports/actes-recovery-state.json")
-START, END = "2026-11-12", "2026-11-26"
+# Keep each historical interval's audit cursor and summary independent.
+WINDOWS={
+    "recent":("2026-11-12","2026-11-26","imports/actes-recovery-state.json"),
+    "early":("2026-11-01","2026-11-12","imports/actes-recovery-20261101-12.json"),
+}
+WINDOW_NAME=os.environ.get("ZONAOK_ACTES_WINDOW","recent")
+if WINDOW_NAME not in WINDOWS:raise ValueError("invalid_recovery_window")
+START, END, state_file=WINDOWS[WINDOW_NAME]
+STATE=Path(state_file)
 WINDOW = START+"|"+END
 def read(p,default):
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else default
@@ -199,9 +206,10 @@ async def acts(doc,root,control):
     work=pending+audit_pending
     plan=sorted(work,key=lambda x:(attempts.get(x[0],""),-int(x[1]["iso"].replace("-","")),x[0]))[:40]
     audit_keys={k for k,_ in audit_pending}
-    report={"selected":len(plan),"attempted":0,"verified":0,"pending":0,"reasons":{},"reusedVerified":promoted}
+    report={"selected":len(plan),"attempted":0,"verified":0,"pending":0,"reasons":{},"reusedVerified":promoted,"matchDiagnostics":{}}
     previous_audits={k:copy.deepcopy(matches[k]) for k,_ in plan if k in audit_keys and k in matches}
     await run_matches(master,matches,plan,time.monotonic()+15*60,report)
+    control.setdefault("matchDiagnostics",{}).update(report["matchDiagnostics"])
     for k,r in plan:
         if k in matches and str(matches[k].get("checkedAt",""))>=clock.isoformat()[:19]:
             attempts[k]=matches[k]["checkedAt"]
@@ -233,6 +241,13 @@ async def acts(doc,root,control):
     report["remainingAudit"]=sum(bool(v) and k in fresh and verified(k,fresh[k]) for k,v in gaps.items())
     remaining={k for k,r in fresh.items() if not verified(k,r) or gaps.get(k)}
     report["pendingCompleteActs"]=len(remaining)
+    diagnostics=control.get("matchDiagnostics",{})
+    report["pendingByMatch"]={k:{
+        "iso":fresh[k]["iso"],"competition":byid[k].get("competition",""),
+        "home":byid[k].get("home",""),"away":byid[k].get("away",""),
+        "actaUrl":make_match_url(fresh[k]["leagueId"],fresh[k]["matchId"]),
+        "verified":verified(k,fresh[k]),"missingFields":gaps.get(k,[]),
+        "lastAttempt":diagnostics.get(k,{})} for k in sorted(remaining)}
     # Chain fresh work or genuine progress immediately. Persistent gaps
     # without progress remain eligible at the next scheduled execution,
     # rather than creating an endless self-dispatch loop.
@@ -254,5 +269,6 @@ async def main():
     persist(doc,before)
     report={"phase":phase,"before":initial,"after":summarize(doc),**report}
     control["last"+phase.title()]=report
+    if phase=="acts":control["lastActsFinishedAt"]=utc_now()
     write(STATE,control);print(json.dumps(report,ensure_ascii=False),flush=True)
 if __name__=="__main__":asyncio.run(main())
