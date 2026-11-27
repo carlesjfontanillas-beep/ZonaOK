@@ -236,9 +236,20 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
                 if res and res.status>=400:raise RuntimeError(f"HTTP {res.status}")
                 await page.wait_for_selector("tr.sidgad-calendario-partido:visible",timeout=18000)
                 data=await page.evaluate(JS_CALENDAR,lid)
-                rows,meta=verified_league_rows(lid,data["rows"],[])
+                # La vista calendar?liga=IDP és el calendari oficial de la competició.
+                # verified_league_rows exigeix leagueId i matchId a cada fila; molts
+                # partits reprogramats sense resultat no porten aquests atributs al DOM.
+                # Per a una revisió de data/hora n'hi ha prou amb validar la fila visible,
+                # els equips, la data i l'hora, i fer després una correspondència inequívoca.
+                rows=[row for row in data.get("rows",[])
+                      if isinstance(row,dict)
+                      and clean(row.get("home")) and clean(row.get("away"))
+                      and check_iso(row.get("iso")) and check_time(row.get("time"))]
                 for row in rows:official[matchid(row)].append(row)
-                report.setdefault("leagueChecks",[]).append({"leagueId":lid,"status":meta["status"],"rows":len(rows)})
+                report.setdefault("leagueChecks",[]).append({
+                    "leagueId":lid,"status":"official-calendar-rows",
+                    "rows":len(rows),"rowsWithIDs":sum(bool(matchid(row)[1]) for row in rows),
+                    "rowsWithoutIDs":sum(not bool(matchid(row)[1]) for row in rows)})
             except Exception as exc:
                 error=type(exc).__name__
                 report.setdefault("leagueChecks",[]).append({"leagueId":lid,"error":error})
