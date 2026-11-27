@@ -376,7 +376,7 @@
     const club = clubFilter.value, category = categoryFilter.value, competition=competitionFilter.value;
     syncMissingActa();
     const selected = matches.filter(r =>
-      (!onlyMissingActa || (!recentActaUrl(r) && !/^\d{3,10}$/.test(String(r.matchId||r.idp||'').trim()))) &&
+      (!onlyMissingActa || (!/^OK\s*LIGA(?:\s|$)/.test(norm(r.competition)) && !recentActaUrl(r) && !/^\d{3,10}$/.test(String(r.matchId||r.idp||'').trim()))) &&
       (!club || queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo),r,'home'),club) || queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo),r,'away'),club)) &&
       queryMatches(r.competition, category) &&
       queryMatches(competitionGroup(r.competition),competition));
