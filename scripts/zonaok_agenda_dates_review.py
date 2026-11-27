@@ -24,7 +24,9 @@ def matchid(r):
     return (clean(r.get("leagueId")),clean(r.get("matchId")))
 
 def describe(r):
-    return {k:r.get(k) for k in ("iso","time","competition","home","away","leagueId","matchId")}
+    scores=score_tuple(r)
+    return {**{k:r.get(k) for k in ("iso","time","competition","home","away","leagueId","matchId")},
+            "hasResult":bool(scores),"result":f"{scores[0]}-{scores[1]}" if scores else None}
 
 def logo_identity(r, side):
     value=clean(r.get(side+"Logo"))
@@ -288,7 +290,11 @@ async def main():
         rows,changes=apply(old,accepted)
         report["unresolved"]=[{**describe(old[i]),"reason":reason,"possibleSchedules":poss}
                               for i,reason,poss in unresolved+rejected]
+        report["unresolvedWithoutResult"]=[item for item in report["unresolved"] if not item["hasResult"]]
+        report["unresolvedWithoutResultCount"]=len(report["unresolvedWithoutResult"])
+        report["unresolvedWithResultCount"]=len(report["unresolved"])-report["unresolvedWithoutResultCount"]
         report["changes"]=changes
+        report["changesWithoutResult"]=[item for item in changes if not item.get("hasResult")]
         report["catalogAfter"]=len(rows);report["windowAfter"]=sum(inside(r) for r in rows)
         report["changed"]=len(changes)
         report["dateChanged"]=sum(c["iso"]!=c["newIso"] for c in changes)
