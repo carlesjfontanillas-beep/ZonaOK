@@ -108,34 +108,621 @@
   "lastActs": {
     "phase": "acts",
     "before": {
-      "total": 12397,
-      "identified": 5708,
-      "missingHistoricalIDs": 68,
-      "missingHistoricalScores": 30,
-      "historical": 5776,
-      "verified": 0,
-      "historicalUnverified": 5776
+      "window": {
+        "from": "2026-11-12",
+        "to": "2026-11-26"
+      },
+      "total": 1369,
+      "catalogTotal": 12397,
+      "identified": 1316,
+      "actaRequired": 1335,
+      "nationalScoreOnly": 34,
+      "nationalWithScore": 34,
+      "nationalMissingScore": 0,
+      "allWindowMissingScores": 17,
+      "missingHistoricalIDs": 19,
+      "missingHistoricalScores": 17,
+      "historical": 1335,
+      "verified": 697,
+      "historicalUnverified": 638,
+      "pendingWithID": 619
     },
     "after": {
-      "total": 12397,
-      "identified": 5708,
-      "missingHistoricalIDs": 68,
-      "missingHistoricalScores": 30,
-      "historical": 5776,
-      "verified": 2130,
-      "historicalUnverified": 3646
+      "window": {
+        "from": "2026-11-12",
+        "to": "2026-11-26"
+      },
+      "total": 1369,
+      "catalogTotal": 12397,
+      "identified": 1316,
+      "actaRequired": 1335,
+      "nationalScoreOnly": 34,
+      "nationalWithScore": 34,
+      "nationalMissingScore": 0,
+      "allWindowMissingScores": 17,
+      "missingHistoricalIDs": 19,
+      "missingHistoricalScores": 17,
+      "historical": 1335,
+      "verified": 736,
+      "historicalUnverified": 599,
+      "pendingWithID": 580
     },
     "selected": 40,
     "attempted": 40,
     "verified": 39,
     "pending": 1,
     "reasons": {
-      "incomplete_or_changed_roster": 1
+      "TimeoutError": 1
     },
-    "reusedVerified": 2091,
-    "remainingEligible": 3578,
-    "players": 9953,
-    "appearances": 44029
+    "reusedVerified": 0,
+    "remainingEligible": 580,
+    "coverage": {
+      "verifiedWithAllTrackedFields": 571,
+      "verifiedWithGaps": 165,
+      "playerFields": {
+        "Núm.": {
+          "present": 11159,
+          "missing": 0
+        },
+        "P": {
+          "present": 11159,
+          "missing": 0
+        },
+        "C": {
+          "present": 11159,
+          "missing": 0
+        },
+        "5i": {
+          "present": 11159,
+          "missing": 0
+        },
+        "Cat": {
+          "present": 9643,
+          "missing": 1516
+        },
+        "G": {
+          "present": 11159,
+          "missing": 0
+        },
+        "As": {
+          "present": 11159,
+          "missing": 0
+        },
+        "PEN": {
+          "present": 11159,
+          "missing": 0
+        },
+        "FD": {
+          "present": 11159,
+          "missing": 0
+        },
+        "F→": {
+          "present": 11159,
+          "missing": 0
+        },
+        "F←": {
+          "present": 11159,
+          "missing": 0
+        },
+        "TA": {
+          "present": 11159,
+          "missing": 0
+        },
+        "TB": {
+          "present": 11159,
+          "missing": 0
+        },
+        "TR": {
+          "present": 11159,
+          "missing": 0
+        }
+      },
+      "gapCounts": {
+        "player:Cat": 141,
+        "staff": 24
+      },
+      "unconfirmedGapsByMatch": {
+        "5082|164774": [
+          "staff"
+        ],
+        "5082|164775": [
+          "staff"
+        ],
+        "5046|163820": [
+          "staff"
+        ],
+        "5045|163694": [
+          "staff"
+        ],
+        "5045|163690": [
+          "staff"
+        ],
+        "5082|164776": [
+          "staff"
+        ],
+        "5045|164001": [
+          "staff"
+        ],
+        "4793|158278": [
+          "player:Cat"
+        ],
+        "4780|154950": [
+          "player:Cat"
+        ],
+        "4806|158688": [
+          "player:Cat"
+        ],
+        "4787|149645": [
+          "player:Cat"
+        ],
+        "4778|147645": [
+          "player:Cat"
+        ],
+        "4792|156111": [
+          "player:Cat"
+        ],
+        "5045|163692": [
+          "staff"
+        ],
+        "4778|147644": [
+          "player:Cat"
+        ],
+        "5045|163691": [
+          "staff"
+        ],
+        "4778|147643": [
+          "player:Cat"
+        ],
+        "4775|146621": [
+          "player:Cat"
+        ],
+        "4778|147642": [
+          "player:Cat"
+        ],
+        "4775|146624": [
+          "player:Cat"
+        ],
+        "4778|147461": [
+          "player:Cat"
+        ],
+        "4775|146628": [
+          "player:Cat"
+        ],
+        "4778|147462": [
+          "player:Cat"
+        ],
+        "5046|163815": [
+          "staff"
+        ],
+        "5046|163842": [
+          "staff"
+        ],
+        "4790|149297": [
+          "player:Cat"
+        ],
+        "5082|164782": [
+          "staff"
+        ],
+        "5082|164781": [
+          "staff"
+        ],
+        "4778|147654": [
+          "player:Cat"
+        ],
+        "4804|158489": [
+          "player:Cat"
+        ],
+        "4778|147653": [
+          "player:Cat"
+        ],
+        "4780|154962": [
+          "player:Cat"
+        ],
+        "4802|159383": [
+          "player:Cat"
+        ],
+        "5045|163698": [
+          "staff"
+        ],
+        "4778|147463": [
+          "player:Cat"
+        ],
+        "4778|147650": [
+          "player:Cat"
+        ],
+        "5045|163700": [
+          "staff"
+        ],
+        "5045|164250": [
+          "staff"
+        ],
+        "5046|163840": [
+          "staff"
+        ],
+        "4807|159725": [
+          "player:Cat"
+        ],
+        "4805|157572": [
+          "player:Cat"
+        ],
+        "4793|158284": [
+          "player:Cat"
+        ],
+        "4792|156129": [
+          "player:Cat"
+        ],
+        "4792|156133": [
+          "player:Cat"
+        ],
+        "4806|158697": [
+          "player:Cat"
+        ],
+        "4807|159735": [
+          "player:Cat"
+        ],
+        "4802|159421": [
+          "player:Cat"
+        ],
+        "4802|159422": [
+          "player:Cat"
+        ],
+        "4793|158288": [
+          "player:Cat"
+        ],
+        "4793|158286": [
+          "player:Cat"
+        ],
+        "4793|158282": [
+          "player:Cat"
+        ],
+        "4794|157026": [
+          "player:Cat"
+        ],
+        "4787|149664": [
+          "player:Cat"
+        ],
+        "4807|159732": [
+          "player:Cat"
+        ],
+        "4793|158283": [
+          "player:Cat"
+        ],
+        "4792|156134": [
+          "player:Cat"
+        ],
+        "4823|161786": [
+          "player:Cat"
+        ],
+        "4804|158491": [
+          "player:Cat"
+        ],
+        "4807|159734": [
+          "player:Cat"
+        ],
+        "4806|158699": [
+          "player:Cat"
+        ],
+        "4804|158493": [
+          "player:Cat"
+        ],
+        "4802|159420": [
+          "player:Cat"
+        ],
+        "4807|159730": [
+          "player:Cat"
+        ],
+        "4803|157232": [
+          "player:Cat"
+        ],
+        "4794|157022": [
+          "player:Cat"
+        ],
+        "4806|158693": [
+          "player:Cat"
+        ],
+        "4807|159731": [
+          "player:Cat"
+        ],
+        "4808|164852": [
+          "player:Cat"
+        ],
+        "4792|156130": [
+          "player:Cat"
+        ],
+        "4803|157227": [
+          "player:Cat"
+        ],
+        "4775|146631": [
+          "player:Cat"
+        ],
+        "4787|149661": [
+          "player:Cat"
+        ],
+        "4793|158281": [
+          "player:Cat"
+        ],
+        "4792|156132": [
+          "player:Cat"
+        ],
+        "4805|157554": [
+          "player:Cat"
+        ],
+        "4808|164853": [
+          "player:Cat"
+        ],
+        "4775|146629": [
+          "player:Cat"
+        ],
+        "4790|149027": [
+          "player:Cat"
+        ],
+        "4803|157231": [
+          "player:Cat"
+        ],
+        "4778|147469": [
+          "player:Cat"
+        ],
+        "4807|159727": [
+          "player:Cat"
+        ],
+        "4775|146630": [
+          "player:Cat"
+        ],
+        "4807|159728": [
+          "player:Cat"
+        ],
+        "4807|159733": [
+          "player:Cat"
+        ],
+        "4802|159416": [
+          "player:Cat"
+        ],
+        "4778|147652": [
+          "player:Cat"
+        ],
+        "4780|155142": [
+          "player:Cat"
+        ],
+        "4778|147468": [
+          "player:Cat"
+        ],
+        "4778|147651": [
+          "player:Cat"
+        ],
+        "4790|148935": [
+          "player:Cat"
+        ],
+        "4790|149211": [
+          "player:Cat"
+        ],
+        "4790|149302": [
+          "player:Cat"
+        ],
+        "4806|158695": [
+          "player:Cat"
+        ],
+        "4807|159726": [
+          "player:Cat"
+        ],
+        "4804|158498": [
+          "player:Cat"
+        ],
+        "4804|158490": [
+          "player:Cat"
+        ],
+        "4805|157555": [
+          "player:Cat"
+        ],
+        "4787|149844": [
+          "player:Cat"
+        ],
+        "4802|159419": [
+          "player:Cat"
+        ],
+        "4803|157226": [
+          "player:Cat"
+        ],
+        "4808|164854": [
+          "player:Cat"
+        ],
+        "4793|158280": [
+          "player:Cat"
+        ],
+        "4807|159724": [
+          "player:Cat"
+        ],
+        "4804|158495": [
+          "player:Cat"
+        ],
+        "4802|159414": [
+          "player:Cat"
+        ],
+        "4814|156037": [
+          "player:Cat"
+        ],
+        "4804|158494": [
+          "player:Cat"
+        ],
+        "4805|157553": [
+          "player:Cat"
+        ],
+        "4805|157550": [
+          "player:Cat"
+        ],
+        "4802|159412": [
+          "player:Cat"
+        ],
+        "4794|157021": [
+          "player:Cat"
+        ],
+        "4807|159729": [
+          "player:Cat"
+        ],
+        "4805|157557": [
+          "player:Cat"
+        ],
+        "4794|157114": [
+          "player:Cat"
+        ],
+        "4793|158287": [
+          "player:Cat"
+        ],
+        "4780|154957": [
+          "player:Cat"
+        ],
+        "4780|154959": [
+          "player:Cat"
+        ],
+        "4780|155143": [
+          "player:Cat"
+        ],
+        "4802|159418": [
+          "player:Cat"
+        ],
+        "4793|158279": [
+          "player:Cat"
+        ],
+        "4787|149934": [
+          "player:Cat"
+        ],
+        "4780|154961": [
+          "player:Cat"
+        ],
+        "4803|157229": [
+          "player:Cat"
+        ],
+        "4805|157558": [
+          "player:Cat"
+        ],
+        "4775|146633": [
+          "player:Cat"
+        ],
+        "4775|146636": [
+          "player:Cat"
+        ],
+        "4780|155144": [
+          "player:Cat"
+        ],
+        "4794|157020": [
+          "player:Cat"
+        ],
+        "4806|158698": [
+          "player:Cat"
+        ],
+        "4802|159423": [
+          "player:Cat"
+        ],
+        "4823|161730": [
+          "player:Cat"
+        ],
+        "4803|157228": [
+          "player:Cat"
+        ],
+        "4793|158285": [
+          "player:Cat"
+        ],
+        "4804|158492": [
+          "player:Cat"
+        ],
+        "4807|159685": [
+          "player:Cat"
+        ],
+        "4802|159417": [
+          "player:Cat"
+        ],
+        "4804|158444": [
+          "player:Cat"
+        ],
+        "4793|158235": [
+          "player:Cat"
+        ],
+        "4805|157551": [
+          "player:Cat"
+        ],
+        "4803|157225": [
+          "player:Cat"
+        ],
+        "4803|157230": [
+          "player:Cat"
+        ],
+        "4780|154960": [
+          "player:Cat"
+        ],
+        "4775|146632": [
+          "player:Cat"
+        ],
+        "4778|147649": [
+          "player:Cat"
+        ],
+        "4785|150669": [
+          "player:Cat"
+        ],
+        "4780|155141": [
+          "player:Cat"
+        ],
+        "4805|157552": [
+          "player:Cat"
+        ],
+        "4806|158696": [
+          "player:Cat"
+        ],
+        "4794|157024": [
+          "player:Cat"
+        ],
+        "4778|147471": [
+          "player:Cat"
+        ],
+        "4802|159415": [
+          "player:Cat"
+        ],
+        "4802|159413": [
+          "player:Cat"
+        ],
+        "4794|157025": [
+          "player:Cat"
+        ],
+        "4780|155139": [
+          "player:Cat"
+        ],
+        "4792|156131": [
+          "player:Cat"
+        ],
+        "4804|158497": [
+          "player:Cat"
+        ],
+        "4778|147467": [
+          "player:Cat"
+        ],
+        "4775|146634": [
+          "player:Cat"
+        ],
+        "5046|163848": [
+          "staff"
+        ],
+        "5045|164004": [
+          "staff"
+        ],
+        "5046|163849": [
+          "staff"
+        ],
+        "5045|164007": [
+          "staff"
+        ],
+        "5045|164251": [
+          "staff"
+        ],
+        "5046|163813": [
+          "staff"
+        ],
+        "5062|164082": [
+          "staff"
+        ]
+      }
+    },
+    "remainingAudit": 165,
+    "readyNext": 734,
+    "players": 9954,
+    "appearances": 44652
   },
   "window": {
     "from": "2026-11-12",
@@ -150,5 +737,6 @@
     "4811": "2026-11-27T07:56:18Z",
     "4812": "2026-11-27T07:56:21Z",
     "4814": "2026-11-27T07:56:25Z"
-  }
+  },
+  "windowFieldAudits": {}
 }
