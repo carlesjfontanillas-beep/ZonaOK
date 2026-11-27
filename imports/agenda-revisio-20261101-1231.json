@@ -4,33 +4,12 @@
     "to": "2026-12-31"
   },
   "sourceUrl": "https://www.hoqueipatins.fecapa.cat/ag/",
-  "runId": "46038634388",
-  "startedAt": "2026-11-27T17:06:50Z",
+  "runId": "46045019840",
+  "reviewScriptSha": "677f10ed58358301dd5c7924c273466e76a16be8aaacd91f77b3bdf331f97549",
+  "startedAt": "2026-11-27T17:52:13Z",
   "status": "partial",
   "changes": [],
   "unresolved": [
-    {
-      "iso": "2026-11-28",
-      "time": "17:30",
-      "competition": "BENJAMÍ PLATA GIRONA FASE1 GRUP B",
-      "home": "CP JONQUERENC",
-      "away": "CH LLORET CAFÈS CORNELLÀ A",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-28",
-      "time": "13:00",
-      "competition": "FEM 11 PLATA",
-      "home": "JOIERIA MONER SANT RAMON",
-      "away": "AUTO VIGATANA PATÍ VIC",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
     {
       "iso": "2026-11-08",
       "time": "10:00",
@@ -39,7 +18,7 @@
       "away": "PAVELLÓ FOMENT DEPORTIU CASSANENC",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -50,7 +29,7 @@
       "away": "CPI SANT IGNASI A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -61,7 +40,7 @@
       "away": "CP CONGRES A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -72,260 +51,7 @@
       "away": "POLIESPORTIU MUNICIPAL LA NORIA",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-28",
-      "time": "16:00",
-      "competition": "BCN BENJAMÍ BRONZE 2",
-      "home": "CLUB HOQUEI PRAT",
-      "away": "CLUB HOQUEI MOLINS DE REI",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "13:00",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "BIR",
-      "away": "MH",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "13:00",
-      "competition": "OK LIGA PLATA NORTE",
-      "home": "CHO",
-      "away": "ACO",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "16:00",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "PAL",
-      "away": "CPVS",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "17:00",
-      "competition": "OK LIGA PLATA SUR",
-      "home": "CHM",
-      "away": "SHA",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "17:30",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "CPM",
-      "away": "CPF",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "17:30",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "CPV",
-      "away": "BHC",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "17:30",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "PHSC",
-      "away": "HCA",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "18:30",
-      "competition": "OK LIGA PLATA NORTE",
-      "home": "DOM",
-      "away": "PHSC",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "19:30",
-      "competition": "OK LIGA MASCULINA",
-      "home": "CPC",
-      "away": "LLEI",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "19:30",
-      "competition": "OK LIGA MASCULINA",
-      "home": "NOIA",
-      "away": "CPV",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "19:30",
-      "competition": "OK LIGA MASCULINA",
-      "home": "PAS",
-      "away": "BAR",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "19:30",
-      "competition": "OK LIGA PLATA NORTE",
-      "home": "CPT",
-      "away": "BAR",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "19:30",
-      "competition": "OK LIGA PLATA SUR",
-      "home": "CHM",
-      "away": "CHP",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "19:30",
-      "competition": "OK LIGA PLATA SUR",
-      "home": "VIC",
-      "away": "CCH",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "20:00",
-      "competition": "OK LIGA MASCULINA",
-      "home": "CPV",
-      "away": "SHUM",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "20:00",
-      "competition": "OK LIGA PLATA NORTE",
-      "home": "CON",
-      "away": "REUS",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "20:00",
-      "competition": "OK LIGA PLATA NORTE",
-      "home": "RCJ",
-      "away": "CHVS",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "20:00",
-      "competition": "OK LIGA PLATA SUR",
-      "home": "CPM",
-      "away": "CPV",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "20:00",
-      "competition": "OK LIGA PLATA SUR",
-      "home": "HCSJ",
-      "away": "IHC",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "20:30",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "CHM",
-      "away": "CCH",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "20:30",
-      "competition": "OK LIGA MASCULINA",
-      "home": "LLO",
-      "away": "CHC",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-21",
-      "time": "20:30",
-      "competition": "OK LIGA PLATA NORTE",
-      "home": "CDM",
-      "away": "GEG",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -336,40 +62,7 @@
       "away": "PAVELLÓ MUNICIPAL CALDES DE MALAVELLA",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-22",
-      "time": "11:30",
-      "competition": "OK LIGA MASCULINA",
-      "home": "IHC",
-      "away": "REUS",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-22",
-      "time": "13:00",
-      "competition": "OK LIGA PLATA SUR",
-      "home": "ESP",
-      "away": "CPA",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-22",
-      "time": "18:30",
-      "competition": "OK LIGA PLATA SUR",
-      "home": "NOIA",
-      "away": "CEV",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -380,18 +73,7 @@
       "away": "CLUB HOQUEI LES FRANQUESES",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-24",
-      "time": "21:00",
-      "competition": "OK LIGA PLATA NORTE",
-      "home": "REUS",
-      "away": "PHSC",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -402,95 +84,7 @@
       "away": "UEH VETERANS 50",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-25",
-      "time": "16:30",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "MH",
-      "away": "CPV",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-25",
-      "time": "17:00",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "BHC",
-      "away": "CHM",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-25",
-      "time": "20:00",
-      "competition": "OK LIGA PLATA NORTE",
-      "home": "CHO",
-      "away": "CPT",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-25",
-      "time": "20:30",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "CPVS",
-      "away": "CPM",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-25",
-      "time": "20:45",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "CCH",
-      "away": "HCR",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-25",
-      "time": "21:00",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "CPF",
-      "away": "BIR",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-25",
-      "time": "21:00",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "HCA",
-      "away": "TEL",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-25",
-      "time": "21:00",
-      "competition": "OK LIGA IBERDROLA",
-      "home": "PHSC",
-      "away": "PAL",
-      "leagueId": "4775",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -501,7 +95,7 @@
       "away": "GEIEG",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -512,29 +106,7 @@
       "away": "HOQUEI PATINS TONA",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-29",
-      "time": "20:00",
-      "competition": "FEM 15 OR",
-      "home": "FENIE ENERGIA CERDANYOLA CCH A",
-      "away": "OXFORD HC SALT",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-28",
-      "time": "15:00",
-      "competition": "JÚNIOR OR 5",
-      "home": "FARNERS",
-      "away": "CP RIUDEBITLLES",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -545,7 +117,7 @@
       "away": "CH FIGUERES",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -556,18 +128,7 @@
       "away": "CLUB HOQUEI VILA-SECA",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-28",
-      "time": "13:00",
-      "competition": "FEM 15 PLATA",
-      "home": "CLUB PATÍ VILA-SANA B",
-      "away": "AUTO VIGATANA PATÍ VIC",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -578,7 +139,7 @@
       "away": "CHP SANT FELIU",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -589,7 +150,7 @@
       "away": "FCBETERANS",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -600,7 +161,7 @@
       "away": "TRANSLOP ALCAÑIZ CLUB PATIN",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -611,18 +172,7 @@
       "away": "REUS DEPORTIU",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-28",
-      "time": "16:30",
-      "competition": "FEM 11 PLATA",
-      "home": "CE SAGRERENC",
-      "away": "FUTBOL CLUB MARTINENC",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -633,7 +183,7 @@
       "away": "CP FOLGUEROLES B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -644,18 +194,29 @@
       "away": "FENIE ENERGIA CERDANYOLA CCH C",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
-      "iso": "2026-11-29",
-      "time": "20:00",
-      "competition": "1ª CATALANA FEMENINA GRUP A",
-      "home": "FARNERS",
-      "away": "CGM IGUALADA FEMENÍ HCP",
+      "iso": "2026-11-28",
+      "time": "13:00",
+      "competition": "FEM 11 PLATA",
+      "home": "JOIERIA MONER SANT RAMON",
+      "away": "AUTO VIGATANA PATÍ VIC",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-28",
+      "time": "13:00",
+      "competition": "FEM 15 PLATA",
+      "home": "CLUB PATÍ VILA-SANA B",
+      "away": "AUTO VIGATANA PATÍ VIC",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -666,29 +227,18 @@
       "away": "UNIÓ ESPORTIVA D'HORTA B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
-      "iso": "2026-11-29",
-      "time": "10:45",
-      "competition": "BCN BENJAMÍ PLATA 3",
-      "home": "CH LES FRANQUESES",
-      "away": "UNIÓ ESPORTIVA D'HORTA B",
+      "iso": "2026-11-28",
+      "time": "15:00",
+      "competition": "JÚNIOR OR 5",
+      "home": "FARNERS",
+      "away": "CP RIUDEBITLLES",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-29",
-      "time": "12:00",
-      "competition": "JÚNIOR OR 3",
-      "home": "CPI ESPANYOL",
-      "away": "REUS DEPORTIU A A",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -699,40 +249,29 @@
       "away": "CLUB PATÍ CENTELLES",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-29",
-      "time": "10:00",
-      "competition": "BCN BENJAMÍ OR 5",
-      "home": "CLUB HOQUEI VILASSAR",
-      "away": "CLUB PATÍ VOLTREGÀ B",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
       "iso": "2026-11-28",
-      "time": "17:00",
-      "competition": "INFANTIL PLATA 3",
-      "home": "CLUB HOQUEI CASTELLET",
-      "away": "MARTINELIA MANLLEU C",
+      "time": "16:00",
+      "competition": "BCN BENJAMÍ BRONZE 2",
+      "home": "CLUB HOQUEI PRAT",
+      "away": "CLUB HOQUEI MOLINS DE REI",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
       "iso": "2026-11-28",
-      "time": "18:00",
-      "competition": "ALEVÍ PLATA 8",
-      "home": "HOQUEI CLUB CASTELLAR B",
-      "away": "CP MASQUEFA C",
+      "time": "16:30",
+      "competition": "FEM 11 PLATA",
+      "home": "CE SAGRERENC",
+      "away": "FUTBOL CLUB MARTINENC",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -743,7 +282,7 @@
       "away": "IGUALADA HC",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -754,7 +293,18 @@
       "away": "GEIEG A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-28",
+      "time": "17:00",
+      "competition": "INFANTIL PLATA 3",
+      "home": "CLUB HOQUEI CASTELLET",
+      "away": "MARTINELIA MANLLEU C",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -765,7 +315,18 @@
       "away": "REUS DEPORTIU A A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-28",
+      "time": "17:30",
+      "competition": "BENJAMÍ PLATA GIRONA FASE1 GRUP B",
+      "home": "CP JONQUERENC",
+      "away": "CH LLORET CAFÈS CORNELLÀ A",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -776,29 +337,18 @@
       "away": "CEH SABADELL",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
       "iso": "2026-11-28",
-      "time": "19:00",
-      "competition": "JUVENIL OR 7",
-      "home": "CP MASQUEFA",
-      "away": "UNIÓ ESPORTIVA D'HORTA B",
+      "time": "18:00",
+      "competition": "ALEVÍ PLATA 8",
+      "home": "HOQUEI CLUB CASTELLAR B",
+      "away": "CP MASQUEFA C",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-29",
-      "time": "11:15",
-      "competition": "INFANTIL OR 4",
-      "home": "OXFORD HC SALT A",
-      "away": "IGUALADA HC D",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -809,7 +359,18 @@
       "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-28",
+      "time": "19:00",
+      "competition": "JUVENIL OR 7",
+      "home": "CP MASQUEFA",
+      "away": "UNIÓ ESPORTIVA D'HORTA B",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -820,7 +381,18 @@
       "away": "CH PALAFRUGELL A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-29",
+      "time": "10:00",
+      "competition": "BCN BENJAMÍ OR 5",
+      "home": "CLUB HOQUEI VILASSAR",
+      "away": "CLUB PATÍ VOLTREGÀ B",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -831,29 +403,7 @@
       "away": "CLUB HOQUEI ARENYS DE MAR B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-29",
-      "time": "10:30",
-      "competition": "FEM 11 PLATA",
-      "home": "GIRONA CLUB HOQUEI",
-      "away": "CP CORBERA",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-11-29",
-      "time": "10:30",
-      "competition": "FEM 13 PLATA",
-      "home": "CLUB PATI TORRELLES",
-      "away": "CP CALDES",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -864,7 +414,40 @@
       "away": "CHP MCDONALDS AMPOSTA",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-29",
+      "time": "10:30",
+      "competition": "FEM 11 PLATA",
+      "home": "GIRONA CLUB HOQUEI",
+      "away": "CP CORBERA",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-29",
+      "time": "10:30",
+      "competition": "FEM 13 PLATA",
+      "home": "CLUB PATI TORRELLES",
+      "away": "CP CALDES",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-29",
+      "time": "10:45",
+      "competition": "BCN BENJAMÍ PLATA 3",
+      "home": "CH LES FRANQUESES",
+      "away": "UNIÓ ESPORTIVA D'HORTA B",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -875,7 +458,7 @@
       "away": "CLUB HOQUEI VILA-SECA B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -886,7 +469,7 @@
       "away": "PAVELLÓ POLIESPORTIU DE BELL-LLOC",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -897,7 +480,18 @@
       "away": "CLUB PATÍ VILA-SANA B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-29",
+      "time": "11:15",
+      "competition": "INFANTIL OR 4",
+      "home": "OXFORD HC SALT A",
+      "away": "IGUALADA HC D",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -908,7 +502,18 @@
       "away": "CPI LA SAGRERA B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-29",
+      "time": "12:00",
+      "competition": "JÚNIOR OR 3",
+      "home": "CPI ESPANYOL",
+      "away": "REUS DEPORTIU A A",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -919,7 +524,7 @@
       "away": "MARTINELIA MANLLEU",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -930,7 +535,7 @@
       "away": "CLUB PATI VILAFRANCA AKO",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -941,7 +546,7 @@
       "away": "HOQUEI PATINS TONA",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -952,7 +557,7 @@
       "away": "CLUB ESPORTIU OLESA PATI",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -963,7 +568,7 @@
       "away": "CP JONQUERENC",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -974,7 +579,7 @@
       "away": "AUTO VIGATANA PATÍ VIC C",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -985,7 +590,7 @@
       "away": "CH MATARÓ",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -996,18 +601,29 @@
       "away": "CLUB PATI VILAFRANCA AKO",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
-      "iso": "2026-12-06",
-      "time": "10:00",
-      "competition": "JUVENIL OR 8",
-      "home": "CLUB PATI TORDERA B",
-      "away": "UEH BARBERÀ A",
+      "iso": "2026-11-29",
+      "time": "20:00",
+      "competition": "1ª CATALANA FEMENINA GRUP A",
+      "home": "FARNERS",
+      "away": "CGM IGUALADA FEMENÍ HCP",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-29",
+      "time": "20:00",
+      "competition": "FEM 15 OR",
+      "home": "FENIE ENERGIA CERDANYOLA CCH A",
+      "away": "OXFORD HC SALT",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1018,73 +634,7 @@
       "away": "CH RIPOLLET",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-06",
-      "time": "19:00",
-      "competition": "3ª CATALANA GRUP A",
-      "home": "CEH SABADELL",
-      "away": "EUROFIRMS CASSANENC",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-05",
-      "time": "12:30",
-      "competition": "JUVENIL OR 1",
-      "home": "CE NOIA FREIXENET C",
-      "away": "CLUB HOQUEI PRAT A",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-05",
-      "time": "20:00",
-      "competition": "INFANTIL OR 8",
-      "home": "SHUM FRIT RAVICH",
-      "away": "FENIE ENERGIA CERDANYOLA CCH B",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-13",
-      "time": "17:15",
-      "competition": "2ª CATALANA FEMENINA GRUP B",
-      "home": "SANT JOSEP DE BADALONA",
-      "away": "BADIA IGUALADA FEMENÍ HCP",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-05",
-      "time": "19:45",
-      "competition": "NACIONAL CATALANA MASCULINA",
-      "home": "CAPELLADES",
-      "away": "UEH BARBERÀ",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-05",
-      "time": "17:30",
-      "competition": "JÚNIOR OR 7",
-      "home": "UNIÓ ESPORTIVA D'HORTA B",
-      "away": "CH PALAFRUGELL",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1095,7 +645,7 @@
       "away": "CLUB HOQUEI CASTELLET",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1106,7 +656,7 @@
       "away": "CLUB PATÍ VOLTREGÀ",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1117,7 +667,7 @@
       "away": "CLUB PATÍ MONJOS B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1128,7 +678,7 @@
       "away": "CLUB HOQUEI MOLLERUSSA A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1139,7 +689,18 @@
       "away": "FUTBOL CLUB MARTINENC A A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-05",
+      "time": "12:30",
+      "competition": "JUVENIL OR 1",
+      "home": "CE NOIA FREIXENET C",
+      "away": "CLUB HOQUEI PRAT A",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1150,18 +711,7 @@
       "away": "CLUB HOQUEI VILA-SECA C",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-06",
-      "time": "15:00",
-      "competition": "ALEVÍ OR 8",
-      "home": "REUS DEPORTIU A A",
-      "away": "CP CORBERA",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1172,7 +722,51 @@
       "away": "CH JUNEDA",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-05",
+      "time": "17:30",
+      "competition": "JÚNIOR OR 7",
+      "home": "UNIÓ ESPORTIVA D'HORTA B",
+      "away": "CH PALAFRUGELL",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-05",
+      "time": "19:45",
+      "competition": "NACIONAL CATALANA MASCULINA",
+      "home": "CAPELLADES",
+      "away": "UEH BARBERÀ",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-05",
+      "time": "20:00",
+      "competition": "INFANTIL OR 8",
+      "home": "SHUM FRIT RAVICH",
+      "away": "FENIE ENERGIA CERDANYOLA CCH B",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-06",
+      "time": "10:00",
+      "competition": "JUVENIL OR 8",
+      "home": "CLUB PATI TORDERA B",
+      "away": "UEH BARBERÀ A",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1183,7 +777,18 @@
       "away": "ROTOTANK BIGUES I RIELLS",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-06",
+      "time": "15:00",
+      "competition": "ALEVÍ OR 8",
+      "home": "REUS DEPORTIU A A",
+      "away": "CP CORBERA",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1194,7 +799,7 @@
       "away": "ROTOTANK BIGUES I RIELLS",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1205,7 +810,18 @@
       "away": "CLUB PATÍ MONJOS",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-06",
+      "time": "19:00",
+      "competition": "3ª CATALANA GRUP A",
+      "home": "CEH SABADELL",
+      "away": "EUROFIRMS CASSANENC",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1216,29 +832,7 @@
       "away": "POLIESPORTIU RIPOLL",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-12",
-      "time": "16:30",
-      "competition": "INFANTIL PLATA 1",
-      "home": "CH LLORET CAFÈS CORNELLÀ",
-      "away": "CLUB PATI TORDERA B",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-13",
-      "time": "10:30",
-      "competition": "TARRAGONA PREBENJAMI BRONZE",
-      "home": "HC VALLS FM LOGISTIC B",
-      "away": "CLUB D'ESPORTS VENDRELL C",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1249,18 +843,7 @@
       "away": "CLUB DESPORTS VENDRELL",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-19",
-      "time": "16:00",
-      "competition": "TARRAGONA BENJAMÍ",
-      "home": "CP RIUDOMS D",
-      "away": "CLUB DESPORTS VENDRELL",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1271,7 +854,7 @@
       "away": "CP RIUDOMS B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1282,18 +865,7 @@
       "away": "CH FIGUERES B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-12",
-      "time": "18:30",
-      "competition": "JÚNIOR OR 5",
-      "home": "FARNERS",
-      "away": "CE NOIA FREIXENET A",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1304,18 +876,7 @@
       "away": "CLUB HOQUEI PRAT",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-13",
-      "time": "17:30",
-      "competition": "FEM 17 PLATA",
-      "home": "HOQUEI CLUB ALPICAT",
-      "away": "CH LLORET CAFÈS CORNELLÀ",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1326,7 +887,7 @@
       "away": "CLUB HOQUEI MOLLERUSSA A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1337,7 +898,18 @@
       "away": "CLUB D'ESPORTS VENDRELL A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-12",
+      "time": "16:30",
+      "competition": "INFANTIL PLATA 1",
+      "home": "CH LLORET CAFÈS CORNELLÀ",
+      "away": "CLUB PATI TORDERA B",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1348,7 +920,18 @@
       "away": "CH CALDES RECAM LÀSER A",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-12",
+      "time": "18:30",
+      "competition": "JÚNIOR OR 5",
+      "home": "FARNERS",
+      "away": "CE NOIA FREIXENET A",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1359,18 +942,7 @@
       "away": "CLUB HOQUEI MOLLERUSSA B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-13",
-      "time": "10:45",
-      "competition": "ALEVÍ PLATA 8",
-      "home": "CLUB HOQUEI ARENYS DE MAR",
-      "away": "CP CALDES A",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1381,7 +953,7 @@
       "away": "CLUB ESPORTIU OLESA PATI",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1392,7 +964,29 @@
       "away": "PISTA 1 LA SEU D URGELL",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-13",
+      "time": "10:30",
+      "competition": "TARRAGONA PREBENJAMI BRONZE",
+      "home": "HC VALLS FM LOGISTIC B",
+      "away": "CLUB D'ESPORTS VENDRELL C",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-13",
+      "time": "10:45",
+      "competition": "ALEVÍ PLATA 8",
+      "home": "CLUB HOQUEI ARENYS DE MAR",
+      "away": "CP CALDES A",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1403,7 +997,29 @@
       "away": "GENERALI HC PALAU",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-13",
+      "time": "17:15",
+      "competition": "2ª CATALANA FEMENINA GRUP B",
+      "home": "SANT JOSEP DE BADALONA",
+      "away": "BADIA IGUALADA FEMENÍ HCP",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-13",
+      "time": "17:30",
+      "competition": "FEM 17 PLATA",
+      "home": "HOQUEI CLUB ALPICAT",
+      "away": "CH LLORET CAFÈS CORNELLÀ",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1414,18 +1030,7 @@
       "away": "CP SUBUR SITGES",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-20",
-      "time": "17:00",
-      "competition": "2ª CATALANA GRUP C",
-      "home": "CAPELLADES",
-      "away": "CP SUBUR SITGES",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1436,51 +1041,7 @@
       "away": "PÈTALS D’ART FDCASSANENC C",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-20",
-      "time": "10:00",
-      "competition": "FEM 11 PLATA",
-      "home": "CLUB PATI TORRELLES",
-      "away": "VICIO PHC SANT CUGAT B",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-19",
-      "time": "15:00",
-      "competition": "JUVENIL PLATA 4",
-      "home": "AUTO VIGATANA PATÍ VIC D",
-      "away": "CH LLORET CAFÈS CORNELLÀ",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-19",
-      "time": "15:00",
-      "competition": "BCN BENJAMÍ OR 4",
-      "home": "AUTO VIGATANA PATÍ VIC B",
-      "away": "CH CALDES RECAM LÀSER C",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-20",
-      "time": "16:15",
-      "competition": "ALEVÍ PLATA 1",
-      "home": "CP FOLGUEROLES B",
-      "away": "AUTO VIGATANA PATÍ VIC C",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1491,7 +1052,7 @@
       "away": "CP TARADELL",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1502,7 +1063,18 @@
       "away": "CH CALDES RECAM LÀSER B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-19",
+      "time": "15:00",
+      "competition": "BCN BENJAMÍ OR 4",
+      "home": "AUTO VIGATANA PATÍ VIC B",
+      "away": "CH CALDES RECAM LÀSER C",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1513,7 +1085,18 @@
       "away": "CH RIPOLLET B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-19",
+      "time": "15:00",
+      "competition": "JUVENIL PLATA 4",
+      "home": "AUTO VIGATANA PATÍ VIC D",
+      "away": "CH LLORET CAFÈS CORNELLÀ",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1524,7 +1107,18 @@
       "away": "GENERALI HC PALAU B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-19",
+      "time": "16:00",
+      "competition": "TARRAGONA BENJAMÍ",
+      "home": "CP RIUDOMS D",
+      "away": "CLUB DESPORTS VENDRELL",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1535,18 +1129,7 @@
       "away": "CH FIGUERES",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
-      "possibleSchedules": []
-    },
-    {
-      "iso": "2026-12-20",
-      "time": "12:30",
-      "competition": "1ª CATALANA FEMENINA GRUP A",
-      "home": "CP BLANES",
-      "away": "PONS LLEIDA BELL-LLOC",
-      "leagueId": "",
-      "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1557,7 +1140,18 @@
       "away": "RIBES CP B B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-20",
+      "time": "10:00",
+      "competition": "FEM 11 PLATA",
+      "home": "CLUB PATI TORRELLES",
+      "away": "VICIO PHC SANT CUGAT B",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1568,7 +1162,7 @@
       "away": "CP RODA",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1579,18 +1173,18 @@
       "away": "CP SANT CELONI B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
       "iso": "2026-12-20",
-      "time": "19:00",
-      "competition": "1ª CATALANA GRUP A",
-      "home": "ANDBANK- ANDORRA HOQUEI CLUB",
-      "away": "CP CONGRÉS",
+      "time": "12:30",
+      "competition": "1ª CATALANA FEMENINA GRUP A",
+      "home": "CP BLANES",
+      "away": "PONS LLEIDA BELL-LLOC",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1601,7 +1195,29 @@
       "away": "HOQUEI PATINS TONA",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-20",
+      "time": "16:15",
+      "competition": "ALEVÍ PLATA 1",
+      "home": "CP FOLGUEROLES B",
+      "away": "AUTO VIGATANA PATÍ VIC C",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-20",
+      "time": "17:00",
+      "competition": "2ª CATALANA GRUP C",
+      "home": "CAPELLADES",
+      "away": "CP SUBUR SITGES",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
       "possibleSchedules": []
     },
     {
@@ -1612,7 +1228,392 @@
       "away": "UEH BARBERÀ B",
       "leagueId": "",
       "matchId": "",
-      "reason": "Identitat o marcador no inequívoc",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-12-20",
+      "time": "19:00",
+      "competition": "1ª CATALANA GRUP A",
+      "home": "ANDBANK- ANDORRA HOQUEI CLUB",
+      "away": "CP CONGRÉS",
+      "leagueId": "",
+      "matchId": "",
+      "reason": "No s'ha trobat una correspondència inequívoca a l'Agenda oficial",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "13:00",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "BIR",
+      "away": "MH",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "13:00",
+      "competition": "OK LIGA PLATA NORTE",
+      "home": "CHO",
+      "away": "ACO",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "16:00",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "PAL",
+      "away": "CPVS",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "17:00",
+      "competition": "OK LIGA PLATA SUR",
+      "home": "CHM",
+      "away": "SHA",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "17:30",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "CPM",
+      "away": "CPF",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "17:30",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "CPV",
+      "away": "BHC",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "17:30",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "PHSC",
+      "away": "HCA",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "18:30",
+      "competition": "OK LIGA PLATA NORTE",
+      "home": "DOM",
+      "away": "PHSC",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "19:30",
+      "competition": "OK LIGA MASCULINA",
+      "home": "CPC",
+      "away": "LLEI",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "19:30",
+      "competition": "OK LIGA MASCULINA",
+      "home": "NOIA",
+      "away": "CPV",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "19:30",
+      "competition": "OK LIGA MASCULINA",
+      "home": "PAS",
+      "away": "BAR",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "19:30",
+      "competition": "OK LIGA PLATA NORTE",
+      "home": "CPT",
+      "away": "BAR",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "19:30",
+      "competition": "OK LIGA PLATA SUR",
+      "home": "CHM",
+      "away": "CHP",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "19:30",
+      "competition": "OK LIGA PLATA SUR",
+      "home": "VIC",
+      "away": "CCH",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "20:00",
+      "competition": "OK LIGA MASCULINA",
+      "home": "CPV",
+      "away": "SHUM",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "20:00",
+      "competition": "OK LIGA PLATA NORTE",
+      "home": "CON",
+      "away": "REUS",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "20:00",
+      "competition": "OK LIGA PLATA NORTE",
+      "home": "RCJ",
+      "away": "CHVS",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "20:00",
+      "competition": "OK LIGA PLATA SUR",
+      "home": "CPM",
+      "away": "CPV",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "20:00",
+      "competition": "OK LIGA PLATA SUR",
+      "home": "HCSJ",
+      "away": "IHC",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "20:30",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "CHM",
+      "away": "CCH",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "20:30",
+      "competition": "OK LIGA MASCULINA",
+      "home": "LLO",
+      "away": "CHC",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "20:30",
+      "competition": "OK LIGA PLATA NORTE",
+      "home": "CDM",
+      "away": "GEG",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-22",
+      "time": "11:30",
+      "competition": "OK LIGA MASCULINA",
+      "home": "IHC",
+      "away": "REUS",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-22",
+      "time": "13:00",
+      "competition": "OK LIGA PLATA SUR",
+      "home": "ESP",
+      "away": "CPA",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-22",
+      "time": "18:30",
+      "competition": "OK LIGA PLATA SUR",
+      "home": "NOIA",
+      "away": "CEV",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-24",
+      "time": "21:00",
+      "competition": "OK LIGA PLATA NORTE",
+      "home": "REUS",
+      "away": "PHSC",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-25",
+      "time": "16:30",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "MH",
+      "away": "CPV",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-25",
+      "time": "17:00",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "BHC",
+      "away": "CHM",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-25",
+      "time": "20:00",
+      "competition": "OK LIGA PLATA NORTE",
+      "home": "CHO",
+      "away": "CPT",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-25",
+      "time": "20:30",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "CPVS",
+      "away": "CPM",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-25",
+      "time": "20:45",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "CCH",
+      "away": "HCR",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-25",
+      "time": "21:00",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "CPF",
+      "away": "BIR",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-25",
+      "time": "21:00",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "HCA",
+      "away": "TEL",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
+      "possibleSchedules": []
+    },
+    {
+      "iso": "2026-11-25",
+      "time": "21:00",
+      "competition": "OK LIGA IBERDROLA",
+      "home": "PHSC",
+      "away": "PAL",
+      "leagueId": "4775",
+      "matchId": "",
+      "reason": "Calendari IDP sense correspondència única",
       "possibleSchedules": []
     }
   ],
@@ -1624,10 +1625,17 @@
   "sourcePages": 1,
   "unchanged": 4479,
   "proposals": 0,
+  "leagueChecks": [
+    {
+      "leagueId": "4775",
+      "status": "partial-identifiers",
+      "rows": 72
+    }
+  ],
   "catalogAfter": 12397,
   "windowAfter": 4625,
   "changed": 0,
   "dateChanged": 0,
   "timeChanged": 0,
-  "finishedAt": "2026-11-27T17:07:09Z"
+  "finishedAt": "2026-11-27T17:52:34Z"
 }
