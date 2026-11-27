@@ -1,149 +1,125 @@
 name: 'ZonaOK - Actes TOTAL AUTO (Chromium Playwright)'
-
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/zonaok-auto-actes.yml'
   workflow_dispatch:
     inputs:
       scope:
-        description: 'fast=actualitzacio dels darrers 7 dies; full=repàs historic'
-        required: true
         type: choice
-        options:
-          - fast
-          - full
-        default: fast
+        options: [full, fast]
+        default: full
       limit:
-        description: 'Nombre de partits a revisar (nomes Actes); 0=tots'
-        required: true
         type: string
         default: '40'
       offset:
-        description: 'Mode full Actes: auto o numero de partida'
-        required: true
         type: string
-        default: 'auto'
+        default: auto
       publish:
-        description: 'Publicar les dades verificades un cop validades.'
-        required: true
         type: boolean
         default: true
   schedule:
-    - cron: '3,8,13,18,23,28,33,38,43,48,53,58 * * * *'
-
+    - cron: '3,18,33,48 * * * *'
 permissions:
   contents: write
   actions: write
-
-# Una cua per importació; publicació optimista amb fusió sobre el main actual.
 concurrency:
   group: zonaok-import-actes
   cancel-in-progress: false
-
 jobs:
   importar:
     runs-on: ubuntu-latest
-    timeout-minutes: 65
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
     steps:
+      - name: Pausar tots els altres workflows i cancel·lar imports en curs
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --paginate "repos/$GH_REPO/actions/workflows?per_page=100" --jq '.workflows[] | select(.path | startswith(".github/workflows/")) | select(.path != ".github/workflows/zonaok-auto-actes.yml") | select(.state == "active") | [.id,.path] | @tsv' > "$RUNNER_TEMP/workflows-to-pause"
+          while IFS=$'\t' read -r id path; do
+            [ -n "$id" ] || continue
+            gh api -X PUT "repos/$GH_REPO/actions/workflows/$id/disable"
+            echo "PAUSAT: $path"
+          done < "$RUNNER_TEMP/workflows-to-pause"
+          for attempt in 1 2 3 4 5 6; do
+            gh api "repos/$GH_REPO/actions/runs?per_page=100" --jq '.workflow_runs[] | select(.path | startswith(".github/workflows/")) | select(.path != ".github/workflows/zonaok-auto-actes.yml") | select(.status != "completed") | .id' > "$RUNNER_TEMP/other-runs"
+            if [ ! -s "$RUNNER_TEMP/other-runs" ]; then break; fi
+            while read -r id; do
+              gh run cancel "$id" --repo "$GH_REPO" || true
+            done < "$RUNNER_TEMP/other-runs"
+            sleep 10
+          done
+          gh api "repos/$GH_REPO/actions/runs?per_page=100" --jq '.workflow_runs[] | select(.path | startswith(".github/workflows/")) | select(.path != ".github/workflows/zonaok-auto-actes.yml") | select(.status != "completed") | .id' > "$RUNNER_TEMP/other-runs"
+          test ! -s "$RUNNER_TEMP/other-runs"
+          echo "Només Actes queda habilitat; altres execucions aturades."
       - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
-          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Decidir si toca importar segons l'horari Europe/Madrid
-        id: schedule_gate
-        if: ${{ github.event_name == 'schedule' }}
-        env:
-          GITHUB_EVENT_SCHEDULE: ${{ github.event.schedule }}
-        run: python scripts/zonaok_schedule_gate.py --mode actes
-
-      - name: Instal·lar Playwright + Chromium
-        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
-        shell: bash
+      - name: Preparar i provar els lectors FECAPA
         run: |
-          set -euo pipefail
           python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
           python -m playwright install --with-deps chromium
-      - name: Proves de fusió conservadora
-        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
+          python -m py_compile scripts/zonaok_actes_recovery_only.py
+          python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Fase 1 - recuperar IDP (només identificadors; agenda i marcadors intactes)
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.publish }}
         shell: bash
-        run: python -m unittest discover -s tests -p 'test_*.py' -v
-      - name: Capturar actes a FECAPA amb navegador real
-        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
-        shell: bash
-        env:
-          LIMIT: ${{ github.event_name == 'schedule' && '40' || inputs.limit }}
-          SCOPE: ${{ github.event_name == 'schedule' && 'fast' || inputs.scope }}
-          OFFSET: ${{ github.event_name == 'schedule' && 'auto' || inputs.offset }}
-        run: |
-          set -euo pipefail
-          xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \
-            --mode actes --scope "${SCOPE:-fast}" --offset "${OFFSET:-auto}" --limit "${LIMIT:-40}" \
-            --capture captura-actes-auto.json --report diagnostic-actes-auto.json
-      - name: Fusionar JSON únic i generar fitxers compatibles
-        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          python scripts/zonaok_fecapa_unificat.py merge \
-            --mode actes --capture captura-actes-auto.json \
-            --output zonaok-tots-partits.json --compat --report fusio-actes-auto.json
-      - name: Publicar només si l'usuari ho activa
-        if: ${{ (inputs.publish == true || github.event_name == 'schedule') && (github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true') }}
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          # Captura ja feta, pero es refa la fusio amb el main mes recent.
-          for attempt in 1 2 3 4 5 6 7 8; do
-            git fetch origin main
-            git reset --hard origin/main
-            python scripts/zonaok_fecapa_unificat.py merge \
-              --mode actes --capture captura-actes-auto.json \
-              --output zonaok-tots-partits.json --compat --report fusio-actes-auto.json
-            # Primer validar la fusió original, després la reducció justificada per duplicats.
-            python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
-            python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-actes.json
-            git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
-            if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
-            if git diff --cached --quiet; then echo 'Sense canvis nous'; exit 0; fi
-            git commit -m 'ZonaOK AUTO: actes actualitzar JSON unificat'
-            if git push origin HEAD:main; then
-              python scripts/zonaok_jugadors_trigger.py --catalog zonaok-tots-partits.json --state imports/jugadors-maintenance-state.json --previous-ref HEAD^ > player-trigger.txt
-              if grep -q '^run=true$' player-trigger.txt; then
-                gh workflow run jugadors-public.yml --repo carlesjfontanillas-beep/ZonaOK --ref main -f mode=flash || echo "::warning::No s'ha pogut activar Jugadors; el repàs programat recupera els partits pendents."
-              fi
-              exit 0
-            fi
-            echo 'Canvi concurrent a main, es reintenta la fusio...'
-            sleep 2
-          done
-          echo "ERROR: no s'ha pogut publicar després de 8 intents" >&2
-          exit 1
-      - name: Resum de captura i fusio
+          git pull --ff-only origin main
+          xvfb-run -a python scripts/zonaok_actes_recovery_only.py ids | tee "$RUNNER_TEMP/actes-ids.log"
+          python scripts/zonaok_fecapa_unificat.py validate
+          git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-recovery-state.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'ZonaOK Actes exclusiu: recuperar IDP oficials'
+            git push origin HEAD:main
+          fi
+      - name: Fase 2 - llegir acta oficial tancada i dades completes
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.publish }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git pull --ff-only origin main
+          mkdir -m 700 data
+          trap 'rm -rf data' EXIT
+          gzip -dc imports/jugadors-master.json.gz > data/jugadors-master.json
+          cp imports/jugadors-maintenance-state.json data/jugadors-maintenance-state.json
+          xvfb-run -a python scripts/zonaok_actes_recovery_only.py acts "$PWD/data" | tee "$RUNNER_TEMP/actes-contingut.log"
+          python scripts/verify_public_master.py data/jugadors-master.json
+          python scripts/zonaok_fecapa_unificat.py validate
+          gzip -n -c data/jugadors-master.json > imports/jugadors-master.json.gz
+          cp data/jugadors-maintenance-state.json imports/jugadors-maintenance-state.json
+          git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-recovery-state.json imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'ZonaOK Actes exclusiu: dades oficials verificades'
+            git push origin HEAD:main
+          fi
+      - name: Resum i diagnòstic per a la revisió
         if: always()
         shell: bash
         run: |
-          for f in diagnostic-actes-auto.json fusio-actes-auto.json; do
+          for f in "$RUNNER_TEMP/actes-ids.log" "$RUNNER_TEMP/actes-contingut.log"; do
             if [ -f "$f" ]; then
-              echo "## $f" >> "$GITHUB_STEP_SUMMARY"
-              echo '```json' >> "$GITHUB_STEP_SUMMARY"
-              head -c 8000 "$f" >> "$GITHUB_STEP_SUMMARY"
-              printf '\n```\n' >> "$GITHUB_STEP_SUMMARY"
+              echo '~~~' >> "$GITHUB_STEP_SUMMARY"
+              cat "$f" >> "$GITHUB_STEP_SUMMARY"
+              echo '~~~' >> "$GITHUB_STEP_SUMMARY"
             fi
           done
-      - name: Desar diagnostics
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: zonaok-actes-diagnostic
+          name: zonaok-actes-recuperacio
           if-no-files-found: ignore
           path: |
-            diagnostic-actes-auto.json
-            captura-actes-auto.json
-            fusio-actes-auto.json
-            diagnostic-duplicats-actes.json
+            ${{ runner.temp }}/actes-ids.log
+            ${{ runner.temp }}/actes-contingut.log
