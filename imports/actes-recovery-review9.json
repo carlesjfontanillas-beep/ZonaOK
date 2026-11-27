@@ -61,5 +61,472 @@
     "calendarIDs": 0,
     "checks": [],
     "untriedLeagues": 0
-  }
+  },
+  "windowFieldAudits": {},
+  "windowActAttempts": {
+    "4784|151834": "2026-11-27T12:15:17.610511+00:00",
+    "4791|159285": "2026-11-27T12:15:24.038275+00:00",
+    "4779|148198": "2026-11-27T12:15:30.711537+00:00",
+    "4782|150937": "2026-11-27T12:15:37.217270+00:00",
+    "4779|148191": "2026-11-27T12:15:43.907657+00:00",
+    "4781|154014": "2026-11-27T12:15:50.870154+00:00",
+    "4784|151829": "2026-11-27T12:15:57.661479+00:00",
+    "4791|159253": "2026-11-27T12:16:04.262537+00:00",
+    "4814|156522": "2026-11-27T12:16:24.341645+00:00"
+  },
+  "matchDiagnostics": {
+    "4784|151834": {
+      "status": "pending",
+      "reason": "incomplete_or_changed_roster",
+      "checkedAt": "2026-11-27T12:15:17.610511+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4791|159285": {
+      "status": "pending",
+      "reason": "incomplete_or_changed_roster",
+      "checkedAt": "2026-11-27T12:15:24.038275+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4779|148198": {
+      "status": "pending",
+      "reason": "incomplete_or_changed_roster",
+      "checkedAt": "2026-11-27T12:15:30.711537+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4782|150937": {
+      "status": "pending",
+      "reason": "incomplete_or_changed_roster",
+      "checkedAt": "2026-11-27T12:15:37.217270+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4779|148191": {
+      "status": "pending",
+      "reason": "incomplete_or_changed_roster",
+      "checkedAt": "2026-11-27T12:15:43.907657+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4781|154014": {
+      "status": "pending",
+      "reason": "incomplete_or_changed_roster",
+      "checkedAt": "2026-11-27T12:15:50.870154+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4784|151829": {
+      "status": "pending",
+      "reason": "incomplete_or_changed_roster",
+      "checkedAt": "2026-11-27T12:15:57.661479+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4791|159253": {
+      "status": "pending",
+      "reason": "incomplete_or_changed_roster",
+      "checkedAt": "2026-11-27T12:16:04.262537+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4814|156522": {
+      "status": "pending",
+      "reason": "TimeoutError",
+      "checkedAt": "2026-11-27T12:16:24.341645+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    }
+  },
+  "lastActs": {
+    "phase": "acts",
+    "before": {
+      "window": {
+        "from": "2026-11-12",
+        "to": "2026-11-26"
+      },
+      "total": 9,
+      "catalogTotal": 12397,
+      "identified": 9,
+      "actaRequired": 9,
+      "nationalScoreOnly": 0,
+      "nationalWithScore": 0,
+      "nationalMissingScore": 0,
+      "allWindowMissingScores": 0,
+      "missingHistoricalIDs": 0,
+      "missingHistoricalScores": 0,
+      "historical": 9,
+      "verified": 0,
+      "historicalUnverified": 9,
+      "pendingWithID": 9
+    },
+    "after": {
+      "window": {
+        "from": "2026-11-12",
+        "to": "2026-11-26"
+      },
+      "total": 9,
+      "catalogTotal": 12397,
+      "identified": 9,
+      "actaRequired": 9,
+      "nationalScoreOnly": 0,
+      "nationalWithScore": 0,
+      "nationalMissingScore": 0,
+      "allWindowMissingScores": 0,
+      "missingHistoricalIDs": 0,
+      "missingHistoricalScores": 0,
+      "historical": 9,
+      "verified": 0,
+      "historicalUnverified": 9,
+      "pendingWithID": 9
+    },
+    "selected": 9,
+    "attempted": 9,
+    "verified": 0,
+    "pending": 9,
+    "reasons": {
+      "incomplete_or_changed_roster": 8,
+      "TimeoutError": 1
+    },
+    "reusedVerified": 0,
+    "matchDiagnostics": {
+      "4784|151834": {
+        "status": "pending",
+        "reason": "incomplete_or_changed_roster",
+        "checkedAt": "2026-11-27T12:15:17.610511+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4791|159285": {
+        "status": "pending",
+        "reason": "incomplete_or_changed_roster",
+        "checkedAt": "2026-11-27T12:15:24.038275+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4779|148198": {
+        "status": "pending",
+        "reason": "incomplete_or_changed_roster",
+        "checkedAt": "2026-11-27T12:15:30.711537+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4782|150937": {
+        "status": "pending",
+        "reason": "incomplete_or_changed_roster",
+        "checkedAt": "2026-11-27T12:15:37.217270+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4779|148191": {
+        "status": "pending",
+        "reason": "incomplete_or_changed_roster",
+        "checkedAt": "2026-11-27T12:15:43.907657+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4781|154014": {
+        "status": "pending",
+        "reason": "incomplete_or_changed_roster",
+        "checkedAt": "2026-11-27T12:15:50.870154+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4784|151829": {
+        "status": "pending",
+        "reason": "incomplete_or_changed_roster",
+        "checkedAt": "2026-11-27T12:15:57.661479+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4791|159253": {
+        "status": "pending",
+        "reason": "incomplete_or_changed_roster",
+        "checkedAt": "2026-11-27T12:16:04.262537+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4814|156522": {
+        "status": "pending",
+        "reason": "TimeoutError",
+        "checkedAt": "2026-11-27T12:16:24.341645+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      }
+    },
+    "remainingEligible": 9,
+    "coverage": {
+      "verifiedWithAllTrackedFields": 0,
+      "verifiedWithGaps": 0,
+      "playerFields": {
+        "Núm.": {
+          "present": 0,
+          "missing": 0
+        },
+        "P": {
+          "present": 0,
+          "missing": 0
+        },
+        "C": {
+          "present": 0,
+          "missing": 0
+        },
+        "5i": {
+          "present": 0,
+          "missing": 0
+        },
+        "G": {
+          "present": 0,
+          "missing": 0
+        },
+        "As": {
+          "present": 0,
+          "missing": 0
+        },
+        "PEN": {
+          "present": 0,
+          "missing": 0
+        },
+        "FD": {
+          "present": 0,
+          "missing": 0
+        },
+        "F→": {
+          "present": 0,
+          "missing": 0
+        },
+        "F←": {
+          "present": 0,
+          "missing": 0
+        },
+        "TA": {
+          "present": 0,
+          "missing": 0
+        },
+        "TB": {
+          "present": 0,
+          "missing": 0
+        },
+        "TR": {
+          "present": 0,
+          "missing": 0
+        }
+      },
+      "optionalPlayerFields": [
+        "Cat"
+      ],
+      "optionalActaFields": [
+        "staff"
+      ],
+      "gapCounts": {},
+      "unconfirmedGapsByMatch": {}
+    },
+    "remainingAudit": 0,
+    "pendingCompleteActs": 9,
+    "pendingByMatch": {
+      "4779|148191": {
+        "iso": "2026-11-15",
+        "competition": "2ª CATALANA GRUP C",
+        "home": "FENIE ENERGIA CERDANYOLA CCH",
+        "away": "CP SUBUR SITGES",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148191",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "incomplete_or_changed_roster",
+          "checkedAt": "2026-11-27T12:15:43.907657+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4779|148198": {
+        "iso": "2026-11-21",
+        "competition": "2ª CATALANA GRUP C",
+        "home": "CP SUBUR SITGES",
+        "away": "HOQUEI BANYOLES",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148198",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "incomplete_or_changed_roster",
+          "checkedAt": "2026-11-27T12:15:30.711537+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4781|154014": {
+        "iso": "2026-11-15",
+        "competition": "3ª CATALANA GRUP E",
+        "home": "HC VILA-SANA ALPICAT",
+        "away": "CLUB PATI CALAFELL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=calendar&partido=154014",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "incomplete_or_changed_roster",
+          "checkedAt": "2026-11-27T12:15:50.870154+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4782|150937": {
+        "iso": "2026-11-21",
+        "competition": "JÚNIOR OR 1",
+        "home": "CLUB PATÍ VOLTREGÀ",
+        "away": "CLUB PATI CALAFELL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=150937",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "incomplete_or_changed_roster",
+          "checkedAt": "2026-11-27T12:15:37.217270+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4784|151829": {
+        "iso": "2026-11-15",
+        "competition": "JUVENIL OR 10",
+        "home": "CHP SANT FELIU A",
+        "away": "CLUB PATI CALAFELL B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151829",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "incomplete_or_changed_roster",
+          "checkedAt": "2026-11-27T12:15:57.661479+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4784|151834": {
+        "iso": "2026-11-22",
+        "competition": "JUVENIL OR 10",
+        "home": "CLUB PATI CALAFELL B",
+        "away": "CLUB D'ESPORTS VENDRELL B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151834",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "incomplete_or_changed_roster",
+          "checkedAt": "2026-11-27T12:15:17.610511+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4791|159253": {
+        "iso": "2026-11-15",
+        "competition": "ALEVÍ BRONZE",
+        "home": "CP CALDES B",
+        "away": "CE CORNELLÀ",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4791&vista=calendar&partido=159253",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "incomplete_or_changed_roster",
+          "checkedAt": "2026-11-27T12:16:04.262537+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4791|159285": {
+        "iso": "2026-11-22",
+        "competition": "ALEVÍ BRONZE",
+        "home": "CE SAGRERENC",
+        "away": "CE CORNELLÀ",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4791&vista=calendar&partido=159285",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "incomplete_or_changed_roster",
+          "checkedAt": "2026-11-27T12:15:24.038275+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4814|156522": {
+        "iso": "2026-11-14",
+        "competition": "BCN PREBENJAMI PLATA 4",
+        "home": "UNIÓ ESPORTIVA D'HORTA A",
+        "away": "CP MONTESQUIU",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4814&vista=calendar&partido=156522",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "TimeoutError",
+          "checkedAt": "2026-11-27T12:16:24.341645+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      }
+    },
+    "readyNext": 0,
+    "players": 9975,
+    "appearances": 52418
+  },
+  "lastActsFinishedAt": "2026-11-27T12:16:43Z"
 }
