@@ -3,13 +3,13 @@
 import asyncio, json, re, time, sys, copy
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
-from collections import Counter
+from urllib.parse import urlparse, parse_qs
 from types import SimpleNamespace
 from playwright.async_api import async_playwright
 from zonaok_fecapa_unificat import (CANONICAL, ROOT, JS_CALENDAR, league_ids_from_files,
     verified_league_rows, make_match_url, match_index, clean, write_compatibility, local_today,
     score_tuple, utc_now, chromium_context)
-from zonaok_jugadors_incremental import candidates
+from zonaok_jugadors_incremental import candidates, norm
 from zonaok_jugadors_blocks import run_matches, STATS_REVISION
 from zonaok_jugadors_auto import load, save, verify_master, enrich_names
 from zonaok_jugadors_total_master import link_memberships
@@ -23,6 +23,13 @@ def ids(r):
     return (clean(r.get("leagueId") or r.get("league")),clean(r.get("matchId") or r.get("id")))
 def valid(r):
     return bool(make_match_url(*ids(r)))
+def url_ids(row):
+    u=urlparse(str(row.get("actaUrl") or ""))
+    if u.scheme!="https" or u.hostname not in {"www.hoqueipatins.fecapa.cat","hoqueipatins.fecapa.cat"}:return None
+    q=parse_qs(u.query)
+    l,m=q.get("liga",[]),q.get("partido",[])
+    if len(l)==len(m)==1 and make_match_url(l[0],m[0]):return l[0],m[0]
+    return None
 def attach(rows,r):
     l,m=ids(r)
     if not make_match_url(l,m):return False
@@ -57,6 +64,13 @@ def persist(doc, before):
     write(CANONICAL,doc);write_compatibility(doc)
 async def discover(doc,state):
     rows=doc["matches"]; added=0
+    for r in rows:
+        if valid(r):
+            if not r.get("actaUrl"):r["actaUrl"]=make_match_url(*ids(r))
+            continue
+        pair=url_ids(r)
+        if pair and all(not old or old==new for old,new in zip(ids(r),pair)) and not any(ids(x)==pair for x in rows):
+            r.update(leagueId=pair[0],matchId=pair[1]);added+=1
     for name,key in [("zonaok-actes.json","fixtures"),("zonaok-tots-actes.json","rows")]:
         for raw in read(Path(name),{}).get(key,[]):
             if isinstance(raw,dict):added+=attach(rows,raw)
@@ -90,12 +104,21 @@ async def discover(doc,state):
             await page.close()
         finally:await ctx.close();await browser.close()
     return report
+def all_candidates(doc):
+    rows=candidates(Path("."))
+    # Closed official acts can exist even if the cached fixture has no score.
+    for r in doc["matches"]:
+        if not historical(r) or not valid(r):continue
+        l,m=ids(r);key=l+"|"+m
+        if key in rows:continue
+        rows[key]={"leagueId":l,"matchId":m,"iso":r["iso"],"fingerprint":json.dumps([r.get("homeScore"),r.get("awayScore"),norm(r.get("status")),r.get("actaState"),r.get("actaUrl")],ensure_ascii=False,separators=(",",":"))}
+    return rows
 async def acts(doc,root):
     path=root/"jugadors-master.json"; statepath=root/"jugadors-maintenance-state.json"
     master=load(path,"41");verify_master(master)
     state=read(statepath,{"matches":{},"rosters":{}})
     matches=state.setdefault("matches",{})
-    rows=candidates(Path("."))
+    rows=all_candidates(doc)
     byid={ "|".join(ids(r)):r for r in doc["matches"] if valid(r)}
     # Previous closed-acta evidence can be reused only with an identical fingerprint.
     def verified(k,r):
@@ -120,7 +143,7 @@ async def acts(doc,root):
         if verified(k,r) and k in byid:promote(k)
     # A change in the acta availability field alone must not trigger another scrape.
     write(CANONICAL,doc)
-    fresh=candidates(Path("."))
+    fresh=all_candidates(doc)
     for k,r in fresh.items():
         if k in rows and verified(k,rows[k]):
             matches[k]["fingerprint"]=r["fingerprint"]
