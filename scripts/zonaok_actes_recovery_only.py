@@ -148,7 +148,7 @@ def all_candidates(doc):
         rows[key]={"leagueId":l,"matchId":m,"iso":r["iso"],"fingerprint":json.dumps([r.get("homeScore"),r.get("awayScore"),norm(r.get("status")),r.get("actaState"),r.get("actaUrl")],ensure_ascii=False,separators=(",",":"))}
     return rows
 def coverage(master,matches,byid):
-    fields=("Núm.","P","C","5i","Cat","G","As","PEN","FD","F→","F←","TA","TB","TR")
+    fields=("Núm.","P","C","5i","G","As","PEN","FD","F→","F←","TA","TB","TR")  # Cat is retained when available, but is optional for acta completeness.
     appearances={}
     for a in master["matchAppearances"].values():
         k=a["leagueId"]+"|"+a["matchId"]
@@ -229,7 +229,7 @@ async def acts(doc,root,control):
     verify_master(master);save(path,master);save(statepath,state)
     report["remainingEligible"]=sum(not verified(k,r) for k,r in fresh.items())
     gaps,field_counts=coverage(master,matches,byid)
-    report["coverage"]={"verifiedWithAllTrackedFields":sum(not v for v in gaps.values()),"verifiedWithGaps":sum(bool(v) for v in gaps.values()),"playerFields":field_counts,"gapCounts":{f:sum(f in v for v in gaps.values()) for f in sorted({f for v in gaps.values() for f in v})},"unconfirmedGapsByMatch":{k:v for k,v in gaps.items() if v}}
+    report["coverage"]={"verifiedWithAllTrackedFields":sum(not v for v in gaps.values()),"verifiedWithGaps":sum(bool(v) for v in gaps.values()),"playerFields":field_counts,"optionalPlayerFields":["Cat"],"gapCounts":{f:sum(f in v for v in gaps.values()) for f in sorted({f for v in gaps.values() for f in v})},"unconfirmedGapsByMatch":{k:v for k,v in gaps.items() if v}}
     report["remainingAudit"]=sum(bool(v) and k in fresh and verified(k,fresh[k]) for k,v in gaps.items())
     remaining={k for k,r in fresh.items() if not verified(k,r) or gaps.get(k)}
     report["pendingCompleteActs"]=len(remaining)
