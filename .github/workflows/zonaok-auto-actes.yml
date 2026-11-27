@@ -9,7 +9,7 @@ on:
     inputs:
       scope:
         type: choice
-        options: [full, fast, review9]
+        options: [full, fast, review9, agenda_dates]
         default: full
       limit:
         type: string
@@ -82,7 +82,12 @@ jobs:
               return json.loads(p.read_text()).get("lastActsFinishedAt","") if p.exists() else ""
           review=Path("imports/actes-recovery-review9.json")
           review_done=review.exists() and bool(json.loads(review.read_text()).get("lastActsFinishedAt"))
-          if os.environ["REQUEST_SCOPE"]=="review9" or not review_done:
+          agenda=Path("imports/agenda-revisio-20261101-1231.json")
+          agenda_done=agenda.exists() and bool(json.loads(agenda.read_text()).get("finishedAt"))
+          if os.environ["REQUEST_SCOPE"]=="agenda_dates" or not agenda_done:
+              window="agenda_dates"
+              paths[window]=str(agenda)
+          elif os.environ["REQUEST_SCOPE"]=="review9" or not review_done:
               window="review9"
               paths[window]=str(review)
           else:
@@ -96,10 +101,33 @@ jobs:
         run: |
           python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
           python -m playwright install --with-deps chromium
-          python -m py_compile scripts/zonaok_actes_recovery_only.py
+          python -m py_compile scripts/zonaok_actes_recovery_only.py scripts/zonaok_agenda_dates_review.py
           python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Agenda puntual - dates i hores del 1 novembre al 31 desembre
+        if: ${{ env.ZONAOK_ACTES_WINDOW == 'agenda_dates' && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --ff-only origin main
+          result=0
+          xvfb-run -a python scripts/zonaok_agenda_dates_review.py || result=$?
+          if [ "$result" = 0 ]; then
+            python scripts/zonaok_fecapa_unificat.py validate
+            git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json
+          else
+            git restore -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json
+          fi
+          test -f "$ACTES_STATE"
+          git add -- "$ACTES_STATE"
+          if ! git diff --cached --quiet; then
+            git commit -m 'ZonaOK Agenda puntual: revisió exclusiva de dates i hores novembre-desembre'
+            git push origin HEAD:main
+          fi
+          exit "$result"
       - name: Fase 1 - recuperar IDP (només identificadors; agenda i marcadors intactes)
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.publish }}
+        if: ${{ env.ZONAOK_ACTES_WINDOW != 'agenda_dates' && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
         shell: bash
         run: |
           set -euo pipefail
@@ -115,7 +143,7 @@ jobs:
             git push origin HEAD:main
           fi
       - name: Fase 2 - llegir acta oficial tancada i dades completes
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.publish }}
+        if: ${{ env.ZONAOK_ACTES_WINDOW != 'agenda_dates' && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
         shell: bash
         run: |
           set -euo pipefail
@@ -139,7 +167,8 @@ jobs:
         if: always()
         shell: bash
         run: |
-          for f in "$RUNNER_TEMP/actes-ids.log" "$RUNNER_TEMP/actes-contingut.log"; do
+          for f in "$RUNNER_TEMP/actes-ids.log" "$RUNNER_TEMP/actes-contingut.log" "$ACTES_STATE"; do
+            if [ "$f" = "$ACTES_STATE" ] && [ "${ZONAOK_ACTES_WINDOW:-}" != agenda_dates ]; then continue; fi
             if [ -f "$f" ]; then
               echo '~~~' >> "$GITHUB_STEP_SUMMARY"
               cat "$f" >> "$GITHUB_STEP_SUMMARY"
@@ -154,6 +183,7 @@ jobs:
           path: |
             ${{ runner.temp }}/actes-ids.log
             ${{ runner.temp }}/actes-contingut.log
+            imports/agenda-revisio-20261101-1231.json
 
       - name: Encadenar el següent lot de la finestra o reintentar amb pausa
         if: ${{ always() && !cancelled() && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
@@ -163,6 +193,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if [ "${ZONAOK_ACTES_WINDOW:-}" = agenda_dates ] && [ -f "$ACTES_STATE" ]; then
+            echo "Agenda puntual finalitzada; reprendre Actes sense reactivar les altres importacions."
+            active=$(gh run list --workflow zonaok-auto-actes.yml --branch main --limit 30 --json databaseId,status --jq "[.[] | select(.databaseId != $GITHUB_RUN_ID and .status != \"completed\")] | length")
+            if [ "$active" = 0 ]; then
+              gh workflow run zonaok-auto-actes.yml --ref main -f scope=full -f publish=true
+            fi
+            exit 0
+          fi
           if [ "${ZONAOK_ACTES_WINDOW:-}" = review9 ]; then
             echo "Lot exclusiu acabat; recuperar la cua històrica amb el mode full."
           fi
