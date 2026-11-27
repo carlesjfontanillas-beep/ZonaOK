@@ -55,36 +55,52 @@
     "calendarIDs": 0,
     "checks": [
       {
-        "league": "4808",
-        "error": "TimeoutError"
+        "league": "4822",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 34
       },
       {
-        "league": "4810",
-        "error": "TimeoutError"
+        "league": "4824",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 23
       },
       {
-        "league": "4813",
-        "error": "TimeoutError"
+        "league": "4833",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 20
       },
       {
-        "league": "4815",
-        "error": "TimeoutError"
+        "league": "4834",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 24
       },
       {
-        "league": "4818",
-        "error": "TimeoutError"
+        "league": "4856",
+        "ids": 0,
+        "status": "verified",
+        "accepted": 24
       },
       {
-        "league": "4819",
-        "error": "TimeoutError"
+        "league": "4858",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 20
       },
       {
-        "league": "4820",
-        "error": "TimeoutError"
+        "league": "4860",
+        "ids": 0,
+        "status": "verified",
+        "accepted": 15
       },
       {
-        "league": "4821",
-        "error": "TimeoutError"
+        "league": "5014",
+        "ids": 0,
+        "status": "verified",
+        "accepted": 1
       }
     ],
     "untriedLeagues": 0
@@ -777,14 +793,14 @@
     "4819": "2026-11-27T16:06:47Z",
     "4820": "2026-11-27T16:07:12Z",
     "4821": "2026-11-27T16:07:36Z",
-    "4822": "2026-11-27T14:07:32Z",
-    "4824": "2026-11-27T14:22:44Z",
-    "4833": "2026-11-27T14:22:47Z",
-    "4834": "2026-11-27T14:22:50Z",
-    "4856": "2026-11-27T14:22:53Z",
-    "4858": "2026-11-27T14:22:56Z",
-    "4860": "2026-11-27T14:22:59Z",
-    "5014": "2026-11-27T14:23:01Z",
+    "4822": "2026-11-27T16:23:03Z",
+    "4824": "2026-11-27T16:23:06Z",
+    "4833": "2026-11-27T16:23:10Z",
+    "4834": "2026-11-27T16:23:13Z",
+    "4856": "2026-11-27T16:23:16Z",
+    "4858": "2026-11-27T16:23:20Z",
+    "4860": "2026-11-27T16:23:23Z",
+    "5014": "2026-11-27T16:23:26Z",
     "5015": "2026-11-27T14:23:04Z",
     "5027": "2026-11-27T14:37:15Z",
     "5070": "2026-11-27T14:37:18Z",
