@@ -9,7 +9,7 @@ on:
     inputs:
       scope:
         type: choice
-        options: [full, fast]
+        options: [full, fast, review9]
         default: full
       limit:
         type: string
@@ -69,6 +69,8 @@ jobs:
           python-version: '3.12'
       - name: Seleccionar finestra de recuperació sense escriptors simultanis
         shell: bash
+        env:
+          REQUEST_SCOPE: ${{ inputs.scope || 'full' }}
         run: |
           python - <<'PY'
           import json,os
@@ -78,7 +80,13 @@ jobs:
           def last_done(k):
               p=Path(paths[k])
               return json.loads(p.read_text()).get("lastActsFinishedAt","") if p.exists() else ""
-          window="early" if not Path(paths["early"]).exists() else min(paths,key=lambda k:(last_done(k),k))
+          review=Path("imports/actes-recovery-review9.json")
+          review_done=review.exists() and bool(json.loads(review.read_text()).get("lastActsFinishedAt"))
+          if os.environ["REQUEST_SCOPE"]=="review9" or not review_done:
+              window="review9"
+              paths[window]=str(review)
+          else:
+              window="early" if not Path(paths["early"]).exists() else min(paths,key=lambda k:(last_done(k),k))
           with open(os.environ["GITHUB_ENV"],"a") as out:
               print("ZONAOK_ACTES_WINDOW="+window,file=out)
               print("ACTES_STATE="+paths[window],file=out)
@@ -155,6 +163,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          if [ "${ZONAOK_ACTES_WINDOW:-}" = review9 ]; then
+            echo "Revisió exclusiva de nou actes finalitzada; no encadenar altres períodes des d'aquest lot."
+            exit 0
+          fi
           if [ "$JOB_STATUS" != success ]; then
             [[ "$RETRY_DEPTH" =~ ^[0-9]+$ ]] || exit 1
             if [ "$RETRY_DEPTH" -lt 2 ]; then
