@@ -269,7 +269,8 @@ def apply(old, accepted):
     return rows,changes
 
 async def main():
-    report={"window":{"from":START,"to":END},"sourceUrl":AGENDA_URL,"runId":os.environ.get("GITHUB_RUN_ID"),\n            "reviewScriptSha":SCRIPT_SHA,
+    report={"window":{"from":START,"to":END},"sourceUrl":AGENDA_URL,"runId":os.environ.get("GITHUB_RUN_ID"),
+            "reviewScriptSha":SCRIPT_SHA,
             "startedAt":utc_now(),"status":"error","changes":[],"unresolved":[]}
     try:
         doc=load_unified(CANONICAL)
