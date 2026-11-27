@@ -37,16 +37,28 @@ def attach(rows,r):
     if not make_match_url(l,m):return False
     r={**r,"leagueId":l,"matchId":m}
     i=match_index(rows,r,"agenda")
-    if i is None or not historical(rows[i]) or valid(rows[i]):return False
+    if i is None or not requires_acta(rows[i]) or valid(rows[i]):return False
     if any(ids(x)==(l,m) for x in rows):return False
     rows[i].update(leagueId=l,matchId=m,actaUrl=make_match_url(l,m))
     return True
 def historical(r):
     return bool(r.get("iso") and START<=r["iso"]<=END and not re.search(
         r"ajorn|aplaz|susp|cancel|anul",str(r.get("status","")),re.I))
+def state_league(r):
+    name=norm(r.get("competition")).replace("-"," ")
+    name=" ".join(name.split())
+    return name in {"ok liga","ok liga masculina","ok liga plata norte","ok liga plata sur","ok liga iberdrola","ok liga femenina"}
+
+def requires_acta(r):
+    return historical(r) and not state_league(r)
+
 def summarize(doc):
-    rows=doc["matches"]; past=[r for r in rows if historical(r)]
-    return dict(window={"from":START,"to":END},total=len(past),catalogTotal=len(rows),identified=sum(valid(r) for r in past),
+    rows=doc["matches"]; window=[r for r in rows if historical(r)]
+    past=[r for r in window if requires_acta(r)]
+    national=[r for r in window if state_league(r)]
+    return dict(window={"from":START,"to":END},total=len(window),catalogTotal=len(rows),identified=sum(valid(r) for r in past),
+        actaRequired=len(past),nationalScoreOnly=len(national),nationalWithScore=sum(score_tuple(r) for r in national),nationalMissingScore=sum(not score_tuple(r) for r in national),
+        allWindowMissingScores=sum(not score_tuple(r) for r in window),
         missingHistoricalIDs=sum(not valid(r) for r in past),
         missingHistoricalScores=sum(not score_tuple(r) for r in past),
         historical=len(past),verified=sum(r.get("actaState")=="available" for r in past),
@@ -55,7 +67,7 @@ def summarize(doc):
 def persist(doc, before):
     if len(doc["matches"])!=len(before["matches"]):raise ValueError("fixture_count_changed")
     for a,b in zip(before["matches"],doc["matches"]):
-        if not historical(a) and a!=b:raise ValueError("outside_window_changed")
+        if not requires_acta(a) and a!=b:raise ValueError("outside_acta_scope_changed")
         if any(a.get(k)!=b.get(k) for k in ("iso","time","competition","home","away")) or (score_tuple(a) and (a.get("homeScore"),a.get("awayScore"))!=(b.get("homeScore"),b.get("awayScore"))):
             raise ValueError("fixture_or_score_changed")
         if valid(a) and ids(a)!=ids(b):raise ValueError("existing_id_changed")
@@ -69,7 +81,7 @@ def persist(doc, before):
 async def discover(doc,state):
     rows=doc["matches"]; added=0
     for r in rows:
-        if not historical(r):continue
+        if not requires_acta(r):continue
         if valid(r):
             if not r.get("actaUrl"):r["actaUrl"]=make_match_url(*ids(r))
             continue
@@ -83,8 +95,8 @@ async def discover(doc,state):
             if isinstance(raw.get("key"),str):
                 parts=raw["key"].split("|")
                 if len(parts)==5:raw.update(zip(("iso","time","competition","home","away"),parts))
-            if historical(raw):added+=attach(rows,raw)
-    pending=[r for r in rows if historical(r) and not valid(r)]
+            if requires_acta(raw):added+=attach(rows,raw)
+    pending=[r for r in rows if requires_acta(r) and not valid(r)]
     league_ids=league_ids_from_files()
     known={ids(r)[0] for r in pending if ids(r)[0] in league_ids}
     competitions={norm(r.get("competition")) for r in pending}
@@ -110,7 +122,7 @@ async def discover(doc,state):
                     await page.wait_for_selector("tr.sidgad-calendario-partido:visible",timeout=22000)
                     data=await page.evaluate(JS_CALENDAR,l)
                     accepted,meta=verified_league_rows(l,data["rows"],[])
-                    n=sum(attach(rows,r) for r in accepted if historical(r))
+                    n=sum(attach(rows,r) for r in accepted if requires_acta(r))
                     report["calendarIDs"]+=n
                     report["checks"].append({"league":l,"ids":n,"status":meta["status"],"accepted":len(accepted)})
                 except Exception as exc:
@@ -119,13 +131,13 @@ async def discover(doc,state):
                 await asyncio.sleep(1.5)
             await page.close()
         finally:await ctx.close();await browser.close()
-    report["untriedLeagues"]=sum(l not in checks for l in league_ids) if any(historical(r) and not valid(r) for r in rows) else 0
+    report["untriedLeagues"]=sum(l not in checks for l in league_ids) if any(requires_acta(r) and not valid(r) for r in rows) else 0
     return report
 def all_candidates(doc):
     rows={}
     # Closed official acts can exist even if the cached fixture has no score.
     for r in doc["matches"]:
-        if not historical(r) or not valid(r):continue
+        if not requires_acta(r) or not valid(r):continue
         l,m=ids(r);key=l+"|"+m
         if key in rows:continue
         rows[key]={"leagueId":l,"matchId":m,"iso":r["iso"],"fingerprint":json.dumps([r.get("homeScore"),r.get("awayScore"),norm(r.get("status")),r.get("actaState"),r.get("actaUrl")],ensure_ascii=False,separators=(",",":"))}
@@ -138,7 +150,7 @@ def coverage(master,matches,byid):
         if k in byid:appearances.setdefault(k,[]).append(a)
     result={}; counts={f:{"present":0,"missing":0} for f in fields}
     for k,r in byid.items():
-        if not historical(r) or r.get("actaState")!="available":continue
+        if not requires_acta(r) or r.get("actaState")!="available":continue
         detail=matches.get(k,{}).get("details",{}); people=appearances.get(k,[])
         missing=[]
         for f in fields:
