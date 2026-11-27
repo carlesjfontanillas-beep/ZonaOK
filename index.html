@@ -1351,11 +1351,13 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
  for(const g of groups)for(const r of g.standings){
   const key=norm(g.name)+'|'+norm(r.team);if(!r.team||seen.has(key))continue;seen.add(key);
   const s=r.stats||{},pj=num(r.played??s.PJ),pts=num(r.points??s.PTS),gf=num(r.gf??s.GF),gc=num(r.ga??s.GC),dg=gf!==null&&gc!==null?gf-gc:num(r.difference??s.DIF),valid=pj!==null&&pj>0&&pts!==null;
-  rows.push({team:r.team,group:g.name,pj,pts,gf,gc,dg,pg:num(s.PG),pe:num(s.PE),pp:num(s.PP),coef:valid?pts/pj:null,dgm:valid&&dg!==null?dg/pj:null,gfm:valid&&gf!==null?gf/pj:null,favorite:norm(g.name)===norm(anchor.name)&&norm(r.team)===team});
+  const groupPos=num(r.pos??r.position??s.POS);const position=groupPos!==null&&Number.isInteger(groupPos)&&groupPos>0?groupPos:null;
+  rows.push({team:r.team,group:g.name,position,pj,pts,gf,gc,dg,pg:num(s.PG),pe:num(s.PE),pp:num(s.PP),coef:valid?pts/pj:null,dgm:valid&&dg!==null?dg/pj:null,gfm:valid&&gf!==null?gf/pj:null,favorite:norm(g.name)===norm(anchor.name)&&norm(r.team)===team});
  }
  const desc=(a,b)=>a===b?0:a===null?1:b===null?-1:b-a;
- rows.sort((a,b)=>desc(a.coef,b.coef)||desc(a.dgm,b.dgm)||desc(a.gfm,b.gfm)||a.team.localeCompare(b.team,'ca')||a.group.localeCompare(b.group,'ca'));
- let prev=null,rank=0;rows.forEach((r,i)=>{if(r.coef===null){r.rank=null;return}if(!prev||desc(prev.coef,r.coef)||desc(prev.dgm,r.dgm)||desc(prev.gfm,r.gfm))rank=i+1;r.rank=rank;prev=r});
+ const posOrder=r=>r.position??Infinity;
+ rows.sort((a,b)=>(posOrder(a)===posOrder(b)?0:posOrder(a)-posOrder(b))||desc(a.coef,b.coef)||desc(a.dgm,b.dgm)||desc(a.gfm,b.gfm)||a.team.localeCompare(b.team,'ca')||a.group.localeCompare(b.group,'ca'));
+ let thirds=0,rank=0;rows.forEach(r=>{r.rank=r.position===null||r.coef===null?null:++rank;r.tier=r.rank===null?'':r.position===1?'first':r.position===2?'second':r.position===3&&thirds++<4?'third':''});
  return {rows,groups,competition:family==='BCN PB INICIACIO'?'BCN PB-INICIACIÓ':anchor.competition||anchor.name,capturedAt:data.capturedAt};
 }
   function openFavoriteRanking(league,fav){
@@ -1381,16 +1383,17 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
 .zok-ranking-table th:nth-child(2),.zok-ranking-table td:nth-child(2){text-align:left;min-width:124px;width:160px;max-width:180px;white-space:normal;overflow-wrap:anywhere;position:sticky;left:var(--rank-width);z-index:1;box-shadow:2px 0 0 #52738a55}
 .zok-ranking-table th:first-child,.zok-ranking-table th:nth-child(2){z-index:4;background:#214966}
 .zok-ranking-table td:nth-child(3){color:#fbc252;font-weight:750}
-.zok-ranking-table tr.zok-ranking-top td{font-weight:800}
-.zok-ranking-table tr.zok-ranking-top td:first-child{color:#fbc252}
-.zok-ranking-table tr.zok-ranking-favorite td{background:#554525;color:#ffe3a8;font-weight:800;border-bottom-color:#a17c35}
-.zok-ranking-table tr.zok-ranking-favorite td:first-child{box-shadow:inset 3px 0 #fbc252}
+.zok-ranking-table tbody tr.zok-ranking-first td{background:#b8e4bf;color:#103820;border-bottom-color:#80bf8e;font-weight:800}
+.zok-ranking-table tbody tr.zok-ranking-second td{background:#ffe58b;color:#463503;border-bottom-color:#d6b95e;font-weight:800}
+.zok-ranking-table tbody tr.zok-ranking-third td{background:#ffc38c;color:#512b0b;border-bottom-color:#df9a5c;font-weight:800}
+.zok-ranking-table tr.zok-ranking-favorite td{font-weight:850}
+.zok-ranking-table tr.zok-ranking-favorite td:first-child{box-shadow:inset 4px 0 #fbc252}
 .zok-ranking-group{display:block;color:#9fbed2;font-size:10px;line-height:1.25;margin-top:2px;font-weight:500}
-.zok-ranking-table tr.zok-ranking-favorite .zok-ranking-group{color:#eed6a3}
+.zok-ranking-table tr.zok-ranking-first .zok-ranking-group,.zok-ranking-table tr.zok-ranking-second .zok-ranking-group,.zok-ranking-table tr.zok-ranking-third .zok-ranking-group{color:inherit;opacity:.85}
 .zok-ranking-foot{flex:none;padding:9px 12px 10px;background:#0c263c;color:#b9cddd;font-size:10px;line-height:1.4}
 @media(max-width:480px){.zok-ranking-dialog{height:94dvh}.zok-ranking-table{--rank-width:29px;font-size:11px}.zok-ranking-table th,.zok-ranking-table td{padding:6px 5px}.zok-ranking-table th:nth-child(2),.zok-ranking-table td:nth-child(2){min-width:108px;width:115px;max-width:135px}.zok-ranking-group{font-size:9px}.zok-ranking-scroll{margin:0 6px}}`;document.head.append(style);
  }
- const d=el('dialog','zok-ranking-dialog'),head=el('div','zok-ranking-head'),title=el('strong','','📊 RÀNQUING'),close=el('button','','×'),meta=el('div','zok-ranking-meta','Carregant classificacions FECAPA…'),scroll=el('div','zok-ranking-scroll'),foot=el('div','zok-ranking-foot','Rànquing ZonaOK (no oficial). PTS/PJ · desempat DG/PJ i GF/PJ. No ajusta la dificultat dels rivals.');
+ const d=el('dialog','zok-ranking-dialog'),head=el('div','zok-ranking-head'),title=el('strong','','📊 RÀNQUING'),close=el('button','','×'),meta=el('div','zok-ranking-meta','Carregant classificacions FECAPA…'),scroll=el('div','zok-ranking-scroll'),foot=el('div','zok-ranking-foot','Rànquing ZonaOK (no oficial). Posició al grup, després PTS/PJ · desempat DG/PJ i GF/PJ. Verd: primers · groc: segons · taronja: 4 millors tercers.');
  d.setAttribute('aria-label','Rànquing de la competició');close.type='button';close.setAttribute('aria-label','Tancar');close.addEventListener('click',()=>d.close());head.append(title,close);d.append(head,meta,scroll,foot);document.body.append(d);window.ZonaOKRankingDialog=d;d.addEventListener('close',()=>{d.remove();if(window.ZonaOKRankingDialog===d)window.ZonaOKRankingDialog=null});d.showModal();
  const url=new URL('zonaok-classificacions.json',document.baseURI);url.searchParams.set('v',String(Date.now()));
  fetch(url,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('No s’han pogut carregar les classificacions.');return r.json()}).then(data=>{
@@ -1401,7 +1404,7 @@ window.ZonaOKStateTeamName=(function makeResolver(table,fixtures){
   const table=el('table','zok-ranking-table'),thead=el('thead'),header=el('tr'),body=el('tbody');
   ['#','Equip / grup','Coef.','PJ','PG','PE','PP','PTS','GF','GC','DG','DG/PJ','GF/PJ'].forEach(v=>{const th=el('th','',v);th.scope='col';header.append(th)});thead.append(header);
   const fmt=(v,digits=0)=>v===null?'—':v.toLocaleString('ca-ES',{minimumFractionDigits:digits,maximumFractionDigits:digits});
-  result.rows.forEach((r,i)=>{const tr=el('tr');if(i<20&&r.rank!==null)tr.classList.add('zok-ranking-top');if(r.favorite)tr.classList.add('zok-ranking-favorite');tr.append(el('td','',r.rank===null?'—':String(r.rank)));const name=el('td','',r.team);name.append(el('span','zok-ranking-group',r.group));tr.append(name);[fmt(r.coef,3),fmt(r.pj),fmt(r.pg),fmt(r.pe),fmt(r.pp),fmt(r.pts),fmt(r.gf),fmt(r.gc),fmt(r.dg),fmt(r.dgm,3),fmt(r.gfm,3)].forEach(v=>tr.append(el('td','',v)));body.append(tr)});
+  result.rows.forEach(r=>{const tr=el('tr');if(r.tier)tr.classList.add('zok-ranking-'+r.tier);if(r.favorite)tr.classList.add('zok-ranking-favorite');tr.append(el('td','',r.rank===null?'—':String(r.rank)));const name=el('td','',r.team);name.append(el('span','zok-ranking-group',r.group+(r.position===null?'':' · '+r.position+'è')));tr.append(name);[fmt(r.coef,3),fmt(r.pj),fmt(r.pg),fmt(r.pe),fmt(r.pp),fmt(r.pts),fmt(r.gf),fmt(r.gc),fmt(r.dg),fmt(r.dgm,3),fmt(r.gfm,3)].forEach(v=>tr.append(el('td','',v)));body.append(tr)});
   table.append(thead,body);scroll.replaceChildren(table);
  }).catch(e=>{if(d.isConnected)meta.textContent=e.message||'Error en carregar el rànquing.'});
 }
