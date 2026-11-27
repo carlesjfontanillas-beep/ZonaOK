@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-26T20:14:01.701707+00:00",
+  "capturedAt": "2026-11-27T00:16:12.587454+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -30501,6 +30501,616 @@
         }
       ]
     },
+    "5046:lcv-master-50": {
+      "name": "LCV MÀSTER 50",
+      "category": "LCV MÀSTER 50",
+      "competition": "LCV MÀSTER 50",
+      "leagueId": "5046",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=clasificaciones",
+      "capturedAt": "2026-11-27T00:16:12.587454+00:00",
+      "standingsAt": "2026-11-27T00:16:12.587454+00:00",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "UEH VETERANS 50",
+          "played": "5",
+          "points": "15",
+          "gf": "26",
+          "ga": "9",
+          "difference": "17",
+          "stats": {
+            "PTS": "15",
+            "PJ": "5",
+            "PG": "5",
+            "PE": "0",
+            "PP": "0",
+            "GF": "26",
+            "GC": "9",
+            "DIF": "17"
+          },
+          "shortTeam": "UEH VETERANS 50",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "2",
+          "team": "CLUB PATI VILAFRANCA",
+          "played": "5",
+          "points": "15",
+          "gf": "24",
+          "ga": "8",
+          "difference": "16",
+          "stats": {
+            "PTS": "15",
+            "PJ": "5",
+            "PG": "5",
+            "PE": "0",
+            "PP": "0",
+            "GF": "24",
+            "GC": "8",
+            "DIF": "16"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CE CORNELLÀ",
+          "played": "6",
+          "points": "13",
+          "gf": "40",
+          "ga": "18",
+          "difference": "22",
+          "stats": {
+            "PTS": "13",
+            "PJ": "6",
+            "PG": "4",
+            "PE": "1",
+            "PP": "1",
+            "GF": "40",
+            "GC": "18",
+            "DIF": "22"
+          },
+          "shortTeam": "CE CORNELLÀ",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "4",
+          "team": "UNIÓ ESPORTIVA LA GARRIGA +50",
+          "played": "7",
+          "points": "13",
+          "gf": "38",
+          "ga": "27",
+          "difference": "11",
+          "stats": {
+            "PTS": "13",
+            "PJ": "7",
+            "PG": "4",
+            "PE": "1",
+            "PP": "2",
+            "GF": "38",
+            "GC": "27",
+            "DIF": "11"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "MOLLET HC",
+          "played": "4",
+          "points": "12",
+          "gf": "25",
+          "ga": "9",
+          "difference": "16",
+          "stats": {
+            "PTS": "12",
+            "PJ": "4",
+            "PG": "4",
+            "PE": "0",
+            "PP": "0",
+            "GF": "25",
+            "GC": "9",
+            "DIF": "16"
+          },
+          "shortTeam": "MOLLET HC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "6",
+          "team": "GEIEG",
+          "played": "4",
+          "points": "9",
+          "gf": "25",
+          "ga": "14",
+          "difference": "11",
+          "stats": {
+            "PTS": "9",
+            "PJ": "4",
+            "PG": "3",
+            "PE": "0",
+            "PP": "1",
+            "GF": "25",
+            "GC": "14",
+            "DIF": "11"
+          },
+          "shortTeam": "GEIEG",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "7",
+          "team": "ESPANYOL",
+          "played": "6",
+          "points": "8",
+          "gf": "28",
+          "ga": "18",
+          "difference": "10",
+          "stats": {
+            "PTS": "8",
+            "PJ": "6",
+            "PG": "2",
+            "PE": "2",
+            "PP": "2",
+            "GF": "28",
+            "GC": "18",
+            "DIF": "10"
+          },
+          "shortTeam": "ESPANYOL",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "8",
+          "team": "CLUB PATI CALAFELL",
+          "played": "7",
+          "points": "6",
+          "gf": "24",
+          "ga": "34",
+          "difference": "-10",
+          "stats": {
+            "PTS": "6",
+            "PJ": "7",
+            "PG": "2",
+            "PE": "0",
+            "PP": "5",
+            "GF": "24",
+            "GC": "34",
+            "DIF": "-10"
+          }
+        },
+        {
+          "pos": "9",
+          "team": "CLUB HOQUEI PREMIA A",
+          "played": "4",
+          "points": "6",
+          "gf": "14",
+          "ga": "13",
+          "difference": "1",
+          "stats": {
+            "PTS": "6",
+            "PJ": "4",
+            "PG": "2",
+            "PE": "0",
+            "PP": "2",
+            "GF": "14",
+            "GC": "13",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "10",
+          "team": "CLUB HOQUEI LES FRANQUESES",
+          "played": "5",
+          "points": "4",
+          "gf": "14",
+          "ga": "17",
+          "difference": "-3",
+          "stats": {
+            "PTS": "4",
+            "PJ": "5",
+            "PG": "1",
+            "PE": "1",
+            "PP": "3",
+            "GF": "14",
+            "GC": "17",
+            "DIF": "-3"
+          }
+        },
+        {
+          "pos": "11",
+          "team": "HCSENTMENAT",
+          "played": "6",
+          "points": "1",
+          "gf": "8",
+          "ga": "34",
+          "difference": "-26",
+          "stats": {
+            "PTS": "1",
+            "PJ": "6",
+            "PG": "0",
+            "PE": "1",
+            "PP": "5",
+            "GF": "8",
+            "GC": "34",
+            "DIF": "-26"
+          },
+          "shortTeam": "HCSENTMENAT",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "12",
+          "team": "FENIE ENERGIA CERDANYOLA CCH",
+          "played": "4",
+          "points": "0",
+          "gf": "5",
+          "ga": "32",
+          "difference": "-27",
+          "stats": {
+            "PTS": "0",
+            "PJ": "4",
+            "PG": "0",
+            "PE": "0",
+            "PP": "4",
+            "GF": "5",
+            "GC": "32",
+            "DIF": "-27"
+          }
+        },
+        {
+          "pos": "13",
+          "team": "CLUB HOQUEI PREMIA B",
+          "played": "7",
+          "points": "0",
+          "gf": "13",
+          "ga": "51",
+          "difference": "-38",
+          "stats": {
+            "PTS": "0",
+            "PJ": "7",
+            "PG": "0",
+            "PE": "0",
+            "PP": "7",
+            "GF": "13",
+            "GC": "51",
+            "DIF": "-38"
+          }
+        }
+      ]
+    },
+    "5062:veterans-girona": {
+      "name": "VETERANS GIRONA",
+      "category": "VETERANS GIRONA",
+      "competition": "VETERANS GIRONA",
+      "leagueId": "5062",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=5062&vista=clasificaciones",
+      "capturedAt": "2026-11-27T00:16:12.587454+00:00",
+      "standingsAt": "2026-11-27T00:16:12.587454+00:00",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CH LLORET",
+          "played": "3",
+          "points": "9",
+          "gf": "26",
+          "ga": "10",
+          "difference": "16",
+          "stats": {
+            "PTS": "9",
+            "PJ": "3",
+            "PG": "3",
+            "PE": "0",
+            "PP": "0",
+            "GF": "26",
+            "GC": "10",
+            "DIF": "16"
+          },
+          "shortTeam": "CH LLORET",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "2",
+          "team": "CLUB PATÍ MALGRAT GRUP ESCOBAR A",
+          "played": "2",
+          "points": "6",
+          "gf": "13",
+          "ga": "9",
+          "difference": "4",
+          "stats": {
+            "PTS": "6",
+            "PJ": "2",
+            "PG": "2",
+            "PE": "0",
+            "PP": "0",
+            "GF": "13",
+            "GC": "9",
+            "DIF": "4"
+          }
+        },
+        {
+          "pos": "3",
+          "team": "CLUB PATÍ MALGRAT GRUP ESCOBAR B",
+          "played": "3",
+          "points": "6",
+          "gf": "11",
+          "ga": "7",
+          "difference": "4",
+          "stats": {
+            "PTS": "6",
+            "PJ": "3",
+            "PG": "2",
+            "PE": "0",
+            "PP": "1",
+            "GF": "11",
+            "GC": "7",
+            "DIF": "4"
+          }
+        },
+        {
+          "pos": "4",
+          "team": "METALL-LÒGIC FDCASSANENC",
+          "played": "4",
+          "points": "4",
+          "gf": "14",
+          "ga": "13",
+          "difference": "1",
+          "stats": {
+            "PTS": "4",
+            "PJ": "4",
+            "PG": "1",
+            "PE": "1",
+            "PP": "2",
+            "GF": "14",
+            "GC": "13",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "5",
+          "team": "SHUM FRIT RAVICH",
+          "played": "1",
+          "points": "3",
+          "gf": "2",
+          "ga": "1",
+          "difference": "1",
+          "stats": {
+            "PTS": "3",
+            "PJ": "1",
+            "PG": "1",
+            "PE": "0",
+            "PP": "0",
+            "GF": "2",
+            "GC": "1",
+            "DIF": "1"
+          }
+        },
+        {
+          "pos": "6",
+          "team": "CH PALAFRUGELL",
+          "played": "4",
+          "points": "1",
+          "gf": "9",
+          "ga": "23",
+          "difference": "-14",
+          "stats": {
+            "PTS": "1",
+            "PJ": "4",
+            "PG": "0",
+            "PE": "1",
+            "PP": "3",
+            "GF": "9",
+            "GC": "23",
+            "DIF": "-14"
+          },
+          "shortTeam": "CH PALAFRUGELL",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "7",
+          "team": "FARNERS",
+          "played": "3",
+          "points": "0",
+          "gf": "9",
+          "ga": "21",
+          "difference": "-12",
+          "stats": {
+            "PTS": "0",
+            "PJ": "3",
+            "PG": "0",
+            "PE": "0",
+            "PP": "3",
+            "GF": "9",
+            "GC": "21",
+            "DIF": "-12"
+          },
+          "shortTeam": "FARNERS",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        }
+      ]
+    },
+    "5070:fase-de-grups-golden-cat-masculina": {
+      "name": "FASE DE GRUPS GOLDEN CAT MASCULINA",
+      "category": "FASE DE GRUPS GOLDEN CAT MASCULINA",
+      "competition": "FASE DE GRUPS GOLDEN CAT MASCULINA",
+      "leagueId": "5070",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=5070&vista=clasificaciones",
+      "capturedAt": "2026-11-27T00:16:12.587454+00:00",
+      "standingsAt": "2026-11-27T00:16:12.587454+00:00",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "PORTUGAL M",
+          "played": "3",
+          "points": "6",
+          "gf": "14",
+          "ga": "9",
+          "difference": "5",
+          "stats": {
+            "PTS": "6",
+            "PJ": "3",
+            "PG": "2",
+            "PE": "0",
+            "PP": "1",
+            "GF": "14",
+            "GC": "9",
+            "DIF": "5"
+          },
+          "shortTeam": "PORTUGAL M",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "2",
+          "team": "ANGOLA",
+          "played": "3",
+          "points": "4",
+          "gf": "10",
+          "ga": "11",
+          "difference": "-1",
+          "stats": {
+            "PTS": "4",
+            "PJ": "3",
+            "PG": "1",
+            "PE": "1",
+            "PP": "1",
+            "GF": "10",
+            "GC": "11",
+            "DIF": "-1"
+          },
+          "shortTeam": "ANGOLA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "3",
+          "team": "CATALUNYA M",
+          "played": "3",
+          "points": "4",
+          "gf": "8",
+          "ga": "10",
+          "difference": "-2",
+          "stats": {
+            "PTS": "4",
+            "PJ": "3",
+            "PG": "1",
+            "PE": "1",
+            "PP": "1",
+            "GF": "8",
+            "GC": "10",
+            "DIF": "-2"
+          },
+          "shortTeam": "CATALUNYA M",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "4",
+          "team": "FRANÇA M",
+          "played": "3",
+          "points": "3",
+          "gf": "9",
+          "ga": "11",
+          "difference": "-2",
+          "stats": {
+            "PTS": "3",
+            "PJ": "3",
+            "PG": "1",
+            "PE": "0",
+            "PP": "2",
+            "GF": "9",
+            "GC": "11",
+            "DIF": "-2"
+          },
+          "shortTeam": "FRANÇA M",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        }
+      ]
+    },
+    "5073:fase-de-grups-golden-cat-femenina": {
+      "name": "FASE DE GRUPS GOLDEN CAT FEMENINA",
+      "category": "FASE DE GRUPS GOLDEN CAT FEMENINA",
+      "competition": "FASE DE GRUPS GOLDEN CAT FEMENINA",
+      "leagueId": "5073",
+      "url": "https://www.hoqueipatins.fecapa.cat/?liga=5073&vista=clasificaciones",
+      "capturedAt": "2026-11-27T00:16:12.587454+00:00",
+      "standingsAt": "2026-11-27T00:16:12.587454+00:00",
+      "standings": [
+        {
+          "pos": "1",
+          "team": "CATALUNYA F",
+          "played": "3",
+          "points": "9",
+          "gf": "15",
+          "ga": "1",
+          "difference": "14",
+          "stats": {
+            "PTS": "9",
+            "PJ": "3",
+            "PG": "3",
+            "PE": "0",
+            "PP": "0",
+            "GF": "15",
+            "GC": "1",
+            "DIF": "14"
+          },
+          "shortTeam": "CATALUNYA F",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "2",
+          "team": "PORTUGAL F",
+          "played": "3",
+          "points": "6",
+          "gf": "26",
+          "ga": "6",
+          "difference": "20",
+          "stats": {
+            "PTS": "6",
+            "PJ": "3",
+            "PG": "2",
+            "PE": "0",
+            "PP": "1",
+            "GF": "26",
+            "GC": "6",
+            "DIF": "20"
+          },
+          "shortTeam": "PORTUGAL F",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "3",
+          "team": "ALEMANYA",
+          "played": "3",
+          "points": "3",
+          "gf": "4",
+          "ga": "25",
+          "difference": "-21",
+          "stats": {
+            "PTS": "3",
+            "PJ": "3",
+            "PG": "1",
+            "PE": "0",
+            "PP": "2",
+            "GF": "4",
+            "GC": "25",
+            "DIF": "-21"
+          },
+          "shortTeam": "ALEMANYA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "4",
+          "team": "FRANÇA F",
+          "played": "3",
+          "points": "0",
+          "gf": "2",
+          "ga": "15",
+          "difference": "-13",
+          "stats": {
+            "PTS": "0",
+            "PJ": "3",
+            "PG": "0",
+            "PE": "0",
+            "PP": "3",
+            "GF": "2",
+            "GC": "15",
+            "DIF": "-13"
+          },
+          "shortTeam": "FRANÇA F",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        }
+      ]
+    },
     "5082:classificacio-general": {
       "name": "CLASSIFICACIÓ GENERAL",
       "category": "CLASSIFICACIÓ GENERAL",
@@ -30865,5 +31475,109 @@
         }
       ]
     }
-  }
+  },
+  "teamAliases": [
+    {
+      "leagueId": "5046",
+      "group": "LCV MÀSTER 50",
+      "team": "UEH VETERANS 50",
+      "shortTeam": "UEH VETERANS 50"
+    },
+    {
+      "leagueId": "5046",
+      "group": "LCV MÀSTER 50",
+      "team": "CE CORNELLÀ",
+      "shortTeam": "CE CORNELLÀ"
+    },
+    {
+      "leagueId": "5046",
+      "group": "LCV MÀSTER 50",
+      "team": "MOLLET HC",
+      "shortTeam": "MOLLET HC"
+    },
+    {
+      "leagueId": "5046",
+      "group": "LCV MÀSTER 50",
+      "team": "GEIEG",
+      "shortTeam": "GEIEG"
+    },
+    {
+      "leagueId": "5046",
+      "group": "LCV MÀSTER 50",
+      "team": "ESPANYOL",
+      "shortTeam": "ESPANYOL"
+    },
+    {
+      "leagueId": "5046",
+      "group": "LCV MÀSTER 50",
+      "team": "HCSENTMENAT",
+      "shortTeam": "HCSENTMENAT"
+    },
+    {
+      "leagueId": "5062",
+      "group": "VETERANS GIRONA",
+      "team": "CH LLORET",
+      "shortTeam": "CH LLORET"
+    },
+    {
+      "leagueId": "5062",
+      "group": "VETERANS GIRONA",
+      "team": "CH PALAFRUGELL",
+      "shortTeam": "CH PALAFRUGELL"
+    },
+    {
+      "leagueId": "5062",
+      "group": "VETERANS GIRONA",
+      "team": "FARNERS",
+      "shortTeam": "FARNERS"
+    },
+    {
+      "leagueId": "5070",
+      "group": "FASE DE GRUPS GOLDEN CAT MASCULINA",
+      "team": "PORTUGAL M",
+      "shortTeam": "PORTUGAL M"
+    },
+    {
+      "leagueId": "5070",
+      "group": "FASE DE GRUPS GOLDEN CAT MASCULINA",
+      "team": "ANGOLA",
+      "shortTeam": "ANGOLA"
+    },
+    {
+      "leagueId": "5070",
+      "group": "FASE DE GRUPS GOLDEN CAT MASCULINA",
+      "team": "CATALUNYA M",
+      "shortTeam": "CATALUNYA M"
+    },
+    {
+      "leagueId": "5070",
+      "group": "FASE DE GRUPS GOLDEN CAT MASCULINA",
+      "team": "FRANÇA M",
+      "shortTeam": "FRANÇA M"
+    },
+    {
+      "leagueId": "5073",
+      "group": "FASE DE GRUPS GOLDEN CAT FEMENINA",
+      "team": "CATALUNYA F",
+      "shortTeam": "CATALUNYA F"
+    },
+    {
+      "leagueId": "5073",
+      "group": "FASE DE GRUPS GOLDEN CAT FEMENINA",
+      "team": "PORTUGAL F",
+      "shortTeam": "PORTUGAL F"
+    },
+    {
+      "leagueId": "5073",
+      "group": "FASE DE GRUPS GOLDEN CAT FEMENINA",
+      "team": "ALEMANYA",
+      "shortTeam": "ALEMANYA"
+    },
+    {
+      "leagueId": "5073",
+      "group": "FASE DE GRUPS GOLDEN CAT FEMENINA",
+      "team": "FRANÇA F",
+      "shortTeam": "FRANÇA F"
+    }
+  ]
 }
