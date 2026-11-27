@@ -24,9 +24,10 @@ def matchid(r):
     return (clean(r.get("leagueId")),clean(r.get("matchId")))
 
 def describe(r):
-    scores=score_tuple(r)
+    has_result=score_tuple(r)
+    result=f"{r.get('homeScore')}-{r.get('awayScore')}" if has_result else None
     return {**{k:r.get(k) for k in ("iso","time","competition","home","away","leagueId","matchId")},
-            "hasResult":bool(scores),"result":f"{scores[0]}-{scores[1]}" if scores else None}
+            "hasResult":has_result,"result":result}
 
 def logo_identity(r, side):
     value=clean(r.get(side+"Logo"))
