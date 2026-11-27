@@ -111,9 +111,10 @@
         </details>
         <div class="zok-push-subheading">Els meus avisos</div>
         <div data-push-targets class="zok-push-targets"></div>
-        <p class="zok-push-intro" role="status" data-push-catalog-status>Carregant el catàleg…</p>
-        <button class="secondary zok-push-refresh" type="button" data-push-refresh>Actualitza el catàleg</button>
-        <p class="zok-push-intro">Els avisos de jugadors s’incorporaran quan les seves dades estiguin verificades.</p>
+        <div hidden style="display:none" aria-hidden="true">
+          <p data-push-catalog-status>Carregant el catàleg…</p>
+          <button type="button" data-push-refresh>Actualitza el catàleg</button>
+        </div>
         <section class="zok-favorite-group zok-push-card zok-push-always-open">
           <h2>Activació</h2>
           <div class="zok-push-activation">
