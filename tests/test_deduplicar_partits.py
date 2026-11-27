@@ -92,12 +92,28 @@ class WorkflowIntegrationTest(unittest.TestCase):
             with self.subTest(mode=mode):
                 text=(root/".github"/"workflows"/f"zonaok-auto-{mode}.yml").read_text(encoding="utf-8")
                 check=f"python scripts/zonaok_deduplicar_partits.py {'' if mode=='actes' else '--apply '}--report diagnostic-duplicats-{mode}.json"
+                if mode=="actes":
+                    agenda=text[text.index("- name: Agenda puntual"):text.index("- name: Fase 1")]
+                    self.assertIn("python scripts/zonaok_agenda_dates_review.py",agenda)
+                    self.assertLess(agenda.index("python scripts/zonaok_fecapa_unificat.py validate"),
+                                    agenda.index("git add -- zonaok-tots-partits.json"))
+                    acts=text[text.index("- name: Fase 1"):]
+                    positions=[]; cursor=0
+                    while True:
+                        position=acts.find(check,cursor)
+                        if position<0:break
+                        positions.append(position);cursor=position+len(check)
+                    self.assertEqual(len(positions),2)
+                    publish="git add -- zonaok-tots-partits.json"
+                    for position in positions:
+                        next_publish=acts.find(publish,position)
+                        self.assertNotEqual(next_publish,-1)
+                        self.assertLess(position,next_publish)
+                    self.assertNotIn("zonaok_deduplicar_partits.py --apply",acts)
+                    continue
                 self.assertIn(check,text)
                 self.assertLess(text.index("python scripts/zonaok_fecapa_unificat.py validate"),text.index(check))
-                self.assertLess(text.index(check),text.index("git add -- zonaok-tots-partits.json" if mode=="actes" else "git add zonaok-tots-partits.json"))
-                if mode=="actes":
-                    self.assertNotIn("zonaok_deduplicar_partits.py --apply",text)
-                    self.assertEqual(text.count(check),2)
+                self.assertLess(text.index(check),text.index("git add zonaok-tots-partits.json"))
 
 if __name__=="__main__":
     unittest.main()
