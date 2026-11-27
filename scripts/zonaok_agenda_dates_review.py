@@ -43,6 +43,21 @@ def same_team(a,b,side):
 def same_teams(a,b):
     return same_team(a,b,"home") and same_team(a,b,"away")
 
+def league_ids_by_competition():
+    path=Path("zonaok-classificacions.json")
+    if not path.exists():return {}
+    try:doc=json.loads(path.read_text(encoding="utf-8"))
+    except (OSError,ValueError):return {}
+    result=defaultdict(set)
+    for item in doc.get("competitions",{}).values():
+        if not isinstance(item,dict):continue
+        lid=clean(item.get("leagueId"))
+        if not re.fullmatch(r"\\d{4,6}",lid):continue
+        for key in ("competition","category","name"):
+            label=norm(item.get(key))
+            if label:result[label].add(lid)
+    return {key:sorted(ids,key=int) for key,ids in result.items()}
+
 def score_compatible(a,b):
     # An empty Agenda score is not evidence against the same fixture. Conflicting
     # published scores remain a hard stop.
@@ -172,25 +187,33 @@ async def capture(ctx,report,old):
         await page.close()
 
 async def calendar_check(ctx, old, proposals, unresolved, report):
-    # Prefer the stable official IDP from the league calendar. Use the
-    # general Agenda only to propose candidates; query IDP directly for
-    # unresolved existing fixtures so renamed labels cannot hide reschedules.
+    # Use the official competition catalogue to recover a calendar IDP even
+    # when a fixture row has no reliable leagueId or matchId.
+    comp_ids=league_ids_by_competition()
+    report["competitionMappings"]=len(comp_ids)
     work=defaultdict(list);accepted=[];rejected=[]
+    def target_leagues(row):
+        mapped=comp_ids.get(norm(row.get("competition")),[])
+        lid,mid=matchid(row)
+        if mapped:return mapped
+        return [lid] if lid else []
     for i,n in proposals:
-        lid,mid=matchid(old[i])
-        if lid:work[lid].append(("proposal",i,n))
+        lids=target_leagues(old[i])
+        if lids:
+            for lid in lids:work[lid].append(("proposal",i,n))
         else:accepted.append((i,n,"Agenda oficial: parella d'equips inequívoca"))
     unresolved_without_league=[]
     for item in unresolved:
         i,reason,possible=item
-        lid,_=matchid(old[i])
-        if lid:work[lid].append(("unresolved",i,item))
+        lids=target_leagues(old[i])
+        if lids:
+            for lid in lids:work[lid].append(("unresolved",i,item))
         else:unresolved_without_league.append(item)
 
     resolved=set();calendar_unchanged=0
     page=await ctx.new_page()
     try:
-        for lid,items in sorted(work.items()):
+        for lid,items in sorted(work.items(),key=lambda pair:int(pair[0])):
             official=defaultdict(list)
             error=""
             try:
@@ -213,13 +236,12 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
                     else:unresolved_without_league.append(payload)
                     continue
                 if old_mid:
-                    candidates=official.get((old_lid,old_mid),[])
+                    candidates=[r for group in official.values() for r in group
+                                if matchid(r)[1]==old_mid]
                 else:
                     candidates=[r for group in official.values() for r in group if same_teams(old_row,r)]
                     same_comp=[r for r in candidates if norm(r.get("competition"))==norm(old_row.get("competition"))]
                     if same_comp:candidates=same_comp
-                # Require a single official row. Duplicate or conflicting IDPs
-                # remain unresolved and are listed in the report.
                 if len(candidates)!=1:
                     slots=[when(r) for r in candidates]
                     if kind=="proposal":
@@ -230,7 +252,7 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
                 official_row=candidates[0]
                 if not score_compatible(old_row,official_row):
                     if kind=="proposal":
-                        rejected.append((i,"Marcador de l'IDP contradictori", [when(official_row)]))
+                        rejected.append((i,"Marcador de l'IDP contradictori",[when(official_row)]))
                     else:
                         unresolved_without_league.append((i,"Marcador de l'IDP contradictori",[when(official_row)]))
                     continue
@@ -242,15 +264,14 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
                         rejected.append((i,"IDP no confirma la data/hora de l'Agenda",[when(official_row)]))
                 else:
                     if when(old_row)==when(official_row):
-                        resolved.append(i);calendar_unchanged+=1
+                        resolved.add(i);calendar_unchanged+=1
                     else:
                         accepted.append((i,official_row,"Calendari oficial FECAPA per IDP"))
-                        resolved.append(i)
+                        resolved.add(i)
     finally:
         await page.close()
 
-    unresolved_left=[item for item in unresolved_without_league
-                     if item[0] not in resolved]
+    unresolved_left=[item for item in unresolved_without_league if item[0] not in resolved]
     return accepted,rejected,unresolved_left,calendar_unchanged
 
 def apply(old, accepted):
