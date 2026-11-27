@@ -86,9 +86,10 @@ jobs:
           agenda=Path("imports/agenda-revisio-20261101-1231.json")
           agenda_report=json.loads(agenda.read_text()) if agenda.exists() else {}
           agenda_done=bool(agenda_report.get("finishedAt"))
+          scoreless_review_pending=bool(agenda_report.get("unresolvedWithoutResultCount",0))
           script_sha=hashlib.sha256(Path("scripts/zonaok_agenda_dates_review.py").read_bytes()).hexdigest()
           agenda_code_current=agenda_report.get("reviewScriptSha")==script_sha
-          if os.environ["REQUEST_SCOPE"]=="agenda_dates" or not agenda_done or not agenda_code_current:
+          if os.environ["REQUEST_SCOPE"]=="agenda_dates" or not agenda_done or not agenda_code_current or scoreless_review_pending:
               window="agenda_dates"
               paths[window]=str(agenda)
           elif os.environ["REQUEST_SCOPE"]=="review9" or not review_done:
