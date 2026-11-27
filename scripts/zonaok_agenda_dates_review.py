@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """One-shot FECAPA Agenda schedule audit; only existing fixture iso/time may change."""
-import asyncio, copy, json, os, re, sys
+import asyncio, copy, hashlib, json, os, re, sys
 from collections import defaultdict, Counter
 from pathlib import Path
 from playwright.async_api import async_playwright
@@ -9,6 +9,7 @@ from zonaok_fecapa_unificat import (AGENDA_URL, CANONICAL, JS_AGENDA, chromium_c
     utc_now, write_compatibility, ROOT, JS_CALENDAR, verified_league_rows, clean)
 START, END = "2026-11-01", "2026-12-31"
 REPORT=Path("imports/agenda-revisio-20261101-1231.json")
+SCRIPT_SHA=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 def inside(r):
     return START<=str(r.get("iso",""))<=END
@@ -79,9 +80,10 @@ def propose(old,incoming):
         for key in schedule_keys(r):candidates.update(new_index.get(key,set()))
         # Prefer the same competition when teams appear in more than one
         # competition; allow a changed competition label only if unique.
-        same_comp={j for j in candidates if norm(incoming[j].get("competition"))==norm(r.get("competition"))}
-        if same_comp:candidates=same_comp
-        candidate_map[i]={j for j in candidates if score_compatible(r,incoming[j])}
+        compatible={j for j in candidates if score_compatible(r,incoming[j])}
+        same_comp={j for j in compatible if norm(incoming[j].get("competition"))==norm(r.get("competition"))}
+        if same_comp:compatible=same_comp
+        candidate_map[i]=compatible
     reverse=defaultdict(set)
     for i,candidates in candidate_map.items():
         for j in candidates:reverse[j].add(i)
@@ -182,7 +184,7 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
         if lid:work[lid].append(("unresolved",i,item))
         else:unresolved_without_league.append(item)
 
-    resolved=[];calendar_unchanged=0
+    resolved=set();calendar_unchanged=0
     page=await ctx.new_page()
     try:
         for lid,items in sorted(work.items()):
@@ -245,7 +247,7 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
         await page.close()
 
     unresolved_left=[item for item in unresolved_without_league
-                     if item[0] not in set(resolved)]
+                     if item[0] not in resolved]
     return accepted,rejected,unresolved_left,calendar_unchanged
 
 def apply(old, accepted):
@@ -267,7 +269,7 @@ def apply(old, accepted):
     return rows,changes
 
 async def main():
-    report={"window":{"from":START,"to":END},"sourceUrl":AGENDA_URL,"runId":os.environ.get("GITHUB_RUN_ID"),
+    report={"window":{"from":START,"to":END},"sourceUrl":AGENDA_URL,"runId":os.environ.get("GITHUB_RUN_ID"),\n            "reviewScriptSha":SCRIPT_SHA,
             "startedAt":utc_now(),"status":"error","changes":[],"unresolved":[]}
     try:
         doc=load_unified(CANONICAL)
