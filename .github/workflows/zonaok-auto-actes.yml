@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/zonaok-auto-actes.yml'
       - 'scripts/zonaok_actes_recovery_only.py'
+      - 'scripts/zonaok_agenda_dates_review.py'
   workflow_dispatch:
     inputs:
       scope:
@@ -73,7 +74,7 @@ jobs:
           REQUEST_SCOPE: ${{ inputs.scope || 'full' }}
         run: |
           python - <<'PY'
-          import json,os
+          import hashlib,json,os
           from pathlib import Path
           paths={"early":"imports/actes-recovery-20261101-12.json","recent":"imports/actes-recovery-state.json"}
           # Start the new interval first, then rotate oldest completed lot.
@@ -83,8 +84,11 @@ jobs:
           review=Path("imports/actes-recovery-review9.json")
           review_done=review.exists() and bool(json.loads(review.read_text()).get("lastActsFinishedAt"))
           agenda=Path("imports/agenda-revisio-20261101-1231.json")
-          agenda_done=agenda.exists() and bool(json.loads(agenda.read_text()).get("finishedAt"))
-          if os.environ["REQUEST_SCOPE"]=="agenda_dates" or not agenda_done:
+          agenda_report=json.loads(agenda.read_text()) if agenda.exists() else {}
+          agenda_done=bool(agenda_report.get("finishedAt"))
+          script_sha=hashlib.sha256(Path("scripts/zonaok_agenda_dates_review.py").read_bytes()).hexdigest()
+          agenda_code_current=agenda_report.get("reviewScriptSha")==script_sha
+          if os.environ["REQUEST_SCOPE"]=="agenda_dates" or not agenda_done or not agenda_code_current:
               window="agenda_dates"
               paths[window]=str(agenda)
           elif os.environ["REQUEST_SCOPE"]=="review9" or not review_done:
