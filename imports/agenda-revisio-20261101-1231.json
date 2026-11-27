@@ -7,7 +7,7 @@
   "runId": "46047500290",
   "reviewScriptSha": "91597c8899cca331076ba44a53dc69a72db82d0ab40d4489b1969d58d341dbf7",
   "startedAt": "2026-11-27T18:11:40Z",
-  "status": "partial",
+  "status": "needs-review",
   "changes": [],
   "unresolved": [
     {
@@ -3390,5 +3390,7 @@
   "changed": 0,
   "dateChanged": 0,
   "timeChanged": 0,
-  "finishedAt": "2026-11-27T18:12:04Z"
+  "finishedAt": null,
+  "previousFinishedAt": "2026-11-27T18:12:04Z",
+  "pendingReason": "Partits sense resultat pendents de contrastar amb el calendari oficial FECAPA"
 }
