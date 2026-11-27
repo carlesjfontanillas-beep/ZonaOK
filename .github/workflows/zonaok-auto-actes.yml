@@ -164,8 +164,7 @@ jobs:
         run: |
           set -euo pipefail
           if [ "${ZONAOK_ACTES_WINDOW:-}" = review9 ]; then
-            echo "Revisió exclusiva de nou actes finalitzada; no encadenar altres períodes des d'aquest lot."
-            exit 0
+            echo "Lot exclusiu acabat; recuperar la cua històrica amb el mode full."
           fi
           if [ "$JOB_STATUS" != success ]; then
             [[ "$RETRY_DEPTH" =~ ^[0-9]+$ ]] || exit 1
