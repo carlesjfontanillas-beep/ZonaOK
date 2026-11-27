@@ -2139,12 +2139,12 @@ async function zonaokOpenStandingTeamMatches(entry,row,display){
     .zok-standing-history header strong{display:block;color:#fbc252;font-size:15px;line-height:1.2}.zok-standing-history header small{display:block;color:#b9cddd;font-size:11px;margin-top:3px}
     .zok-standing-history header button{flex:none;width:36px;height:36px;border:1px solid #7597b0;border-radius:9px;background:#183d5b;color:white;font-size:24px;padding:0;cursor:pointer}
     .zok-standing-history-body{overflow:auto;min-height:0;padding:10px;overscroll-behavior:contain}.zok-standing-history-summary{margin:0 0 8px;color:#b9cddd;font-size:12px}
-    .zok-standing-history-match{display:grid;gap:5px;border:1px solid #45627a;border-radius:10px;background:#173950;margin:0 0 6px;padding:7px}
-    .zok-standing-history-date{display:flex;justify-content:space-between;font-size:11px;color:#b9cddd;gap:6px}
-    .zok-standing-history-teams{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:7px;text-align:center;font-size:12px;line-height:1.2;overflow-wrap:anywhere}
-    .zok-standing-history-score{border-radius:8px;padding:7px 9px;font-size:19px;white-space:nowrap;font-weight:850;font-variant-numeric:tabular-nums}
-    .zok-standing-history-score.win{background:#b8e4bf;color:#103820}.zok-standing-history-score.loss{background:#f6b6b9;color:#69191e}.zok-standing-history-score.draw{background:#ffc38c;color:#512b0b}
-    .zok-standing-history-selected{color:#fbc252;font-weight:850}.zok-standing-history-acta{justify-self:end;background:transparent;border:1px solid #7597b0;border-radius:7px;color:#ecf5ff;padding:3px 8px;font-size:11px;cursor:pointer}
+    .zok-standing-history-cards{display:grid;gap:8px;min-width:0}
+    .zok-standing-history .match{margin:0;min-width:0;width:100%;box-sizing:border-box}
+    .zok-standing-history .match-date strong{font-size:clamp(15px,4vw,17px)!important}
+    .zok-standing-history .match-date small{font-size:clamp(12px,3.5vw,14px)!important}
+    .zok-standing-history .score{font-size:clamp(18px,5vw,21px)!important;line-height:1.15;background:none!important}
+    .zok-standing-history .score.win{color:#087b3e!important}.zok-standing-history .score.loss{color:#c32632!important}.zok-standing-history .score.draw{color:#9e5508!important}
     `;document.head.append(style);
   }
   const d=mk('dialog','zok-standing-history'),header=mk('header'),title=mk('div'),close=mk('button','','×'),body=mk('div','zok-standing-history-body');
@@ -2155,13 +2155,13 @@ async function zonaokOpenStandingTeamMatches(entry,row,display){
     if(!d.open)return;
     const matches=zonaokStandingMatchRows(source,entry,row,display);body.replaceChildren(mk('p','zok-standing-history-summary',matches.length+' partits amb resultat · Més recents primer'));
     if(!matches.length){body.append(mk('p','helper','No hi ha partits amb resultat identificats per a aquest equip i grup.'));return;}
+    const cards=mk('div','cards zok-standing-history-cards');body.append(cards);
     for(const match of matches){
-      const card=mk('article','zok-standing-history-match'),date=mk('div','zok-standing-history-date'),teams=mk('div','zok-standing-history-teams'),label=match.outcome==='win'?'Victòria':match.outcome==='loss'?'Derrota':'Empat';
-      date.append(mk('span','',niceDate(match.iso)+' · '+match.time),mk('span','',label));
-      const score=mk('strong','zok-standing-history-score '+match.outcome,match.homeScore+' : '+match.awayScore);
-      teams.append(mk('strong',match.homeSelected?'zok-standing-history-selected':'',match.home),score,mk('strong',match.homeSelected?'':'zok-standing-history-selected',match.away));card.append(date,teams);
-      const url=window.ZonaOKActaLinks?.savedUrl(match);if(url&&window.ZonaOKActaFitxa?.open){const acta=mk('button','zok-standing-history-acta','Acta');acta.type='button';acta.onclick=()=>window.ZonaOKActaFitxa.open(match,url);card.append(acta);}
-      body.append(card);
+      const card=createCard(match,match.league||String(entry.id||'').split(':')[0]||'live');
+      const score=card.querySelector('.score'),label=match.outcome==='win'?'Victòria':match.outcome==='loss'?'Derrota':'Empat';
+      if(score){score.classList.add(match.outcome);score.setAttribute('aria-label',label+': '+match.homeScore+' : '+match.awayScore);}
+      const note=card.querySelector('.score-note');if(note)note.textContent=label;
+      cards.append(card);
     }
   }catch(error){if(d.open)body.replaceChildren(mk('p','helper',error.message||'No s’han pogut carregar els partits.'));}
 }
