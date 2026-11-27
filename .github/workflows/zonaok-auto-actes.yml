@@ -86,7 +86,7 @@ jobs:
           review_done=review.exists() and bool(json.loads(review.read_text()).get("lastActsFinishedAt"))
           agenda=Path("imports/agenda-revisio-20261101-1231.json")
           agenda_report=json.loads(agenda.read_text()) if agenda.exists() else {}
-          agenda_done=bool(agenda_report.get("finishedAt"))
+          agenda_done=bool(agenda_report.get("finishedAt")) and agenda_report.get("status") in ("success","partial")
           scoreless_review_pending=bool(agenda_report.get("unresolvedWithoutResultCount",0))
           script_sha=hashlib.sha256(Path("scripts/zonaok_agenda_dates_review.py").read_bytes()).hexdigest()
           agenda_code_current=agenda_report.get("reviewScriptSha")==script_sha
