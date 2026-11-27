@@ -4,9 +4,9 @@
     "to": "2026-12-31"
   },
   "sourceUrl": "https://www.hoqueipatins.fecapa.cat/ag/",
-  "runId": "46051157798",
-  "reviewScriptSha": "5319c26d69c8f801ce893c9bc1522b2b89160cca37e6bdcd6ad7c5dffef2e55e",
-  "startedAt": "2026-11-27T18:40:47Z",
+  "runId": "46051756053",
+  "reviewScriptSha": "2aeb58ab8ffac53c0201cbdae6b6cf4da9260aeb77f790367f09b8d0fba39b80",
+  "startedAt": "2026-11-27T18:46:14Z",
   "status": "error",
   "changes": [],
   "unresolved": [],
@@ -16,8 +16,9 @@
   "sourceRowsSeason": 12146,
   "sourceRowsWindow": 4479,
   "sourcePages": 1,
-  "unchanged": 4480,
+  "unchanged": 4488,
   "proposals": 0,
+  "scorelessPastWithoutIDP": 18,
   "competitionMappings": 169,
   "leagueChecks": [
     {
@@ -785,5 +786,5 @@
     }
   ],
   "error": "ValueError: new_duplicate",
-  "finishedAt": "2026-11-27T18:42:22Z"
+  "finishedAt": "2026-11-27T18:47:32Z"
 }
