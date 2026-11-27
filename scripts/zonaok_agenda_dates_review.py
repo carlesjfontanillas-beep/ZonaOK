@@ -43,6 +43,21 @@ def same_team(a,b,side):
 def same_teams(a,b):
     return same_team(a,b,"home") and same_team(a,b,"away")
 
+def same_calendar_fixture(old, official):
+    # Alguns registres antics tenen la pista al camp away per una captura
+    # desplaçada. Només recuperem aquests casos si local i pista coincideixen
+    # exactament dins el calendari IDP de la competició.
+    if same_teams(old, official):
+        return True
+    away=clean(old.get("away"))
+    venue=clean(official.get("venue"))
+    if not away or not venue or not same_team(old, official, "home"):
+        return False
+    venue_like=bool(re.match(
+        r"^(?:PAVELL|PABELL|POLIESPORT|POLIDEPORT|PISTA|POLIESPORTIU|"
+        r"POLIDEPORTIVO|PAVILLO|PAVELLON)\\b", norm(away)))
+    return venue_like and norm(away)==norm(venue)
+
 def league_ids_by_competition():
     path=Path("zonaok-classificacions.json")
     if not path.exists():return {}
@@ -239,7 +254,7 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
                     candidates=[r for group in official.values() for r in group
                                 if matchid(r)[1]==old_mid]
                 else:
-                    candidates=[r for group in official.values() for r in group if same_teams(old_row,r)]
+                    candidates=[r for group in official.values() for r in group if same_calendar_fixture(old_row,r)]
                     same_comp=[r for r in candidates if norm(r.get("competition"))==norm(old_row.get("competition"))]
                     if same_comp:candidates=same_comp
                 if len(candidates)!=1:
