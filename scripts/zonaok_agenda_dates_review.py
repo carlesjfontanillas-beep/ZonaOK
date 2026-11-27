@@ -55,7 +55,7 @@ def same_calendar_fixture(old, official):
         return False
     venue_like=bool(re.match(
         r"^(?:PAVELL|PABELL|POLIESPORT|POLIDEPORT|PISTA|POLIESPORTIU|"
-        r"POLIDEPORTIVO|PAVILLO|PAVELLON)\\b", norm(away)))
+        r"POLIDEPORTIVO|PAVILLO|PAVELLON)\b", norm(away)))
     return venue_like and norm(away)==norm(venue)
 
 def league_ids_by_competition():
