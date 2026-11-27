@@ -18,6 +18,7 @@ from zonaok_jugadors_total_master import link_memberships
 WINDOWS={
     "recent":("2026-11-12","2026-11-26","imports/actes-recovery-state.json"),
     "early":("2026-11-01","2026-11-12","imports/actes-recovery-20261101-12.json"),
+    "october":("2026-10-01","2026-10-31","imports/actes-recovery-20261001-31.json"),
     "review9":("2026-11-12","2026-11-26","imports/actes-recovery-review9.json"),
 }
 REVIEW9=frozenset({
