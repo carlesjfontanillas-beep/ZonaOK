@@ -79,6 +79,7 @@ jobs:
           git pull --ff-only origin main
           xvfb-run -a python scripts/zonaok_actes_recovery_only.py ids | tee "$RUNNER_TEMP/actes-ids.log"
           python scripts/zonaok_fecapa_unificat.py validate
+          python scripts/zonaok_deduplicar_partits.py --report diagnostic-duplicats-actes.json
           git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-recovery-state.json
           if ! git diff --cached --quiet; then
             git commit -m 'ZonaOK Actes exclusiu: recuperar IDP oficials'
@@ -97,6 +98,7 @@ jobs:
           xvfb-run -a python scripts/zonaok_actes_recovery_only.py acts "$PWD/data" | tee "$RUNNER_TEMP/actes-contingut.log"
           python scripts/verify_public_master.py data/jugadors-master.json
           python scripts/zonaok_fecapa_unificat.py validate
+          python scripts/zonaok_deduplicar_partits.py --report diagnostic-duplicats-actes.json
           gzip -n -c data/jugadors-master.json > imports/jugadors-master.json.gz
           cp data/jugadors-maintenance-state.json imports/jugadors-maintenance-state.json
           git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-recovery-state.json imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
