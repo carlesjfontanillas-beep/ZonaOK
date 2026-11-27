@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """One-shot FECAPA Agenda schedule audit; only existing fixture iso/time may change."""
-import asyncio, copy, json, os, sys
+import asyncio, copy, json, os, re, sys
 from collections import defaultdict, Counter
 from pathlib import Path
 from playwright.async_api import async_playwright
@@ -25,11 +25,96 @@ def matchid(r):
 def describe(r):
     return {k:r.get(k) for k in ("iso","time","competition","home","away","leagueId","matchId")}
 
+def logo_identity(r, side):
+    value=clean(r.get(side+"Logo"))
+    match=re.search(r"/logos_clubes/(\d+(?:_\d+)?)\.(?:png|gif)(?:[?#]|$)",value,re.I)
+    return match.group(1) if match else ""
+
+def same_team(a,b,side):
+    left,right=norm(a.get(side)),norm(b.get(side))
+    if left and left==right:return True
+    left_logo,right_logo=logo_identity(a,side),logo_identity(b,side)
+    return bool(left_logo and left_logo==right_logo)
+
+def same_teams(a,b):
+    return same_team(a,b,"home") and same_team(a,b,"away")
+
 def score_compatible(a,b):
-    # A published result must not be reassigned to another fixture.
-    if score_tuple(a):
-        return score_tuple(b) and (a["homeScore"],a["awayScore"])==(b["homeScore"],b["awayScore"])
-    return True
+    # An empty Agenda score is not evidence against the same fixture. Conflicting
+    # published scores remain a hard stop.
+    sa,sb=score_tuple(a),score_tuple(b)
+    return not (sa and sb) or (a["homeScore"],a["awayScore"])==(b["homeScore"],b["awayScore"])
+
+def schedule_keys(r):
+    names=(norm(r.get("home")),norm(r.get("away")))
+    keys=[]
+    if all(names):keys.append(("teams",*names))
+    logos=(logo_identity(r,"home"),logo_identity(r,"away"))
+    if all(logos):keys.append(("logos",*logos))
+    return keys
+
+def propose(old,incoming):
+    # Match the entire season, then edit only fixtures whose old or new date is
+    # in scope. The general Agenda has no IDP, so use an ordered team pair as
+    # the stable key and the competition label only as a tie-breaker.
+    old_schedule=defaultdict(list);new_schedule=defaultdict(list)
+    for i,r in enumerate(old):old_schedule[(identity(r),when(r))].append(i)
+    for j,r in enumerate(incoming):new_schedule[(identity(r),when(r))].append(j)
+    used_old=set();used_new=set();unchanged=0
+    for key,olds in old_schedule.items():
+        news=new_schedule.get(key,[])
+        if len(olds)==len(news)==1 and score_compatible(old[olds[0]],incoming[news[0]]):
+            i,j=olds[0],news[0];used_old.add(i);used_new.add(j)
+            if inside(old[i]):unchanged+=1
+
+    new_index=defaultdict(set)
+    for j,r in enumerate(incoming):
+        if j in used_new:continue
+        for key in schedule_keys(r):new_index[key].add(j)
+
+    candidate_map={}
+    for i,r in enumerate(old):
+        if i in used_old:continue
+        candidates=set()
+        for key in schedule_keys(r):candidates.update(new_index.get(key,set()))
+        # Prefer the same competition when teams appear in more than one
+        # competition; allow a changed competition label only if unique.
+        same_comp={j for j in candidates if norm(incoming[j].get("competition"))==norm(r.get("competition"))}
+        if same_comp:candidates=same_comp
+        candidate_map[i]={j for j in candidates if score_compatible(r,incoming[j])}
+    reverse=defaultdict(set)
+    for i,candidates in candidate_map.items():
+        for j in candidates:reverse[j].add(i)
+
+    proposals=[];unresolved=[]
+    for i,r in enumerate(old):
+        if i in used_old:continue
+        candidates=candidate_map.get(i,set())
+        related=inside(r) or any(inside(incoming[j]) for j in candidates)
+        if not related:continue
+        if len(candidates)==1:
+            j=next(iter(candidates))
+            if len(reverse[j])==1:
+                if when(r)==when(incoming[j]):
+                    if inside(r):unchanged+=1
+                else:
+                    proposals.append((i,incoming[j]))
+                continue
+        # Include same-team matches that failed score validation so conflicts
+        # are visible instead of silently looking like a missing fixture.
+        team_candidates=set()
+        for key in schedule_keys(r):team_candidates.update(new_index.get(key,set()))
+        if len(candidates)>1 or any(len(reverse[j])>1 for j in candidates):
+            reason="Més d'una correspondència possible"
+            possible=[when(incoming[j]) for j in sorted(candidates)]
+        elif team_candidates and not candidates:
+            reason="Marcador oficial contradictori"
+            possible=[when(incoming[j]) for j in sorted(team_candidates)]
+        else:
+            reason="No s'ha trobat una correspondència inequívoca a l'Agenda oficial"
+            possible=[]
+        unresolved.append((i,reason,possible))
+    return proposals,unresolved,unchanged
 
 def write(path,doc):
     path.write_text(json.dumps(doc,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
@@ -81,46 +166,28 @@ async def capture(ctx,report,old):
     finally:
         await page.close()
 
-def propose(old,incoming):
-    old_groups=defaultdict(list); new_groups=defaultdict(list)
-    for i,r in enumerate(old):old_groups[identity(r)].append((i,r))
-    for r in incoming:new_groups[identity(r)].append(r)
-    proposals=[]; unresolved=[]; unchanged=0; matched=set()
-    for key, originals in old_groups.items():
-        fresh=new_groups.get(key,[])
-        before=[]; after=list(fresh)
-        # First consume identical schedules across the whole season.
-        for i,r in originals:
-            same=[j for j,x in enumerate(after) if when(x)==when(r)]
-            if len(same)==1:
-                after.pop(same[0]);matched.add(i)
-                if inside(r):unchanged+=1
-            else:before.append((i,r))
-        if not before:continue
-        if len(before)==1 and len(after)==1:
-            i,r=before[0]; n=after[0]
-            if not (inside(r) or inside(n)):continue
-            if when(r)==when(n):continue
-            if score_compatible(r,n):
-                proposals.append((i,n)); continue
-        for i,r in before:
-            if inside(r) or any(inside(n) for n in after):
-                unresolved.append((i, "Identitat o marcador no inequívoc", [when(n) for n in after]))
-    return proposals,unresolved,unchanged
-
-async def calendar_check(ctx, old, proposals, report):
-    # /ag/ has no official IDP. Verify the proposed changes against the
-    # official competition calendar whenever the fixture already has IDs.
-    by_league=defaultdict(list)
-    accepted=[]; rejected=[]
+async def calendar_check(ctx, old, proposals, unresolved, report):
+    # Prefer the stable official IDP from the league calendar. Use the
+    # general Agenda only to propose candidates; query IDP directly for
+    # unresolved existing fixtures so renamed labels cannot hide reschedules.
+    work=defaultdict(list);accepted=[];rejected=[]
     for i,n in proposals:
         lid,mid=matchid(old[i])
-        if lid and mid:by_league[lid].append((i,n))
-        else:accepted.append((i,n,"Agenda: competició i equips inequívocs"))
+        if lid:work[lid].append(("proposal",i,n))
+        else:accepted.append((i,n,"Agenda oficial: parella d'equips inequívoca"))
+    unresolved_without_league=[]
+    for item in unresolved:
+        i,reason,possible=item
+        lid,_=matchid(old[i])
+        if lid:work[lid].append(("unresolved",i,item))
+        else:unresolved_without_league.append(item)
+
+    resolved=[];calendar_unchanged=0
     page=await ctx.new_page()
     try:
-        for lid,group in sorted(by_league.items()):
+        for lid,items in sorted(work.items()):
             official=defaultdict(list)
+            error=""
             try:
                 res=await page.goto(ROOT+f"?liga={lid}&vista=calendar",wait_until="domcontentloaded",timeout=35000)
                 if res and res.status>=400:raise RuntimeError(f"HTTP {res.status}")
@@ -129,17 +196,57 @@ async def calendar_check(ctx, old, proposals, report):
                 rows,meta=verified_league_rows(lid,data["rows"],[])
                 for row in rows:official[matchid(row)].append(row)
                 report.setdefault("leagueChecks",[]).append({"leagueId":lid,"status":meta["status"],"rows":len(rows)})
-            except Exception as e:
-                report.setdefault("leagueChecks",[]).append({"leagueId":lid,"error":type(e).__name__})
-            for i,n in group:
-                candidates=official.get(matchid(old[i]),[])
-                slots={when(x) for x in candidates}
-                if slots=={when(n)}:
-                    accepted.append((i,n,"Agenda + IDP oficial"))
+            except Exception as exc:
+                error=type(exc).__name__
+                report.setdefault("leagueChecks",[]).append({"leagueId":lid,"error":error})
+
+            for kind,i,payload in items:
+                old_row=old[i];old_lid,old_mid=matchid(old_row)
+                if error:
+                    if kind=="proposal":
+                        rejected.append((i,"No s'ha pogut consultar el calendari oficial IDP",[]))
+                    else:unresolved_without_league.append(payload)
+                    continue
+                if old_mid:
+                    candidates=official.get((old_lid,old_mid),[])
                 else:
-                    rejected.append((i,"IDP no confirma la nova data/hora",list(slots)))
-    finally:await page.close()
-    return accepted,rejected
+                    candidates=[r for group in official.values() for r in group if same_teams(old_row,r)]
+                    same_comp=[r for r in candidates if norm(r.get("competition"))==norm(old_row.get("competition"))]
+                    if same_comp:candidates=same_comp
+                # Require a single official row. Duplicate or conflicting IDPs
+                # remain unresolved and are listed in the report.
+                if len(candidates)!=1:
+                    slots=[when(r) for r in candidates]
+                    if kind=="proposal":
+                        rejected.append((i,"El calendari oficial IDP no dona una única correspondència",slots))
+                    else:
+                        unresolved_without_league.append((i,"Calendari IDP sense correspondència única",slots))
+                    continue
+                official_row=candidates[0]
+                if not score_compatible(old_row,official_row):
+                    if kind=="proposal":
+                        rejected.append((i,"Marcador de l'IDP contradictori", [when(official_row)]))
+                    else:
+                        unresolved_without_league.append((i,"Marcador de l'IDP contradictori",[when(official_row)]))
+                    continue
+                if kind=="proposal":
+                    n=payload
+                    if when(official_row)==when(n):
+                        accepted.append((i,n,"Agenda i calendari oficial IDP"))
+                    else:
+                        rejected.append((i,"IDP no confirma la data/hora de l'Agenda",[when(official_row)]))
+                else:
+                    if when(old_row)==when(official_row):
+                        resolved.append(i);calendar_unchanged+=1
+                    else:
+                        accepted.append((i,official_row,"Calendari oficial FECAPA per IDP"))
+                        resolved.append(i)
+    finally:
+        await page.close()
+
+    unresolved_left=[item for item in unresolved_without_league
+                     if item[0] not in set(resolved)]
+    return accepted,rejected,unresolved_left,calendar_unchanged
 
 def apply(old, accepted):
     rows=copy.deepcopy(old); changes=[]
@@ -172,7 +279,8 @@ async def main():
                 incoming=await capture(ctx,report,old)
                 proposals,unresolved,unchanged=propose(old,incoming)
                 report["unchanged"]=unchanged;report["proposals"]=len(proposals)
-                accepted,rejected=await calendar_check(ctx,old,proposals,report)
+                accepted,rejected,unresolved,calendar_unchanged=await calendar_check(ctx,old,proposals,unresolved,report)
+                unchanged+=calendar_unchanged;report["unchanged"]=unchanged
             finally:await ctx.close();await browser.close()
         rows,changes=apply(old,accepted)
         report["unresolved"]=[{**describe(old[i]),"reason":reason,"possibleSchedules":poss}
