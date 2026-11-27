@@ -67,6 +67,23 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Seleccionar finestra de recuperació sense escriptors simultanis
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          paths={"early":"imports/actes-recovery-20261101-12.json","recent":"imports/actes-recovery-state.json"}
+          # Start the new interval first, then rotate oldest completed lot.
+          def last_done(k):
+              p=Path(paths[k])
+              return json.loads(p.read_text()).get("lastActsFinishedAt","") if p.exists() else ""
+          window="early" if not Path(paths["early"]).exists() else min(paths,key=lambda k:(last_done(k),k))
+          with open(os.environ["GITHUB_ENV"],"a") as out:
+              print("ZONAOK_ACTES_WINDOW="+window,file=out)
+              print("ACTES_STATE="+paths[window],file=out)
+          print("Finestra seleccionada:",window,paths[window])
+          PY
       - name: Preparar i provar els lectors FECAPA
         run: |
           python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
@@ -84,7 +101,7 @@ jobs:
           xvfb-run -a python scripts/zonaok_actes_recovery_only.py ids | tee "$RUNNER_TEMP/actes-ids.log"
           python scripts/zonaok_fecapa_unificat.py validate
           python scripts/zonaok_deduplicar_partits.py --report diagnostic-duplicats-actes.json
-          git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-recovery-state.json
+          git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json "$ACTES_STATE"
           if ! git diff --cached --quiet; then
             git commit -m 'ZonaOK Actes exclusiu: recuperar IDP oficials'
             git push origin HEAD:main
@@ -105,7 +122,7 @@ jobs:
           python scripts/zonaok_deduplicar_partits.py --report diagnostic-duplicats-actes.json
           gzip -n -c data/jugadors-master.json > imports/jugadors-master.json.gz
           cp data/jugadors-maintenance-state.json imports/jugadors-maintenance-state.json
-          git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-recovery-state.json imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
+          git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json "$ACTES_STATE" imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
           if ! git diff --cached --quiet; then
             git commit -m 'ZonaOK Actes exclusiu: dades oficials verificades'
             git push origin HEAD:main
@@ -153,14 +170,18 @@ jobs:
             if ! python - <<'PY'
           import json,os,sys
           from pathlib import Path
-          s=json.loads(Path("imports/actes-recovery-state.json").read_text())
-          a=s["lastActs"];i=s["lastIds"]
-          ready=a.get("readyNext",0)
-          untried=i.get("untriedLeagues",0) if a["after"]["missingHistoricalIDs"] else 0
-          ids_progress=bool(i.get("calendarIDs",0) or i.get("legacyIDs",0)) and bool(a["after"]["missingHistoricalIDs"])
-          blocked=bool(a.get("blocked") or i.get("blocked"))
-          print("Següent lot:",ready,"actes preparades,",untried,"lligues encara no consultades; progrés IDP:",ids_progress,"bloqueig:",blocked)
-          sys.exit(0 if (ready or untried or ids_progress) and not blocked else 1)
+          paths=[Path("imports/actes-recovery-state.json"),Path("imports/actes-recovery-20261101-12.json")]
+          current=json.loads(Path(os.environ["ACTES_STATE"]).read_text())
+          blocked=bool(current.get("lastActs",{}).get("blocked") or current.get("lastIds",{}).get("blocked"))
+          def ready(p):
+              if not p.exists():return True
+              s=json.loads(p.read_text());a=s.get("lastActs",{});i=s.get("lastIds",{})
+              if not a:return True
+              missing=a.get("after",{}).get("missingHistoricalIDs",0)
+              return bool(a.get("readyNext",0) or (missing and (i.get("untriedLeagues",0) or i.get("calendarIDs",0) or i.get("legacyIDs",0))))
+          work=[p.name for p in paths if ready(p)]
+          print("Finestres amb feina immediata:",work,"bloqueig:",blocked)
+          sys.exit(0 if work and not blocked else 1)
           PY
             then
               echo "Sense treball immediat recuperable; el cron manté els reintents espaiats."
