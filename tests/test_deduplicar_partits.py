@@ -91,10 +91,13 @@ class WorkflowIntegrationTest(unittest.TestCase):
         for mode in ("agenda","directe","actes"):
             with self.subTest(mode=mode):
                 text=(root/".github"/"workflows"/f"zonaok-auto-{mode}.yml").read_text(encoding="utf-8")
-                check=f"python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-{mode}.json"
+                check=f"python scripts/zonaok_deduplicar_partits.py {'' if mode=='actes' else '--apply '}--report diagnostic-duplicats-{mode}.json"
                 self.assertIn(check,text)
                 self.assertLess(text.index("python scripts/zonaok_fecapa_unificat.py validate"),text.index(check))
-                self.assertLess(text.index(check),text.index("git add zonaok-tots-partits.json"))
+                self.assertLess(text.index(check),text.index("git add -- zonaok-tots-partits.json" if mode=="actes" else "git add zonaok-tots-partits.json"))
+                if mode=="actes":
+                    self.assertNotIn("zonaok_deduplicar_partits.py --apply",text)
+                    self.assertEqual(text.count(check),2)
 
 if __name__=="__main__":
     unittest.main()
