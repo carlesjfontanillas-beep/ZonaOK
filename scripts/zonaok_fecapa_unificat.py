@@ -408,7 +408,7 @@ JS_CALENDAR = r"""(league) => {
   const clubLogo=side=>{
     const src=side?.querySelector('img[src]')?.getAttribute('src')||'';
     try{const u=new URL(src,location.href);return u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&
-      /^\\/fecapa\\/images\\/logos_clubes\\/\\d+(?:_\\d+)?\\.(?:png|gif)$/i.test(u.pathname)?u.href:'';}catch(_){return '';}
+      /^\/fecapa\/images\/logos_clubes\/\d+(?:_\d+)?\.(?:png|gif)$/i.test(u.pathname)?u.href:'';}catch(_){return '';}
   };
   const rows=[];let examined=0,invalid=0,ambiguousIds=0;
   const leaguesFound=new Set();
