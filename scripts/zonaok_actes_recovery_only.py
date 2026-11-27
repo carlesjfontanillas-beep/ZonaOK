@@ -98,16 +98,21 @@ async def discover(doc,state):
             if requires_acta(raw):added+=attach(rows,raw)
     pending=[r for r in rows if requires_acta(r) and not valid(r)]
     league_ids=league_ids_from_files()
-    known={ids(r)[0] for r in pending if ids(r)[0] in league_ids}
-    competitions={norm(r.get("competition")) for r in pending}
-    known.update(ids(r)[0] for r in rows if valid(r) and norm(r.get("competition")) in competitions)
+    # Every unresolved fixture remains eligible on every run. No time-based
+    # exclusion. Use known competition-to-league links to prioritise, and
+    # oldest-attempt-first rotation so a failing league cannot starve others.
+    by_comp={}
+    for r in rows:
+        l=ids(r)[0]
+        if valid(r) and l in league_ids:
+            by_comp.setdefault(norm(r.get("competition")),set()).add(l)
+    priority={}
+    for r in pending:
+        related=set(by_comp.get(norm(r.get("competition")),set()))
+        if ids(r)[0] in league_ids:related.add(ids(r)[0])
+        for l in related:priority[l]=priority.get(l,0)+1
     checks=state.setdefault("windowLeagueChecks",{})
-    # Rotate all known calendars, prioritising leagues with unresolved matches.
-    clock=datetime.now(timezone.utc)
-    def league_due(l):
-        try:return clock-datetime.fromisoformat(checks[l])>=timedelta(hours=6)
-        except (KeyError,ValueError,TypeError):return True
-    selected=sorted((l for l in league_ids if league_due(l)),key=lambda l:(bool(checks.get(l)),l not in known,checks.get(l,""),int(l)))[:8] if pending else []
+    selected=sorted(league_ids,key=lambda l:(checks.get(l,""),-priority.get(l,0),int(l)))[:8] if pending else []
     report={"legacyIDs":added,"calendarIDs":0,"checks":[],"untriedLeagues":sum(l not in checks for l in league_ids) if pending else 0}
     if not selected:return report
     async with async_playwright() as pw:
@@ -185,19 +190,21 @@ async def acts(doc,root,control):
             promote(k);promoted+=1
     missing_before,_=coverage(master,matches,byid)
     audits=control.setdefault("windowFieldAudits",{})
+    attempts=control.setdefault("windowActAttempts",{})
+    # Complete verified acts are final. Incomplete verified acts and acts
+    # without verification remain eligible; no cooldown or one-audit cap.
     pending=[(k,r) for k,r in rows.items() if not verified(k,r)]
-    audit_pending=[(k,r) for k,r in rows.items() if verified(k,r) and missing_before.get(k) and int(audits.get(k,0))<1]
+    audit_pending=[(k,r) for k,r in rows.items() if verified(k,r) and missing_before.get(k)]
     clock=datetime.now(timezone.utc)
-    def due(k):
-        try:return clock-datetime.fromisoformat(matches.get(k,{}).get("checkedAt",""))>=timedelta(hours=2)
-        except (ValueError,TypeError):return True
-    plan=sorted((x for x in pending if due(x[0])),key=lambda x:(matches.get(x[0],{}).get("checkedAt",""),x[1]["iso"],x[0]),reverse=False)[:40]
-    if len(plan)<40:plan+=sorted(audit_pending,key=lambda x:(x[1]["iso"],x[0]),reverse=True)[:40-len(plan)]
+    work=pending+audit_pending
+    plan=sorted(work,key=lambda x:(attempts.get(x[0],""),-int(x[1]["iso"].replace("-","")),x[0]))[:40]
     audit_keys={k for k,_ in audit_pending}
     report={"selected":len(plan),"attempted":0,"verified":0,"pending":0,"reasons":{},"reusedVerified":promoted}
     previous_audits={k:copy.deepcopy(matches[k]) for k,_ in plan if k in audit_keys and k in matches}
     await run_matches(master,matches,plan,time.monotonic()+15*60,report)
     for k,r in plan:
+        if k in matches and str(matches[k].get("checkedAt",""))>=clock.isoformat()[:19]:
+            attempts[k]=matches[k]["checkedAt"]
         if verified(k,r) and k in byid:promote(k)
         if k in audit_keys and matches.get(k,{}).get("checkedAt") and str(matches[k]["checkedAt"])>=clock.isoformat()[:19]:
             audits[k]=int(audits.get(k,0))+1
@@ -223,8 +230,17 @@ async def acts(doc,root,control):
     report["remainingEligible"]=sum(not verified(k,r) for k,r in fresh.items())
     gaps,field_counts=coverage(master,matches,byid)
     report["coverage"]={"verifiedWithAllTrackedFields":sum(not v for v in gaps.values()),"verifiedWithGaps":sum(bool(v) for v in gaps.values()),"playerFields":field_counts,"gapCounts":{f:sum(f in v for v in gaps.values()) for f in sorted({f for v in gaps.values() for f in v})},"unconfirmedGapsByMatch":{k:v for k,v in gaps.items() if v}}
-    report["remainingAudit"]=sum(bool(v) and int(audits.get(k,0))<1 and k in fresh and verified(k,fresh[k]) for k,v in gaps.items())
-    report["readyNext"]=sum(not verified(k,r) and due(k) for k,r in fresh.items())+report["remainingAudit"]
+    report["remainingAudit"]=sum(bool(v) and k in fresh and verified(k,fresh[k]) for k,v in gaps.items())
+    remaining={k for k,r in fresh.items() if not verified(k,r) or gaps.get(k)}
+    report["pendingCompleteActs"]=len(remaining)
+    # Chain fresh work or genuine progress immediately. Persistent gaps
+    # without progress remain eligible at the next scheduled execution,
+    # rather than creating an endless self-dispatch loop.
+    unattempted=sum(k not in attempts for k in remaining)
+    before_gaps=sum(len(v) for v in missing_before.values())
+    after_gaps=sum(len(v) for v in gaps.values())
+    progress=len(remaining)<len(work) or (len(remaining)==len(work) and after_gaps<before_gaps)
+    report["readyNext"]=len(remaining) if progress else unattempted
     report["players"]=len(master["players"]);report["appearances"]=len(master["matchAppearances"])
     return report
 async def main():
