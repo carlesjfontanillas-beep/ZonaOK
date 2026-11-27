@@ -172,7 +172,8 @@ def coverage(master,matches,byid):
         for f in ("header","teamStats","periods"):
             if not detail.get(f):missing.append(f)
         if not all(side in detail.get("fouls",{}) for side in ("home","away")):missing.append("fouls")
-        if not all(detail.get("staff",{}).get(side) for side in ("home","away")):missing.append("staff")
+        # Staff is optional: preserve imported entries, but an absent staff list
+        # does not make an otherwise complete official acta incomplete.
         if not score_tuple(r):missing.append("score")
         result[k]=missing
     return result,counts
@@ -237,7 +238,7 @@ async def acts(doc,root,control):
     verify_master(master);save(path,master);save(statepath,state)
     report["remainingEligible"]=sum(not verified(k,r) for k,r in fresh.items())
     gaps,field_counts=coverage(master,matches,byid)
-    report["coverage"]={"verifiedWithAllTrackedFields":sum(not v for v in gaps.values()),"verifiedWithGaps":sum(bool(v) for v in gaps.values()),"playerFields":field_counts,"optionalPlayerFields":["Cat"],"gapCounts":{f:sum(f in v for v in gaps.values()) for f in sorted({f for v in gaps.values() for f in v})},"unconfirmedGapsByMatch":{k:v for k,v in gaps.items() if v}}
+    report["coverage"]={"verifiedWithAllTrackedFields":sum(not v for v in gaps.values()),"verifiedWithGaps":sum(bool(v) for v in gaps.values()),"playerFields":field_counts,"optionalPlayerFields":["Cat"],"optionalActaFields":["staff"],"gapCounts":{f:sum(f in v for v in gaps.values()) for f in sorted({f for v in gaps.values() for f in v})},"unconfirmedGapsByMatch":{k:v for k,v in gaps.items() if v}}
     report["remainingAudit"]=sum(bool(v) and k in fresh and verified(k,fresh[k]) for k,v in gaps.items())
     remaining={k for k,r in fresh.items() if not verified(k,r) or gaps.get(k)}
     report["pendingCompleteActs"]=len(remaining)
