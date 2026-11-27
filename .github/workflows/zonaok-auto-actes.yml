@@ -6,6 +6,7 @@ on:
       - '.github/workflows/zonaok-auto-actes.yml'
       - 'scripts/zonaok_actes_recovery_only.py'
       - 'scripts/zonaok_agenda_dates_review.py'
+      - 'scripts/zonaok_fecapa_unificat.py'
   workflow_dispatch:
     inputs:
       scope:
