@@ -198,7 +198,19 @@ jobs:
         run: |
           set -euo pipefail
           if [ "${ZONAOK_ACTES_WINDOW:-}" = agenda_dates ] && [ -f "$ACTES_STATE" ]; then
-            echo "Agenda puntual finalitzada; reprendre Actes sense reactivar les altres importacions."
+            if [ "$JOB_STATUS" != success ]; then
+              echo "::error::Agenda no ha acabat correctament; no s'encadena Actes."
+              exit 1
+            fi
+            python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          report=json.loads(Path("imports/agenda-revisio-20261101-1231.json").read_text())
+          expected=hashlib.sha256(Path("scripts/zonaok_agenda_dates_review.py").read_bytes()).hexdigest()
+          if not report.get("finishedAt") or report.get("reviewScriptSha") != expected:
+              raise SystemExit("L'informe Agenda no és complet o no correspon al codi revisat.")
+          PY
+            echo "Agenda puntual publicada; reprendre Actes sense reactivar les altres importacions."
             active=$(gh run list --workflow zonaok-auto-actes.yml --branch main --limit 30 --json databaseId,status --jq "[.[] | select(.databaseId != $GITHUB_RUN_ID and .status != \"completed\")] | length")
             if [ "$active" = 0 ]; then
               gh workflow run zonaok-auto-actes.yml --ref main -f scope=full -f publish=true
