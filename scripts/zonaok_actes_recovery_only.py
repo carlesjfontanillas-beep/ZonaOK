@@ -183,17 +183,23 @@ async def acts(doc,root,control):
     if len(plan)<40:plan+=sorted(audit_pending,key=lambda x:(x[1]["iso"],x[0]),reverse=True)[:40-len(plan)]
     audit_keys={k for k,_ in audit_pending}
     report={"selected":len(plan),"attempted":0,"verified":0,"pending":0,"reasons":{},"reusedVerified":promoted}
+    previous_audits={k:copy.deepcopy(matches[k]) for k,_ in plan if k in audit_keys and k in matches}
     await run_matches(master,matches,plan,time.monotonic()+15*60,report)
     for k,r in plan:
         if verified(k,r) and k in byid:promote(k)
-        if k in audit_keys and matches.get(k,{}).get("checkedAt") and str(matches[k]["checkedAt"])>=clock.isoformat()[:19]:audits[k]=int(audits.get(k,0))+1
+        if k in audit_keys and matches.get(k,{}).get("checkedAt") and str(matches[k]["checkedAt"])>=clock.isoformat()[:19]:
+            audits[k]=int(audits.get(k,0))+1
+            if k in previous_audits and not verified(k,r):
+                matches[k]=previous_audits[k]
+                control.setdefault("windowAuditFailures",{})[k]=utc_now()
     # Recover a missing score only from the total in a successfully closed official acta.
     for k,r in rows.items():
         if not verified(k,r) or score_tuple(byid[k]):continue
         totals=[p.get("score","") for p in matches[k].get("details",{}).get("periods",[]) if norm(p.get("period"))=="total"]
         if len(totals)==1:
             value=re.fullmatch(r"\s*(\d+)\s*[-:]\s*(\d+)\s*",totals[0])
-            if value:byid[k].update(homeScore=int(value[1]),awayScore=int(value[2]),scoreSource="FECAPA:acta_oficial",scoreUpdatedAt=utc_now())
+            if value and all(byid[k].get(f) in (None,int(value[i])) for i,f in ((1,"homeScore"),(2,"awayScore"))):
+                byid[k].update(homeScore=int(value[1]),awayScore=int(value[2]),scoreSource="FECAPA:acta_oficial",scoreUpdatedAt=utc_now())
     # A change in the acta availability field alone must not trigger another scrape.
     write(CANONICAL,doc)
     fresh=all_candidates(doc)
