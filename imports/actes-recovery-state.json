@@ -12,75 +12,98 @@
   "lastIds": {
     "phase": "ids",
     "before": {
-      "total": 12397,
-      "identified": 5708,
-      "missingHistoricalIDs": 68,
-      "missingHistoricalScores": 30,
-      "historical": 5776,
-      "verified": 0,
-      "historicalUnverified": 5776
+      "window": {
+        "from": "2026-11-12",
+        "to": "2026-11-26"
+      },
+      "total": 1369,
+      "catalogTotal": 12397,
+      "identified": 1314,
+      "actaRequired": 1335,
+      "nationalScoreOnly": 34,
+      "nationalWithScore": 34,
+      "nationalMissingScore": 0,
+      "allWindowMissingScores": 17,
+      "missingHistoricalIDs": 21,
+      "missingHistoricalScores": 17,
+      "historical": 1335,
+      "verified": 697,
+      "historicalUnverified": 638,
+      "pendingWithID": 617
     },
     "after": {
-      "total": 12397,
-      "identified": 5708,
-      "missingHistoricalIDs": 68,
-      "missingHistoricalScores": 30,
-      "historical": 5776,
-      "verified": 0,
-      "historicalUnverified": 5776
+      "window": {
+        "from": "2026-11-12",
+        "to": "2026-11-26"
+      },
+      "total": 1369,
+      "catalogTotal": 12397,
+      "identified": 1316,
+      "actaRequired": 1335,
+      "nationalScoreOnly": 34,
+      "nationalWithScore": 34,
+      "nationalMissingScore": 0,
+      "allWindowMissingScores": 17,
+      "missingHistoricalIDs": 19,
+      "missingHistoricalScores": 17,
+      "historical": 1335,
+      "verified": 697,
+      "historicalUnverified": 638,
+      "pendingWithID": 619
     },
     "legacyIDs": 0,
-    "calendarIDs": 0,
+    "calendarIDs": 2,
     "checks": [
-      {
-        "league": "4775",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 72
-      },
-      {
-        "league": "4774",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 72
-      },
-      {
-        "league": "4776",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 170
-      },
-      {
-        "league": "4778",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 95
-      },
-      {
-        "league": "4779",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 209
-      },
-      {
-        "league": "4780",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 88
-      },
-      {
-        "league": "4781",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 328
-      },
       {
         "league": "4782",
         "ids": 0,
         "status": "partial-identifiers",
         "accepted": 189
+      },
+      {
+        "league": "4789",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 332
+      },
+      {
+        "league": "4790",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 430
+      },
+      {
+        "league": "4803",
+        "ids": 1,
+        "status": "partial-identifiers",
+        "accepted": 72
+      },
+      {
+        "league": "4807",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 101
+      },
+      {
+        "league": "4811",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 237
+      },
+      {
+        "league": "4812",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 81
+      },
+      {
+        "league": "4814",
+        "ids": 1,
+        "status": "partial-identifiers",
+        "accepted": 205
       }
-    ]
+    ],
+    "untriedLeagues": 49
   },
   "lastActs": {
     "phase": "acts",
@@ -113,5 +136,19 @@
     "remainingEligible": 3578,
     "players": 9953,
     "appearances": 44029
+  },
+  "window": {
+    "from": "2026-11-12",
+    "to": "2026-11-26"
+  },
+  "windowLeagueChecks": {
+    "4782": "2026-11-27T07:55:56Z",
+    "4789": "2026-11-27T07:56:01Z",
+    "4790": "2026-11-27T07:56:06Z",
+    "4803": "2026-11-27T07:56:09Z",
+    "4807": "2026-11-27T07:56:13Z",
+    "4811": "2026-11-27T07:56:18Z",
+    "4812": "2026-11-27T07:56:21Z",
+    "4814": "2026-11-27T07:56:25Z"
   }
 }
