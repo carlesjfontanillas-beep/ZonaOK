@@ -52,7 +52,7 @@ def league_ids_by_competition():
     for item in doc.get("competitions",{}).values():
         if not isinstance(item,dict):continue
         lid=clean(item.get("leagueId"))
-        if not re.fullmatch(r"\\d{4,6}",lid):continue
+        if not re.fullmatch(r"\d{4,6}",lid):continue
         for key in ("competition","category","name"):
             label=norm(item.get(key))
             if label:result[label].add(lid)
