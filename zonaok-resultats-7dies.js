@@ -154,7 +154,15 @@
 
   let matches = [], periodRows = {past:[],upcoming:[]}, activePeriod = 'past', periodLoaded = false;
   let publishedAt = '', pendingLoad = null, periodTitle, periodNote, pastButton, upcomingButton;
-  let panel, navButton, clubFilter, categoryFilter, competitionFilter, content, counter, status;
+  let panel, navButton, clubFilter, categoryFilter, competitionFilter, content, counter, status, missingActaButton;
+  let onlyMissingActa = false;
+  const adminAllowed = () => window.ZonaOKAdminDevice?.allowed() === true;
+  const recentActaUrl = row => window.ZonaOKActaLinks?.savedUrl(row)||window.ZonaOKActes?.url(row,row.leagueId||'live')||'';
+  function syncMissingActa(){
+    const enabled = adminAllowed() && activePeriod === 'past';
+    if (!enabled) onlyMissingActa = false;
+    if(missingActaButton){missingActaButton.hidden = !enabled;missingActaButton.setAttribute('aria-pressed',String(onlyMissingActa));}
+  }
 
   function combinedAgenda(data) {
     const source = Array.isArray(data?.agenda?.rows) ? data.agenda.rows : [];
@@ -217,6 +225,7 @@
     upcomingButton.setAttribute('aria-pressed',String(future));
     periodTitle.textContent = future ? 'Pròxims partits' : 'Partits recents';
     periodNote.textContent = future ? 'Pròxims 7 dies · Més propers primer' : 'Darrers 7 dies · Més recents primer';
+    syncMissingActa();
     if(!periodLoaded)return;
     matches = periodRows[activePeriod];
     updateClubOptions();
@@ -298,7 +307,7 @@
     const time = make('strong', 'zok-recent-time', row.time);
     const date = make('small', 'zok-recent-day', prettyDate(row.iso));
     top.append(category, time, date);
-    const actaUrl=window.ZonaOKActaLinks.savedUrl(row)||window.ZonaOKActes?.url(row,row.leagueId||'live')||'';
+    const actaUrl=recentActaUrl(row);
     if(actaUrl){
       const acta=make('button','zok-recent-acta','Acta');
       acta.type='button';
@@ -365,7 +374,9 @@
 
   function renderCards() {
     const club = clubFilter.value, category = categoryFilter.value, competition=competitionFilter.value;
+    syncMissingActa();
     const selected = matches.filter(r =>
+      (!onlyMissingActa || (!recentActaUrl(r) && !/^\d{3,10}$/.test(String(r.matchId||r.idp||'').trim()))) &&
       (!club || queryMatches(teamLabel(r.home,teamKey(r.home,r.homeLogo),r,'home'),club) || queryMatches(teamLabel(r.away,teamKey(r.away,r.awayLogo),r,'away'),club)) &&
       queryMatches(r.competition, category) &&
       queryMatches(competitionGroup(r.competition),competition));
@@ -458,6 +469,9 @@
       body.zok-recent-mode #${ID} .zok-recent-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin:14px 0 7px}
       #${ID} .zok-recent-filters label{display:grid;gap:6px;font-size:12px;font-weight:850;color:#b9dbec}
       #${ID} .zok-recent-filters input{width:100%;min-width:0;padding:12px 8px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fff;font:inherit;font-size:12px}
+      #${ID} .zok-recent-admin-filter{align-self:end;min-height:40px;padding:8px 10px;border:1px solid #7597b0;border-radius:11px;background:#183d5b;color:#fbc252;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+      #${ID} .zok-recent-admin-filter[aria-pressed=true]{background:#fbc252;color:#10283c;border-color:#fbc252}
+      html:not(.zok-admin-device) #${ID} .zok-recent-admin-filter,#${ID} .zok-recent-admin-filter[hidden]{display:none!important}
       #${ID} .zok-suggest-wrap{position:relative;min-width:0}
       #${ID} .zok-suggestions{display:none;position:absolute;z-index:30;top:calc(100% + 4px);left:0;right:0;max-height:220px;overflow:auto;padding:4px;border:1px solid #7597b0;border-radius:10px;background:#183d5b;box-shadow:0 8px 24px #001522aa}
       #${ID} .zok-suggestions.open{display:grid}
@@ -537,7 +551,13 @@
     competitionFilter.type='search'; competitionFilter.placeholder='Totes les competicions'; competitionFilter.setAttribute('list','zok-results-competitions');
     competitionFilter.setAttribute('aria-label', 'Filtra els resultats per competició');
     competitionLabel.append(competitionFilter); mountSuggestions(competitionFilter);
-    filterRow.append(clubLabel, categoryLabel, competitionLabel);
+    missingActaButton = make('button','zok-recent-admin-filter','⌕ Sense acta');
+    missingActaButton.type='button';missingActaButton.hidden=true;
+    missingActaButton.setAttribute('aria-label','Mostra només els partits sense acta');
+    missingActaButton.setAttribute('aria-pressed','false');
+    missingActaButton.onclick=()=>{if(!adminAllowed()||activePeriod!=='past')return;onlyMissingActa=!onlyMissingActa;renderCards();};
+    filterRow.append(clubLabel, categoryLabel, competitionLabel, missingActaButton);
+    new MutationObserver(()=>{const was=onlyMissingActa;syncMissingActa();if(was!==onlyMissingActa&&periodLoaded)renderCards();}).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
     content = make('div', 'cards');
     status = make('p', 'zok-recent-stamp', '');
     const tabs=make('div','zok-period-tabs zok-scope-switch');tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Període dels partits');
