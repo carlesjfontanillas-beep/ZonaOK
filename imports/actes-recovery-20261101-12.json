@@ -262,7 +262,47 @@
     "4793|158264": "2026-11-27T11:58:47.170462+00:00",
     "4793|158267": "2026-11-27T11:58:54.045429+00:00",
     "4793|158268": "2026-11-27T11:59:00.755175+00:00",
-    "4794|157006": "2026-11-27T11:59:07.524417+00:00"
+    "4794|157006": "2026-11-27T11:59:07.524417+00:00",
+    "4794|157007": "2026-11-27T12:37:25.720800+00:00",
+    "4794|157010": "2026-11-27T12:37:32.337686+00:00",
+    "4794|157011": "2026-11-27T12:37:38.970431+00:00",
+    "4794|157012": "2026-11-27T12:37:45.621918+00:00",
+    "4802|159387": "2026-11-27T12:37:52.258386+00:00",
+    "4802|159388": "2026-11-27T12:37:58.940715+00:00",
+    "4802|159389": "2026-11-27T12:38:05.542766+00:00",
+    "4802|159392": "2026-11-27T12:38:12.022662+00:00",
+    "4802|159393": "2026-11-27T12:38:18.693973+00:00",
+    "4802|159394": "2026-11-27T12:38:25.345847+00:00",
+    "4803|157205": "2026-11-27T12:38:31.945449+00:00",
+    "4803|157209": "2026-11-27T12:38:38.553343+00:00",
+    "4803|157210": "2026-11-27T12:38:45.145977+00:00",
+    "4803|157211": "2026-11-27T12:38:51.778807+00:00",
+    "4803|157212": "2026-11-27T12:38:58.376500+00:00",
+    "4803|157214": "2026-11-27T12:39:05.018159+00:00",
+    "4803|157215": "2026-11-27T12:39:11.720509+00:00",
+    "4804|158469": "2026-11-27T12:39:18.411121+00:00",
+    "4804|158470": "2026-11-27T12:39:24.858911+00:00",
+    "4804|158471": "2026-11-27T12:39:31.506257+00:00",
+    "4804|158472": "2026-11-27T12:39:38.251446+00:00",
+    "4804|158473": "2026-11-27T12:39:44.877648+00:00",
+    "4804|158475": "2026-11-27T12:39:51.438501+00:00",
+    "4805|157532": "2026-11-27T12:39:57.945863+00:00",
+    "4805|157534": "2026-11-27T12:40:03.915395+00:00",
+    "4805|157535": "2026-11-27T12:40:10.744150+00:00",
+    "4805|157537": "2026-11-27T12:40:17.383411+00:00",
+    "4805|157538": "2026-11-27T12:40:23.997311+00:00",
+    "4805|157539": "2026-11-27T12:40:30.565437+00:00",
+    "4805|157540": "2026-11-27T12:40:37.204187+00:00",
+    "4806|158677": "2026-11-27T12:40:43.780331+00:00",
+    "4806|158678": "2026-11-27T12:40:50.691809+00:00",
+    "4806|158681": "2026-11-27T12:40:57.313335+00:00",
+    "4806|158682": "2026-11-27T12:41:03.945614+00:00",
+    "4806|158683": "2026-11-27T12:41:10.720023+00:00",
+    "4807|159697": "2026-11-27T12:41:17.370203+00:00",
+    "4807|159699": "2026-11-27T12:41:23.994486+00:00",
+    "4807|159704": "2026-11-27T12:41:30.636260+00:00",
+    "4807|159709": "2026-11-27T12:41:37.313831+00:00",
+    "4808|164843": "2026-11-27T12:41:43.930480+00:00"
   },
   "matchDiagnostics": {
     "5045|163690": {
@@ -1344,6 +1384,366 @@
         "home": 2,
         "away": 2
       }
+    },
+    "4794|157007": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:37:25.720800+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4794|157010": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:37:32.337686+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4794|157011": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:37:38.970431+00:00",
+      "staffSides": {
+        "home": 1,
+        "away": 2
+      }
+    },
+    "4794|157012": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:37:45.621918+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4802|159387": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:37:52.258386+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4802|159388": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:37:58.940715+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4802|159389": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:38:05.542766+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4802|159392": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:38:12.022662+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4802|159393": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:38:18.693973+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4802|159394": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:38:25.345847+00:00",
+      "staffSides": {
+        "home": 1,
+        "away": 2
+      }
+    },
+    "4803|157205": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:38:31.945449+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4803|157209": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:38:38.553343+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4803|157210": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:38:45.145977+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4803|157211": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:38:51.778807+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4803|157212": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:38:58.376500+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4803|157214": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:39:05.018159+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4803|157215": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:39:11.720509+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4804|158469": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:39:18.411121+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4804|158470": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:39:24.858911+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4804|158471": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:39:31.506257+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4804|158472": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:39:38.251446+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4804|158473": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:39:44.877648+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 3
+      }
+    },
+    "4804|158475": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:39:51.438501+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4805|157532": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:39:57.945863+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4805|157534": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:40:03.915395+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4805|157535": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:40:10.744150+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4805|157537": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:40:17.383411+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4805|157538": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:40:23.997311+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4805|157539": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:40:30.565437+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 3
+      }
+    },
+    "4805|157540": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:40:37.204187+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 3
+      }
+    },
+    "4806|158677": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:40:43.780331+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4806|158678": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:40:50.691809+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4806|158681": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:40:57.313335+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4806|158682": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:41:03.945614+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4806|158683": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:41:10.720023+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4807|159697": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:41:17.370203+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4807|159699": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:41:23.994486+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 3
+      }
+    },
+    "4807|159704": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:41:30.636260+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4807|159709": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:41:37.313831+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4808|164843": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-27T12:41:43.930480+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
     }
   },
   "windowAuditFailures": {
@@ -1367,9 +1767,9 @@
       "missingHistoricalIDs": 1,
       "missingHistoricalScores": 1,
       "historical": 941,
-      "verified": 190,
-      "historicalUnverified": 751,
-      "pendingWithID": 750
+      "verified": 230,
+      "historicalUnverified": 711,
+      "pendingWithID": 710
     },
     "after": {
       "window": {
@@ -1387,9 +1787,9 @@
       "missingHistoricalIDs": 1,
       "missingHistoricalScores": 1,
       "historical": 941,
-      "verified": 230,
-      "historicalUnverified": 711,
-      "pendingWithID": 710
+      "verified": 270,
+      "historicalUnverified": 671,
+      "pendingWithID": 670
     },
     "selected": 40,
     "attempted": 40,
@@ -1398,484 +1798,436 @@
     "reasons": {},
     "reusedVerified": 0,
     "matchDiagnostics": {
-      "4787|149923": {
+      "4794|157007": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:54:37.858346+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4787|149924": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:54:45.109423+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4787|149925": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:54:51.787271+00:00",
+        "checkedAt": "2026-11-27T12:37:25.720800+00:00",
         "staffSides": {
           "home": 2,
           "away": 3
         }
       },
-      "4787|149977": {
+      "4794|157010": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:54:58.334413+00:00",
+        "checkedAt": "2026-11-27T12:37:32.337686+00:00",
         "staffSides": {
           "home": 3,
           "away": 2
         }
       },
-      "4787|150013": {
+      "4794|157011": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:55:05.375549+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4787|157901": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:55:12.431960+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 3
-        }
-      },
-      "4787|157903": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:55:19.265715+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4787|157905": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:55:26.271735+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4787|157992": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:55:33.314553+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 3
-        }
-      },
-      "4787|157998": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:55:40.342062+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4788|158817": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:55:47.095687+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4790|148829": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:55:54.186434+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 3
-        }
-      },
-      "4790|148832": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:56:01.232320+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 3
-        }
-      },
-      "4790|148921": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:56:08.332194+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 3
-        }
-      },
-      "4790|148922": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:56:15.383751+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 3
-        }
-      },
-      "4790|148923": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:56:22.463525+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4790|149011": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:56:29.316513+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 3
-        }
-      },
-      "4790|149013": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:56:36.332392+00:00",
+        "checkedAt": "2026-11-27T12:37:38.970431+00:00",
         "staffSides": {
           "home": 1,
           "away": 2
         }
       },
-      "4790|149015": {
+      "4794|157012": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:56:42.904419+00:00",
+        "checkedAt": "2026-11-27T12:37:45.621918+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4802|159387": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:37:52.258386+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4802|159388": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:37:58.940715+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4802|159389": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:38:05.542766+00:00",
         "staffSides": {
           "home": 2,
           "away": 3
         }
       },
-      "4790|149071": {
+      "4802|159392": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:56:49.996278+00:00",
+        "checkedAt": "2026-11-27T12:38:12.022662+00:00",
         "staffSides": {
           "home": 2,
           "away": 2
         }
       },
-      "4790|149102": {
+      "4802|159393": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:56:57.049842+00:00",
+        "checkedAt": "2026-11-27T12:38:18.693973+00:00",
         "staffSides": {
           "home": 2,
           "away": 2
         }
       },
-      "4790|149105": {
+      "4802|159394": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:57:03.886532+00:00",
+        "checkedAt": "2026-11-27T12:38:25.345847+00:00",
         "staffSides": {
-          "home": 2,
-          "away": 3
-        }
-      },
-      "4790|149162": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:57:10.956706+00:00",
-        "staffSides": {
-          "home": 2,
+          "home": 1,
           "away": 2
         }
       },
-      "4790|149193": {
+      "4803|157205": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:57:17.717610+00:00",
-        "staffSides": {
-          "home": 3,
-          "away": 2
-        }
-      },
-      "4790|149283": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:57:24.804826+00:00",
+        "checkedAt": "2026-11-27T12:38:31.945449+00:00",
         "staffSides": {
           "home": 2,
           "away": 2
         }
       },
-      "4790|149286": {
+      "4803|157209": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:57:31.888946+00:00",
-        "staffSides": {
-          "home": 3,
-          "away": 2
-        }
-      },
-      "4790|149287": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:57:39.025097+00:00",
+        "checkedAt": "2026-11-27T12:38:38.553343+00:00",
         "staffSides": {
           "home": 2,
           "away": 2
         }
       },
-      "4790|159203": {
+      "4803|157210": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:57:46.093588+00:00",
-        "staffSides": {
-          "home": 4,
-          "away": 2
-        }
-      },
-      "4790|159208": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:57:53.332836+00:00",
+        "checkedAt": "2026-11-27T12:38:45.145977+00:00",
         "staffSides": {
           "home": 2,
           "away": 2
         }
       },
-      "4791|159276": {
+      "4803|157211": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:58:00.061272+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4792|156117": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:58:06.628321+00:00",
-        "staffSides": {
-          "home": 3,
-          "away": 3
-        }
-      },
-      "4792|156118": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:58:13.426037+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 4
-        }
-      },
-      "4792|156119": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:58:20.176307+00:00",
-        "staffSides": {
-          "home": 3,
-          "away": 2
-        }
-      },
-      "4792|156121": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:58:26.809767+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4792|156122": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:58:33.585184+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4793|158260": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:58:40.368570+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4793|158264": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:58:47.170462+00:00",
-        "staffSides": {
-          "home": 2,
-          "away": 2
-        }
-      },
-      "4793|158267": {
-        "status": "verified",
-        "reason": null,
-        "checkedAt": "2026-11-27T11:58:54.045429+00:00",
+        "checkedAt": "2026-11-27T12:38:51.778807+00:00",
         "staffSides": {
           "home": 2,
           "away": 3
         }
       },
-      "4793|158268": {
+      "4803|157212": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:59:00.755175+00:00",
+        "checkedAt": "2026-11-27T12:38:58.376500+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4803|157214": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:39:05.018159+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4803|157215": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:39:11.720509+00:00",
         "staffSides": {
           "home": 2,
           "away": 2
         }
       },
-      "4794|157006": {
+      "4804|158469": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-27T11:59:07.524417+00:00",
+        "checkedAt": "2026-11-27T12:39:18.411121+00:00",
         "staffSides": {
           "home": 2,
+          "away": 2
+        }
+      },
+      "4804|158470": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:39:24.858911+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4804|158471": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:39:31.506257+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4804|158472": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:39:38.251446+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4804|158473": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:39:44.877648+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 3
+        }
+      },
+      "4804|158475": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:39:51.438501+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4805|157532": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:39:57.945863+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4805|157534": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:40:03.915395+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4805|157535": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:40:10.744150+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4805|157537": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:40:17.383411+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4805|157538": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:40:23.997311+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4805|157539": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:40:30.565437+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 3
+        }
+      },
+      "4805|157540": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:40:37.204187+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 3
+        }
+      },
+      "4806|158677": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:40:43.780331+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4806|158678": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:40:50.691809+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4806|158681": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:40:57.313335+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4806|158682": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:41:03.945614+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4806|158683": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:41:10.720023+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4807|159697": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:41:17.370203+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4807|159699": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:41:23.994486+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 3
+        }
+      },
+      "4807|159704": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:41:30.636260+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4807|159709": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:41:37.313831+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4808|164843": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-27T12:41:43.930480+00:00",
+        "staffSides": {
+          "home": 3,
           "away": 2
         }
       }
     },
-    "remainingEligible": 710,
+    "remainingEligible": 670,
     "coverage": {
-      "verifiedWithAllTrackedFields": 214,
-      "verifiedWithGaps": 16,
+      "verifiedWithAllTrackedFields": 270,
+      "verifiedWithGaps": 0,
       "playerFields": {
         "Núm.": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "P": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "C": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "5i": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "G": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "As": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "PEN": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "FD": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "F→": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "F←": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "TA": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "TB": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         },
         "TR": {
-          "present": 3599,
+          "present": 4157,
           "missing": 0
         }
       },
       "optionalPlayerFields": [
         "Cat"
       ],
-      "gapCounts": {
-        "staff": 16
-      },
-      "unconfirmedGapsByMatch": {
-        "5046|163834": [
-          "staff"
-        ],
-        "5046|163835": [
-          "staff"
-        ],
-        "5045|164000": [
-          "staff"
-        ],
-        "5046|163836": [
-          "staff"
-        ],
-        "5046|163833": [
-          "staff"
-        ],
-        "5045|164247": [
-          "staff"
-        ],
-        "5045|164002": [
-          "staff"
-        ],
-        "5045|164246": [
-          "staff"
-        ],
-        "5045|163689": [
-          "staff"
-        ],
-        "5082|164774": [
-          "staff"
-        ],
-        "5082|164775": [
-          "staff"
-        ],
-        "5046|163820": [
-          "staff"
-        ],
-        "5045|163694": [
-          "staff"
-        ],
-        "5045|163690": [
-          "staff"
-        ],
-        "5082|164776": [
-          "staff"
-        ],
-        "5045|164001": [
-          "staff"
-        ]
-      }
+      "optionalActaFields": [
+        "staff"
+      ],
+      "gapCounts": {},
+      "unconfirmedGapsByMatch": {}
     },
-    "remainingAudit": 16,
-    "pendingCompleteActs": 726,
+    "remainingAudit": 0,
+    "pendingCompleteActs": 670,
     "pendingByMatch": {
       "4774|146365": {
         "iso": "2026-11-01",
@@ -5483,16 +5835,6 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "4794|157007": {
-        "iso": "2026-11-08",
-        "competition": "FEM 17 PLATA",
-        "home": "CLUB HOQUEI MOLINS DE REI",
-        "away": "PREDECAT IGUALADA FEMENÍ HCP B",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4794&vista=calendar&partido=157007",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
       "4794|157008": {
         "iso": "2026-11-07",
         "competition": "FEM 17 PLATA",
@@ -5509,36 +5851,6 @@
         "home": "HOQUEI CLUB CASTELLAR",
         "away": "CH LLORET CAFÈS CORNELLÀ",
         "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4794&vista=calendar&partido=157009",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4794|157010": {
-        "iso": "2026-11-08",
-        "competition": "FEM 17 PLATA",
-        "home": "FUTBOL CLUB MARTINENC",
-        "away": "CLUB HOQUEI SANTA PERPÈTUA",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4794&vista=calendar&partido=157010",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4794|157011": {
-        "iso": "2026-11-08",
-        "competition": "FEM 17 PLATA",
-        "home": "OXFORD HC SALT B",
-        "away": "CLUB PATI TORRELLES",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4794&vista=calendar&partido=157011",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4794|157012": {
-        "iso": "2026-11-08",
-        "competition": "FEM 17 PLATA",
-        "home": "CP MANRESA",
-        "away": "HOQUEI CLUB ALPICAT",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4794&vista=calendar&partido=157012",
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
@@ -5613,36 +5925,6 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "4802|159387": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 OR",
-        "home": "GENERALI HC PALAU A",
-        "away": "MARTINELIA MANLLEU A",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=calendar&partido=159387",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4802|159388": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 OR",
-        "home": "ROTOTANK BIGUES I RIELLS",
-        "away": "FUTBOL CLUB MARTINENC",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=calendar&partido=159388",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4802|159389": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 OR",
-        "home": "OXFORD HC SALT",
-        "away": "MARTINELIA MANLLEU B",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=calendar&partido=159389",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
       "4802|159390": {
         "iso": "2026-11-06",
         "competition": "FEM 15 OR",
@@ -5659,36 +5941,6 @@
         "home": "CLUB PATÍ RODA",
         "away": "MOLLET HC B",
         "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=calendar&partido=159391",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4802|159392": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 OR",
-        "home": "IGUALADA FEMENÍ HCP A",
-        "away": "CLUB PATÍ VOLTREGÀ B",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=calendar&partido=159392",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4802|159393": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 OR",
-        "home": "CH MATARÓ",
-        "away": "GENERALI HC PALAU B",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=calendar&partido=159393",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4802|159394": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 OR",
-        "home": "FARNERS",
-        "away": "SANT CELONI",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=calendar&partido=159394",
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
@@ -5773,16 +6025,6 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "4803|157205": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 PLATA",
-        "home": "HOQUEI CLUB RIPOLL",
-        "away": "CH LLORET CAFÈS CORNELLÀ",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4803&vista=calendar&partido=157205",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
       "4803|157207": {
         "iso": "2026-11-07",
         "competition": "FEM 15 PLATA",
@@ -5799,66 +6041,6 @@
         "home": "AUTO VIGATANA PATÍ VIC",
         "away": "PONS LLEIDA",
         "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4803&vista=calendar&partido=157208",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4803|157209": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 PLATA",
-        "home": "CLUB PATI VILAFRANCA AKO",
-        "away": "CEH SABADELL",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4803&vista=calendar&partido=157209",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4803|157210": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 PLATA",
-        "home": "CH OLOT",
-        "away": "JOIERIA TRIAS IGUALADA FHCP B",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4803&vista=calendar&partido=157210",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4803|157211": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 PLATA",
-        "home": "CLUB HOQUEI SANTA PERPÈTUA",
-        "away": "HCSENTMENAT",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4803&vista=calendar&partido=157211",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4803|157212": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 PLATA",
-        "home": "CP RIUDOMS",
-        "away": "CLUB PATÍ VILA-SANA B",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4803&vista=calendar&partido=157212",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4803|157214": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 PLATA",
-        "home": "UNIÓ ESPORTIVA D'HORTA",
-        "away": "CP ESNECA FRAGA",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4803&vista=calendar&partido=157214",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4803|157215": {
-        "iso": "2026-11-08",
-        "competition": "FEM 15 PLATA",
-        "home": "CH LLORET CAFÈS CORNELLÀ",
-        "away": "CH PALAFRUGELL",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4803&vista=calendar&partido=157215",
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
@@ -5943,72 +6125,12 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "4804|158469": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 OR",
-        "home": "CLUB PATI CUBELLES",
-        "away": "HOQUEI CLARET",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4804&vista=calendar&partido=158469",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4804|158470": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 OR",
-        "home": "MARTINELIA MANLLEU",
-        "away": "OXFORD HC SALT",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4804&vista=calendar&partido=158470",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4804|158471": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 OR",
-        "home": "FENIE ENERGIA CERDANYOLA CCH B",
-        "away": "GILI IGUALADA FEMENÍ HCP A",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4804&vista=calendar&partido=158471",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4804|158472": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 OR",
-        "home": "CLUB PATÍ VILA-SANA B",
-        "away": "FARNERS",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4804&vista=calendar&partido=158472",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4804|158473": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 OR",
-        "home": "CE ARENYS DE MUNT",
-        "away": "INNOAESTHETICS HC SANT JUST",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4804&vista=calendar&partido=158473",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
       "4804|158474": {
         "iso": "2026-11-07",
         "competition": "FEM 13 OR",
         "home": "GENERALI HC PALAU B",
         "away": "VICIO PHC SANT CUGAT",
         "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4804&vista=calendar&partido=158474",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4804|158475": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 OR",
-        "home": "IGUALADA HC",
-        "away": "UNIÓ ESPORTIVA D'HORTA B",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4804&vista=calendar&partido=158475",
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
@@ -6103,82 +6225,12 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "4805|157532": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 PLATA",
-        "home": "CLUB PATI TORRELLES",
-        "away": "CP MASQUEFA",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=calendar&partido=157532",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
       "4805|157533": {
         "iso": "2026-11-07",
         "competition": "FEM 13 PLATA",
         "home": "AUTO VIGATANA PATÍ VIC",
         "away": "VICIO PHC SANT CUGAT",
         "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=calendar&partido=157533",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4805|157534": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 PLATA",
-        "home": "CLUB HOQUEI MOLINS DE REI",
-        "away": "CLUB PATI VILAFRANCA AKO",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=calendar&partido=157534",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4805|157535": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 PLATA",
-        "home": "CP CONGRES",
-        "away": "CLUB HOQUEI SANTA PERPÈTUA",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=calendar&partido=157535",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4805|157537": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 PLATA",
-        "home": "CH MATARÓ",
-        "away": "CP RIUDOMS",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=calendar&partido=157537",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4805|157538": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 PLATA",
-        "home": "FITONATUR IGUALADA FEMENÍ HCP",
-        "away": "CLUB HOQUEI CASTELLET",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=calendar&partido=157538",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4805|157539": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 PLATA",
-        "home": "FUTBOL CLUB MARTINENC",
-        "away": "HCSENTMENAT",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=calendar&partido=157539",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4805|157540": {
-        "iso": "2026-11-08",
-        "competition": "FEM 13 PLATA",
-        "home": "CLUB HOQUEI MOLLERUSSA",
-        "away": "CLUB PATÍ RODA-FOLGUEROLES",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=calendar&partido=157540",
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
@@ -6213,62 +6265,12 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "4806|158677": {
-        "iso": "2026-11-08",
-        "competition": "FEM 11 OR",
-        "home": "CH MATARÓ",
-        "away": "INNOAESTHETICS HC SANT JUST A",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4806&vista=calendar&partido=158677",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4806|158678": {
-        "iso": "2026-11-08",
-        "competition": "FEM 11 OR",
-        "home": "UEH BARBERÀ",
-        "away": "BELL-LLOC LLISTA",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4806&vista=calendar&partido=158678",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
       "4806|158680": {
         "iso": "2026-11-07",
         "competition": "FEM 11 OR",
         "home": "GENERALI HC PALAU A",
         "away": "CLUB PATÍ VOLTREGÀ",
         "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4806&vista=calendar&partido=158680",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4806|158681": {
-        "iso": "2026-11-08",
-        "competition": "FEM 11 OR",
-        "home": "IGUALADA HC",
-        "away": "CE ARENYS DE MUNT",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4806&vista=calendar&partido=158681",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4806|158682": {
-        "iso": "2026-11-08",
-        "competition": "FEM 11 OR",
-        "home": "VICIO PHC SANT CUGAT",
-        "away": "OXFORD HC SALT",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4806&vista=calendar&partido=158682",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4806|158683": {
-        "iso": "2026-11-08",
-        "competition": "FEM 11 OR",
-        "home": "MOLLET HC",
-        "away": "CLUB PATÍ VILA-SANA",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4806&vista=calendar&partido=158683",
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
@@ -6333,32 +6335,12 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "4807|159697": {
-        "iso": "2026-11-08",
-        "competition": "FEM 11 PLATA",
-        "home": "CE NOIA FREIXENET",
-        "away": "CE SAGRERENC",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4807&vista=calendar&partido=159697",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
       "4807|159698": {
         "iso": "2026-11-07",
         "competition": "FEM 11 PLATA",
         "home": "AUTO VIGATANA PATÍ VIC",
         "away": "INNOAESTHETICS HC SANT JUST B",
         "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4807&vista=calendar&partido=159698",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4807|159699": {
-        "iso": "2026-11-08",
-        "competition": "FEM 11 PLATA",
-        "home": "CLUB PATI TORRELLES",
-        "away": "JOIERIA MONER SANT RAMON",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4807&vista=calendar&partido=159699",
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
@@ -6403,16 +6385,6 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "4807|159704": {
-        "iso": "2026-11-08",
-        "competition": "FEM 11 PLATA",
-        "home": "CLUB PATI CALAFELL",
-        "away": "CLUB HOQUEI MOLLERUSSA",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4807&vista=calendar&partido=159704",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
       "4807|159705": {
         "iso": "2026-11-07",
         "competition": "FEM 11 PLATA",
@@ -6453,32 +6425,12 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "4807|159709": {
-        "iso": "2026-11-08",
-        "competition": "FEM 11 PLATA",
-        "home": "CP CORBERA",
-        "away": "FUTBOL CLUB MARTINENC",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4807&vista=calendar&partido=159709",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
       "4808|164841": {
         "iso": "2026-11-07",
         "competition": "MINIFEM 2ª FASE",
         "home": "ROTOTANK BIGUES I RIELLS",
         "away": "OXFORD HC SALT",
         "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4808&vista=calendar&partido=164841",
-        "verified": false,
-        "missingFields": [],
-        "lastAttempt": {}
-      },
-      "4808|164843": {
-        "iso": "2026-11-08",
-        "competition": "MINIFEM 2ª FASE",
-        "home": "CPI LA SAGRERA",
-        "away": "CLUB HOQUEI VILASSAR",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4808&vista=calendar&partido=164843",
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
@@ -8843,66 +8795,6 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "5045|163689": {
-        "iso": "2026-11-11",
-        "competition": "LCV GRUP A",
-        "home": "HOQUEI CLUB CASTELLAR",
-        "away": "FCBETERANS",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=163689",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:24:30.518186+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5045|163690": {
-        "iso": "2026-11-12",
-        "competition": "LCV GRUP A",
-        "home": "CP CONGRES B",
-        "away": "CP CORBERA",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=163690",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "pending",
-          "reason": "closure_unverified",
-          "checkedAt": "2026-11-27T11:23:43.616112+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5045|163694": {
-        "iso": "2026-11-12",
-        "competition": "LCV GRUP A",
-        "home": "CE ARENYS DE MUNT",
-        "away": "INNOAESTHETICS HC SANT JUST",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=163694",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:23:50.234850+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
       "5045|163995": {
         "iso": "2026-11-06",
         "competition": "LCV GRUP B",
@@ -8922,66 +8814,6 @@
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
-      },
-      "5045|164000": {
-        "iso": "2026-11-09",
-        "competition": "LCV GRUP B",
-        "home": "FUTBOL CLUB CUATRO VIENTOS",
-        "away": "CLUB PATI CALAFELL",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=164000",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:25:10.600583+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5045|164001": {
-        "iso": "2026-11-12",
-        "competition": "LCV GRUP B",
-        "home": "CHP SANT FELIU",
-        "away": "UEH VETERANS",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=164001",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:23:56.952998+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5045|164002": {
-        "iso": "2026-11-10",
-        "competition": "LCV GRUP B",
-        "home": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
-        "away": "HCSENTMENAT",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=164002",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:24:37.186186+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
       },
       "5045|164243": {
         "iso": "2026-11-06",
@@ -9003,46 +8835,6 @@
         "missingFields": [],
         "lastAttempt": {}
       },
-      "5045|164246": {
-        "iso": "2026-11-10",
-        "competition": "LCV GRUP C",
-        "home": "CH RIPOLLET",
-        "away": "VICIO PHC SANT CUGAT B",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=164246",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:24:43.865041+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5045|164247": {
-        "iso": "2026-11-10",
-        "competition": "LCV GRUP C",
-        "home": "STICK CLUB BARCELONA",
-        "away": "GENERALI HC PALAU",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5045&vista=calendar&partido=164247",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:24:50.566338+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
       "5046|163806": {
         "iso": "2026-11-03",
         "competition": "LCV MÀSTER 50",
@@ -9052,26 +8844,6 @@
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
-      },
-      "5046|163820": {
-        "iso": "2026-11-12",
-        "competition": "LCV MÀSTER 50",
-        "home": "CLUB HOQUEI PREMIA B",
-        "away": "UNIÓ ESPORTIVA LA GARRIGA +50",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=calendar&partido=163820",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:24:03.583853+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
       },
       "5046|163826": {
         "iso": "2026-11-02",
@@ -9112,86 +8884,6 @@
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
-      },
-      "5046|163833": {
-        "iso": "2026-11-10",
-        "competition": "LCV MÀSTER 50",
-        "home": "CLUB HOQUEI PREMIA B",
-        "away": "MOLLET HC",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=calendar&partido=163833",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:24:57.232129+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5046|163834": {
-        "iso": "2026-11-09",
-        "competition": "LCV MÀSTER 50",
-        "home": "CE CORNELLÀ",
-        "away": "ESPANYOL",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=calendar&partido=163834",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:25:17.480462+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5046|163835": {
-        "iso": "2026-11-09",
-        "competition": "LCV MÀSTER 50",
-        "home": "CLUB PATI CALAFELL",
-        "away": "UNIÓ ESPORTIVA LA GARRIGA +50",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=calendar&partido=163835",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:25:24.136649+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5046|163836": {
-        "iso": "2026-11-10",
-        "competition": "LCV MÀSTER 50",
-        "home": "HCSENTMENAT",
-        "away": "CLUB HOQUEI LES FRANQUESES",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5046&vista=calendar&partido=163836",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:25:03.895033+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 1
-          }
-        }
       },
       "5062|164077": {
         "iso": "2026-11-04",
@@ -9252,71 +8944,11 @@
         "verified": false,
         "missingFields": [],
         "lastAttempt": {}
-      },
-      "5082|164774": {
-        "iso": "2026-11-12",
-        "competition": "VETERANS TARRAGONA",
-        "home": "CN REUS PLOMS",
-        "away": "CLUB PATI CALAFELL",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5082&vista=calendar&partido=164774",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:24:10.453120+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5082|164775": {
-        "iso": "2026-11-12",
-        "competition": "VETERANS TARRAGONA",
-        "home": "CLUB PATI CALAFELL",
-        "away": "CHP AMPOSTA",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5082&vista=calendar&partido=164775",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:24:17.135023+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
-      },
-      "5082|164776": {
-        "iso": "2026-11-12",
-        "competition": "VETERANS TARRAGONA",
-        "home": "CHP AMPOSTA",
-        "away": "CN REUS PLOMS",
-        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=5082&vista=calendar&partido=164776",
-        "verified": true,
-        "missingFields": [
-          "staff"
-        ],
-        "lastAttempt": {
-          "status": "verified",
-          "reason": null,
-          "checkedAt": "2026-11-27T11:24:23.835905+00:00",
-          "staffSides": {
-            "home": 0,
-            "away": 0
-          }
-        }
       }
     },
-    "readyNext": 726,
+    "readyNext": 670,
     "players": 9975,
-    "appearances": 52418
+    "appearances": 52976
   },
-  "lastActsFinishedAt": "2026-11-27T11:59:33Z"
+  "lastActsFinishedAt": "2026-11-27T12:42:12Z"
 }
