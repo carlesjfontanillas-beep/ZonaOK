@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-27T01:46:26.612758+00:00",
+  "capturedAt": "2026-11-27T02:20:59.520795+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -30981,8 +30981,8 @@
       "category": "FASE DE GRUPS LLIGA CATALANA PLATA",
       "competition": "FASE DE GRUPS LLIGA CATALANA PLATA",
       "leagueId": "4856",
-      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
-      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
+      "capturedAt": "2026-11-27T02:20:59.520795+00:00",
+      "standingsAt": "2026-11-27T02:20:59.520795+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4856&vista=clasificaciones",
       "standings": [
         {
@@ -31073,8 +31073,8 @@
       "competition": "FASE DE GRUPS FRIT RAVICH LLIGA CATALANA",
       "leagueId": "4858",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4858&vista=clasificaciones",
-      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
-      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
+      "capturedAt": "2026-11-27T02:20:59.520795+00:00",
+      "standingsAt": "2026-11-27T02:20:59.520795+00:00",
       "standings": [
         {
           "pos": "1",
@@ -31164,8 +31164,8 @@
       "competition": "FASES FINALS FRIT RAVICH LLIGA CATALANA",
       "leagueId": "4858",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4858&vista=clasificaciones",
-      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
-      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
+      "capturedAt": "2026-11-27T02:20:59.520795+00:00",
+      "standingsAt": "2026-11-27T02:20:59.520795+00:00",
       "standings": [
         {
           "pos": "1",
@@ -31184,7 +31184,9 @@
             "GF": "6",
             "GC": "0",
             "DIF": "6"
-          }
+          },
+          "shortTeam": "BARÇA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
@@ -31203,7 +31205,9 @@
             "GF": "2",
             "GC": "2",
             "DIF": "0"
-          }
+          },
+          "shortTeam": "IGUALADA HC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
@@ -31336,7 +31340,9 @@
             "GF": "0",
             "GC": "0",
             "DIF": "0"
-          }
+          },
+          "shortTeam": "PONS LLEIDA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "10",
@@ -31374,7 +31380,9 @@
             "GF": "0",
             "GC": "0",
             "DIF": "0"
-          }
+          },
+          "shortTeam": "PAS ALCOI",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "12",
@@ -31403,8 +31411,8 @@
       "competition": "FASE DE GRUPS LLIGA CATALANA FEMENINA",
       "leagueId": "4860",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4860&vista=clasificaciones",
-      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
-      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
+      "capturedAt": "2026-11-27T02:20:59.520795+00:00",
+      "standingsAt": "2026-11-27T02:20:59.520795+00:00",
       "standings": [
         {
           "pos": "1",
@@ -31494,8 +31502,8 @@
       "competition": "FASES FINALS LLIGA CATALANA FEMENINA",
       "leagueId": "4860",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4860&vista=clasificaciones",
-      "capturedAt": "2026-11-26T20:14:01.701707+00:00",
-      "standingsAt": "2026-11-26T20:14:01.701707+00:00",
+      "capturedAt": "2026-11-27T02:20:59.520795+00:00",
+      "standingsAt": "2026-11-27T02:20:59.520795+00:00",
       "standings": [
         {
           "pos": "1",
@@ -31647,7 +31655,9 @@
             "GF": "0",
             "GC": "0",
             "DIF": "0"
-          }
+          },
+          "shortTeam": "CH MATARÓ",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
     },
@@ -35824,6 +35834,36 @@
       "group": "PREBENJAMÍ PLATA-BRONZE F1",
       "team": "CP ESNECA FRAGA",
       "shortTeam": "CP ESNECA FRAGA"
+    },
+    {
+      "leagueId": "4858",
+      "group": "FASES FINALS FRIT RAVICH LLIGA CATALANA",
+      "team": "BARÇA",
+      "shortTeam": "BARÇA"
+    },
+    {
+      "leagueId": "4858",
+      "group": "FASES FINALS FRIT RAVICH LLIGA CATALANA",
+      "team": "IGUALADA HC",
+      "shortTeam": "IGUALADA HC"
+    },
+    {
+      "leagueId": "4858",
+      "group": "FASES FINALS FRIT RAVICH LLIGA CATALANA",
+      "team": "PONS LLEIDA",
+      "shortTeam": "PONS LLEIDA"
+    },
+    {
+      "leagueId": "4858",
+      "group": "FASES FINALS FRIT RAVICH LLIGA CATALANA",
+      "team": "PAS ALCOI",
+      "shortTeam": "PAS ALCOI"
+    },
+    {
+      "leagueId": "4860",
+      "group": "FASES FINALS LLIGA CATALANA FEMENINA",
+      "team": "CH MATARÓ",
+      "shortTeam": "CH MATARÓ"
     },
     {
       "leagueId": "5046",
