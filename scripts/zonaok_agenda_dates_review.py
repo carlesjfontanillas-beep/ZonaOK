@@ -227,7 +227,9 @@ async def calendar_check(ctx, old, proposals, unresolved, report, extra_candidat
     # Prioritza els partits sense resultat, sense IDP i amb data ja passada:
     # Agenda pot conservar la data antiga, així que cal consultar l'IDP encara
     # que la comparació d'Agenda indiqui la mateixa data.
+    already_reviewed={i for i,_,_ in proposals}|{item[0] for item in unresolved}
     for i in extra_candidates:
+        if i in already_reviewed:continue
         item=(i,"Partit sense resultat, sense IDP i amb data anterior a avui",[])
         lids=target_leagues(old[i])
         if lids:
@@ -362,12 +364,28 @@ async def main():
                 today=utc_now()[:10]
                 extra_candidates=[i for i,row in enumerate(old)
                                   if inside(row) and str(row.get("iso",""))<today
-                                  and not score_tuple(row) and not matchid(row)[0]]
+                                  and not score_tuple(row) and not matchid(row)[1]]
                 report["scorelessPastWithoutIDP"]=len(extra_candidates)
                 accepted,rejected,unresolved,calendar_unchanged=await calendar_check(
                     ctx,old,proposals,unresolved,report,extra_candidates)
                 unchanged+=calendar_unchanged;report["unchanged"]=unchanged
             finally:await ctx.close();await browser.close()
+        # Si una data oficial proposada crearia un registre duplicat, deixa
+        # aquest cas pendent en lloc de bloquejar tota la publicació.
+        before_counts=Counter((identity(r),when(r)) for r in old)
+        tentative=copy.deepcopy(old)
+        for i,n,_proof in accepted:tentative[i]["iso"],tentative[i]["time"]=when(n)
+        after_counts=Counter((identity(r),when(r)) for r in tentative)
+        duplicate_keys={key for key,count in after_counts.items()
+                        if count>max(1,before_counts[key])}
+        kept=[]
+        for i,n,proof in accepted:
+            key=(identity(old[i]),when(n))
+            if key in duplicate_keys:
+                rejected.append((i,"La data oficial crearia un duplicat; cal revisió manual",[when(n)]))
+            else:
+                kept.append((i,n,proof))
+        accepted=kept
         rows,changes=apply(old,accepted)
         report["unresolved"]=[{**describe(old[i]),"reason":reason,"possibleSchedules":poss}
                               for i,reason,poss in unresolved+rejected]
