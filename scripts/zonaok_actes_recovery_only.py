@@ -18,7 +18,13 @@ from zonaok_jugadors_total_master import link_memberships
 WINDOWS={
     "recent":("2026-11-12","2026-11-26","imports/actes-recovery-state.json"),
     "early":("2026-11-01","2026-11-12","imports/actes-recovery-20261101-12.json"),
+    "review9":("2026-11-12","2026-11-26","imports/actes-recovery-review9.json"),
 }
+REVIEW9=frozenset({
+    ("4779","148191"), ("4779","148198"), ("4782","150937"),
+    ("4781","154014"), ("4784","151829"), ("4784","151834"),
+    ("4791","159253"), ("4791","159285"), ("4814","156522"),
+})
 WINDOW_NAME=os.environ.get("ZONAOK_ACTES_WINDOW","recent")
 if WINDOW_NAME not in WINDOWS:raise ValueError("invalid_recovery_window")
 START, END, state_file=WINDOWS[WINDOW_NAME]
@@ -49,7 +55,8 @@ def attach(rows,r):
     rows[i].update(leagueId=l,matchId=m,actaUrl=make_match_url(l,m))
     return True
 def historical(r):
-    return bool(r.get("iso") and START<=r["iso"]<=END and not re.search(
+    return bool((WINDOW_NAME!="review9" or ids(r) in REVIEW9)
+        and r.get("iso") and START<=r["iso"]<=END and not re.search(
         r"ajorn|aplaz|susp|cancel|anul",str(r.get("status","")),re.I))
 def state_league(r):
     name=norm(r.get("competition")).replace("-"," ")
@@ -263,6 +270,10 @@ async def main():
     phase=sys.argv[1]; doc=read(CANONICAL,{});before=copy.deepcopy(doc)
     control=read(STATE,{})
     control["window"]={"from":START,"to":END}
+    if WINDOW_NAME=="review9":
+        found={ids(r) for r in doc["matches"] if requires_acta(r) and valid(r)}
+        if found!=REVIEW9:raise ValueError("review9_catalog_mismatch")
+        control["requestedMatchIds"]=["|".join(k) for k in sorted(REVIEW9)]
     initial=summarize(doc)
     if phase=="ids":report=await discover(doc,control)
     elif phase=="acts":report=await acts(doc,Path(sys.argv[2]),control)
