@@ -201,7 +201,7 @@ async def capture(ctx,report,old):
     finally:
         await page.close()
 
-async def calendar_check(ctx, old, proposals, unresolved, report):
+async def calendar_check(ctx, old, proposals, unresolved, report, extra_candidates=()):
     # Use the official competition catalogue to recover a calendar IDP even
     # when a fixture row has no reliable leagueId or matchId.
     comp_ids=league_ids_by_competition()
@@ -224,6 +224,16 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
         if lids:
             for lid in lids:work[lid].append(("unresolved",i,item))
         else:unresolved_without_league.append(item)
+    # Prioritza els partits sense resultat, sense IDP i amb data ja passada:
+    # Agenda pot conservar la data antiga, així que cal consultar l'IDP encara
+    # que la comparació d'Agenda indiqui la mateixa data.
+    for i in extra_candidates:
+        item=(i,"Partit sense resultat, sense IDP i amb data anterior a avui",[])
+        lids=target_leagues(old[i])
+        if lids:
+            for lid in lids:work[lid].append(("heuristic",i,item))
+        else:
+            unresolved_without_league.append(item)
 
     resolved=set();calendar_unchanged=0
     page=await ctx.new_page()
@@ -304,7 +314,10 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
                         rejected.append((i,"IDP no confirma la data/hora de l'Agenda",[when(official_row)]))
                 else:
                     if when(old_row)==when(official_row):
-                        resolved.add(i);calendar_unchanged+=1
+                        if kind=="heuristic":
+                            resolved.add(i);calendar_unchanged+=1
+                        else:
+                            resolved.add(i);calendar_unchanged+=1
                     else:
                         accepted.append((i,official_row,"Calendari oficial FECAPA per IDP"))
                         resolved.add(i)
@@ -346,7 +359,13 @@ async def main():
                 incoming=await capture(ctx,report,old)
                 proposals,unresolved,unchanged=propose(old,incoming)
                 report["unchanged"]=unchanged;report["proposals"]=len(proposals)
-                accepted,rejected,unresolved,calendar_unchanged=await calendar_check(ctx,old,proposals,unresolved,report)
+                today=utc_now()[:10]
+                extra_candidates=[i for i,row in enumerate(old)
+                                  if inside(row) and str(row.get("iso",""))<today
+                                  and not score_tuple(row) and not matchid(row)[0]]
+                report["scorelessPastWithoutIDP"]=len(extra_candidates)
+                accepted,rejected,unresolved,calendar_unchanged=await calendar_check(
+                    ctx,old,proposals,unresolved,report,extra_candidates)
                 unchanged+=calendar_unchanged;report["unchanged"]=unchanged
             finally:await ctx.close();await browser.close()
         rows,changes=apply(old,accepted)
