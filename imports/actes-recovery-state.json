@@ -81,5 +81,37 @@
         "accepted": 189
       }
     ]
+  },
+  "lastActs": {
+    "phase": "acts",
+    "before": {
+      "total": 12397,
+      "identified": 5708,
+      "missingHistoricalIDs": 68,
+      "missingHistoricalScores": 30,
+      "historical": 5776,
+      "verified": 0,
+      "historicalUnverified": 5776
+    },
+    "after": {
+      "total": 12397,
+      "identified": 5708,
+      "missingHistoricalIDs": 68,
+      "missingHistoricalScores": 30,
+      "historical": 5776,
+      "verified": 2130,
+      "historicalUnverified": 3646
+    },
+    "selected": 40,
+    "attempted": 40,
+    "verified": 39,
+    "pending": 1,
+    "reasons": {
+      "incomplete_or_changed_roster": 1
+    },
+    "reusedVerified": 2091,
+    "remainingEligible": 3578,
+    "players": 9953,
+    "appearances": 44029
   }
 }
