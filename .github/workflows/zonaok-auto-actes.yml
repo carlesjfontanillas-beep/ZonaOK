@@ -217,11 +217,7 @@ jobs:
               echo "::notice::Queden $unresolved_no_result partits sense resultat pendents de verificar amb Agenda; Actes no s'encadena."
               exit 0
             fi
-            echo "Agenda puntual publicada i validada; reprendre Actes sense reactivar les altres importacions."
-            active=$(gh run list --workflow zonaok-auto-actes.yml --branch main --limit 30 --json databaseId,status --jq "[.[] | select(.databaseId != $GITHUB_RUN_ID and .status != \"completed\")] | length")
-            if [ "$active" = 0 ]; then
-              gh workflow run zonaok-auto-actes.yml --ref main -f scope=full -f publish=true
-            fi
+            echo "Agenda puntual publicada i validada; Actes i la resta d'accions continuen pausats per instrucció de l'usuari."
             exit 0
           fi
           if [ "${ZONAOK_ACTES_WINDOW:-}" = review9 ]; then
