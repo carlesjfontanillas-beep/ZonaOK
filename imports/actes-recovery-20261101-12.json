@@ -18,14 +18,14 @@
     "4785": "2026-11-27T15:47:08Z",
     "4786": "2026-11-27T15:47:33Z",
     "4787": "2026-11-27T15:47:57Z",
-    "4788": "2026-11-27T13:59:35Z",
-    "4789": "2026-11-27T14:15:20Z",
-    "4790": "2026-11-27T14:15:24Z",
-    "4791": "2026-11-27T14:15:27Z",
-    "4792": "2026-11-27T14:15:31Z",
-    "4793": "2026-11-27T14:15:35Z",
-    "4794": "2026-11-27T14:15:39Z",
-    "4802": "2026-11-27T14:15:43Z",
+    "4788": "2026-11-27T16:16:15Z",
+    "4789": "2026-11-27T16:16:19Z",
+    "4790": "2026-11-27T16:16:23Z",
+    "4791": "2026-11-27T16:16:26Z",
+    "4792": "2026-11-27T16:16:29Z",
+    "4793": "2026-11-27T16:16:33Z",
+    "4794": "2026-11-27T16:16:36Z",
+    "4802": "2026-11-27T16:16:39Z",
     "4803": "2026-11-27T14:15:46Z",
     "4804": "2026-11-27T14:30:08Z",
     "4805": "2026-11-27T14:30:11Z",
@@ -108,36 +108,52 @@
     "calendarIDs": 0,
     "checks": [
       {
-        "league": "4780",
-        "error": "TimeoutError"
+        "league": "4788",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 12
       },
       {
-        "league": "4781",
-        "error": "TimeoutError"
+        "league": "4789",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 332
       },
       {
-        "league": "4782",
-        "error": "TimeoutError"
+        "league": "4790",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 430
       },
       {
-        "league": "4783",
-        "error": "TimeoutError"
+        "league": "4791",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 36
       },
       {
-        "league": "4784",
-        "error": "TimeoutError"
+        "league": "4792",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 48
       },
       {
-        "league": "4785",
-        "error": "TimeoutError"
+        "league": "4793",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 80
       },
       {
-        "league": "4786",
-        "error": "TimeoutError"
+        "league": "4794",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 56
       },
       {
-        "league": "4787",
-        "error": "TimeoutError"
+        "league": "4802",
+        "ids": 0,
+        "status": "partial-identifiers",
+        "accepted": 107
       }
     ],
     "untriedLeagues": 0
