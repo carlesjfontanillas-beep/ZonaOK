@@ -268,9 +268,11 @@ async def calendar_check(ctx, old, proposals, unresolved, report):
                             overlap=len(target_tokens & tokens)
                             if overlap and overlap / max(1,min(len(target_tokens),len(tokens))) >= 0.5:
                                 related.append(row)
-                        payload[3:4] = [("sameHomeCalendarRows",[
-                            {k:r.get(k) for k in ("iso","time","home","away","venue","homeLogo","awayLogo")}
-                            for r in related[:6]])]
+                        report.setdefault("calendarCandidateDiagnostics",[]).append({
+                            **describe(old_row),
+                            "sameHomeCalendarRows":[
+                                {k:r.get(k) for k in ("iso","time","home","away","venue","homeLogo","awayLogo")}
+                                for r in related[:6]]})
                     if kind=="proposal":
                         rejected.append((i,"El calendari oficial IDP no dona una única correspondència",slots))
                     else:
@@ -337,10 +339,8 @@ async def main():
                 unchanged+=calendar_unchanged;report["unchanged"]=unchanged
             finally:await ctx.close();await browser.close()
         rows,changes=apply(old,accepted)
-        report["unresolved"]=[{**describe(old[i]),"reason":reason,"possibleSchedules":poss,
-            **({k:v for k,v in item[3:]} if len(item)>3 else {})}
-                              for item in unresolved+rejected
-                              for i,reason,poss in [item[:3]]]
+        report["unresolved"]=[{**describe(old[i]),"reason":reason,"possibleSchedules":poss}
+                              for i,reason,poss in unresolved+rejected]
         report["unresolvedWithoutResult"]=[item for item in report["unresolved"] if not item["hasResult"]]
         report["unresolvedWithoutResultCount"]=len(report["unresolvedWithoutResult"])
         report["unresolvedWithResultCount"]=len(report["unresolved"])-report["unresolvedWithoutResultCount"]
