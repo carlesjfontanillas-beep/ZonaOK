@@ -405,6 +405,11 @@ JS_CALENDAR = r"""(league) => {
     const [leagueId,matchId]=[...pairs][0].split(':');
     return {leagueId,matchId,ambiguous:false};
   };
+  const clubLogo=side=>{
+    const src=side?.querySelector('img[src]')?.getAttribute('src')||'';
+    try{const u=new URL(src,location.href);return u.protocol==='https:'&&u.hostname==='sidgad.cloud'&&
+      /^\\/fecapa\\/images\\/logos_clubes\\/\\d+(?:_\\d+)?\\.(?:png|gif)$/i.test(u.pathname)?u.href:'';}catch(_){return '';}
+  };
   const rows=[];let examined=0,invalid=0,ambiguousIds=0;
   const leaguesFound=new Set();
   // El calendari REAL es troba a sidgad-calendario-table. En directe és
@@ -415,8 +420,10 @@ JS_CALENDAR = r"""(league) => {
     if(node.matches('.sidgad-calendario-fase')){phase=T(node);continue;}
     if(!node.matches('tr.sidgad-calendario-partido'))continue;
     examined++;
-    const home=T(node.querySelector('.sidgad-col-equipo-home'));
-    const away=T(node.querySelector('.sidgad-col-equipo-away'));
+    const homeSide=node.querySelector('.sidgad-col-equipo-home');
+    const awaySide=node.querySelector('.sidgad-col-equipo-away');
+    const home=T(homeSide), away=T(awaySide);
+    const homeLogo=clubLogo(homeSide), awayLogo=clubLogo(awaySide);
     const date=parsed(T(node.querySelector('.sidgad-col-dia')));
     const time=clock(T(node.querySelector('.sidgad-col-hora')));
     if(!home||!away||N(home)===N(away)||!date||!time){invalid++;continue;}
@@ -441,7 +448,7 @@ JS_CALENDAR = r"""(league) => {
     const competition=phase||T(document.querySelector('.sidgad-calendario-fase'))||'';
     rows.push({iso:date,time,home,away,competition,leagueId,matchId,
       homeScore:sc[0],awayScore:sc[1],actaUrl:'',status:'',
-      venue:T(node.querySelector('.sidgad-col-pista'))});
+      homeLogo,awayLogo,venue:T(node.querySelector('.sidgad-col-pista'))});
   }
   // Compatibilitat amb calendaris de format antic, només quan no hi ha
   // taules del calendari real. Mai agafem targetes globals ocultes.
