@@ -16,6 +16,9 @@ on:
       offset:
         type: string
         default: auto
+      retry_depth:
+        type: string
+        default: '0'
       publish:
         type: boolean
         default: true
@@ -125,3 +128,49 @@ jobs:
           path: |
             ${{ runner.temp }}/actes-ids.log
             ${{ runner.temp }}/actes-contingut.log
+
+      - name: Encadenar el següent lot de la finestra o reintentar amb pausa
+        if: ${{ always() && !cancelled() && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
+        env:
+          RETRY_DEPTH: ${{ inputs.retry_depth || '0' }}
+          JOB_STATUS: ${{ job.status }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "$JOB_STATUS" != success ]; then
+            [[ "$RETRY_DEPTH" =~ ^[0-9]+$ ]] || exit 1
+            if [ "$RETRY_DEPTH" -lt 2 ]; then
+              echo "Error: reintent limitat després de 120 segons"
+              sleep 120
+              depth=$((RETRY_DEPTH+1))
+            else
+              echo "::warning::Dos reintents esgotats; esperar cron o diagnòstic"
+              exit 0
+            fi
+          else
+            if [ ! -f "$RUNNER_TEMP/actes-contingut.log" ]; then exit 0; fi
+            if ! python - <<'PY'
+          import json,os,sys
+          from pathlib import Path
+          s=json.loads(Path("imports/actes-recovery-state.json").read_text())
+          a=s["lastActs"];i=s["lastIds"]
+          ready=a.get("readyNext",0)
+          untried=i.get("untriedLeagues",0) if a["after"]["missingHistoricalIDs"] else 0
+          blocked=bool(a.get("blocked") or i.get("blocked"))
+          print("Següent lot:",ready,"actes preparades,",untried,"lligues encara no consultades; bloqueig:",blocked)
+          sys.exit(0 if (ready or untried) and not blocked else 1)
+          PY
+            then
+              echo "Sense treball immediat recuperable; el cron manté els reintents espaiats."
+              exit 0
+            fi
+            depth=0
+            sleep 15
+          fi
+          active=$(gh run list --workflow zonaok-auto-actes.yml --branch main --limit 30 --json databaseId,status --jq "[.[] | select(.databaseId != $GITHUB_RUN_ID and .status != \"completed\")] | length")
+          if [ "$active" = 0 ]; then
+            gh workflow run zonaok-auto-actes.yml --ref main -f scope=full -f publish=true -f retry_depth="$depth"
+            echo "Lot següent sol·licitat."
+          else
+            echo "Ja hi ha un lot en cua."
+          fi
