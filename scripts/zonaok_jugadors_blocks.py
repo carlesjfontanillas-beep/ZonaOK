@@ -113,6 +113,11 @@ async def run_matches(master,state,plan,deadline,report):
                 report["attempted"]+=1
                 report["pending" if error else "verified"]+=1
                 if error:report["reasons"][error]=report["reasons"].get(error,0)+1
+                if "matchDiagnostics" in report:
+                    report["matchDiagnostics"][key]={"status":"pending" if error else "verified",
+                        "reason":error or None,"checkedAt":state[key]["checkedAt"],
+                        "staffSides":{side:len(state[key].get("details",{}).get("staff",{}).get(side) or [])
+                                      for side in ("home","away")}}
                 await asyncio.sleep(1.2)
         finally:
             await ctx.close();await browser.close()
