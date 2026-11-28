@@ -24,6 +24,10 @@ Versió activa al panell de Cloudflare: `24ca50a7` (anterior: `4fe6527e`).
 - Els rellotges i l'hora del partit s'han traslladat al moment de la prova per fer l'enviament semi real; els detalls de la incidència i el marcador corresponen a l'acta facilitada. No s'hi ha afegit cap etiqueta visible de prova.
 - El desplegament del format nou és la versió activa `24ca50a7`. No s'han reenviat les sis incidències després del canvi de format per evitar duplicar avisos al telèfon.
 
+## Recuperació d'actes quan el catàleg no porta IDP
+
+El capturador ara conserva els partits de Nacional Catalana encara que no tinguin `leagueId`/`matchId`. Calcula un `internalId` estable amb temporada, data, hora, competició i equips per seleccionar el partit i deduplicar-ne les incidències. Quan l'acta ho requereix, consulta el calendari oficial de la competició (masculina `4774`, femenina `4775`) i només segueix l'enllaç de partit si troba una única coincidència exacta per data i equips. Si no n'hi ha cap o n'hi ha més d'una, no associa cap acta ni envia incidències d'aquell partit.
+
 ## Etiqueta «from ZonaOK»
 
 «from» és una atribució que mostra iOS, no un camp del payload push ni del Worker. No es pot canviar a «de» des del codi de ZonaOK; iOS decideix l'idioma de la interfície segons la configuració del dispositiu.
