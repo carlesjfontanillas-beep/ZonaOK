@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Provar finestres i transport
+      - name: Provar finestres, transport i límit entre jornades
         run: python -m unittest discover -s tests -p 'test_push_*.py' -v
       - name: Publicar planificació sense enviar anticipadament
         run: |

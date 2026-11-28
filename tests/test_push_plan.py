@@ -18,7 +18,8 @@ class PlanTest(unittest.TestCase):
         self.assertEqual(p['from'],'2026-11-28T10:00:00+01:00')
         self.assertEqual(p['until'],'2026-11-29T10:00:00+01:00')
         due=scheduled_starts(c,now=datetime(2026,11,28,9,5,tzinfo=timezone.utc),plan=p)
-        self.assertEqual(len(due),1)
+        self.assertEqual(len(due),2)
+        self.assertEqual({e['fixture']['time'] for e in due},{'09:59','10:00'})
         self.assertEqual(due[0]['eventId'],p['events'][0]['eventId'])
         self.assertEqual(scheduled_starts(cat(row('2026-11-28','10:00',status='AJORNAT')),now=datetime(2026,11,28,9,5,tzinfo=timezone.utc),plan=p),[])
     def test_dst(self):
