@@ -1,10 +1,75 @@
 {
   "new": 0,
-  "updated": 70,
-  "unmatched": 0,
+  "updated": 74,
+  "unmatched": 1,
   "ambiguousOrInvalid": 0,
   "unchanged": 0,
-  "unmatchedDetails": [],
+  "unmatchedDetails": [
+    {
+      "reason": "no_unique_fixture",
+      "fecapa": {
+        "iso": "2026-11-28",
+        "time": "13:00",
+        "competition": "OK LIGA IBERDROLA",
+        "home": "CHM",
+        "away": "MH",
+        "homeScore": 0,
+        "awayScore": 0,
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "status": ""
+      },
+      "sameTimeCandidates": [
+        {
+          "iso": "2026-11-28",
+          "time": "13:00",
+          "competition": "ALEVÍ OR 7",
+          "home": "CLUB PATI CALAFELL B",
+          "away": "CH LLORET CAFÈS CORNELLÀ",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:00",
+          "competition": "BCN BENJAMÍ OR 2",
+          "home": "AUTO VIGATANA PATÍ VIC A",
+          "away": "CE ARENYS DE MUNT B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:00",
+          "competition": "FEM 11 PLATA",
+          "home": "CLUB HOQUEI VILASSAR",
+          "away": "CP RIUDOMS",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:00",
+          "competition": "INFANTIL OR 3",
+          "home": "CLUB PATÍ VILAFRANCA AKO A A",
+          "away": "HOQUEI CLUB ALPICAT B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:00",
+          "competition": "JUVENIL OR 3",
+          "home": "CH OLOT A",
+          "away": "CLUB PATÍ VOLTREGÀ A",
+          "leagueId": "",
+          "matchId": ""
+        }
+      ]
+    }
+  ],
   "legacyActes": 5712,
-  "resultsLast7Days": 734
+  "resultsLast7Days": 737
 }
