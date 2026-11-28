@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T14:11:52.693193+00:00",
+  "capturedAt": "2026-11-28T14:16:47.013328+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -22873,8 +22873,8 @@
       "competition": "FEM 11 PLATA",
       "leagueId": "4807",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4807&vista=clasificaciones",
-      "capturedAt": "2026-11-28T14:00:17.495035+00:00",
-      "standingsAt": "2026-11-28T14:00:17.495035+00:00",
+      "capturedAt": "2026-11-28T14:16:47.013328+00:00",
+      "standingsAt": "2026-11-28T14:16:47.013328+00:00",
       "standings": [
         {
           "pos": "1",
@@ -23108,6 +23108,29 @@
         },
         {
           "pos": "11",
+          "team": "CLUB HOQUEI SANTA PERPÈTUA",
+          "teamId": "12374",
+          "teamLogo": "/fecapa/images/logos_clubes/291_3.png",
+          "played": "9",
+          "points": "15",
+          "gf": "37",
+          "ga": "40",
+          "difference": "-3",
+          "stats": {
+            "PTS": "15",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "0",
+            "PP": "4",
+            "GF": "37",
+            "GC": "40",
+            "DIF": "-3"
+          },
+          "shortTeam": "CHSP",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "12",
           "team": "HOQUEI CLUB CASTELLAR",
           "teamId": "12524",
           "teamLogo": "/fecapa/images/logos_clubes/241_2.png",
@@ -23130,7 +23153,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "12",
+          "pos": "13",
           "team": "CP CORBERA",
           "teamId": "11281",
           "teamLogo": "/fecapa/images/logos_clubes/575_1.png",
@@ -23153,7 +23176,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "13",
+          "pos": "14",
           "team": "GENERALI HC PALAU B",
           "teamId": "11217",
           "teamLogo": "/fecapa/images/logos_clubes/271_1.png",
@@ -23176,7 +23199,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "14",
+          "pos": "15",
           "team": "CLUB HOQUEI MOLLERUSSA",
           "teamId": "11673",
           "teamLogo": "/fecapa/images/logos_clubes/340_1.png",
@@ -23199,7 +23222,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "15",
+          "pos": "16",
           "team": "CP CONGRES",
           "teamId": "12029",
           "teamLogo": "/fecapa/images/logos_clubes/246_1.png",
@@ -23222,7 +23245,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "16",
+          "pos": "17",
           "team": "HOQUEI CLARET",
           "teamId": "11435",
           "teamLogo": "/fecapa/images/logos_clubes/443.png",
@@ -23245,7 +23268,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "17",
+          "pos": "18",
           "team": "FARNERS",
           "teamId": "11999",
           "teamLogo": "/fecapa/images/logos_clubes/310_5.png",
@@ -23265,29 +23288,6 @@
             "DIF": "-3"
           },
           "shortTeam": "CLUB",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "18",
-          "team": "CLUB HOQUEI SANTA PERPÈTUA",
-          "teamId": "12374",
-          "teamLogo": "/fecapa/images/logos_clubes/291_3.png",
-          "played": "8",
-          "points": "12",
-          "gf": "28",
-          "ga": "37",
-          "difference": "-9",
-          "stats": {
-            "PTS": "12",
-            "PJ": "8",
-            "PG": "4",
-            "PE": "0",
-            "PP": "4",
-            "GF": "28",
-            "GC": "37",
-            "DIF": "-9"
-          },
-          "shortTeam": "CHSP",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -23361,29 +23361,6 @@
         },
         {
           "pos": "22",
-          "team": "GIRONA CLUB HOQUEI",
-          "teamId": "11617",
-          "teamLogo": "/fecapa/images/logos_clubes/312_1.png",
-          "played": "8",
-          "points": "3",
-          "gf": "17",
-          "ga": "59",
-          "difference": "-42",
-          "stats": {
-            "PTS": "3",
-            "PJ": "8",
-            "PG": "1",
-            "PE": "0",
-            "PP": "7",
-            "GF": "17",
-            "GC": "59",
-            "DIF": "-42"
-          },
-          "shortTeam": "GHC",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "23",
           "team": "CLUB HOQUEI VILASSAR",
           "teamId": "11928",
           "teamLogo": "/fecapa/images/logos_clubes/303_1.png",
@@ -23403,6 +23380,29 @@
             "DIF": "-45"
           },
           "shortTeam": "CHV",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "23",
+          "team": "GIRONA CLUB HOQUEI",
+          "teamId": "11617",
+          "teamLogo": "/fecapa/images/logos_clubes/312_1.png",
+          "played": "8",
+          "points": "3",
+          "gf": "17",
+          "ga": "59",
+          "difference": "-42",
+          "stats": {
+            "PTS": "3",
+            "PJ": "8",
+            "PG": "1",
+            "PE": "0",
+            "PP": "7",
+            "GF": "17",
+            "GC": "59",
+            "DIF": "-42"
+          },
+          "shortTeam": "GHC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -23433,20 +23433,20 @@
           "team": "INNOAESTHETICS HC SANT JUST B",
           "teamId": "12177",
           "teamLogo": "/fecapa/images/logos_clubes/288_1.png",
-          "played": "8",
+          "played": "9",
           "points": "0",
-          "gf": "17",
-          "ga": "70",
-          "difference": "-53",
+          "gf": "20",
+          "ga": "79",
+          "difference": "-59",
           "stats": {
             "PTS": "0",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "0",
             "PE": "0",
-            "PP": "8",
-            "GF": "17",
-            "GC": "70",
-            "DIF": "-53"
+            "PP": "9",
+            "GF": "20",
+            "GC": "79",
+            "DIF": "-59"
           },
           "shortTeam": "CSJB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -39950,6 +39950,12 @@
     {
       "leagueId": "4807",
       "group": "FEM 11 PLATA",
+      "team": "CLUB HOQUEI SANTA PERPÈTUA",
+      "shortTeam": "CHSP"
+    },
+    {
+      "leagueId": "4807",
+      "group": "FEM 11 PLATA",
       "team": "HOQUEI CLUB CASTELLAR",
       "shortTeam": "HCC"
     },
@@ -39992,12 +39998,6 @@
     {
       "leagueId": "4807",
       "group": "FEM 11 PLATA",
-      "team": "CLUB HOQUEI SANTA PERPÈTUA",
-      "shortTeam": "CHSP"
-    },
-    {
-      "leagueId": "4807",
-      "group": "FEM 11 PLATA",
       "team": "CE SAGRERENC",
       "shortTeam": "CES"
     },
@@ -40016,14 +40016,14 @@
     {
       "leagueId": "4807",
       "group": "FEM 11 PLATA",
-      "team": "GIRONA CLUB HOQUEI",
-      "shortTeam": "GHC"
+      "team": "CLUB HOQUEI VILASSAR",
+      "shortTeam": "CHV"
     },
     {
       "leagueId": "4807",
       "group": "FEM 11 PLATA",
-      "team": "CLUB HOQUEI VILASSAR",
-      "shortTeam": "CHV"
+      "team": "GIRONA CLUB HOQUEI",
+      "shortTeam": "GHC"
     },
     {
       "leagueId": "4807",
