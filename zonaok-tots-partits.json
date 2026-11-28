@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T16:50:44Z",
+  "updatedAt": "2026-11-28T16:52:34Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T09:50:44Z",
@@ -144344,9 +144344,9 @@
       "venue": "PAVELLÓ CAN BADELL",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "158292",
+      "leagueId": "4793",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4793&vista=calendar&partido=158292",
       "status": "FINAL",
       "round": "",
       "homeScore": 10,
@@ -144357,7 +144357,9 @@
       "directeUpdatedAt": "2026-11-28T16:50:41Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:50:41Z",
-      "finalDetectedAt": "2026-11-28T16:39:47Z"
+      "finalDetectedAt": "2026-11-28T16:39:47Z",
+      "actaCheckedAt": "2026-11-28T16:50:31.372990+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -144681,9 +144683,9 @@
       "venue": "COMPLEX ESPORTIU DE LES COMES",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "151556",
+      "leagueId": "4784",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151556",
       "status": "FINAL",
       "round": "",
       "homeScore": 3,
@@ -144694,7 +144696,9 @@
       "directeUpdatedAt": "2026-11-28T16:50:41Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:50:41Z",
-      "finalDetectedAt": "2026-11-28T16:45:10Z"
+      "finalDetectedAt": "2026-11-28T16:45:10Z",
+      "actaCheckedAt": "2026-11-28T16:50:17.566622+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -144728,9 +144732,9 @@
       "venue": "MUNICIPAL D ESPORTS I LLEURE D OLOT",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "150679",
+      "leagueId": "4785",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4785&vista=calendar&partido=150679",
       "status": "FINAL",
       "round": "",
       "homeScore": 3,
@@ -144741,7 +144745,9 @@
       "directeUpdatedAt": "2026-11-28T16:50:41Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:50:41Z",
-      "finalDetectedAt": "2026-11-28T16:45:10Z"
+      "finalDetectedAt": "2026-11-28T16:45:10Z",
+      "actaCheckedAt": "2026-11-28T16:50:24.688443+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -280357,8 +280363,8 @@
   "stats": {
     "total": 12186,
     "withScores": 5937,
-    "withActaLinks": 5891,
-    "verifiedActes": 5807
+    "withActaLinks": 5894,
+    "verifiedActes": 5810
   },
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
