@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T17:42:13.773941+00:00",
+  "capturedAt": "2026-11-28T17:47:18.127394+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -16304,8 +16304,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-28T14:05:52.639167+00:00",
-      "standingsAt": "2026-11-28T14:05:52.639167+00:00",
+      "capturedAt": "2026-11-28T17:47:18.127394+00:00",
+      "standingsAt": "2026-11-28T17:47:18.127394+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -16358,6 +16358,30 @@
         },
         {
           "pos": "3",
+          "team": "MOLLET HC A",
+          "teamId": "12202",
+          "teamLogo": "/fecapa/images/logos_clubes/266_1.png",
+          "played": "10",
+          "points": "16",
+          "gf": "42",
+          "ga": "35",
+          "difference": "7",
+          "stats": {
+            "PTS": "16",
+            "PJ": "10",
+            "PG": "5",
+            "PE": "1",
+            "PP": "4",
+            "GF": "42",
+            "GC": "35",
+            "DIF": "7",
+            "SAN": "0"
+          },
+          "shortTeam": "MHCA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "4",
           "team": "HOQUEI CASAL ESPLUGA A",
           "teamId": "11764",
           "teamLogo": "/fecapa/images/logos_clubes/324.gif",
@@ -16378,30 +16402,6 @@
             "SAN": "0"
           },
           "shortTeam": "HCEA",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "4",
-          "team": "MOLLET HC A",
-          "teamId": "12202",
-          "teamLogo": "/fecapa/images/logos_clubes/266_1.png",
-          "played": "9",
-          "points": "13",
-          "gf": "31",
-          "ga": "33",
-          "difference": "-2",
-          "stats": {
-            "PTS": "13",
-            "PJ": "9",
-            "PG": "4",
-            "PE": "1",
-            "PP": "4",
-            "GF": "31",
-            "GC": "33",
-            "DIF": "-2",
-            "SAN": "0"
-          },
-          "shortTeam": "MHCA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -16481,20 +16481,20 @@
           "team": "CE ARENYS DE MUNT A",
           "teamId": "11240",
           "teamLogo": "/fecapa/images/logos_clubes/232_1.png",
-          "played": "9",
+          "played": "10",
           "points": "0",
-          "gf": "22",
-          "ga": "92",
-          "difference": "-70",
+          "gf": "24",
+          "ga": "103",
+          "difference": "-79",
           "stats": {
             "PTS": "0",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "0",
             "PE": "0",
-            "PP": "9",
-            "GF": "22",
-            "GC": "92",
-            "DIF": "-70",
+            "PP": "10",
+            "GF": "24",
+            "GC": "103",
+            "DIF": "-79",
             "SAN": "0"
           },
           "shortTeam": "DMAA",
@@ -21054,8 +21054,8 @@
       "competition": "FEM 15 OR",
       "leagueId": "4802",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=clasificaciones",
-      "capturedAt": "2026-11-28T13:37:43.993287+00:00",
-      "standingsAt": "2026-11-28T13:37:43.993287+00:00",
+      "capturedAt": "2026-11-28T17:47:18.127394+00:00",
+      "standingsAt": "2026-11-28T17:47:18.127394+00:00",
       "standings": [
         {
           "pos": "1",
@@ -21128,6 +21128,29 @@
         },
         {
           "pos": "4",
+          "team": "IGUALADA HC",
+          "teamId": "12419",
+          "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
+          "played": "9",
+          "points": "24",
+          "gf": "49",
+          "ga": "10",
+          "difference": "39",
+          "stats": {
+            "PTS": "24",
+            "PJ": "9",
+            "PG": "8",
+            "PE": "0",
+            "PP": "1",
+            "GF": "49",
+            "GC": "10",
+            "DIF": "39"
+          },
+          "shortTeam": "IHC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "5",
           "team": "CLUB PATÍ VOLTREGÀ A",
           "teamId": "12478",
           "teamLogo": "/fecapa/images/logos_clubes/304.png",
@@ -21150,7 +21173,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "5",
+          "pos": "6",
           "team": "ROTOTANK BIGUES I RIELLS",
           "teamId": "11499",
           "teamLogo": "/fecapa/images/logos_clubes/236.gif",
@@ -21170,29 +21193,6 @@
             "DIF": "43"
           },
           "shortTeam": "BIR",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "6",
-          "team": "IGUALADA HC",
-          "teamId": "12419",
-          "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
-          "played": "8",
-          "points": "21",
-          "gf": "40",
-          "ga": "9",
-          "difference": "31",
-          "stats": {
-            "PTS": "21",
-            "PJ": "8",
-            "PG": "7",
-            "PE": "0",
-            "PP": "1",
-            "GF": "40",
-            "GC": "9",
-            "DIF": "31"
-          },
-          "shortTeam": "IHC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -21499,20 +21499,20 @@
           "team": "HOQUEI CLUB CASTELLAR",
           "teamId": "12520",
           "teamLogo": "/fecapa/images/logos_clubes/241_2.png",
-          "played": "9",
+          "played": "10",
           "points": "4",
-          "gf": "12",
-          "ga": "51",
-          "difference": "-39",
+          "gf": "13",
+          "ga": "60",
+          "difference": "-47",
           "stats": {
             "PTS": "4",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "1",
             "PE": "1",
-            "PP": "7",
-            "GF": "12",
-            "GC": "51",
-            "DIF": "-39"
+            "PP": "8",
+            "GF": "13",
+            "GC": "60",
+            "DIF": "-47"
           },
           "shortTeam": "HCC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -40291,14 +40291,14 @@
     {
       "leagueId": "4789",
       "group": "ALEVÍ OR 5",
-      "team": "HOQUEI CASAL ESPLUGA A",
-      "shortTeam": "HCEA"
+      "team": "MOLLET HC A",
+      "shortTeam": "MHCA"
     },
     {
       "leagueId": "4789",
       "group": "ALEVÍ OR 5",
-      "team": "MOLLET HC A",
-      "shortTeam": "MHCA"
+      "team": "HOQUEI CASAL ESPLUGA A",
+      "shortTeam": "HCEA"
     },
     {
       "leagueId": "4789",
@@ -41437,6 +41437,12 @@
     {
       "leagueId": "4802",
       "group": "FEM 15 OR",
+      "team": "IGUALADA HC",
+      "shortTeam": "IHC"
+    },
+    {
+      "leagueId": "4802",
+      "group": "FEM 15 OR",
       "team": "CLUB PATÍ VOLTREGÀ A",
       "shortTeam": "CPVA"
     },
@@ -41445,12 +41451,6 @@
       "group": "FEM 15 OR",
       "team": "ROTOTANK BIGUES I RIELLS",
       "shortTeam": "BIR"
-    },
-    {
-      "leagueId": "4802",
-      "group": "FEM 15 OR",
-      "team": "IGUALADA HC",
-      "shortTeam": "IHC"
     },
     {
       "leagueId": "4802",
