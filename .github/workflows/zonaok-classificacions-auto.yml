@@ -28,7 +28,7 @@ on:
         type: boolean
         default: true
   schedule:
-    - cron: '4,9,14,19,24,29,34,39,44,49,54,59 * * * *'
+    - cron: '8,23,38,53 * * * *'
 
 permissions:
   contents: write

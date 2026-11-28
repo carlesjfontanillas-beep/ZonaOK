@@ -31,7 +31,7 @@ on:
         type: boolean
         default: true
   schedule:
-    - cron: '2,7,12,17,22,27,32,37,42,47,52,57 * * * *'
+    - cron: '2,12,22,32,42,52 * * * *'
 
 permissions:
   contents: write
@@ -136,8 +136,18 @@ jobs:
           sys.exit(0 if any(current_final(r,datetime.now(timezone.utc)) and r.get('finalDetectedAt')==captured for r in doc['matches']) else 1)
           PY
               then
-                gh workflow run zonaok-actes-live.yml --repo carlesjfontanillas-beep/ZonaOK --ref main || echo "::warning::Actes i Jugadors: el cron recupera els pendents."
-                gh workflow run zonaok-classificacions-auto.yml --repo carlesjfontanillas-beep/ZonaOK --ref main -f scope=live -f publish=true || echo "::warning::Classificacions: el cron recupera els grups pendents."
+                # One active run plus at most one waiting refresh; pending work is coalesced.
+                if waiting=$(gh run list --workflow zonaok-actes-live.yml --repo "$GITHUB_REPOSITORY" --branch main --limit 30 --json status --jq '[.[] | select(.status != "completed" and .status != "in_progress")] | length') && [ "$waiting" = 0 ]; then
+                  gh workflow run zonaok-actes-live.yml --repo carlesjfontanillas-beep/ZonaOK --ref main || echo "::warning::Actes i Jugadors: el cron recupera els pendents."
+                else
+                  echo "::notice::zonaok-actes-live.yml: ja hi ha una execució pendent o no es pot verificar la cua; es conserva el cron."
+                fi
+                # One active run plus at most one waiting refresh; pending work is coalesced.
+                if waiting=$(gh run list --workflow zonaok-classificacions-auto.yml --repo "$GITHUB_REPOSITORY" --branch main --limit 30 --json status --jq '[.[] | select(.status != "completed" and .status != "in_progress")] | length') && [ "$waiting" = 0 ]; then
+                  gh workflow run zonaok-classificacions-auto.yml --repo carlesjfontanillas-beep/ZonaOK --ref main -f scope=live -f publish=true || echo "::warning::Classificacions: el cron recupera els grups pendents."
+                else
+                  echo "::notice::zonaok-classificacions-auto.yml: ja hi ha una execució pendent o no es pot verificar la cua; es conserva el cron."
+                fi
               fi
               exit 0
             fi

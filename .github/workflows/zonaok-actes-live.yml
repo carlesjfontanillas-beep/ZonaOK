@@ -5,7 +5,7 @@ on:
     paths: ['.github/workflows/zonaok-actes-live.yml']
   workflow_dispatch:
   schedule:
-    - cron: '4,9,14,19,24,29,34,39,44,49,54,59 * * * *'
+    - cron: '4,19,34,49 * * * *'
 permissions:
   contents: write
   actions: write
@@ -78,4 +78,9 @@ jobs:
           done
           if [ "$published" != true ]; then exit 1; fi
           # Si s'acaba de recuperar l'IDP, Classificacions ja pot resoldre el grup.
-          gh workflow run zonaok-classificacions-auto.yml --ref main -f scope=live -f publish=true || echo '::warning::Classificacions es recuperarà al cron.'
+          # One active run plus at most one waiting refresh; pending work is coalesced.
+          if waiting=$(gh run list --workflow zonaok-classificacions-auto.yml --repo "$GITHUB_REPOSITORY" --branch main --limit 30 --json status --jq '[.[] | select(.status != "completed" and .status != "in_progress")] | length') && [ "$waiting" = 0 ]; then
+            gh workflow run zonaok-classificacions-auto.yml --ref main -f scope=live -f publish=true || echo '::warning::Classificacions es recuperarà al cron.'
+          else
+            echo "::notice::zonaok-classificacions-auto.yml: ja hi ha una execució pendent o no es pot verificar la cua; es conserva el cron."
+          fi
