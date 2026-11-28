@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T16:51:51.833395+00:00",
+  "capturedAt": "2026-11-28T16:57:14.572845+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -5409,8 +5409,8 @@
       "category": "3ª CATALANA",
       "competition": "3ª CATALANA",
       "leagueId": "4781",
-      "capturedAt": "2026-11-28T09:17:57.286253+00:00",
-      "standingsAt": "2026-11-28T09:17:57.286253+00:00",
+      "capturedAt": "2026-11-28T16:57:14.572845+00:00",
+      "standingsAt": "2026-11-28T16:57:14.572845+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=clasificaciones",
       "standings": [
         {
@@ -5487,6 +5487,30 @@
         },
         {
           "pos": "4",
+          "team": "CLUB PATÍ MONJOS B",
+          "teamId": "11361",
+          "teamLogo": "/fecapa/images/logos_clubes/267_3.png",
+          "played": "8",
+          "points": "15",
+          "gf": "36",
+          "ga": "38",
+          "difference": "-2",
+          "stats": {
+            "PTS": "15",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "0",
+            "PP": "3",
+            "GF": "36",
+            "GC": "38",
+            "DIF": "-2",
+            "SAN": "0"
+          },
+          "shortTeam": "CPMB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "5",
           "team": "HC VILA-SANA ALPICAT",
           "teamId": "12062",
           "teamLogo": "/fecapa/images/logos_clubes/333.png",
@@ -5510,7 +5534,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "5",
+          "pos": "6",
           "team": "CE NOIA FREIXENET",
           "teamId": "11779",
           "teamLogo": "/fecapa/images/logos_clubes/269.png",
@@ -5531,30 +5555,6 @@
             "SAN": "0"
           },
           "shortTeam": "NOIA",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "6",
-          "team": "CLUB PATÍ MONJOS B",
-          "teamId": "11361",
-          "teamLogo": "/fecapa/images/logos_clubes/267_3.png",
-          "played": "7",
-          "points": "12",
-          "gf": "24",
-          "ga": "35",
-          "difference": "-11",
-          "stats": {
-            "PTS": "12",
-            "PJ": "7",
-            "PG": "4",
-            "PE": "0",
-            "PP": "3",
-            "GF": "24",
-            "GC": "35",
-            "DIF": "-11",
-            "SAN": "0"
-          },
-          "shortTeam": "CPMB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -5706,20 +5706,20 @@
           "team": "RIBES CP B B",
           "teamId": "12013",
           "teamLogo": "/fecapa/images/logos_clubes/277_2.png",
-          "played": "8",
+          "played": "9",
           "points": "0",
-          "gf": "11",
-          "ga": "54",
-          "difference": "-43",
+          "gf": "14",
+          "ga": "66",
+          "difference": "-52",
           "stats": {
             "PTS": "0",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "0",
             "PE": "0",
-            "PP": "8",
-            "GF": "11",
-            "GC": "54",
-            "DIF": "-43",
+            "PP": "9",
+            "GF": "14",
+            "GC": "66",
+            "DIF": "-52",
             "SAN": "0"
           },
           "shortTeam": "RCPB",
@@ -12514,8 +12514,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-28T12:54:48.592033+00:00",
-      "standingsAt": "2026-11-28T12:54:48.592033+00:00",
+      "capturedAt": "2026-11-28T16:57:14.572845+00:00",
+      "standingsAt": "2026-11-28T16:57:14.572845+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -12615,20 +12615,20 @@
           "team": "SHUM FRIT RAVICH",
           "teamId": "12282",
           "teamLogo": "/fecapa/images/logos_clubes/320_1.gif",
-          "played": "7",
+          "played": "8",
           "points": "6",
-          "gf": "9",
-          "ga": "28",
-          "difference": "-19",
+          "gf": "10",
+          "ga": "31",
+          "difference": "-21",
           "stats": {
             "PTS": "6",
-            "PJ": "7",
+            "PJ": "8",
             "PG": "2",
             "PE": "0",
-            "PP": "5",
-            "GF": "9",
-            "GC": "28",
-            "DIF": "-19"
+            "PP": "6",
+            "GF": "10",
+            "GC": "31",
+            "DIF": "-21"
           },
           "shortTeam": "SHUM",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -12638,20 +12638,20 @@
           "team": "INNOAESTHETICS HC SANT JUST A",
           "teamId": "12166",
           "teamLogo": "/fecapa/images/logos_clubes/288_1.png",
-          "played": "8",
-          "points": "2",
-          "gf": "17",
-          "ga": "50",
-          "difference": "-33",
+          "played": "9",
+          "points": "5",
+          "gf": "20",
+          "ga": "51",
+          "difference": "-31",
           "stats": {
-            "PTS": "2",
-            "PJ": "8",
-            "PG": "0",
+            "PTS": "5",
+            "PJ": "9",
+            "PG": "1",
             "PE": "2",
             "PP": "6",
-            "GF": "17",
-            "GC": "50",
-            "DIF": "-33"
+            "GF": "20",
+            "GC": "51",
+            "DIF": "-31"
           },
           "shortTeam": "CSJA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -37523,6 +37523,12 @@
     {
       "leagueId": "4781",
       "group": "3ª CATALANA GRUP E",
+      "team": "CLUB PATÍ MONJOS B",
+      "shortTeam": "CPMB"
+    },
+    {
+      "leagueId": "4781",
+      "group": "3ª CATALANA GRUP E",
       "team": "HC VILA-SANA ALPICAT",
       "shortTeam": "HCA"
     },
@@ -37531,12 +37537,6 @@
       "group": "3ª CATALANA GRUP E",
       "team": "CE NOIA FREIXENET",
       "shortTeam": "NOIA"
-    },
-    {
-      "leagueId": "4781",
-      "group": "3ª CATALANA GRUP E",
-      "team": "CLUB PATÍ MONJOS B",
-      "shortTeam": "CPMB"
     },
     {
       "leagueId": "4781",
