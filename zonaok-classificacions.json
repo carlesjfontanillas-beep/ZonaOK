@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T15:40:12.264397+00:00",
+  "capturedAt": "2026-11-28T15:45:38.916421+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -11714,13 +11714,15 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-27T01:11:38.298092+00:00",
-      "standingsAt": "2026-11-27T01:11:38.298092+00:00",
+      "capturedAt": "2026-11-28T15:45:38.916421+00:00",
+      "standingsAt": "2026-11-28T15:45:38.916421+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
           "pos": "1",
           "team": "CH CALDES RECAM LÀSER A",
+          "teamId": "11983",
+          "teamLogo": "/fecapa/images/logos_clubes/237.png",
           "played": "7",
           "points": "21",
           "gf": "49",
@@ -11735,11 +11737,15 @@
             "GF": "49",
             "GC": "5",
             "DIF": "44"
-          }
+          },
+          "shortTeam": "CHCA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "IGUALADA HC D",
+          "teamId": "12413",
+          "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
           "played": "8",
           "points": "18",
           "gf": "28",
@@ -11755,12 +11761,14 @@
             "GC": "19",
             "DIF": "9"
           },
-          "shortTeam": "IGUALADA HC D",
+          "shortTeam": "IHCD",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
           "team": "MARTINELIA MANLLEU A",
+          "teamId": "11302",
+          "teamLogo": "/fecapa/images/logos_clubes/259.png",
           "played": "8",
           "points": "15",
           "gf": "31",
@@ -11775,49 +11783,61 @@
             "GF": "31",
             "GC": "7",
             "DIF": "24"
-          }
+          },
+          "shortTeam": "CPMA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "HOQUEI CLUB ALPICAT A",
-          "played": "7",
-          "points": "12",
-          "gf": "20",
-          "ga": "17",
-          "difference": "3",
+          "teamId": "12050",
+          "teamLogo": "/fecapa/images/logos_clubes/333.png",
+          "played": "8",
+          "points": "15",
+          "gf": "22",
+          "ga": "18",
+          "difference": "4",
           "stats": {
-            "PTS": "12",
-            "PJ": "7",
-            "PG": "4",
+            "PTS": "15",
+            "PJ": "8",
+            "PG": "5",
             "PE": "0",
             "PP": "3",
-            "GF": "20",
-            "GC": "17",
-            "DIF": "3"
-          }
+            "GF": "22",
+            "GC": "18",
+            "DIF": "4"
+          },
+          "shortTeam": "HCAA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
           "team": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
-          "played": "8",
+          "teamId": "11787",
+          "teamLogo": "/fecapa/images/logos_clubes/258_1.png",
+          "played": "9",
           "points": "10",
-          "gf": "22",
-          "ga": "34",
-          "difference": "-12",
+          "gf": "23",
+          "ga": "36",
+          "difference": "-13",
           "stats": {
             "PTS": "10",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "3",
             "PE": "1",
-            "PP": "4",
-            "GF": "22",
-            "GC": "34",
-            "DIF": "-12"
-          }
+            "PP": "5",
+            "GF": "23",
+            "GC": "36",
+            "DIF": "-13"
+          },
+          "shortTeam": "CPM",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
           "team": "OXFORD HC SALT A",
+          "teamId": "11781",
+          "teamLogo": "/fecapa/images/logos_clubes/318_1.png",
           "played": "8",
           "points": "4",
           "gf": "14",
@@ -11832,11 +11852,15 @@
             "GF": "14",
             "GC": "50",
             "DIF": "-36"
-          }
+          },
+          "shortTeam": "HCSA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "7",
           "team": "CP CONGRÉS B",
+          "teamId": "12022",
+          "teamLogo": "/fecapa/images/logos_clubes/246_1.png",
           "played": "8",
           "points": "0",
           "gf": "16",
@@ -11852,12 +11876,14 @@
             "GC": "48",
             "DIF": "-32"
           },
-          "shortTeam": "CP CONGRÉS B",
+          "shortTeam": "PCBB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "8",
           "team": "CP SUBUR SITGES A",
+          "teamId": "12358",
+          "teamLogo": "/fecapa/images/logos_clubes/521.png",
           "played": "0",
           "points": "0",
           "gf": "0",
@@ -11872,7 +11898,9 @@
             "GF": "0",
             "GC": "0",
             "DIF": "0"
-          }
+          },
+          "shortTeam": "PSSA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
     },
@@ -14272,8 +14300,8 @@
       "competition": "INFANTIL PLATA",
       "leagueId": "4787",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=clasificaciones",
-      "capturedAt": "2026-11-28T12:59:39.649520+00:00",
-      "standingsAt": "2026-11-28T12:59:39.649520+00:00",
+      "capturedAt": "2026-11-28T15:45:38.916421+00:00",
+      "standingsAt": "2026-11-28T15:45:38.916421+00:00",
       "standings": [
         {
           "pos": "1",
@@ -14484,6 +14512,29 @@
         },
         {
           "pos": "10",
+          "team": "CAMBRILS CH",
+          "teamId": "12307",
+          "teamLogo": "/fecapa/images/logos_clubes/323.png",
+          "played": "10",
+          "points": "8",
+          "gf": "34",
+          "ga": "46",
+          "difference": "-12",
+          "stats": {
+            "PTS": "8",
+            "PJ": "10",
+            "PG": "2",
+            "PE": "2",
+            "PP": "6",
+            "GF": "34",
+            "GC": "46",
+            "DIF": "-12"
+          },
+          "shortTeam": "CCH",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "11",
           "team": "CLUB PATI CUBELLES B B",
           "teamId": "12192",
           "teamLogo": "/fecapa/images/logos_clubes/360_1.png",
@@ -14503,29 +14554,6 @@
             "DIF": "-34"
           },
           "shortTeam": "PCBB",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "11",
-          "team": "CAMBRILS CH",
-          "teamId": "12307",
-          "teamLogo": "/fecapa/images/logos_clubes/323.png",
-          "played": "9",
-          "points": "5",
-          "gf": "22",
-          "ga": "45",
-          "difference": "-23",
-          "stats": {
-            "PTS": "5",
-            "PJ": "9",
-            "PG": "1",
-            "PE": "2",
-            "PP": "6",
-            "GF": "22",
-            "GC": "45",
-            "DIF": "-23"
-          },
-          "shortTeam": "CCH",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -14579,20 +14607,20 @@
           "team": "HOQUEI CLUB ALPICAT D",
           "teamId": "12053",
           "teamLogo": "/fecapa/images/logos_clubes/333.png",
-          "played": "9",
+          "played": "10",
           "points": "0",
-          "gf": "17",
-          "ga": "108",
-          "difference": "-91",
+          "gf": "18",
+          "ga": "120",
+          "difference": "-102",
           "stats": {
             "PTS": "0",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "0",
             "PE": "0",
-            "PP": "9",
-            "GF": "17",
-            "GC": "108",
-            "DIF": "-91"
+            "PP": "10",
+            "GF": "18",
+            "GC": "120",
+            "DIF": "-102"
           },
           "shortTeam": "HCAD",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -38676,6 +38704,54 @@
     },
     {
       "leagueId": "4786",
+      "group": "INFANTIL OR 4",
+      "team": "CH CALDES RECAM LÀSER A",
+      "shortTeam": "CHCA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 4",
+      "team": "IGUALADA HC D",
+      "shortTeam": "IHCD"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 4",
+      "team": "MARTINELIA MANLLEU A",
+      "shortTeam": "CPMA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 4",
+      "team": "HOQUEI CLUB ALPICAT A",
+      "shortTeam": "HCAA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 4",
+      "team": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
+      "shortTeam": "CPM"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 4",
+      "team": "OXFORD HC SALT A",
+      "shortTeam": "HCSA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 4",
+      "team": "CP CONGRÉS B",
+      "shortTeam": "PCBB"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 4",
+      "team": "CP SUBUR SITGES A",
+      "shortTeam": "PSSA"
+    },
+    {
+      "leagueId": "4786",
       "group": "INFANTIL OR 6",
       "team": "CE ARENYS DE MUNT A",
       "shortTeam": "DMAA"
@@ -39151,14 +39227,14 @@
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 6",
-      "team": "CLUB PATI CUBELLES B B",
-      "shortTeam": "PCBB"
+      "team": "CAMBRILS CH",
+      "shortTeam": "CCH"
     },
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 6",
-      "team": "CAMBRILS CH",
-      "shortTeam": "CCH"
+      "team": "CLUB PATI CUBELLES B B",
+      "shortTeam": "PCBB"
     },
     {
       "leagueId": "4787",
