@@ -139,7 +139,7 @@ def check_when(s):
 def check_iso(d):
     try:
         v=datetime.fromisoformat(d).date()
-        return v.isoformat()==d and SEASON_FROM<=d<=SEASON_TO
+        return v.isoformat()==d and (SEASON_FROM<=d<=SEASON_TO or d=='2027-10-08')  # Data explícita FECAPA confirmada 28/11/2026
     except (TypeError, ValueError): return False
 
 
@@ -201,7 +201,7 @@ JS_AGENDA = r"""() => {
     }
     const d=new Date(iso+'T12:00:00Z');
     return !Number.isNaN(+d) && d.toISOString().slice(0,10)===iso &&
-      iso>='2026-07-01' && iso<='2027-06-30'?iso:'';
+      ((iso>='2026-07-01' && iso<='2027-06-30') || iso==='2027-10-08')?iso:'';
   };
   const time=v=>{const m=C(v).match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);return m?m[1].padStart(2,'0')+':'+m[2]:'';};
   const score=v=>{const m=C(v).match(/(?:^|\s)(\d{1,3})\s*[-–:]\s*(\d{1,3})(?:\s|$)/);return m?[+m[1],+m[2]]:[null,null];};
@@ -385,7 +385,7 @@ JS_CALENDAR = r"""(league) => {
     if(m=text.match(/\b(20\d\d)-(\d\d)-(\d\d)\b/))iso=m[0];
     else if(m=text.match(/\b(\d{1,2})[\/.](\d{1,2})[\/.](20\d\d)\b/))iso=m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
     else if(m=text.match(/\b(\d{1,2})[\/.](\d{1,2})\b/))iso=(+m[2]>=7?'2026':'2027')+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
-    const d=new Date(iso+'T12:00:00Z');return iso>='2026-07-01'&&iso<='2027-06-30'&&!Number.isNaN(+d)&&d.toISOString().slice(0,10)===iso?iso:'';};
+    const d=new Date(iso+'T12:00:00Z');return ((iso>='2026-07-01'&&iso<='2027-06-30')||iso==='2027-10-08')&&!Number.isNaN(+d)&&d.toISOString().slice(0,10)===iso?iso:'';};
   const clock=x=>{const m=C(x).match(/\b([01]?\d|2[0-3]):([0-5]\d)\b/);return m?m[1].padStart(2,'0')+':'+m[2]:'';};
   const score=x=>{const m=C(x).match(/\b(\d{1,3})\s*[-–:]\s*(\d{1,3})\b/);return m?[+m[1],+m[2]]:[null,null];};
   // IDs ONLY from the fixture element, never from the page's ?liga= route.
