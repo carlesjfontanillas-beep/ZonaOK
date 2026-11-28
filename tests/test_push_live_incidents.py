@@ -39,7 +39,7 @@ FALTA UEH BARBERÀ
 
     def test_only_live_senior_nacional_matches_are_candidates(self):
         now = datetime(2026, 11, 21, 19, 55, tzinfo=timezone.utc)
-        missing_id = dict(FIXTURE, iso="2026-11-22", home="CLUB PATÍ SENSE ID", away="VISITANT", leagueId="", matchId="", status="EN JOC")
+        missing_id = dict(FIXTURE, iso="2026-11-21", home="CLUB PATÍ SENSE ID", away="VISITANT", leagueId="", matchId="", status="EN JOC")
         rows = [dict(FIXTURE, status="EN JOC"), dict(FIXTURE, matchId="2", competition="OK LIGA IBERDROLA", status="EN JOC"), dict(FIXTURE, matchId="146395", away="CP SANT CELONI", status="FINAL"), missing_id]
         doc = {"schema":"zonaok-partits-total-v1", "season":"2026/2027", "matches":rows}
         selected = candidates(doc, now=now)
