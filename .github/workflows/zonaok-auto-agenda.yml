@@ -124,14 +124,15 @@ jobs:
                 --mode agenda --capture captura-agenda-auto.json \
                 --output zonaok-tots-partits.json --compat --report fusio-agenda-auto.json
             fi
-            # Primer validar la fusió original, després la reducció justificada per duplicats.
-            python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
+            # Validate audited duplicate removal for daily; legacy modes remain non-destructive.
             if python -c "import json,sys;sys.exit(0 if json.load(open('captura-agenda-auto.json')).get('kind')=='agenda-daily' else 1)"; then
+              python scripts/zonaok_agenda_daily.py validate
               python scripts/zonaok_deduplicar_partits.py --report diagnostic-duplicats-agenda.json
               mkdir -p imports
               cp fusio-agenda-auto.json imports/agenda-daily-report.json
               git add imports/agenda-daily-report.json
             else
+              python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
               python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-agenda.json
             fi
             git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json

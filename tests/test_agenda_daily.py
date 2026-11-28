@@ -2,7 +2,7 @@ import sys,unittest
 from datetime import datetime,timezone
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
-from zonaok_agenda_daily import merge
+from zonaok_agenda_daily import merge,validate_publication
 from zonaok_push_events import detect
 from zonaok_schedule_gate import should_run
 class DailyAgenda(unittest.TestCase):
@@ -63,6 +63,18 @@ class DailyAgenda(unittest.TestCase):
         out,report=self.run_merge([a],[a])
         self.assertEqual(report['scheduleChangeCount'],0)
         self.assertEqual(out['matches'][0]['time'],'13:55')
+    def test_publication_allows_only_audited_removal(self):
+        a=dict(self.row(iso='2026-12-01'),time='13:55')
+        b=dict(a,time='17:00')
+        others=[self.row(iso='2026-12-01',home='X'+str(i),away='Y'+str(i)) for i in range(5)]
+        before={'schema':'zonaok-partits-total-v1','season':'2026/2027','matches':[a,b]+others}
+        packet={'kind':'agenda-daily','season':'2026/2027','capturedAt':'2026-11-28T09:00:00Z','rows':[b]+others}
+        out,report=merge(before,packet)
+        self.assertEqual(validate_publication(before,out,packet,report),1)
+        with self.assertRaises(ValueError):
+            validate_publication(before,dict(out,matches=out['matches'][1:]),packet,report)
+        with self.assertRaises(ValueError):
+            validate_publication(before,out,packet,dict(report,duplicateRepairs=[]))
     def test_daily_madrid_dst(self):
         for month,utc_hour in [(1,9),(7,8)]:
             now=datetime(2026,month,10,utc_hour,12,tzinfo=timezone.utc)

@@ -155,6 +155,38 @@ def merge(doc,packet):
     result={**doc,'matches':rows,'updatedAt':utc_now(),'sources':{**doc.get('sources',{}),'agenda':{**doc.get('sources',{}).get('agenda',{}),'capturedAt':captured,'mergedAt':utc_now(),'scope':'daily',**{k:report[k] for k in ('scheduleChangeCount','recoveredResultCount','newFixtureCount','unresolvedCount')}}}}
     result['stats']={**doc.get('stats',{}),'total':len(rows),'withScores':sum(score_tuple(r) for r in rows),'withActaLinks':sum(bool(r.get('actaUrl')) for r in rows),'verifiedActes':sum(r.get('actaState')=='available' for r in rows)}
     return result,report
+def validate_publication(before,after,packet,report):
+    """Allow only explicitly evidenced duplicate reductions, never arbitrary deletion."""
+    old=before['matches']; new=after['matches']
+    if before['season']!=after['season'] or before['season']!=packet['season']:
+        raise ValueError('season mismatch')
+    oi=index(old,pair,range(len(old))); ni=index(packet['rows'],pair,range(len(packet['rows']))); fi=index(new,pair,range(len(new)))
+    removed=0; seen=set()
+    for d in report['duplicateRepairs']:
+        k=tuple(d['fixture'])
+        if k in seen:raise ValueError('repeated audit pair')
+        seen.add(k)
+        original=[old[i] for i in oi.get(k,[])]
+        official=[packet['rows'][i] for i in ni.get(k,[])]
+        final=[new[i] for i in fi.get(k,[])]
+        if len(original)<2 or len(official)!=1 or len(final)!=1 or slot(final[0])!=slot(official[0]):
+            raise ValueError('duplicate audit without unique official fixture')
+        enc=lambda r:json.dumps(r,sort_keys=True,ensure_ascii=False)
+        if Counter(map(enc,original))!=Counter(map(enc,d['originalRows'])) or d['removed']!=len(original)-1:
+            raise ValueError('duplicate audit does not match HEAD')
+        removed+=d['removed']
+    if removed!=report['duplicatesRemoved'] or len(new)!=len(old)-removed+report['newFixtureCount']:
+        raise ValueError('unexplained row count change')
+    if not {idpair(r) for r in old if all(idpair(r))}<={idpair(r) for r in new if all(idpair(r))}:
+        raise ValueError('lost official identity')
+    scores=lambda rows:{(pair(r),r['homeScore'],r['awayScore']) for r in rows if score_tuple(r)}
+    if not scores(old)<=scores(new):raise ValueError('lost existing result')
+    # Independently reapply the capture on HEAD. Compare fixture rows, not generated metadata.
+    expected,expected_report=merge(before,packet)
+    if expected['matches']!=new or expected_report['duplicatesRemoved']!=removed:
+        raise ValueError('published rows differ from verified merge')
+    return removed
+
 def write(p,d):Path(p).write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 async def collect():
     from playwright.async_api import async_playwright
@@ -166,9 +198,19 @@ async def collect():
     packet={'kind':'agenda-daily','season':SEASON,'capturedAt':utc_now(),'rows':[r for r in rows if safe(r)],'captureReport':report}
     write('captura-agenda-auto.json',packet);write('diagnostic-agenda-auto.json',report)
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('command',choices=['collect','merge']);args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('command',choices=['collect','merge','validate']);args=parser.parse_args()
     if args.command=='collect':asyncio.run(collect());return
-    doc,report=merge(load_unified(CANONICAL),json.loads(Path('captura-agenda-auto.json').read_text()))
+    packet=json.loads(Path('captura-agenda-auto.json').read_text())
+    if args.command=='validate':
+        import subprocess
+        before=json.loads(subprocess.check_output(['git','show',f'HEAD:{CANONICAL}']))
+        after=load_unified(CANONICAL)
+        report=json.loads(Path('fusio-agenda-auto.json').read_text())
+        removed=validate_publication(before,after,packet,report)
+        print('Validació Agenda: duplicats justificats:',removed,'partits conservats:',len(after['matches']))
+        print('Incidències restants:',json.dumps(report['conflicts'],ensure_ascii=False))
+        return
+    doc,report=merge(load_unified(CANONICAL),packet)
     write(CANONICAL,doc);write_compatibility(doc);write('fusio-agenda-auto.json',report)
     print(json.dumps({k:v for k,v in report.items() if not isinstance(v,list)},ensure_ascii=False))
 if __name__=='__main__':main()
