@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T16:56:15Z",
+  "updatedAt": "2026-11-28T16:59:04Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T09:50:44Z",
@@ -144065,9 +144065,9 @@
       "venue": "PAVELLÓ ST.HIPÒLIT DE VOLTREGÀ",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "146901",
+      "leagueId": "4776",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146901",
       "status": "FINAL",
       "round": "",
       "homeScore": 2,
@@ -144138,9 +144138,9 @@
       "venue": "PAVELLO REUS DEPORTIU",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "159226",
+      "leagueId": "4790",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=calendar&partido=159226",
       "status": "FINAL",
       "round": "",
       "homeScore": 9,
@@ -144151,7 +144151,9 @@
       "directeUpdatedAt": "2026-11-28T16:56:10Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:56:10Z",
-      "finalDetectedAt": "2026-11-28T16:34:00Z"
+      "finalDetectedAt": "2026-11-28T16:34:00Z",
+      "actaCheckedAt": "2026-11-28T16:55:36.949582+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -144637,9 +144639,9 @@
       "venue": "POLIESPORTIU MUNICIPAL DE CALAFELL",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "157926",
+      "leagueId": "4787",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=157926",
       "status": "FINAL",
       "round": "",
       "homeScore": 8,
@@ -144650,7 +144652,9 @@
       "directeUpdatedAt": "2026-11-28T16:56:10Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:56:10Z",
-      "finalDetectedAt": "2026-11-28T16:39:47Z"
+      "finalDetectedAt": "2026-11-28T16:39:47Z",
+      "actaCheckedAt": "2026-11-28T16:55:29.960920+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -144895,9 +144899,9 @@
       "venue": "CH MATARO",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "149765",
+      "leagueId": "4787",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=149765",
       "status": "FINAL",
       "round": "",
       "homeScore": 6,
@@ -144908,7 +144912,9 @@
       "directeUpdatedAt": "2026-11-28T16:56:10Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:56:10Z",
-      "finalDetectedAt": "2026-11-28T16:50:41Z"
+      "finalDetectedAt": "2026-11-28T16:50:41Z",
+      "actaCheckedAt": "2026-11-28T16:55:23.154451+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -280370,8 +280376,8 @@
   "stats": {
     "total": 12186,
     "withScores": 5939,
-    "withActaLinks": 5894,
-    "verifiedActes": 5810
+    "withActaLinks": 5898,
+    "verifiedActes": 5813
   },
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
