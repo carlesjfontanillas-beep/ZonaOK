@@ -433152,7 +433152,7 @@
     "4779|148201": {
       "status": "pending",
       "fingerprint": "[4,5,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148201\"]",
-      "checkedAt": "2026-11-28T14:21:39.297787+00:00",
+      "checkedAt": "2026-11-28T14:29:10.314949+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148202": {
@@ -433311,7 +433311,7 @@
     "4779|148204": {
       "status": "pending",
       "fingerprint": "[1,10,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148204\"]",
-      "checkedAt": "2026-11-28T14:21:46.500610+00:00",
+      "checkedAt": "2026-11-28T14:29:17.856879+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148383": {
@@ -439877,6 +439877,232 @@
           {
             "period": "TOTAL",
             "score": "5-5",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4791|159289": {
+      "status": "verified",
+      "fingerprint": "[12,1,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4791&vista=calendar&partido=159289\"]",
+      "checkedAt": "2026-11-28T14:28:43.848129+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "12",
+            "away": "1"
+          },
+          "FALTES": {
+            "home": "1",
+            "away": "7"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 1,
+          "away": 7
+        },
+        "header": {
+          "competition": "ALEVÍ BRONZE",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ PRIMER DE MAIG SENTMENAT",
+          "dateTime": "28/11/2026 - 12:15",
+          "round": "JORNADA 10",
+          "referee1": "TOLEDO AGUILAR, DAVID",
+          "timekeeper": "Juan Saula Xavier",
+          "rinkDelegate": "Juan Saula Xavier"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "LOPEZ RODRIGUEZ, MENNA"
+            },
+            {
+              "role": "Delegat",
+              "name": "JUHE DEL VALLE, MARISOL"
+            }
+          ],
+          "away": [
+            {
+              "role": "Delegat",
+              "name": "FRANCÉS MARTÍNEZ, JAVIER"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "12-1",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4789|152677": {
+      "status": "pending",
+      "fingerprint": "[1,3,\"final\",null,\"https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152677\"]",
+      "checkedAt": "2026-11-28T14:28:31.506652+00:00",
+      "statsAttemptRevision": 4
+    },
+    "4778|147460": {
+      "status": "verified",
+      "fingerprint": "[2,3,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147460\"]",
+      "checkedAt": "2026-11-28T14:28:50.386379+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "2",
+            "away": "3"
+          },
+          "FALTES": {
+            "home": "9",
+            "away": "6"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 9,
+          "away": 6
+        },
+        "header": {
+          "competition": "1ª CATALANA FEMENINA GRUP A",
+          "season": "2026/2027",
+          "venue": "PAVELLO MOLLET",
+          "dateTime": "27/11/2026 - 21:40",
+          "round": "JORNADA 7",
+          "referee1": "RUBIO TAMAYO, ALEX",
+          "timekeeper": "GOMEZ MENESES,ALBERTO GONZALO",
+          "rinkDelegate": "GOMEZ MENESES,ALBERTO GONZALO"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "ALTAYO RIPOLL, JOSEP RAMON"
+            },
+            {
+              "role": "Delegat",
+              "name": "GOMEZ MENESES, ALBERTO GONZALO"
+            }
+          ],
+          "away": [
+            {
+              "role": "Delegat",
+              "name": "ORTEGA LUQUE, DANI"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "2-3",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4789|152788": {
+      "status": "verified",
+      "fingerprint": "[4,7,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152788\"]",
+      "checkedAt": "2026-11-28T14:28:37.336919+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "4",
+            "away": "7"
+          },
+          "FALTES": {
+            "home": "7",
+            "away": "10"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 7,
+          "away": 10
+        },
+        "header": {
+          "competition": "ALEVÍ OR 7",
+          "season": "2026/2027",
+          "venue": "CLUB ESPORTIU NOIA",
+          "dateTime": "28/11/2026 - 13:45",
+          "round": "JORNADA 10",
+          "referee1": "TIÓ LÓPEZ, FERRAN",
+          "rinkDelegate": "FÀBREGAS MASSANA, XAVIER"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "MUÑOZ LINARES, MARIA"
+            },
+            {
+              "role": "2n entrenador",
+              "name": "DEL AMOR TORRENS, JORDI"
+            },
+            {
+              "role": "Delegat",
+              "name": "GARRIDO OLIVER, ANNA"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "GIBERT ALONSO, GORKA"
+            },
+            {
+              "role": "Delegat",
+              "name": "ESCUTÉ SOLER, OSCAR"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "4-7",
             "fouls": "0-0"
           }
         ],
