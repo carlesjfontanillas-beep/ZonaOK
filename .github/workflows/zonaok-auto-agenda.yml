@@ -117,9 +117,13 @@ jobs:
           for attempt in 1 2 3 4 5 6 7 8; do
             git fetch origin main
             git reset --hard origin/main
-            python scripts/zonaok_fecapa_unificat.py merge \
-              --mode agenda --capture captura-agenda-auto.json \
-              --output zonaok-tots-partits.json --compat --report fusio-agenda-auto.json
+            if python -c "import json,sys;sys.exit(0 if json.load(open('captura-agenda-auto.json')).get('kind')=='agenda-daily' else 1)"; then
+              python scripts/zonaok_agenda_daily.py merge
+            else
+              python scripts/zonaok_fecapa_unificat.py merge \
+                --mode agenda --capture captura-agenda-auto.json \
+                --output zonaok-tots-partits.json --compat --report fusio-agenda-auto.json
+            fi
             # Primer validar la fusió original, després la reducció justificada per duplicats.
             python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
             if python -c "import json,sys;sys.exit(0 if json.load(open('captura-agenda-auto.json')).get('kind')=='agenda-daily' else 1)"; then
