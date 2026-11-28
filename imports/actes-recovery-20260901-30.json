@@ -50,5 +50,2464 @@
     "calendarIDs": 0,
     "checks": [],
     "untriedLeagues": 0
-  }
+  },
+  "windowFieldAudits": {},
+  "windowActAttempts": {
+    "4782|150995": "2026-11-28T07:02:32.422423+00:00",
+    "4774|146328": "2026-11-28T07:02:39.178679+00:00",
+    "4774|146331": "2026-11-28T07:02:45.966271+00:00",
+    "4774|146332": "2026-11-28T07:02:52.935687+00:00",
+    "4775|146566": "2026-11-28T07:02:59.820515+00:00",
+    "4775|146567": "2026-11-28T07:03:06.751994+00:00",
+    "4775|146571": "2026-11-28T07:03:13.587254+00:00",
+    "4775|146572": "2026-11-28T07:03:20.435916+00:00",
+    "4776|146816": "2026-11-28T07:03:27.084255+00:00",
+    "4776|146818": "2026-11-28T07:03:33.746486+00:00",
+    "4776|146819": "2026-11-28T07:03:40.381862+00:00",
+    "4776|146820": "2026-11-28T07:03:47.480859+00:00",
+    "4776|147120": "2026-11-28T07:03:54.254826+00:00",
+    "4776|147124": "2026-11-28T07:04:00.738672+00:00",
+    "4776|147125": "2026-11-28T07:04:07.012199+00:00",
+    "4776|147127": "2026-11-28T07:04:14.118074+00:00",
+    "4778|147421": "2026-11-28T07:04:21.049141+00:00",
+    "4778|147422": "2026-11-28T07:04:27.726646+00:00",
+    "4778|147601": "2026-11-28T07:04:34.433455+00:00",
+    "4782|150904": "2026-11-28T07:04:41.371977+00:00",
+    "4782|150906": "2026-11-28T07:04:48.297845+00:00",
+    "4782|150960": "2026-11-28T07:04:55.274254+00:00",
+    "4782|151016": "2026-11-28T07:05:02.221677+00:00",
+    "4782|151018": "2026-11-28T07:05:06.442734+00:00",
+    "4782|151072": "2026-11-28T07:05:13.089619+00:00",
+    "4782|151128": "2026-11-28T07:05:19.737507+00:00",
+    "4782|151184": "2026-11-28T07:05:26.426644+00:00",
+    "4782|151186": "2026-11-28T07:05:33.385028+00:00",
+    "4782|151240": "2026-11-28T07:05:40.284939+00:00",
+    "4782|151243": "2026-11-28T07:05:47.215815+00:00",
+    "4784|151296": "2026-11-28T07:05:51.190977+00:00",
+    "4784|151297": "2026-11-28T07:05:58.241947+00:00",
+    "4784|151299": "2026-11-28T07:06:05.291211+00:00",
+    "4784|151353": "2026-11-28T07:06:12.157113+00:00",
+    "4784|151354": "2026-11-28T07:06:19.224126+00:00",
+    "4784|151355": "2026-11-28T07:06:25.850760+00:00",
+    "4784|151410": "2026-11-28T07:06:32.510183+00:00",
+    "4784|151411": "2026-11-28T07:06:39.564212+00:00",
+    "4784|151520": "2026-11-28T07:06:46.619737+00:00",
+    "4784|151521": "2026-11-28T07:06:53.298394+00:00"
+  },
+  "matchDiagnostics": {
+    "4782|150995": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:02:32.422423+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4774|146328": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:02:39.178679+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 5
+      }
+    },
+    "4774|146331": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:02:45.966271+00:00",
+      "staffSides": {
+        "home": 4,
+        "away": 4
+      }
+    },
+    "4774|146332": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:02:52.935687+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4775|146566": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:02:59.820515+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4775|146567": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:03:06.751994+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4775|146571": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:03:13.587254+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 4
+      }
+    },
+    "4775|146572": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:03:20.435916+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4776|146816": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:03:27.084255+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4776|146818": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:03:33.746486+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4776|146819": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:03:40.381862+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4776|146820": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:03:47.480859+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4776|147120": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:03:54.254826+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4776|147124": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:04:00.738672+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 4
+      }
+    },
+    "4776|147125": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:04:07.012199+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4776|147127": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:04:14.118074+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4778|147421": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:04:21.049141+00:00",
+      "staffSides": {
+        "home": 1,
+        "away": 2
+      }
+    },
+    "4778|147422": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:04:27.726646+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4778|147601": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:04:34.433455+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4782|150904": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:04:41.371977+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4782|150906": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:04:48.297845+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4782|150960": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:04:55.274254+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4782|151016": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:05:02.221677+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4782|151018": {
+      "status": "pending",
+      "reason": "closure_unverified",
+      "checkedAt": "2026-11-28T07:05:06.442734+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4782|151072": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:05:13.089619+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4782|151128": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:05:19.737507+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4782|151184": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:05:26.426644+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4782|151186": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:05:33.385028+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4782|151240": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:05:40.284939+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 1
+      }
+    },
+    "4782|151243": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:05:47.215815+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4784|151296": {
+      "status": "pending",
+      "reason": "closure_unverified",
+      "checkedAt": "2026-11-28T07:05:51.190977+00:00",
+      "staffSides": {
+        "home": 0,
+        "away": 0
+      }
+    },
+    "4784|151297": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:05:58.241947+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4784|151299": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:06:05.291211+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4784|151353": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:06:12.157113+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4784|151354": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:06:19.224126+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4784|151355": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:06:25.850760+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4784|151410": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:06:32.510183+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4784|151411": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:06:39.564212+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4784|151520": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:06:46.619737+00:00",
+      "staffSides": {
+        "home": 3,
+        "away": 2
+      }
+    },
+    "4784|151521": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T07:06:53.298394+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    }
+  },
+  "lastActs": {
+    "phase": "acts",
+    "before": {
+      "window": {
+        "from": "2026-09-01",
+        "to": "2026-09-30"
+      },
+      "total": 688,
+      "catalogTotal": 12397,
+      "identified": 688,
+      "actaRequired": 688,
+      "nationalScoreOnly": 0,
+      "nationalWithScore": 0,
+      "nationalMissingScore": 0,
+      "allWindowMissingScores": 0,
+      "missingHistoricalIDs": 0,
+      "missingHistoricalScores": 0,
+      "historical": 688,
+      "verified": 495,
+      "historicalUnverified": 193,
+      "pendingWithID": 193
+    },
+    "after": {
+      "window": {
+        "from": "2026-09-01",
+        "to": "2026-09-30"
+      },
+      "total": 688,
+      "catalogTotal": 12397,
+      "identified": 688,
+      "actaRequired": 688,
+      "nationalScoreOnly": 0,
+      "nationalWithScore": 0,
+      "nationalMissingScore": 0,
+      "allWindowMissingScores": 0,
+      "missingHistoricalIDs": 0,
+      "missingHistoricalScores": 0,
+      "historical": 688,
+      "verified": 533,
+      "historicalUnverified": 155,
+      "pendingWithID": 155
+    },
+    "selected": 40,
+    "attempted": 40,
+    "verified": 38,
+    "pending": 2,
+    "reasons": {
+      "closure_unverified": 2
+    },
+    "reusedVerified": 0,
+    "matchDiagnostics": {
+      "4782|150995": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:02:32.422423+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4774|146328": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:02:39.178679+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 5
+        }
+      },
+      "4774|146331": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:02:45.966271+00:00",
+        "staffSides": {
+          "home": 4,
+          "away": 4
+        }
+      },
+      "4774|146332": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:02:52.935687+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4775|146566": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:02:59.820515+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4775|146567": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:03:06.751994+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4775|146571": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:03:13.587254+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 4
+        }
+      },
+      "4775|146572": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:03:20.435916+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4776|146816": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:03:27.084255+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4776|146818": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:03:33.746486+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4776|146819": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:03:40.381862+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4776|146820": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:03:47.480859+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4776|147120": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:03:54.254826+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4776|147124": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:04:00.738672+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 4
+        }
+      },
+      "4776|147125": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:04:07.012199+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4776|147127": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:04:14.118074+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4778|147421": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:04:21.049141+00:00",
+        "staffSides": {
+          "home": 1,
+          "away": 2
+        }
+      },
+      "4778|147422": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:04:27.726646+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4778|147601": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:04:34.433455+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4782|150904": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:04:41.371977+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4782|150906": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:04:48.297845+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4782|150960": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:04:55.274254+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4782|151016": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:05:02.221677+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4782|151018": {
+        "status": "pending",
+        "reason": "closure_unverified",
+        "checkedAt": "2026-11-28T07:05:06.442734+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4782|151072": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:05:13.089619+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4782|151128": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:05:19.737507+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4782|151184": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:05:26.426644+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4782|151186": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:05:33.385028+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4782|151240": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:05:40.284939+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 1
+        }
+      },
+      "4782|151243": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:05:47.215815+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      },
+      "4784|151296": {
+        "status": "pending",
+        "reason": "closure_unverified",
+        "checkedAt": "2026-11-28T07:05:51.190977+00:00",
+        "staffSides": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "4784|151297": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:05:58.241947+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4784|151299": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:06:05.291211+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4784|151353": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:06:12.157113+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4784|151354": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:06:19.224126+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4784|151355": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:06:25.850760+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4784|151410": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:06:32.510183+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4784|151411": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:06:39.564212+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4784|151520": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:06:46.619737+00:00",
+        "staffSides": {
+          "home": 3,
+          "away": 2
+        }
+      },
+      "4784|151521": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T07:06:53.298394+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 3
+        }
+      }
+    },
+    "remainingEligible": 155,
+    "coverage": {
+      "verifiedWithAllTrackedFields": 533,
+      "verifiedWithGaps": 0,
+      "playerFields": {
+        "Núm.": {
+          "present": 8187,
+          "missing": 0
+        },
+        "P": {
+          "present": 8187,
+          "missing": 0
+        },
+        "C": {
+          "present": 8187,
+          "missing": 0
+        },
+        "5i": {
+          "present": 8187,
+          "missing": 0
+        },
+        "G": {
+          "present": 8187,
+          "missing": 0
+        },
+        "As": {
+          "present": 8187,
+          "missing": 0
+        },
+        "PEN": {
+          "present": 8187,
+          "missing": 0
+        },
+        "FD": {
+          "present": 8187,
+          "missing": 0
+        },
+        "F→": {
+          "present": 8187,
+          "missing": 0
+        },
+        "F←": {
+          "present": 8187,
+          "missing": 0
+        },
+        "TA": {
+          "present": 8187,
+          "missing": 0
+        },
+        "TB": {
+          "present": 8187,
+          "missing": 0
+        },
+        "TR": {
+          "present": 8187,
+          "missing": 0
+        }
+      },
+      "optionalPlayerFields": [
+        "Cat"
+      ],
+      "optionalActaFields": [
+        "staff"
+      ],
+      "gapCounts": {},
+      "unconfirmedGapsByMatch": {}
+    },
+    "remainingAudit": 0,
+    "pendingCompleteActs": 155,
+    "pendingByMatch": {
+      "4774|146325": {
+        "iso": "2026-09-26",
+        "competition": "NACIONAL CATALANA MASCULINA",
+        "home": "LLEIDANET ALPICAT",
+        "away": "CAPELLADES",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4774&vista=calendar&partido=146325",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4774|146326": {
+        "iso": "2026-09-26",
+        "competition": "NACIONAL CATALANA MASCULINA",
+        "home": "HOQUEI CLUB CASTELLAR",
+        "away": "CLUB HOQUEI CADÍ",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4774&vista=calendar&partido=146326",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4774|146327": {
+        "iso": "2026-09-26",
+        "competition": "NACIONAL CATALANA MASCULINA",
+        "home": "CE ARENYS DE MUNT SOLARTRADEX",
+        "away": "CLUB PATÍ VOLTREGÀ - MASIES",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4774&vista=calendar&partido=146327",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4774|146329": {
+        "iso": "2026-09-26",
+        "competition": "NACIONAL CATALANA MASCULINA",
+        "home": "GIRONA CLUB HOQUEI",
+        "away": "CLUB PATÍ BELL-LLOC",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4774&vista=calendar&partido=146329",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4774|146330": {
+        "iso": "2026-09-26",
+        "competition": "NACIONAL CATALANA MASCULINA",
+        "home": "UEH BARBERÀ",
+        "away": "CH CALDES RECAM LÀSER",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4774&vista=calendar&partido=146330",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4775|146568": {
+        "iso": "2026-09-26",
+        "competition": "NACIONAL CATALANA FEMENINA",
+        "home": "IGUALADA FEMENÍ GRUPO GUZMÁN",
+        "away": "OXFORD HC SALT",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4775&vista=calendar&partido=146568",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4775|146569": {
+        "iso": "2026-09-26",
+        "competition": "NACIONAL CATALANA FEMENINA",
+        "home": "CLUB PATI TORRELLES",
+        "away": "CH OLOT",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4775&vista=calendar&partido=146569",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4775|146570": {
+        "iso": "2026-09-25",
+        "competition": "NACIONAL CATALANA FEMENINA",
+        "home": "ROTOTANK BIGUES I RIELLS",
+        "away": "VICIO PHC SANT CUGAT",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4775&vista=calendar&partido=146570",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4775|146685": {
+        "iso": "2026-09-26",
+        "competition": "NACIONAL CATALANA FEMENINA",
+        "home": "AMETLLER ORIGEN CP VILAFRANCA",
+        "away": "CLUB PATÍ VILA-SANA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4775&vista=calendar&partido=146685",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146805": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "CP SANT CELONI",
+        "away": "UNIÓ ESPORTIVA D'HORTA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146805",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146806": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "CLUB PATÍ VOLTREGÀ",
+        "away": "FARNERS",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146806",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146807": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "GENERALI HC PALAU",
+        "away": "ROTOTANK BIGUES I RIELLS",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146807",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146808": {
+        "iso": "2026-09-20",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "CPI ESPANYOL",
+        "away": "MARTINELIA MANLLEU",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146808",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146809": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "CLUB HOQUEI VILASSAR",
+        "away": "CH OLOT A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146809",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146810": {
+        "iso": "2026-09-20",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "CH RIPOLLET",
+        "away": "CP CONGRÉS",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146810",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146811": {
+        "iso": "2026-09-20",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "CLUB ESPORTS VENDRELL",
+        "away": "CLUB PATI CUBELLES",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146811",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146812": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "HOQUEI CLUB CASTELLAR",
+        "away": "ANDBANK- ANDORRA HOQUEI CLUB",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146812",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146813": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "CLUB PATI TORDERA",
+        "away": "CE TORRELAVIT FONT PACKAGING",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146813",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146814": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "UNIÓ ESPORTIVA D'HORTA",
+        "away": "CLUB PATI TORDERA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146814",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146815": {
+        "iso": "2026-09-25",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "FARNERS",
+        "away": "CP SANT CELONI",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146815",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146817": {
+        "iso": "2026-09-25",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "MARTINELIA MANLLEU",
+        "away": "GENERALI HC PALAU",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146817",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146821": {
+        "iso": "2026-09-25",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "ANDBANK- ANDORRA HOQUEI CLUB",
+        "away": "CLUB ESPORTS VENDRELL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146821",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|146822": {
+        "iso": "2026-09-25",
+        "competition": "1ª CATALANA GRUP A",
+        "home": "CE TORRELAVIT FONT PACKAGING",
+        "away": "HOQUEI CLUB CASTELLAR",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=146822",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147111": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "CLUB PATÍ MONJOS PANSALUD",
+        "away": "CLUB PATÍ RODA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147111",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147113": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "VICIO PHC SANT CUGAT",
+        "away": "CH LLORET FITEL NETWORK",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147113",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147115": {
+        "iso": "2026-09-20",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "CH CALDES RECAM LÀSER",
+        "away": "CAPELLADES",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147115",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147116": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "AUTO VIGATANA PATÍ VIC",
+        "away": "CH VILA-SECA-CEH OLIMPIC",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147116",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147117": {
+        "iso": "2026-09-20",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "CH MATARÓ",
+        "away": "CLUB PATI CALAFELL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147117",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147118": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "CLUB PATI VILAFRANCA AKO",
+        "away": "CH PALAFRUGELL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147118",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147119": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "CP RIUDEBITLLES",
+        "away": "HCSENTMENAT",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147119",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147121": {
+        "iso": "2026-09-25",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "CP RIUDOMS",
+        "away": "CLUB PATÍ MONJOS PANSALUD",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147121",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147123": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "CHP SANT FELIU",
+        "away": "VICIO PHC SANT CUGAT",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147123",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147126": {
+        "iso": "2026-09-25",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "CLUB PATI CALAFELL",
+        "away": "AUTO VIGATANA PATÍ VIC",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147126",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147128": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "HCSENTMENAT",
+        "away": "CLUB PATI VILAFRANCA AKO",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147128",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4776|147267": {
+        "iso": "2026-09-19",
+        "competition": "1ª CATALANA GRUP B",
+        "home": "CHP SANT FELIU",
+        "away": "HOQUEI PATINS TONA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4776&vista=calendar&partido=147267",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4778|147417": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA FEMENINA GRUP A",
+        "home": "CE ARENYS DE MUNT MUNTBIKES",
+        "away": "FENIE ENERGIA CERDANYOLA CCH",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147417",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4778|147418": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA FEMENINA GRUP A",
+        "home": "CLUB HOQUEI ARENYS DE MAR",
+        "away": "MOLLET HC",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147418",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4778|147419": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA FEMENINA GRUP A",
+        "home": "VICIO PHC SANT CUGAT",
+        "away": "CGM IGUALADA FEMENÍ HCP",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147419",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4778|147511": {
+        "iso": "2026-09-25",
+        "competition": "1ª CATALANA FEMENINA GRUP A",
+        "home": "CP BLANES",
+        "away": "SHUM SELVAFIL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147511",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4778|147599": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA FEMENINA GRUP B",
+        "home": "CLUB PATI VILAFRANCA AKO",
+        "away": "INNOAESTHETICS HC SANT JUST",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147599",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4778|147600": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA FEMENINA GRUP B",
+        "home": "CLUB PATÍ VOLTREGÀ",
+        "away": "SFERIC",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147600",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4778|147602": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA FEMENINA GRUP B",
+        "home": "HOQUEI CLUB ALPICAT",
+        "away": "CH MATARÓ",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147602",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4778|147603": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA FEMENINA GRUP B",
+        "home": "UNIÓ ESPORTIVA D'HORTA",
+        "away": "CLUB PATI CUBELLES",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147603",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4778|147604": {
+        "iso": "2026-09-26",
+        "competition": "1ª CATALANA FEMENINA GRUP B",
+        "home": "ROTOTANK BIGUES I RIELLS",
+        "away": "CP VILANOVA LA DAURADA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147604",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4779|148148": {
+        "iso": "2026-09-26",
+        "competition": "2ª CATALANA GRUP C",
+        "home": "CLUB HOQUEI SANTA PERPÈTUA",
+        "away": "CPI SANT IGNASI",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148148",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4779|148150": {
+        "iso": "2026-09-26",
+        "competition": "2ª CATALANA GRUP C",
+        "home": "CP SUBUR SITGES",
+        "away": "CP JONQUERENC",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148150",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|150905": {
+        "iso": "2026-09-26",
+        "competition": "JÚNIOR OR 1",
+        "home": "CP SANT CELONI A",
+        "away": "CLUB PATI CALAFELL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=150905",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|150961": {
+        "iso": "2026-09-26",
+        "competition": "JÚNIOR OR 2",
+        "home": "HOQUEI BANYOLES",
+        "away": "VICIO PHC SANT CUGAT A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=150961",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|150962": {
+        "iso": "2026-09-23",
+        "competition": "JÚNIOR OR 2",
+        "home": "IGUALADA HC A",
+        "away": "IGUALADA HC D",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=150962",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|151018": {
+        "iso": "2026-09-27",
+        "competition": "JÚNIOR OR 3",
+        "home": "CLUB PATÍ MONJOS",
+        "away": "CPI ESPANYOL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151018",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "closure_unverified",
+          "checkedAt": "2026-11-28T07:05:06.442734+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4782|151045": {
+        "iso": "2026-09-25",
+        "competition": "JÚNIOR OR 3",
+        "home": "VICIO PHC SANT CUGAT B",
+        "away": "SHUM ALEA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151045",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|151073": {
+        "iso": "2026-09-26",
+        "competition": "JÚNIOR OR 4",
+        "home": "INNOAESTHETICS HC SANT JUST",
+        "away": "CH MATARÓ",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151073",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|151074": {
+        "iso": "2026-09-26",
+        "competition": "JÚNIOR OR 4",
+        "home": "CP CONGRÉS A",
+        "away": "CH CALDES RECAM LÀSER A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151074",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|151129": {
+        "iso": "2026-09-26",
+        "competition": "JÚNIOR OR 5",
+        "home": "CP RIUDEBITLLES",
+        "away": "CP RIUDOMS B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151129",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|151130": {
+        "iso": "2026-09-26",
+        "competition": "JÚNIOR OR 5",
+        "home": "GEIEG",
+        "away": "HOQUEI CLUB ALPICAT",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151130",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|151241": {
+        "iso": "2026-09-26",
+        "competition": "JÚNIOR OR 7",
+        "home": "AUTO VIGATANA PATÍ VIC A",
+        "away": "CH PALAFRUGELL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151241",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4782|151242": {
+        "iso": "2026-09-26",
+        "competition": "JÚNIOR OR 7",
+        "home": "VICIO PHC SANT CUGAT C",
+        "away": "CE NOIA FREIXENET B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151242",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151296": {
+        "iso": "2026-09-27",
+        "competition": "JUVENIL OR 1",
+        "home": "BARÇA",
+        "away": "CE NOIA FREIXENET C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151296",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {
+          "status": "pending",
+          "reason": "closure_unverified",
+          "checkedAt": "2026-11-28T07:05:51.190977+00:00",
+          "staffSides": {
+            "home": 0,
+            "away": 0
+          }
+        }
+      },
+      "4784|151298": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 1",
+        "home": "IGUALADA HC B",
+        "away": "CLUB HOQUEI PRAT A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151298",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151352": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 2",
+        "home": "CP CONGRÉS A",
+        "away": "CP CONGRÉS B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151352",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151408": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 3",
+        "home": "CLUB PATÍ VOLTREGÀ A",
+        "away": "IGUALADA HC C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151408",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151409": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 3",
+        "home": "FENIE ENERGIA CERDANYOLA CCH B",
+        "away": "CE ARENYS DE MUNT A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151409",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151464": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 4",
+        "home": "CH CALDES RECAM LÀSER A",
+        "away": "HOQUEI CLUB ALPICAT",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151464",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151465": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 4",
+        "home": "JOIERIA MONER SANT RAMON",
+        "away": "CLUB PATI CUBELLES",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151465",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151466": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 4",
+        "home": "FARNERS A",
+        "away": "UNIÓ ESPORTIVA D'HORTA A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151466",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151522": {
+        "iso": "2026-09-27",
+        "competition": "JUVENIL OR 5",
+        "home": "CH RIPOLLET",
+        "away": "INNOAESTHETICS HC SANT JUST",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151522",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151576": {
+        "iso": "2026-09-27",
+        "competition": "JUVENIL OR 6",
+        "home": "IGUALADA HC A",
+        "away": "GEIEG A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151576",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151577": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 6",
+        "home": "AUTO VIGATANA PATÍ VIC B",
+        "away": "CAPELLADES",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151577",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151578": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 6",
+        "home": "AHC ANDORRA",
+        "away": "CLUB HOQUEI VILA-SECA A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151578",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151632": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 7",
+        "home": "FENIE ENERGIA CERDANYOLA CCH A",
+        "away": "UNIÓ ESPORTIVA D'HORTA B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151632",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151633": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 7",
+        "home": "CLUB PATÍ VOLTREGÀ B",
+        "away": "CP MASQUEFA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151633",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151688": {
+        "iso": "2026-09-27",
+        "competition": "JUVENIL OR 8",
+        "home": "CLUB PATÍ RODA A",
+        "away": "CLUB PATI TORDERA B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151688",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151689": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 8",
+        "home": "AUTO VIGATANA PATÍ VIC A",
+        "away": "CE ARENYS DE MUNT B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151689",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151690": {
+        "iso": "2026-09-27",
+        "competition": "JUVENIL OR 8",
+        "home": "CP SANT CELONI A",
+        "away": "UEH BARBERÀ A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151690",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151744": {
+        "iso": "2026-09-27",
+        "competition": "JUVENIL OR 9",
+        "home": "CE NOIA FREIXENET D",
+        "away": "CH CALDES RECAM LÀSER B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151744",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151745": {
+        "iso": "2026-09-27",
+        "competition": "JUVENIL OR 9",
+        "home": "CLUB HOQUEI CADÍ",
+        "away": "CH PALAFRUGELL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151745",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151746": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL OR 9",
+        "home": "CLUB PATI TORRELLES",
+        "away": "CLUB PATI TORDERA C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151746",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151800": {
+        "iso": "2026-09-27",
+        "competition": "JUVENIL OR 10",
+        "home": "REUS DEPORTIU C C",
+        "away": "CP RIUDOMS B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151800",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4784|151801": {
+        "iso": "2026-09-27",
+        "competition": "JUVENIL OR 10",
+        "home": "CLUB PATI CALAFELL B",
+        "away": "CHP SANT FELIU A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151801",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4785|150244": {
+        "iso": "2026-09-26",
+        "competition": "JUVENIL PLATA 1",
+        "home": "CP SUBUR SITGES",
+        "away": "CLUB PATI CALAFELL C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4785&vista=calendar&partido=150244",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151856": {
+        "iso": "2026-09-25",
+        "competition": "INFANTIL OR 1",
+        "home": "IGUALADA HC C",
+        "away": "IGUALADA HC B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151856",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151857": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 1",
+        "home": "CH PALAFRUGELL A",
+        "away": "CLUB HOQUEI VILA-SECA C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151857",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151858": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 1",
+        "home": "GENERALI HC PALAU A",
+        "away": "GENERALI HC PALAU C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151858",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151859": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 1",
+        "home": "BARÇA",
+        "away": "CH JUNEDA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151859",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151912": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 2",
+        "home": "CLUB HOQUEI VILA-SECA A",
+        "away": "GEIEG A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151912",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151913": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 2",
+        "home": "CLUB PATÍ VOLTREGÀ B",
+        "away": "CP RIUDEBITLLES B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151913",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151914": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 2",
+        "home": "FARNERS B",
+        "away": "SE LA SALLE BONANOVA A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151914",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151915": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 2",
+        "home": "CE NOIA FREIXENET B",
+        "away": "VICIO PHC SANT CUGAT A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151915",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151968": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 3",
+        "home": "CP BLANES A",
+        "away": "HOQUEI CLUB ALPICAT B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151968",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151969": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 3",
+        "home": "CLUB HOQUEI SANTA PERPÈTUA A",
+        "away": "CLUB PATÍ VILAFRANCA AKO A A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151969",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151970": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 3",
+        "home": "FENIE ENERGIA CERDANYOLA CCH A",
+        "away": "HCSENTMENAT A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151970",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|151971": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 3",
+        "home": "CP RIUDEBITLLES A",
+        "away": "AUTO VIGATANA PATÍ VIC A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151971",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152024": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 4",
+        "home": "CH CALDES RECAM LÀSER A",
+        "away": "CP CONGRÉS B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152024",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152026": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 4",
+        "home": "OXFORD HC SALT A",
+        "away": "MARTINELIA MANLLEU A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152026",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152027": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 4",
+        "home": "IGUALADA HC D",
+        "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152027",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152080": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 5",
+        "home": "IGUALADA HC A",
+        "away": "FENIE ENERGIA CERDANYOLA CCH C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152080",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152081": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 5",
+        "home": "JOIERIA MONER SANT RAMON A",
+        "away": "VICIO PHC SANT CUGAT C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152081",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152082": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 5",
+        "home": "FARNERS A",
+        "away": "CE NOIA FREIXENET D",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152082",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152083": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 5",
+        "home": "CLUB PATÍ VOLTREGÀ A",
+        "away": "CP SANT CELONI A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152083",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152136": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 6",
+        "home": "CE ARENYS DE MUNT A",
+        "away": "INNOAESTHETICS HC SANT JUST B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152136",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152137": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 6",
+        "home": "REUS DEPORTIU A A",
+        "away": "CH CALDES RECAM LÀSER B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152137",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152138": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 6",
+        "home": "FUTBOL CLUB MARTINENC A",
+        "away": "GEIEG B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152138",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152139": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 6",
+        "home": "JOIERIA MONER SANT RAMON B",
+        "away": "CP CONGRÉS C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152139",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152192": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 7",
+        "home": "CE NOIA FREIXENET A",
+        "away": "CE NOIA FREIXENET E",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152192",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152193": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 7",
+        "home": "REUS DEPORTIU B B",
+        "away": "CLUB PATI CALAFELL A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152193",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152194": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 7",
+        "home": "UNIÓ ESPORTIVA D'HORTA A",
+        "away": "CLUB PATÍ VILAFRANCA AKO B B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152194",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152195": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 7",
+        "home": "CH RIPOLLET A",
+        "away": "CH OLOT A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152195",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152248": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 8",
+        "home": "CLUB PATI CUBELLES A",
+        "away": "SHUM FRIT RAVICH",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152248",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152249": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 8",
+        "home": "VICIO PHC SANT CUGAT B",
+        "away": "INNOAESTHETICS HC SANT JUST A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152249",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152250": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 8",
+        "home": "CH MATARÓ A",
+        "away": "FENIE ENERGIA CERDANYOLA CCH B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152250",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152304": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 9",
+        "home": "GENERALI HC PALAU B",
+        "away": "GENERALI HC PALAU D",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152304",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152305": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 9",
+        "home": "CP VILANOVA",
+        "away": "CLUB PATI TORDERA A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152305",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152306": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 9",
+        "home": "UNIÓ ESPORTIVA D'HORTA B",
+        "away": "IGUALADA HC E",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152306",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152360": {
+        "iso": "2026-09-26",
+        "competition": "INFANTIL OR 10",
+        "home": "ROTOTANK BIGUES I RIELLS A",
+        "away": "HOQUEI CLUB CASTELLAR A A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152360",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152361": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 10",
+        "home": "CP SANT CELONI B",
+        "away": "CP CONGRÉS A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152361",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4786|152362": {
+        "iso": "2026-09-27",
+        "competition": "INFANTIL OR 10",
+        "home": "PONS LLEIDA A",
+        "away": "MOLLET HC A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=152362",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152472": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 2",
+        "home": "UNIÓ ESPORTIVA D'HORTA A",
+        "away": "CH FIGUERES A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152472",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152473": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 2",
+        "home": "HOQUEI MOLLERUSSA-TÀRREGA A",
+        "away": "CP FOLGUEROLES A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152473",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152474": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 2",
+        "home": "CE NOIA FREIXENET B",
+        "away": "HOQUEI CLUB CASTELLAR A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152474",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152475": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 2",
+        "home": "JOIERIA MONER SANT RAMON A",
+        "away": "CLUB PATÍ VOLTREGÀ B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152475",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152528": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 3",
+        "home": "CLUB PATI CALAFELL A",
+        "away": "CLUB PATI CALAFELL C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152528",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152529": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 3",
+        "home": "UEH BARBERÀ A",
+        "away": "CLUB PATÍ VOLTREGÀ E",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152529",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152530": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 3",
+        "home": "BARÇA",
+        "away": "JOIERIA MONER SANT RAMON B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152530",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152531": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 3",
+        "home": "CE NOIA FREIXENET A",
+        "away": "VICIO PHC SANT CUGAT A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152531",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152584": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 4",
+        "home": "CLUB PATÍ VOLTREGÀ A",
+        "away": "HOQUEI CLARET B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152584",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152585": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 4",
+        "home": "CLUB PATÍ VILAFRANCA AKO A A",
+        "away": "CP SANT CELONI B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152585",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152586": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 4",
+        "home": "CLUB PATÍ BREDA",
+        "away": "CLUB PATÍ RODA A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152586",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152615": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 4",
+        "home": "CP VILANOVA B",
+        "away": "HCSENTMENAT A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152615",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152640": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 5",
+        "home": "HOQUEI CASAL ESPLUGA B",
+        "away": "HOQUEI CASAL ESPLUGA A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152640",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152641": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 5",
+        "home": "CP SANT CELONI A",
+        "away": "ROTOTANK BIGUES I RIELLS",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152641",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152642": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 5",
+        "home": "MOLLET HC A",
+        "away": "CP MASQUEFA A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152642",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152643": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 5",
+        "home": "CE ARENYS DE MUNT A",
+        "away": "CH CALDES RECAM LÀSER A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152643",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152696": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 6",
+        "home": "OXFORD HC SALT A",
+        "away": "AUTO VIGATANA PATÍ VIC A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152696",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152697": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 6",
+        "home": "HOQUEI CLUB ALPICAT A",
+        "away": "MARTINELIA MANLLEU A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152697",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152698": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 6",
+        "home": "CLUB HOQUEI SANTA PERPÈTUA A",
+        "away": "VICIO PHC SANT CUGAT B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152698",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152699": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 6",
+        "home": "CP RIUDOMS B",
+        "away": "CE ARENYS DE MUNT B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152699",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152752": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 7",
+        "home": "CP CONGRES A",
+        "away": "JESUS MARIA I JOSEP B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152752",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152753": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 7",
+        "home": "GEIEG B",
+        "away": "CE NOIA FREIXENET C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152753",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152754": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 7",
+        "home": "CLUB PATI CALAFELL B",
+        "away": "CLUB PATI CUBELLES A A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152754",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152755": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 7",
+        "home": "CH LLORET CAFÈS CORNELLÀ",
+        "away": "CH PALAFRUGELL A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152755",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152808": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 8",
+        "home": "IGUALADA HC A",
+        "away": "IGUALADA HC C",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152808",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152809": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 8",
+        "home": "REUS DEPORTIU A A",
+        "away": "CLUB HOQUEI VILASSAR",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152809",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152810": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 8",
+        "home": "CP CORBERA",
+        "away": "CLUB D'ESPORTS VENDRELL",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152810",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152864": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 9",
+        "home": "CLUB PATÍ VOLTREGÀ C",
+        "away": "PONS LLEIDA B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152864",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152865": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 9",
+        "home": "CH OLOT A",
+        "away": "CLUB PATI TORDERA A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152865",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152866": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 9",
+        "home": "FARNERS A",
+        "away": "IGUALADA HC B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152866",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152920": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 10",
+        "home": "CE ARENYS DE MUNT C",
+        "away": "FENIE ENERGIA CERDANYOLA CCH A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152920",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152921": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 10",
+        "home": "CHP SANT FELIU",
+        "away": "CH CALDES RECAM LÀSER B",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152921",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|152922": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 10",
+        "home": "CLUB PATÍ VOLTREGÀ D",
+        "away": "PONS LLEIDA A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152922",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|153067": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 1",
+        "home": "GENERALI HC PALAU B",
+        "away": "GENERALI HC PALAU A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=153067",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|153068": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 1",
+        "home": "CH MATARÓ A",
+        "away": "CP RIUDEBITLLES A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=153068",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|153069": {
+        "iso": "2026-09-26",
+        "competition": "ALEVÍ OR 1",
+        "home": "CPI LA SAGRERA A",
+        "away": "INNOAESTHETICS HC SANT JUST A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=153069",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4789|153070": {
+        "iso": "2026-09-27",
+        "competition": "ALEVÍ OR 1",
+        "home": "CH RIPOLLET A",
+        "away": "GEIEG A",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=153070",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4808|159958": {
+        "iso": "2026-09-27",
+        "competition": "MINIFEM GRUP A",
+        "home": "CE NOIA FREIXENET",
+        "away": "FISIOCLUB IGUALADA FEMENÍ HCP",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4808&vista=calendar&partido=159958",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      },
+      "4816|156803": {
+        "iso": "2026-09-26",
+        "competition": "BCN PB-INICIACIO 1",
+        "home": "CPI SANT IGNASI A",
+        "away": "UNIÓ ESPORTIVA D'HORTA",
+        "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4816&vista=calendar&partido=156803",
+        "verified": false,
+        "missingFields": [],
+        "lastAttempt": {}
+      }
+    },
+    "readyNext": 155,
+    "players": 9976,
+    "appearances": 85022
+  },
+  "lastActsFinishedAt": "2026-11-28T07:07:33Z"
 }
