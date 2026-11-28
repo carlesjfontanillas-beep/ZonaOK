@@ -157,7 +157,10 @@ def should_run(mode: str, cron: str, now: datetime, matches: Path) -> tuple[bool
         if local.hour in expected:
             return True, "daily_rest_check"
         return False, "invalid_cet_cest_daily_slot"
-    if cron not in (LIVE_CRONS[mode], LEGACY_LIVE_CRON):
+    # Accept both the original and staggered En directe fallback schedule.
+    valid_crons={LIVE_CRONS[mode], LEGACY_LIVE_CRON}
+    if mode=="directe":valid_crons.add("2,12,22,32,42,52 * * * *")
+    if cron not in valid_crons:
         return False, "unrecognized_schedule"
     if mode=="directe":
         # No lectura històrica ni repàs matí/vespre.
