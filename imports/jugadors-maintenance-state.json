@@ -433152,7 +433152,7 @@
     "4779|148201": {
       "status": "pending",
       "fingerprint": "[4,5,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148201\"]",
-      "checkedAt": "2026-11-28T16:37:00.848011+00:00",
+      "checkedAt": "2026-11-28T16:42:51.375167+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148202": {
@@ -433311,7 +433311,7 @@
     "4779|148204": {
       "status": "pending",
       "fingerprint": "[1,10,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148204\"]",
-      "checkedAt": "2026-11-28T16:37:08.395711+00:00",
+      "checkedAt": "2026-11-28T16:42:58.453657+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148383": {
@@ -444603,10 +444603,78 @@
       "statsRevision": 4
     },
     "4781|154205": {
-      "status": "pending",
-      "fingerprint": "[1,2,\"final\",null,\"https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=calendar&partido=154205\"]",
-      "checkedAt": "2026-11-28T16:36:06.457562+00:00",
-      "statsAttemptRevision": 4
+      "status": "verified",
+      "fingerprint": "[1,2,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=calendar&partido=154205\"]",
+      "checkedAt": "2026-11-28T16:42:31.463172+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "1",
+            "away": "2"
+          },
+          "FALTES": {
+            "home": "5",
+            "away": "9"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 5,
+          "away": 9
+        },
+        "header": {
+          "competition": "3ª CATALANA GRUP F",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ D ESPORTS DE CENTELLES",
+          "dateTime": "28/11/2026 - 16:00",
+          "round": "JORNADA 9",
+          "referee1": "LAPEDRIZA FERRAGUT, MIQUEL",
+          "rinkDelegate": "Manel Lara"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "JIMENEZ TARRAZON, CRISTINA"
+            },
+            {
+              "role": "Delegat",
+              "name": "FORCADA EXPOSITO, RAMON"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "SANCHEZ MONTESINOS, ALBERT"
+            },
+            {
+              "role": "Delegat",
+              "name": "CARMONA GARCIA, MANUEL ANTONIO"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "1-2",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
     },
     "4787|149851": {
       "status": "verified",
@@ -444747,6 +444815,236 @@
           {
             "period": "TOTAL",
             "score": "2-5",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4807|159739": {
+      "status": "verified",
+      "fingerprint": "[6,0,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4807&vista=calendar&partido=159739\"]",
+      "checkedAt": "2026-11-28T16:42:24.667878+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "6",
+            "away": "0"
+          },
+          "FALTES": {
+            "home": "1",
+            "away": "0"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 1,
+          "away": 0
+        },
+        "header": {
+          "competition": "FEM 11 PLATA",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ MUNICIPAL RODA DE TER",
+          "dateTime": "28/11/2026 - 16:30",
+          "round": "JORNADA 9",
+          "referee1": "CASANOVAS SENSADA, OSCAR",
+          "rinkDelegate": "Jordi Roca Busquets"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "LIEBANA RIBA, DAVID"
+            },
+            {
+              "role": "Delegat",
+              "name": "AUTET CASAS, JUDIT"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "ROS JIMENEZ, GUILLEM"
+            },
+            {
+              "role": "Delegat",
+              "name": "JIMENEZ ASENSIO, JORDI"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "6-0",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4786|151949": {
+      "status": "verified",
+      "fingerprint": "[0,10,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151949\"]",
+      "checkedAt": "2026-11-28T16:42:17.976152+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "0",
+            "away": "10"
+          },
+          "FALTES": {
+            "home": "4",
+            "away": "2"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 4,
+          "away": 2
+        },
+        "header": {
+          "competition": "INFANTIL OR 2",
+          "season": "2026/2027",
+          "venue": "LA SALLE",
+          "dateTime": "28/11/2026 - 16:15",
+          "round": "JORNADA 10",
+          "referee1": "FERNANDEZ-LOBBE TALLARICO, FRANCO",
+          "rinkDelegate": "SALA ROTLLAN, ALBERT"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "MAS GARCIA, SERGIO"
+            },
+            {
+              "role": "Delegat",
+              "name": "LLAVAT RUIZ, YOLANDA"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "GARCIA GONZALEZ, JAVIER"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "DOMINGUEZ IZURRIAGA, ALEJANDRO"
+            },
+            {
+              "role": "Delegat",
+              "name": "VERGÉS CRUSET, ANDREU"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "0-10",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4779|147843": {
+      "status": "verified",
+      "fingerprint": "[5,1,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=147843\"]",
+      "checkedAt": "2026-11-28T16:42:11.056293+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "5",
+            "away": "1"
+          },
+          "FALTES": {
+            "home": "8",
+            "away": "7"
+          },
+          "TARGETES BLAVES": {
+            "home": "1",
+            "away": "1"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 8,
+          "away": 7
+        },
+        "header": {
+          "competition": "2ª CATALANA GRUP A",
+          "season": "2026/2027",
+          "venue": "POLIESPORTIU MUNICIPAL LA MAURINA",
+          "dateTime": "28/11/2026 - 16:00",
+          "round": "JORNADA 9",
+          "referee1": "AMENÓS DOMÉNECH, SERGI",
+          "rinkDelegate": "Francesc Arnedo"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "GATON RUIZ, SERGIO"
+            },
+            {
+              "role": "Delegat",
+              "name": "BENAIGES TORRES, ANDREU"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "ALONSO MARQUEZ, JOSE LUIS"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "POZO GOMEZ, CRISTIAN"
+            },
+            {
+              "role": "Delegat",
+              "name": "BERNAL RUEDA, JONATHAN"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "5-1",
             "fouls": "0-0"
           }
         ],

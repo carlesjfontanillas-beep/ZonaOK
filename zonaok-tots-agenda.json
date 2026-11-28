@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-all-v1",
   "season": "2026/2027",
-  "publishedAt": "2026-11-28T16:45:15Z",
+  "publishedAt": "2026-11-28T16:47:32Z",
   "source": "FECAPA-PLAYWRIGHT",
   "kind": "agenda",
   "rows": [
@@ -143373,9 +143373,9 @@
       "venue": "POLIESPORTIU MUNICIPAL LA MAURINA",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "147843",
+      "leagueId": "4779",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=147843",
       "status": "FINAL",
       "round": "",
       "homeScore": 5,
@@ -143386,7 +143386,9 @@
       "directeUpdatedAt": "2026-11-28T16:45:10Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:45:10Z",
-      "finalDetectedAt": "2026-11-28T16:39:47Z"
+      "finalDetectedAt": "2026-11-28T16:39:47Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:42:11.056293+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143411,7 +143413,8 @@
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:45:10Z",
       "finalDetectedAt": "2026-11-28T16:34:00Z",
-      "actaState": "pending"
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:42:31.463172+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -144052,9 +144055,9 @@
       "venue": "LA SALLE",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "151949",
+      "leagueId": "4786",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151949",
       "status": "FINAL",
       "round": "",
       "homeScore": 0,
@@ -144065,7 +144068,9 @@
       "directeUpdatedAt": "2026-11-28T16:45:10Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:45:10Z",
-      "finalDetectedAt": "2026-11-28T16:39:47Z"
+      "finalDetectedAt": "2026-11-28T16:39:47Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:42:17.976152+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -144195,9 +144200,9 @@
       "venue": "PAVELLÓ MUNICIPAL RODA DE TER",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "159739",
+      "leagueId": "4807",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4807&vista=calendar&partido=159739",
       "status": "FINAL",
       "round": "",
       "homeScore": 6,
@@ -144208,7 +144213,9 @@
       "directeUpdatedAt": "2026-11-28T16:45:10Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:45:10Z",
-      "finalDetectedAt": "2026-11-28T16:39:47Z"
+      "finalDetectedAt": "2026-11-28T16:39:47Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:42:24.667878+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -280008,7 +280015,7 @@
       "lastAgendaAt": "2026-11-27T05:36:54Z"
     }
   ],
-  "capturedAt": "2026-11-28T16:45:15Z",
+  "capturedAt": "2026-11-28T16:47:32Z",
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
     "BARÇA": "https://sidgad.cloud/fecapa/images/logos_clubes/234.png",
