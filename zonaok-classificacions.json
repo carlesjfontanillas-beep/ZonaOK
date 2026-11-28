@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T14:33:31.749671+00:00",
+  "capturedAt": "2026-11-28T14:38:54.450010+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -16497,8 +16497,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-28T13:16:10.045798+00:00",
-      "standingsAt": "2026-11-28T13:16:10.045798+00:00",
+      "capturedAt": "2026-11-28T14:38:54.450010+00:00",
+      "standingsAt": "2026-11-28T14:38:54.450010+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -16551,6 +16551,30 @@
         },
         {
           "pos": "3",
+          "team": "IGUALADA HC C",
+          "teamId": "12418",
+          "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
+          "played": "8",
+          "points": "17",
+          "gf": "57",
+          "ga": "16",
+          "difference": "41",
+          "stats": {
+            "PTS": "17",
+            "PJ": "8",
+            "PG": "5",
+            "PE": "2",
+            "PP": "1",
+            "GF": "57",
+            "GC": "16",
+            "DIF": "41",
+            "SAN": "0"
+          },
+          "shortTeam": "IHCC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "4",
           "team": "CLUB D'ESPORTS VENDRELL",
           "teamId": "11552",
           "teamLogo": "/fecapa/images/logos_clubes/332.png",
@@ -16571,30 +16595,6 @@
             "SAN": "0"
           },
           "shortTeam": "CEV",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "4",
-          "team": "IGUALADA HC C",
-          "teamId": "12418",
-          "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
-          "played": "7",
-          "points": "14",
-          "gf": "41",
-          "ga": "14",
-          "difference": "27",
-          "stats": {
-            "PTS": "14",
-            "PJ": "7",
-            "PG": "4",
-            "PE": "2",
-            "PP": "1",
-            "GF": "41",
-            "GC": "14",
-            "DIF": "27",
-            "SAN": "0"
-          },
-          "shortTeam": "IHCC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -16650,20 +16650,20 @@
           "team": "CLUB HOQUEI VILASSAR",
           "teamId": "11926",
           "teamLogo": "/fecapa/images/logos_clubes/303_1.png",
-          "played": "8",
+          "played": "9",
           "points": "0",
-          "gf": "5",
-          "ga": "79",
-          "difference": "-74",
+          "gf": "7",
+          "ga": "95",
+          "difference": "-88",
           "stats": {
             "PTS": "0",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "0",
             "PE": "0",
-            "PP": "8",
-            "GF": "5",
-            "GC": "79",
-            "DIF": "-74",
+            "PP": "9",
+            "GF": "7",
+            "GC": "95",
+            "DIF": "-88",
             "SAN": "0"
           },
           "shortTeam": "CHV",
@@ -39243,14 +39243,14 @@
     {
       "leagueId": "4789",
       "group": "ALEVÍ OR 8",
-      "team": "CLUB D'ESPORTS VENDRELL",
-      "shortTeam": "CEV"
+      "team": "IGUALADA HC C",
+      "shortTeam": "IHCC"
     },
     {
       "leagueId": "4789",
       "group": "ALEVÍ OR 8",
-      "team": "IGUALADA HC C",
-      "shortTeam": "IHCC"
+      "team": "CLUB D'ESPORTS VENDRELL",
+      "shortTeam": "CEV"
     },
     {
       "leagueId": "4789",
