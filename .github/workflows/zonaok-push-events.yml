@@ -135,22 +135,21 @@ jobs:
               'leagueId': '', 'matchId': ''
           }
           events = [
-              ('goal','P1','04:00','FC BARCELONA','1-0'),
-              ('goal','P1','12:00','CLUB PATÍ VOLTREGÀ - MASIES','1-1'),
-              ('card','P1','16:00','CLUB PATÍ VOLTREGÀ - MASIES',''),
-              ('goal','P2','08:00','FC BARCELONA','2-1'),
-              ('directFoul','P2','13:00','FC BARCELONA',''),
-              ('goal','P2','17:00','FC BARCELONA','3-1'),
-              ('goal','P2','20:00','FC BARCELONA','4-1'),
+              ('goal','P1','15:54','FC BARCELONA','1-0','#28 NICOLÁS SAMA GILABERT'),
+              ('goal','P1','15:20','FC BARCELONA','2-0','#44 ORIOL CASTRO CASTILLEJO'),
+              ('goal','P1','07:09','CLUB PATÍ VOLTREGÀ - MASIES','2-1','#6 ALEX VILA COLELL'),
+              ('goal','P1','02:09','FC BARCELONA','3-1','#8 ALBERT MOLERA I MONCAU'),
+              ('goal','P2','10:34','FC BARCELONA','4-1','#8 ALBERT MOLERA I MONCAU'),
+              ('card','P2','05:17','CLUB PATÍ VOLTREGÀ - MASIES','','#4 MARC JURADO LIRA'),
           ]
           observed = datetime.now().astimezone().isoformat()
           def norm(value):
               raw = ''.join(c for c in unicodedata.normalize('NFD', str(value or '')) if unicodedata.category(c) != 'Mn')
               return ' '.join(raw.upper().split())
           incidents = []
-          for e,p,t,team,score in events:
-              item = {'event':e,'period':p,'matchClock':t,'team':team,'player':'','score':score,'ordinal':1,'observedAt':observed}
-              material = '|'.join(norm(value).replace('|','/') for value in ('2026/2027',fixture['internalId'],e,p,t,team,'',score,'1'))
+          for e,p,t,team,score,player in events:
+              item = {'event':e,'period':p,'matchClock':t,'team':team,'player':player,'score':score,'ordinal':1,'observedAt':observed}
+              material = '|'.join(norm(value).replace('|','/') for value in ('2026/2027',fixture['internalId'],e,p,t,team,player,score,'1'))
               item['eventId'] = hashlib.sha256(material.encode()).hexdigest()
               incidents.append(item)
           payload = {'schema':'zonaok-push-live-incidents-v1','season':'2026/2027','matches':[{'fixture':fixture,'observedAt':observed,'startedNow':False,'incidents':incidents}]}
