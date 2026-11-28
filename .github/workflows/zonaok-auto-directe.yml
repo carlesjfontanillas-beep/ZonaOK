@@ -56,6 +56,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Marcar inici del cicle
+        run: echo "DIRECTE_STARTED=$(date +%s)" >> "$GITHUB_ENV"
       - name: Decidir si toca importar segons l'horari Europe/Madrid
         id: schedule_gate
         if: ${{ github.event_name == 'schedule' }}
@@ -167,3 +169,40 @@ jobs:
             captura-directe-auto.json
             fusio-directe-auto.json
             diagnostic-duplicats-directe.json
+
+      - name: Continuïtat En directe si GitHub retarda el cron
+        if: ${{ always() && !cancelled() && (github.event_name == 'schedule' || github.event_name == 'push' || inputs.publish == true) && (github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true') }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          test -d .git || exit 0
+          test -n "${DIRECTE_STARTED:-}" || exit 0
+          # Never cancel another run. Stop chaining outside the active match window.
+          remaining=$((300 - $(date +%s) + DIRECTE_STARTED))
+          if [ "$remaining" -gt 0 ]; then sleep "$remaining"; fi
+          git fetch origin main
+          git show origin/main:zonaok-tots-partits.json > "$RUNNER_TEMP/directe-followup.json"
+          if ! python - "$RUNNER_TEMP/directe-followup.json" <<'PY'
+          import sys
+          from pathlib import Path
+          from datetime import datetime,timezone
+          sys.path.insert(0,'scripts')
+          from zonaok_schedule_gate import directe_followup_count
+          n=directe_followup_count(Path(sys.argv[1]),datetime.now(timezone.utc))
+          print('Partits dins la finestra de seguiment:',n)
+          sys.exit(0 if n else 1)
+          PY
+          then
+            echo 'Sense partits dins la finestra activa; es conserva el cron.'
+            exit 0
+          fi
+          active=$(gh run list --workflow zonaok-auto-directe.yml --branch main --limit 30 --json databaseId,status --jq "[.[] | select(.databaseId != $GITHUB_RUN_ID and .status != \"completed\")] | length")
+          if [ "$active" = 0 ]; then
+            gh workflow run zonaok-auto-directe.yml --ref main -f scope=fast -f publish=true
+            echo 'Nou cicle En directe sol·licitat.'
+          else
+            echo 'Ja existeix un cicle actiu o en cua.'
+          fi

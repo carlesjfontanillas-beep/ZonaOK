@@ -125,6 +125,25 @@ def fixture_window_count(path: Path, now: datetime, *, lead: timedelta = timedel
     return count
 
 
+def directe_followup_count(path: Path, now: datetime) -> int:
+    """Bound the five-minute fallback to active or immediately upcoming matches."""
+    local=now.astimezone(MADRID)
+    horizon=local+timedelta(minutes=5)
+    count=0
+    for row in read_matches(path):
+        status=str(row.get('status') or '')
+        if FINAL_STATUS.search(status) and has_score(row):continue
+        if re.search(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',status,re.I):continue
+        try:start=datetime.strptime(f"{row.get('iso','')} {row.get('time','')}",'%Y-%m-%d %H:%M').replace(tzinfo=MADRID)
+        except (ValueError,TypeError):continue
+        if start.date()!=local.date() and not (start.date()==local.date()-timedelta(days=1) and start.hour>=20 and local.hour<4):continue
+        nc=str(row.get('competition','')).upper() in ('NACIONAL CATALANA MASCULINA','NACIONAL CATALANA FEMENINA')
+        earliest=start+(-DIRECTE_LEAD if nc else timedelta(minutes=40))
+        latest=start+WINDOW+DIRECTE_GRACE
+        if earliest<=horizon and local<=latest:count+=1
+    return count
+
+
 def should_run(mode: str, cron: str, now: datetime, matches: Path) -> tuple[bool, str]:
     local = now.astimezone(MADRID)
     if mode == "agenda":

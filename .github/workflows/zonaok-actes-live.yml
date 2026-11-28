@@ -1,5 +1,8 @@
 name: ZonaOK - Actes i jugadors EN DIRECTE
 on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/zonaok-actes-live.yml']
   workflow_dispatch:
   schedule:
     - cron: '4,9,14,19,24,29,34,39,44,49,54,59 * * * *'
@@ -13,7 +16,7 @@ concurrency:
 jobs:
   recent:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 35
     env:
       ZONAOK_ACTES_WINDOW: live
       GH_TOKEN: ${{ github.token }}
@@ -25,16 +28,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Seleccionar només finals pendents d'avui
+      - name: Seleccionar finals pendents d'avui i d'ahir
         id: gate
         run: |
           python - <<'PY'
           import json,os,sys
           from datetime import datetime,timezone
           sys.path.insert(0,'scripts')
-          from zonaok_live_finals import current_final,norm
+          from zonaok_live_finals import recent_acta_final,norm
           rows=json.load(open('zonaok-tots-partits.json'))['matches']
-          pending=[r for r in rows if current_final(r,datetime.now(timezone.utc)) and r.get('actaState')!='available' and not norm(r.get('competition')).startswith('OK LIGA')]
+          pending=[r for r in rows if recent_acta_final(r,datetime.now(timezone.utc)) and r.get('actaState')!='available' and not norm(r.get('competition')).startswith('OK LIGA')]
           print('Finals pendents:',len(pending))
           with open(os.environ['GITHUB_OUTPUT'],'a') as f:print('run='+str(bool(pending)).lower(),file=f)
           PY
@@ -49,20 +52,30 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git pull --ff-only origin main
-          mkdir -m 700 data
+          # Reload both the fixture catalog and the player master on every retry.
+          # Never overwrite concurrent Agenda, En directe or historical imports.
           trap 'rm -rf data' EXIT
-          gzip -dc imports/jugadors-master.json.gz > data/jugadors-master.json
-          cp imports/jugadors-maintenance-state.json data/jugadors-maintenance-state.json
-          xvfb-run -a python scripts/zonaok_actes_recovery_only.py ids
-          xvfb-run -a python scripts/zonaok_actes_recovery_only.py acts "$PWD/data"
-          python scripts/verify_public_master.py data/jugadors-master.json
-          python scripts/zonaok_fecapa_unificat.py validate
-          gzip -n -c data/jugadors-master.json > imports/jugadors-master.json.gz
-          cp data/jugadors-maintenance-state.json imports/jugadors-maintenance-state.json
-          git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-live-state.json imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'ZonaOK: actes finals i jugadors del moment'
-          git push origin HEAD:main
+          published=false
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            rm -rf data
+            mkdir -m 700 data
+            gzip -dc imports/jugadors-master.json.gz > data/jugadors-master.json
+            cp imports/jugadors-maintenance-state.json data/jugadors-maintenance-state.json
+            xvfb-run -a python scripts/zonaok_actes_recovery_only.py ids
+            xvfb-run -a python scripts/zonaok_actes_recovery_only.py acts "$PWD/data"
+            python scripts/verify_public_master.py data/jugadors-master.json
+            python scripts/zonaok_fecapa_unificat.py validate
+            gzip -n -c data/jugadors-master.json > imports/jugadors-master.json.gz
+            cp data/jugadors-maintenance-state.json imports/jugadors-maintenance-state.json
+            git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-live-state.json imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'ZonaOK: actes finals i jugadors del moment'
+            if git push origin HEAD:main; then published=true; break; fi
+            echo "Canvi concurrent a main, reintent amb catàleg i jugadors actualitzats: $attempt"
+            sleep 3
+          done
+          if [ "$published" != true ]; then exit 1; fi
           # Si s'acaba de recuperar l'IDP, Classificacions ja pot resoldre el grup.
           gh workflow run zonaok-classificacions-auto.yml --ref main -f scope=live -f publish=true || echo '::warning::Classificacions es recuperarà al cron.'

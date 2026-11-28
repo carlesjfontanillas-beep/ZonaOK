@@ -6,7 +6,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
-from zonaok_schedule_gate import should_run, LIVE_CRONS
+from zonaok_schedule_gate import should_run, LIVE_CRONS, directe_followup_count
 
 class TestDirecteWindow(unittest.TestCase):
     def test_evening_window_and_delayed_queue(self):
@@ -36,6 +36,20 @@ class TestDirecteWindow(unittest.TestCase):
             row.update(iso='2026-11-25',time='21:00',competition='INFANTIL OR',status='SENSE COMENÇAR')
             check(21,39,False)
             check(21,40,True)
+
+    def test_followup_bounded_and_no_final(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp)/'matches.json'
+            row={'iso':'2026-11-28','time':'11:00','competition':'INFANTIL OR','status':'SENSE COMENÇAR'}
+            def count(h,m):
+                p.write_text(json.dumps({'matches':[row]}))
+                return directe_followup_count(p,datetime(2026,11,28,h,m,tzinfo=ZoneInfo('Europe/Madrid')))
+            self.assertEqual(count(11,34),0)
+            self.assertEqual(count(11,35),1)
+            self.assertEqual(count(13,45),1)
+            self.assertEqual(count(13,46),0)
+            row.update(status='FINAL',homeScore=3,awayScore=1)
+            self.assertEqual(count(12,0),0)
 
 if __name__=="__main__":
     unittest.main()

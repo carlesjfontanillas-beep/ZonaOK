@@ -64,13 +64,13 @@ def historical(r):
 def state_league(r):
     name=norm(r.get("competition")).replace("-"," ")
     name=" ".join(name.split())
-    return name in {"ok liga","ok liga masculina","ok liga plata norte","ok liga plata sur","ok liga iberdrola","ok liga femenina"}
+    return name.startswith('ok liga')
 
 def requires_acta(r):
     if not historical(r) or state_league(r):return False
     if WINDOW_NAME!='live':return True
-    from zonaok_live_finals import current_final
-    return current_final(r,datetime.now(timezone.utc))
+    from zonaok_live_finals import recent_acta_final
+    return recent_acta_final(r,datetime.now(timezone.utc))
 
 
 def summarize(doc):

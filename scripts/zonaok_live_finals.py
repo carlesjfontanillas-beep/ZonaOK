@@ -24,6 +24,15 @@ def current_final(r,now):
     if recovery and recovery<=now and local.date()-timedelta(days=7)<=kickoff.date()<local.date():
         return True
     return kickoff<=local and (kickoff.date()==local.date() or (kickoff.date()==local.date()-timedelta(days=1) and kickoff.hour>=20 and local.hour<4))
+def recent_acta_final(r,now):
+    """Yesterday remains eligible until the closed official acta is verified."""
+    if norm(r.get('competition')).startswith('OK LIGA'):return False
+    if re.search(r'AJORN|APLAZ|SUSP|CANCEL|ANUL',norm(r.get('status'))):return False
+    if current_final(r,now):return True
+    if r.get('iso')!=(now.astimezone(MADRID).date()-timedelta(days=1)).isoformat():return False
+    if re.search(r'EN JOC|EN DIRECTE|EN DIRECTO|LIVE|PLAYING|PRIMERA PART|SEGONA PART|DESCANS',norm(r.get('status'))):return False
+    return all(type(r.get(k)) is int and r[k]>=0 for k in ('homeScore','awayScore'))
+
 def targets(fixtures,standings,now=None):
     now=now or datetime.now(timezone.utc)
     groups=standings.get('competitions',{})
