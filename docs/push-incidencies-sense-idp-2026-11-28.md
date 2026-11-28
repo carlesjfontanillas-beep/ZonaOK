@@ -26,6 +26,8 @@ Versió activa al panell de Cloudflare: `24ca50a7` (anterior: `4fe6527e`).
 
 ## Recuperació d'actes quan el catàleg no porta IDP
 
+El cron de cada cinc minuts també executa ara la selecció, captura i tramesa d'incidències. Per als partits sense IDP, la detecció d'inici compara els dos últims catàlegs i usa la mateixa identitat interna que el capturador; això permet marcar el primer lot com a baseline sense perdre les incidències noves. La captura només continua si el calendari oficial identifica un únic partit. Les preferències del Worker continuen filtrant quins partits s'envien.
+
 El capturador ara conserva els partits de Nacional Catalana encara que no tinguin `leagueId`/`matchId`. Calcula un `internalId` estable amb temporada, data, hora, competició i equips per seleccionar el partit i deduplicar-ne les incidències. Quan l'acta ho requereix, consulta el calendari oficial de la competició (masculina `4774`, femenina `4775`) i només segueix l'enllaç de partit si troba una única coincidència exacta per data i equips. Si no n'hi ha cap o n'hi ha més d'una, no associa cap acta ni envia incidències d'aquell partit.
 
 ## Etiqueta «from ZonaOK»
