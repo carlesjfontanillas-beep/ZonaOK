@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T11:59:05.031493+00:00",
+  "capturedAt": "2026-11-28T12:03:53.757457+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -11885,34 +11885,38 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-27T01:11:38.298092+00:00",
-      "standingsAt": "2026-11-27T01:11:38.298092+00:00",
+      "capturedAt": "2026-11-28T12:03:53.757457+00:00",
+      "standingsAt": "2026-11-28T12:03:53.757457+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
           "pos": "1",
           "team": "CH OLOT A",
-          "played": "9",
-          "points": "24",
-          "gf": "78",
-          "ga": "18",
-          "difference": "60",
+          "teamId": "11852",
+          "teamLogo": "/fecapa/images/logos_clubes/315.png",
+          "played": "10",
+          "points": "27",
+          "gf": "88",
+          "ga": "19",
+          "difference": "69",
           "stats": {
-            "PTS": "24",
-            "PJ": "9",
-            "PG": "8",
+            "PTS": "27",
+            "PJ": "10",
+            "PG": "9",
             "PE": "0",
             "PP": "1",
-            "GF": "78",
-            "GC": "18",
-            "DIF": "60"
+            "GF": "88",
+            "GC": "19",
+            "DIF": "69"
           },
-          "shortTeam": "CH OLOT A",
+          "shortTeam": "HOAA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "CE NOIA FREIXENET A",
+          "teamId": "11796",
+          "teamLogo": "/fecapa/images/logos_clubes/269.png",
           "played": "9",
           "points": "24",
           "gf": "68",
@@ -11927,11 +11931,15 @@
             "GF": "68",
             "GC": "8",
             "DIF": "60"
-          }
+          },
+          "shortTeam": "OIAA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
           "team": "UNIÓ ESPORTIVA D'HORTA A",
+          "teamId": "11162",
+          "teamLogo": "/fecapa/images/logos_clubes/251_1.png",
           "played": "9",
           "points": "21",
           "gf": "60",
@@ -11946,11 +11954,15 @@
             "GF": "60",
             "GC": "27",
             "DIF": "33"
-          }
+          },
+          "shortTeam": "EHAA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "CH RIPOLLET A",
+          "teamId": "12435",
+          "teamLogo": "/fecapa/images/logos_clubes/278.gif",
           "played": "9",
           "points": "12",
           "gf": "34",
@@ -11966,12 +11978,14 @@
             "GC": "43",
             "DIF": "-9"
           },
-          "shortTeam": "CH RIPOLLET A",
+          "shortTeam": "CHRA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
           "team": "CLUB PATI CALAFELL A",
+          "teamId": "12517",
+          "teamLogo": "/fecapa/images/logos_clubes/322.png",
           "played": "9",
           "points": "10",
           "gf": "22",
@@ -11986,30 +12000,38 @@
             "GF": "22",
             "GC": "33",
             "DIF": "-11"
-          }
+          },
+          "shortTeam": "CPCA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
           "team": "REUS DEPORTIU B B",
-          "played": "9",
+          "teamId": "12344",
+          "teamLogo": "/fecapa/images/logos_clubes/328_2.png",
+          "played": "10",
           "points": "7",
-          "gf": "13",
-          "ga": "47",
-          "difference": "-34",
+          "gf": "14",
+          "ga": "57",
+          "difference": "-43",
           "stats": {
             "PTS": "7",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "2",
             "PE": "1",
-            "PP": "6",
-            "GF": "13",
-            "GC": "47",
-            "DIF": "-34"
-          }
+            "PP": "7",
+            "GF": "14",
+            "GC": "57",
+            "DIF": "-43"
+          },
+          "shortTeam": "RDB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "7",
           "team": "CE NOIA FREIXENET E",
+          "teamId": "11799",
+          "teamLogo": "/fecapa/images/logos_clubes/269.png",
           "played": "9",
           "points": "6",
           "gf": "16",
@@ -12024,11 +12046,15 @@
             "GF": "16",
             "GC": "53",
             "DIF": "-37"
-          }
+          },
+          "shortTeam": "OIAE",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "8",
           "team": "CLUB PATÍ VILAFRANCA AKO B B",
+          "teamId": "12093",
+          "teamLogo": "/fecapa/images/logos_clubes/301.png",
           "played": "9",
           "points": "3",
           "gf": "12",
@@ -12043,7 +12069,9 @@
             "GF": "12",
             "GC": "74",
             "DIF": "-62"
-          }
+          },
+          "shortTeam": "CPVB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
     },
@@ -36520,6 +36548,54 @@
       "group": "INFANTIL OR 6",
       "team": "GEIEG B",
       "shortTeam": "GEGB"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 7",
+      "team": "CH OLOT A",
+      "shortTeam": "HOAA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 7",
+      "team": "CE NOIA FREIXENET A",
+      "shortTeam": "OIAA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 7",
+      "team": "UNIÓ ESPORTIVA D'HORTA A",
+      "shortTeam": "EHAA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 7",
+      "team": "CH RIPOLLET A",
+      "shortTeam": "CHRA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 7",
+      "team": "CLUB PATI CALAFELL A",
+      "shortTeam": "CPCA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 7",
+      "team": "REUS DEPORTIU B B",
+      "shortTeam": "RDB"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 7",
+      "team": "CE NOIA FREIXENET E",
+      "shortTeam": "OIAE"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 7",
+      "team": "CLUB PATÍ VILAFRANCA AKO B B",
+      "shortTeam": "CPVB"
     },
     {
       "leagueId": "4787",
