@@ -72,7 +72,14 @@ def scheduled_starts(catalog, *, now, plan=None):
     planned={x['eventId'] for x in (plan or {}).get('events',[]) if x.get('mode')=='scheduled'} if (plan or {}).get('season')==catalog.get('season') else set()
     output=[]
     for start,event_id,fixture,nc in scheduled_candidates(catalog):
-        if nc or start.date()!=local.date() or not timedelta(0)<=local-start<=timedelta(minutes=10):continue
+        if start.date()!=local.date() or not timedelta(0)<=local-start<=timedelta(minutes=10):continue
+        if nc:
+            # Nacional Catalana also gets a kickoff alert from the confirmed
+            # schedule, even if FECAPA never exposes a reliable LIVE transition.
+            # Reuse the detector's LIVE-start ID so a later status change dedupes.
+            key=identity(fixture)
+            if not key:continue
+            event_id=hashlib.sha256(json.dumps([catalog.get("season"),key,"start"],ensure_ascii=False).encode()).hexdigest()
         fixture["startSource"]="Agenda"
         output.append({"eventId":event_id,"event":"start","source":"FECAPA","observedAt":now.isoformat(),"fixture":fixture,"startSource":"Agenda"})
     return sorted(output,key=lambda e:(e['eventId'] not in planned,e['fixture']['iso'],e['fixture']['time'],e['eventId']))
