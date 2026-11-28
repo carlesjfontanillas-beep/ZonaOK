@@ -100,7 +100,7 @@ JS_EXTRACT = r"""(mobile=false) => {
       const cell=i=>i<0?'':clean(cells[i]?.innerText||cells[i]?.textContent||'');
       const pos=cell(0);
       const nameNode=tr.querySelector('.sidgad-clasif-nombre');
-      const team=mobile ? (clean(nameNode?.innerText)||clean(cells[1]?.innerText)) :
+      const team=mobile ? clean((nameNode?.closest('td')||cells[1])?.innerText) :
         (clean(nameNode?.textContent)||cell(1));
       if (!/^\d{1,2}$/.test(pos)||!team) continue;
       const shifts=[...new Set([cells.length-headers.length,1,0,2,3])]
@@ -290,7 +290,7 @@ def pair_mobile_names(wide, mobile):
                r.get('stats')!=short_by_pos[str(r['pos'])].get('stats') for r in rows):continue
         for r in rows:
             short=clean(short_by_pos[str(r['pos'])].get('team'))
-            if re.fullmatch(r'[A-ZÀ-Ü0-9][A-ZÀ-Ü0-9 .-]{0,14}',short) and len(norm(short).replace(' ',''))>=2:
+            if norm(short)!=norm(r.get('team')) and re.fullmatch(r'[A-ZÀ-Ü0-9][A-ZÀ-Ü0-9 .-]{0,14}',short) and len(norm(short).replace(' ',''))>=2:
                 r['shortTeam']=short
                 r['shortTeamSource']='FECAPA-classificacions-vertical'
                 pairs+=1
@@ -575,7 +575,7 @@ def merge_packet(capture: dict, existing: dict) -> tuple[dict,dict]:
         prior_teams={norm(r.get('team')):r for r in (prior.get('standings',[]) if isinstance(prior,dict) else []) if isinstance(r,dict)}
         for r in rows:
             old_team=prior_teams.get(norm(r.get('team')),{})
-            if not r.get('shortTeam') and old_team.get('shortTeamSource')=='FECAPA-classificacions-vertical':
+            if not r.get('shortTeam') and old_team.get('shortTeamSource')=='FECAPA-classificacions-vertical' and norm(old_team.get('shortTeam'))!=norm(old_team.get('team')):
                 r['shortTeam']=old_team['shortTeam']
                 r['shortTeamSource']=old_team['shortTeamSource']
         sorted_rows=sorted(rows,key=lambda r:int(r['pos']))
@@ -599,7 +599,7 @@ def merge_packet(capture: dict, existing: dict) -> tuple[dict,dict]:
         {'leagueId':str(g.get('leagueId','')),'group':g.get('name',''),'team':r['team'],'shortTeam':r['shortTeam']}
         for g in output.values() if isinstance(g,dict)
         for r in g.get('standings',[]) if isinstance(r,dict)
-        and r.get('shortTeam') and r.get('shortTeamSource')=='FECAPA-classificacions-vertical'
+        and r.get('shortTeam') and norm(r.get('shortTeam'))!=norm(r.get('team')) and r.get('shortTeamSource')=='FECAPA-classificacions-vertical'
     ]
     stats={"updatedGroups":updated,"preservedNewer":preserved,
            "preservedByKey":len(old.keys()-incoming.keys()),"totalGroups":len(output),

@@ -1,0 +1,167 @@
+{
+  "schema": "zonaok-equivalencies-equips-v1",
+  "season": "2026/2027",
+  "source": "FECAPA",
+  "note": "Equivalències heretades del codi existent; les de classificacions noves exigeixen sigles diferents del nom i coincidència de fila. Les equivalències de club no identifiquen un equip A/B per si soles.",
+  "manualAliases": [
+    {
+      "team": "BARÇA",
+      "shortTeams": [
+        "BAR",
+        "FCB"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-unificat",
+      "clubId": "234"
+    },
+    {
+      "team": "FC BARCELONA",
+      "shortTeams": [
+        "BAR",
+        "FCB",
+        "BARCA"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-unificat",
+      "clubId": "234"
+    },
+    {
+      "team": "FC BARCELONA VETERANS",
+      "shortTeams": [
+        "FCBETRANS",
+        "FCBETERANS",
+        "FCBV"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-unificat",
+      "clubId": "234"
+    },
+    {
+      "team": "CP SANT CELONI",
+      "shortTeams": [
+        "CPSC"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-unificat",
+      "clubId": "281"
+    },
+    {
+      "team": "CP SANT CELONI A",
+      "shortTeams": [
+        "CPSCA"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-unificat",
+      "clubId": "281"
+    },
+    {
+      "team": "CP SANT CELONI B",
+      "shortTeams": [
+        "CPSCB"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-unificat",
+      "clubId": "281"
+    },
+    {
+      "team": "HOQUEI CLUB CASTELLAR",
+      "shortTeams": [
+        "HCC"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-unificat"
+    },
+    {
+      "team": "HC VALLS",
+      "shortTeams": [
+        "HCV"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-unificat"
+    },
+    {
+      "team": "INNOAESTHETICS HC SANT JUST",
+      "shortTeams": [
+        "HCSJ"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29.8"
+    },
+    {
+      "team": "MOLLET HC A",
+      "shortTeams": [
+        "MHCA"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29.8"
+    },
+    {
+      "team": "CLUB HOQUEI CADÍ",
+      "shortTeams": [
+        "CADI"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29.8"
+    },
+    {
+      "team": "VICIO PHC SANT CUGAT A",
+      "shortTeams": [
+        "HSCA"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29.8"
+    },
+    {
+      "team": "GENERALI HC PALAU",
+      "shortTeams": [
+        "PAL"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29.8"
+    },
+    {
+      "team": "CLUB PATI VOLTREGA A",
+      "shortTeams": [
+        "CPVA"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29"
+    },
+    {
+      "team": "CP VOLTREGA A",
+      "shortTeams": [
+        "CPVA"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29"
+    },
+    {
+      "team": "CLUB PATI VOLTREGA B",
+      "shortTeams": [
+        "CPVB"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29"
+    },
+    {
+      "team": "CP VOLTREGA B",
+      "shortTeams": [
+        "CPVB"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29"
+    },
+    {
+      "team": "AHC ANDORRA",
+      "shortTeams": [
+        "AHC"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29"
+    },
+    {
+      "team": "CH OLOT",
+      "shortTeams": [
+        "CHO"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29"
+    },
+    {
+      "team": "CHP SANT FELIU",
+      "shortTeams": [
+        "SAF"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29"
+    },
+    {
+      "team": "CHP SANT FELIU B",
+      "shortTeams": [
+        "SAFB"
+      ],
+      "source": "FECAPA-equivalencia-preexistent-V29"
+    }
+  ],
+  "teamAliases": []
+}

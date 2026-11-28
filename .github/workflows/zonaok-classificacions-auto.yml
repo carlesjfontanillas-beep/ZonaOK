@@ -148,7 +148,8 @@ jobs:
               --existing zonaok-classificacions.json \
               --output zonaok-classificacions.json \
               --report diagnostic-fusio.json
-            git add -- zonaok-classificacions.json
+            python scripts/zonaok_equivalencies.py --standings zonaok-classificacions.json
+            git add -- zonaok-classificacions.json zonaok-equivalencies-equips.json
             if git diff --cached --quiet; then
               echo 'Sense canvis de classificacio.'
               exit 0

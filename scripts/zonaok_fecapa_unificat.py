@@ -11,6 +11,7 @@ Publicació explícita i separada per GitHub Actions, amb diagnòstics.
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import asyncio
 import json
 import re
@@ -950,6 +951,29 @@ DIRECTE_CONFIRMED_ALIASES = {
 }
 
 
+@lru_cache(maxsize=1)
+def load_equivalence_catalog():
+    path=Path(__file__).resolve().parents[1]/'zonaok-equivalencies-equips.json'
+    try:
+        doc=json.loads(path.read_text(encoding='utf-8'))
+        if doc.get('schema')=='zonaok-equivalencies-equips-v1' and doc.get('season')==SEASON:
+            return doc
+    except (OSError,ValueError,TypeError):
+        pass
+    return {}
+
+
+@lru_cache(maxsize=1)
+def catalog_manual_aliases():
+    result={name:set(codes) for name,codes in DIRECTE_CONFIRMED_ALIASES.items()}
+    for row in load_equivalence_catalog().get('manualAliases',[]):
+        if not isinstance(row,dict):continue
+        name=norm(row.get('team'))
+        if name:
+            result.setdefault(name,set()).update(norm(code).replace(' ','') for code in row.get('shortTeams',[]) if norm(code))
+    return result
+
+
 def official_logo_id(url):
     # L'identificador d'escut és evidència oficial de club, no ID d'equip.
     m=re.fullmatch(r'https://sidgad\.cloud/fecapa/images/logos_clubes/([1-9]\d*)(?:_\d+)?\.(?:png|gif)',clean(url),re.I)
@@ -993,9 +1017,10 @@ def directe_team_alias(full, short, index=None):
     if a==b:return bool(a)
     if not a or not b:return False
     compact=b.replace(' ','')
-    if compact in DIRECTE_CONFIRMED_ALIASES.get(a,set()):return True
+    confirmed=catalog_manual_aliases()
+    if compact in confirmed.get(a,set()):return True
     # Si una sigla revisada pertany a un altre equip, no la reinterpretis.
-    owners={name for name,aliases in DIRECTE_CONFIRMED_ALIASES.items() if compact in aliases}
+    owners={name for name,aliases in confirmed.items() if compact in aliases}
     if owners and a not in owners:return False
     index=index or {}
     aa,bb=index.get(a,set()),index.get(b,set())
@@ -1005,6 +1030,12 @@ def directe_team_alias(full, short, index=None):
 def load_standings_aliases(path=Path('zonaok-classificacions.json')):
     """Equivalències directes verificades entre les dues vistes de FECAPA."""
     pairs={}
+    for r in load_equivalence_catalog().get('teamAliases',[]):
+        if not isinstance(r,dict) or r.get('source')!='FECAPA-classificacions-vertical':continue
+        a,b=norm(r.get('team')),norm(r.get('shortTeam'))
+        lid=clean(r.get('leagueId'))
+        if a and b and a!=b and re.fullmatch(r'\d{4,6}',lid):
+            pairs.setdefault((a,b),set()).add(lid)
     try:
         doc=json.loads(path.read_text(encoding='utf-8'))
     except (OSError,ValueError):return pairs
@@ -1015,7 +1046,7 @@ def load_standings_aliases(path=Path('zonaok-classificacions.json')):
         for r in g.get('standings',[]):
             if not isinstance(r,dict) or r.get('shortTeamSource')!='FECAPA-classificacions-vertical':continue
             a,b=norm(r.get('team')),norm(r.get('shortTeam'))
-            if a and b:pairs.setdefault((a,b),set()).add(lid)
+            if a and b and a!=b:pairs.setdefault((a,b),set()).add(lid)
     return pairs
 
 
