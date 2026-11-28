@@ -1,0 +1,23 @@
+name: ZonaOK - Activar supervisor permanent
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/zonaok-activar-supervisor.yml']
+  workflow_dispatch:
+permissions:
+  actions: write
+  contents: read
+jobs:
+  enable:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Habilitar supervisor sense cancel·lar importacions
+        run: |
+          set -euo pipefail
+          gh workflow enable zonaok-watchdog-importacions.yml
+          if [ "$(gh run list --workflow zonaok-watchdog-importacions.yml --branch main --limit 20 --json status --jq '[.[] | select(.status != "completed")] | length')" = 0 ]; then
+            gh workflow run zonaok-watchdog-importacions.yml --ref main
+          fi

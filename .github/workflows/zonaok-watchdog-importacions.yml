@@ -5,15 +5,19 @@ on:
     paths: ['.github/workflows/zonaok-watchdog-importacions.yml']
   workflow_dispatch:
   schedule:
-    - cron: '12,42 * * * *'
+    - cron: '1,6,11,16,21,26,31,36,41,46,51,56 * * * *'
   workflow_run:
     workflows:
       - ZonaOK - Recuperacio de dades de temporada
       - ZonaOK - Agenda TOTAL AUTO (Chromium Playwright)
       - ZonaOK - En directe TOTAL AUTO (Chromium Playwright)
       - ZonaOK - Actes TOTAL AUTO (Chromium Playwright)
+      - ZonaOK - Actes i jugadors EN DIRECTE
       - ZonaOK - Classificacions AUTO (prova segura)
       - Importació automàtica de jugadors
+      - ZonaOK - Catàleg oficial equips FECAPA
+      - ZonaOK - avisos FECAPA
+      - ZonaOK - Preparar avisos de les 10 h
     types: [completed]
     branches: [main]
 permissions:
@@ -24,78 +28,21 @@ concurrency:
   cancel-in-progress: false
 jobs:
   supervisor:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.head_branch == 'main' }}
+    if: ${{ github.event_name != 'workflow_run' || contains(fromJSON('["failure","cancelled","timed_out","startup_failure","action_required","stale"]'), github.event.workflow_run.conclusion) }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
       EVENT_NAME: ${{ github.event_name }}
-      EVENT_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
     steps:
-      - name: Reintentar errors sense duplicar imports
-        shell: bash
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Validar política de reintents
+        run: python -m unittest discover -s tests -p 'test_watchdog.py' -v
+      - name: Supervisar i reactivar errors
         run: |
-          set -euo pipefail
-          # Give a transient failure or cancelled runner a short cooldown.
-          case "$EVENT_CONCLUSION" in
-            failure|cancelled|timed_out|startup_failure|action_required) sleep 120 ;;
-          esac
-          workflows=(
-            zonaok-recuperacio-temporada.yml
-            zonaok-auto-agenda.yml
-            zonaok-auto-actes.yml
-            zonaok-auto-directe.yml
-            zonaok-classificacions-auto.yml
-            jugadors-public.yml
-          )
-          errors=0
-          for workflow in "${workflows[@]}"; do
-            if ! data=$(gh run list --workflow "$workflow" --branch main --limit 30 --json databaseId,status,conclusion,attempt,updatedAt); then
-              echo "::warning::No es pot consultar $workflow"
-              errors=$((errors+1))
-              continue
-            fi
-            active=$(jq '[.[] | select(.status != "completed")] | length' <<< "$data")
-            if [ "$active" != "0" ]; then
-              echo "$workflow: en curs o en cua, no duplicar"
-              continue
-            fi
-            latest=$(jq -c '.[0] // empty' <<< "$data")
-            if [ -z "$latest" ]; then
-              if [ "$workflow" = zonaok-recuperacio-temporada.yml ]; then
-                gh workflow run "$workflow" --ref main || errors=$((errors+1))
-              fi
-              continue
-            fi
-            conclusion=$(jq -r '.conclusion' <<< "$latest")
-            case "$conclusion" in
-              failure|cancelled|timed_out|startup_failure) ;;
-              *) continue ;;
-            esac
-            id=$(jq -r '.databaseId' <<< "$latest")
-            attempt=$(jq -r '.attempt // 1' <<< "$latest")
-            if [ "$attempt" -lt 3 ]; then
-              if gh run rerun "$id"; then
-                echo "$workflow: reintent de $id (intent $((attempt+1))/3)"
-              else
-                echo "::warning::No s'ha pogut reactivar $workflow"
-                errors=$((errors+1))
-              fi
-            elif [ "$workflow" = zonaok-recuperacio-temporada.yml ]; then
-              # After three failed attempts, use a fresh controller on main,
-              # but not in an immediate loop. Other importers will be planned
-              # again by this controller when due.
-              updated=$(jq -r '.updatedAt' <<< "$latest")
-              age=$(( $(date -u +%s) - $(date -u -d "$updated" +%s) ))
-              if [ "$age" -ge 7200 ]; then
-                gh workflow run "$workflow" --ref main || errors=$((errors+1))
-                echo "$workflow: nou cicle després de la pausa de seguretat"
-              else
-                echo "::warning::$workflow: 3 intents esgotats, espera de seguretat de 2 hores"
-              fi
-            else
-              echo "::warning::$workflow: 3 intents esgotats; el proper cicle planifica un lot nou"
-            fi
-          done
-          [ "$errors" -eq 0 ]
+          if [ "$EVENT_NAME" = workflow_run ]; then sleep 120; fi
+          python scripts/zonaok_watchdog.py

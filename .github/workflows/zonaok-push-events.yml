@@ -1,4 +1,5 @@
 name: ZonaOK - avisos FECAPA
+run-name: ${{ github.event_name == 'schedule' && 'ZonaOK Push scheduled' || format('ZonaOK Push {0} {1} {2} {3}', inputs.test_scenario, inputs.event_source, inputs.before_sha, inputs.after_sha) }}
 
 on:
   workflow_dispatch:
