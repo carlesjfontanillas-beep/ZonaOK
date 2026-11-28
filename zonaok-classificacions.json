@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T12:31:21.825128+00:00",
+  "capturedAt": "2026-11-28T12:37:02.524426+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -18877,33 +18877,37 @@
       "competition": "ALEVÍ BRONZE",
       "leagueId": "4791",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4791&vista=clasificaciones",
-      "capturedAt": "2026-11-27T00:33:49.977241+00:00",
-      "standingsAt": "2026-11-27T00:33:49.977241+00:00",
+      "capturedAt": "2026-11-28T12:37:02.524426+00:00",
+      "standingsAt": "2026-11-28T12:37:02.524426+00:00",
       "standings": [
         {
           "pos": "1",
           "team": "HCSENTMENAT B",
-          "played": "9",
-          "points": "27",
-          "gf": "77",
-          "ga": "22",
-          "difference": "55",
+          "teamId": "11698",
+          "teamLogo": "/fecapa/images/logos_clubes/292_1.png",
+          "played": "10",
+          "points": "30",
+          "gf": "89",
+          "ga": "23",
+          "difference": "66",
           "stats": {
-            "PTS": "27",
-            "PJ": "9",
-            "PG": "9",
+            "PTS": "30",
+            "PJ": "10",
+            "PG": "10",
             "PE": "0",
             "PP": "0",
-            "GF": "77",
-            "GC": "22",
-            "DIF": "55"
+            "GF": "89",
+            "GC": "23",
+            "DIF": "66"
           },
-          "shortTeam": "HCSENTMENAT B",
+          "shortTeam": "HCSB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "CP CALDES B",
+          "teamId": "11727",
+          "teamLogo": "/fecapa/images/logos_clubes/308.png",
           "played": "9",
           "points": "16",
           "gf": "59",
@@ -18919,33 +18923,37 @@
             "GC": "53",
             "DIF": "6"
           },
-          "shortTeam": "CP CALDES B",
+          "shortTeam": "CPCB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
           "team": "CE SAGRERENC",
-          "played": "9",
+          "teamId": "12610",
+          "teamLogo": "/fecapa/images/logos_clubes/724.png",
+          "played": "10",
           "points": "16",
-          "gf": "59",
-          "ga": "48",
-          "difference": "11",
+          "gf": "60",
+          "ga": "60",
+          "difference": "0",
           "stats": {
             "PTS": "16",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "5",
             "PE": "1",
-            "PP": "3",
-            "GF": "59",
-            "GC": "48",
-            "DIF": "11"
+            "PP": "4",
+            "GF": "60",
+            "GC": "60",
+            "DIF": "0"
           },
-          "shortTeam": "CE SAGRERENC",
+          "shortTeam": "CES",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "CP FOLGUEROLES C",
+          "teamId": "11464",
+          "teamLogo": "/fecapa/images/logos_clubes/250.png",
           "played": "9",
           "points": "14",
           "gf": "35",
@@ -18960,11 +18968,15 @@
             "GF": "35",
             "GC": "29",
             "DIF": "6"
-          }
+          },
+          "shortTeam": "PFCC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
           "team": "CE ARENYS DE MUNT D",
+          "teamId": "11245",
+          "teamLogo": "/fecapa/images/logos_clubes/232_1.png",
           "played": "9",
           "points": "11",
           "gf": "44",
@@ -18979,11 +18991,15 @@
             "GF": "44",
             "GC": "56",
             "DIF": "-12"
-          }
+          },
+          "shortTeam": "DMDD",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
           "team": "CLUB PATI TORDERA B",
+          "teamId": "11896",
+          "teamLogo": "/fecapa/images/logos_clubes/297_1.png",
           "played": "9",
           "points": "9",
           "gf": "56",
@@ -18998,11 +19014,15 @@
             "GF": "56",
             "GC": "64",
             "DIF": "-8"
-          }
+          },
+          "shortTeam": "CPTB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "7",
           "team": "MOLLET HC C",
+          "teamId": "12200",
+          "teamLogo": "/fecapa/images/logos_clubes/266_1.png",
           "played": "9",
           "points": "6",
           "gf": "43",
@@ -19018,12 +19038,14 @@
             "GC": "75",
             "DIF": "-32"
           },
-          "shortTeam": "MOLLET HC C",
+          "shortTeam": "MHCC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "8",
           "team": "CE CORNELLÀ",
+          "teamId": "11399",
+          "teamLogo": "/fecapa/images/logos_clubes/248.png",
           "played": "9",
           "points": "6",
           "gf": "33",
@@ -19039,7 +19061,7 @@
             "GC": "59",
             "DIF": "-26"
           },
-          "shortTeam": "CE CORNELLÀ",
+          "shortTeam": "CORN",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
@@ -37894,6 +37916,54 @@
       "group": "ALEVÍ PLATA 7",
       "team": "CH JUNEDA",
       "shortTeam": "CHJ"
+    },
+    {
+      "leagueId": "4791",
+      "group": "ALEVÍ BRONZE",
+      "team": "HCSENTMENAT B",
+      "shortTeam": "HCSB"
+    },
+    {
+      "leagueId": "4791",
+      "group": "ALEVÍ BRONZE",
+      "team": "CP CALDES B",
+      "shortTeam": "CPCB"
+    },
+    {
+      "leagueId": "4791",
+      "group": "ALEVÍ BRONZE",
+      "team": "CE SAGRERENC",
+      "shortTeam": "CES"
+    },
+    {
+      "leagueId": "4791",
+      "group": "ALEVÍ BRONZE",
+      "team": "CP FOLGUEROLES C",
+      "shortTeam": "PFCC"
+    },
+    {
+      "leagueId": "4791",
+      "group": "ALEVÍ BRONZE",
+      "team": "CE ARENYS DE MUNT D",
+      "shortTeam": "DMDD"
+    },
+    {
+      "leagueId": "4791",
+      "group": "ALEVÍ BRONZE",
+      "team": "CLUB PATI TORDERA B",
+      "shortTeam": "CPTB"
+    },
+    {
+      "leagueId": "4791",
+      "group": "ALEVÍ BRONZE",
+      "team": "MOLLET HC C",
+      "shortTeam": "MHCC"
+    },
+    {
+      "leagueId": "4791",
+      "group": "ALEVÍ BRONZE",
+      "team": "CE CORNELLÀ",
+      "shortTeam": "CORN"
     },
     {
       "leagueId": "4792",
