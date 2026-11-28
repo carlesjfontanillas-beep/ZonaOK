@@ -28,6 +28,40 @@ def index(rows,fn,indices):
     out=defaultdict(list)
     for i in indices:out[fn(rows[i])].append(i)
     return out
+def reconcile_duplicate_pairs(doc,incoming,cut,captured):
+    """Match the whole season, including official rows already used by exact matches.
+    Never collapse distinct IDs, separate phases/groups, or contradictory scores.
+    """
+    from zonaok_agenda_reparacio_confirmats import repair
+    old=doc['matches']
+    oi=index(old,pair,range(len(old)))
+    ni=index(incoming,pair,range(len(incoming)))
+    specs=[]
+    for k,indices in oi.items():
+        if len(indices)<2 or state_competition(k[0]):continue
+        targets=ni.get(k,[])
+        if len(targets)!=1:continue
+        b=incoming[targets[0]]
+        group=[old[i] for i in indices]
+        if not any(recent(a,cut) for a in group) and not recent(b,cut):continue
+        if not all(no_conflict(a,b) for a in group):continue
+        if any(a.get('lastAgendaAt') and check_when(a['lastAgendaAt'])>check_when(captured) for a in group):continue
+        if any(slot(a)!=slot(b) and (score_tuple(a) or a.get('actaState')=='available' or FINAL.search(clean(a.get('status'))) or LIVE.search(clean(a.get('status')))) for a in group):continue
+        if k==('BCN BENJAMI PLATA 3','CH LES FRANQUESES','UNIO ESPORTIVA D HORTA B'):continue
+        # If no record already has the official slot, do not pick an arbitrary
+        # previous time for push notifications. The complete candidate set is
+        # retained for a separately confirmed repair.
+        if not any(slot(a)==slot(b) for a in group):continue
+        a=group[0]
+        specs.append({**{f:a[f] for f in ('competition','home','away')},
+                      'oldIso':a['iso'],'oldTime':a['time'],'iso':b['iso'],'time':b['time'],
+                      'approvedSlots':[list(slot(x)) for x in group],
+                      'homeScore':None,'awayScore':None})
+    if not specs:return doc,[],[]
+    updated,audit=repair(doc,{'season':doc['season'],'sourceRun':os.environ.get('GITHUB_RUN_ID','daily'),'capturedAt':captured,'fixtures':specs})
+    return updated,[r for r in audit['details'] if r['status']=='merged'],[r for r in audit['details'] if r['status']=='review']
+
+
 def merge(doc,packet):
     if packet.get('season')!=SEASON or packet.get('kind')!='agenda-daily':raise ValueError('invalid daily packet')
     captured=packet['capturedAt']; clock=check_when(captured);today=clock.astimezone(MADRID).date()
@@ -36,6 +70,10 @@ def merge(doc,packet):
     if not incoming or any(not safe(r) for r in incoming):raise ValueError('invalid or empty source rows')
     if len(incoming)<.8*len(old):raise ValueError('incomplete source coverage')
     if sum(recent(r,cut) for r in incoming)<.8*sum(recent(r,cut) for r in old):raise ValueError('incomplete recent/future coverage')
+    original_count=len(old)
+    doc,duplicate_repairs,duplicate_reviews=reconcile_duplicate_pairs(doc,incoming,cut,captured)
+    old=doc['matches']
+    all_incoming_pairs=index(incoming,pair,range(len(incoming)))
     old_keys={key(a) for a in old}
     rows=copy.deepcopy(old); used_old=set();used_new=set(); links=[]
     # Stable official ID when available; the general Agenda normally has none.
@@ -98,11 +136,11 @@ def merge(doc,packet):
             r['homeScore']=r['awayScore']=None
         rows.append(r);new.append(key(r))
     for i,a in enumerate(old):
-        if i not in used_old and recent(a,cut):conflicts.append({'reason':'not_uniquely_found_in_agenda','fixture':key(a),'possible':[slot(incoming[j]) for j in ni.get(pair(a),[]) if j not in used_new]})
+        if i not in used_old and recent(a,cut):conflicts.append({'reason':'not_uniquely_found_in_agenda','fixture':key(a),'possible':[slot(incoming[j]) for j in all_incoming_pairs.get(pair(a),[])]})
     prior_counts=Counter(key(r) for r in old);counts=Counter(key(r) for r in rows)
     if any(n>max(1,prior_counts[k]) for k,n in counts.items()):raise ValueError('new duplicate fixtures')
     rows.sort(key=lambda r:(r.get('iso',''),r.get('time',''),norm(r.get('competition')),norm(r.get('home'))))
-    report={'schema':'zonaok-agenda-daily-report-v1','capturedAt':captured,'windowFrom':cut,'sourceRows':len(incoming),'catalogBefore':len(old),'catalogAfter':len(rows),'scheduleChanges':changes,'recoveredResults':recovered,'newFixtures':new,'conflicts':conflicts,'scheduleChangeCount':len(changes),'recoveredResultCount':len(recovered),'newFixtureCount':len(new),'unresolvedCount':len(conflicts),'yesterdayMissingResults':[key(r) for r in rows if r.get('iso')==(today-timedelta(days=1)).isoformat() and not score_tuple(r) and not EXCLUDED.search(clean(r.get('status')))]}
+    report={'schema':'zonaok-agenda-daily-report-v1','capturedAt':captured,'windowFrom':cut,'sourceRows':len(incoming),'catalogBefore':original_count,'catalogAfter':len(rows),'duplicateRepairs':duplicate_repairs,'duplicateReviews':duplicate_reviews,'duplicatesRemoved':sum(r['removed'] for r in duplicate_repairs),'scheduleChanges':changes,'recoveredResults':recovered,'newFixtures':new,'conflicts':conflicts,'scheduleChangeCount':len(changes),'recoveredResultCount':len(recovered),'newFixtureCount':len(new),'unresolvedCount':len(conflicts),'yesterdayMissingResults':[key(r) for r in rows if r.get('iso')==(today-timedelta(days=1)).isoformat() and not score_tuple(r) and not EXCLUDED.search(clean(r.get('status')))]}
     result={**doc,'matches':rows,'updatedAt':utc_now(),'sources':{**doc.get('sources',{}),'agenda':{**doc.get('sources',{}).get('agenda',{}),'capturedAt':captured,'mergedAt':utc_now(),'scope':'daily',**{k:report[k] for k in ('scheduleChangeCount','recoveredResultCount','newFixtureCount','unresolvedCount')}}}}
     result['stats']={**doc.get('stats',{}),'total':len(rows),'withScores':sum(score_tuple(r) for r in rows),'withActaLinks':sum(bool(r.get('actaUrl')) for r in rows),'verifiedActes':sum(r.get('actaState')=='available' for r in rows)}
     return result,report
