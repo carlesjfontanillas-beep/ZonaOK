@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T14:38:54.450010+00:00",
+  "capturedAt": "2026-11-28T14:55:42.537722+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -13517,8 +13517,8 @@
       "competition": "INFANTIL PLATA",
       "leagueId": "4787",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=clasificaciones",
-      "capturedAt": "2026-11-28T12:26:14.990875+00:00",
-      "standingsAt": "2026-11-28T12:26:14.990875+00:00",
+      "capturedAt": "2026-11-28T14:55:42.537722+00:00",
+      "standingsAt": "2026-11-28T14:55:42.537722+00:00",
       "standings": [
         {
           "pos": "1",
@@ -13545,6 +13545,29 @@
         },
         {
           "pos": "2",
+          "team": "CLUB HOQUEI PRAT",
+          "teamId": "12148",
+          "teamLogo": "/fecapa/images/logos_clubes/275.png",
+          "played": "10",
+          "points": "25",
+          "gf": "66",
+          "ga": "15",
+          "difference": "51",
+          "stats": {
+            "PTS": "25",
+            "PJ": "10",
+            "PG": "8",
+            "PE": "1",
+            "PP": "1",
+            "GF": "66",
+            "GC": "15",
+            "DIF": "51"
+          },
+          "shortTeam": "CHP",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "3",
           "team": "SE LA SALLE BONANOVA B",
           "teamId": "11833",
           "teamLogo": "/fecapa/images/logos_clubes/727.png",
@@ -13564,29 +13587,6 @@
             "DIF": "24"
           },
           "shortTeam": "LSBB",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "3",
-          "team": "CLUB HOQUEI PRAT",
-          "teamId": "12148",
-          "teamLogo": "/fecapa/images/logos_clubes/275.png",
-          "played": "9",
-          "points": "22",
-          "gf": "52",
-          "ga": "14",
-          "difference": "38",
-          "stats": {
-            "PTS": "22",
-            "PJ": "9",
-            "PG": "7",
-            "PE": "1",
-            "PP": "1",
-            "GF": "52",
-            "GC": "14",
-            "DIF": "38"
-          },
-          "shortTeam": "CHP",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -13824,20 +13824,20 @@
           "team": "HOQUEI CLARET B",
           "teamId": "11439",
           "teamLogo": "/fecapa/images/logos_clubes/443.png",
-          "played": "9",
+          "played": "10",
           "points": "0",
-          "gf": "10",
-          "ga": "52",
-          "difference": "-42",
+          "gf": "11",
+          "ga": "66",
+          "difference": "-55",
           "stats": {
             "PTS": "0",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "0",
             "PE": "0",
-            "PP": "9",
-            "GF": "10",
-            "GC": "52",
-            "DIF": "-42"
+            "PP": "10",
+            "GF": "11",
+            "GC": "66",
+            "DIF": "-55"
           },
           "shortTeam": "CLBB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -38589,14 +38589,14 @@
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 4",
-      "team": "SE LA SALLE BONANOVA B",
-      "shortTeam": "LSBB"
+      "team": "CLUB HOQUEI PRAT",
+      "shortTeam": "CHP"
     },
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 4",
-      "team": "CLUB HOQUEI PRAT",
-      "shortTeam": "CHP"
+      "team": "SE LA SALLE BONANOVA B",
+      "shortTeam": "LSBB"
     },
     {
       "leagueId": "4787",
