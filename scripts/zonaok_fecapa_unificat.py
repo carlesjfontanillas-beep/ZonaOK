@@ -1056,6 +1056,26 @@ def load_standings_aliases(path=Path('zonaok-classificacions.json')):
     return pairs
 
 
+@lru_cache(maxsize=1)
+def catalog_group_aliases():
+    result={}
+    for r in load_equivalence_catalog().get('teamAliases',[]):
+        if not isinstance(r,dict) or r.get('source') not in ('FECAPA-classificacions-vertical','FECAPA-classificacions-capcalera'):continue
+        lid,group=clean(r.get('leagueId')),norm(r.get('group'))
+        a,b=norm(r.get('team')),norm(r.get('shortTeam'))
+        if lid and group and a and b and a!=b:
+            result.setdefault(group,{}).setdefault(lid,{}).setdefault((a,b),set()).add(lid)
+    return result
+
+
+def group_alias_pairs(competition,league=''):
+    """An exact group is stronger than a league containing multiple groups."""
+    groups=catalog_group_aliases().get(norm(competition),{})
+    if league:return groups.get(league)
+    if len(groups)==1:return next(iter(groups.values()))
+    return None
+
+
 def scoped_team_equivalent(a,b,league='',pairs=None):
     """Symmetric name/code equivalence only when the code has a single owner."""
     a,b=norm(a),norm(b)
@@ -1095,7 +1115,7 @@ def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
             aliases=[i for i,r in enumerate(rows) if compatible_id(r)
                      and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
                      and norm(r.get('competition'))==norm(incoming.get('competition'))
-                     and all(scoped_team_equivalent(r.get(side),incoming.get(side),clean(r.get('leagueId')) or lid,pairs) for side in ('home','away'))]
+                     and all(scoped_team_equivalent(r.get(side),incoming.get(side),clean(r.get('leagueId')) or lid,group_alias_pairs(r.get('competition'),clean(r.get('leagueId')) or lid) or pairs) for side in ('home','away'))]
             if len(aliases)==1:return aliases[0]
             if len(aliases)>1:return None
     if mode=='directe' and not candidates:
@@ -1105,17 +1125,20 @@ def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
             a,b=norm(full),norm(short)
             if a and a==b:return True
             league=clean(r.get('leagueId')) or lid
-            verified=pairs.get((a,b),set())
+            group_pairs=group_alias_pairs(r.get('competition'),league)
+            active_pairs=group_pairs if group_pairs is not None else pairs
+            verified=active_pairs.get((a,b),set())
             # No resoldre una sigla duplicada globalment sense lliga.
             # Amb lliga, exigir un únic nom complet dins d'aquella lliga.
-            owners={name for (name,code),leagues in pairs.items()
+            owners={name for (name,code),leagues in active_pairs.items()
                     if code==b and (not league or league in leagues)}
             if owners:
                 return owners=={a} and bool(verified) and (not league or league in verified)
             # Un nom que ja té una sigla oficial no admet altres sigles
             # deduïdes només per compartir escut.
             if any(name==a and (not league or league in leagues)
-                   for (name,_),leagues in pairs.items()):return False
+                   for (name,_),leagues in active_pairs.items()):
+                return b.replace(' ','') in catalog_manual_aliases().get(a,set())
             return directe_team_alias(full,short,alias_index)
         aliases=[i for i,r in enumerate(rows) if compatible_id(r)
                  and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')

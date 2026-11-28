@@ -111,4 +111,20 @@ class TestUnified(unittest.TestCase):
         x=m.load_unified(Path('zonaok-tots-partits.json'))
         self.assertEqual(len(x['matches']),1)
 
+    def test_group_disambiguates_official_shared_code(self):
+        from unittest.mock import patch
+        a={**row(mid='',league='4784',home='CP SANT CELONI A',away='RIVAL A'),'competition':'JUVENIL OR 8'}
+        b={**row(mid='',league='4784',home='CP SANT CELONI B',away='RIVAL B'),'competition':'JUVENIL OR 6'}
+        groups={
+            'JUVENIL OR 8':{'4784':{('CP SANT CELONI A','CPSC'):{'4784'},('RIVAL A','RVA'):{'4784'}}},
+            'JUVENIL OR 6':{'4784':{('CP SANT CELONI B','CPSC'):{'4784'},('RIVAL B','RVB'):{'4784'}}},
+        }
+        pairs={k:v for g in groups.values() for p in g.values() for k,v in p.items()}
+        incoming={**b,'leagueId':'','competition':'JUVENIL OR','home':'CPSC','away':'RVB'}
+        with patch.object(m,'catalog_group_aliases',return_value=groups):
+            self.assertEqual(m.match_index([a,b],incoming,'directe',standing_aliases=pairs),1)
+            self.assertIsNone(m.match_index([a,b,{**b}],incoming,'directe',standing_aliases=pairs))
+            self.assertIsNone(m.match_index([a,b],{**incoming,'away':'UNKNOWN'},'directe',standing_aliases=pairs))
+            self.assertEqual(m.match_index([a,b],{**incoming,'competition':'JUVENIL OR 6'},'agenda',standing_aliases=pairs),1)
+
 if __name__=='__main__':unittest.main()
