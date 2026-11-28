@@ -1,7 +1,7 @@
 {
   "new": 0,
-  "updated": 78,
-  "unmatched": 1,
+  "updated": 83,
+  "unmatched": 2,
   "ambiguousOrInvalid": 0,
   "unchanged": 0,
   "unmatchedDetails": [
@@ -14,7 +14,7 @@
         "home": "CHM",
         "away": "MH",
         "homeScore": 0,
-        "awayScore": 0,
+        "awayScore": 1,
         "homeLogo": "",
         "awayLogo": "",
         "leagueId": "",
@@ -68,8 +68,72 @@
           "matchId": ""
         }
       ]
+    },
+    {
+      "reason": "no_unique_fixture",
+      "fecapa": {
+        "iso": "2026-11-28",
+        "time": "13:30",
+        "competition": "OK LIGA PLATA NORTE",
+        "home": "BAR",
+        "away": "ACO",
+        "homeScore": 3,
+        "awayScore": 2,
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "status": ""
+      },
+      "sameTimeCandidates": [
+        {
+          "iso": "2026-11-28",
+          "time": "13:30",
+          "competition": "ALEVÍ OR 3",
+          "home": "VICIO PHC SANT CUGAT A",
+          "away": "UEH BARBERÀ A",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:30",
+          "competition": "BCN PREBENJAMI BRONZE 2",
+          "home": "CLUB PATI TORDERA B",
+          "away": "VICIO PHC SANT CUGAT E",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:30",
+          "competition": "INFANTIL PLATA 5",
+          "home": "SE LA SALLE BONANOVA C",
+          "away": "HOQUEI CLUB CASTELLAR C",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:30",
+          "competition": "JÚNIOR OR 6",
+          "home": "CH CALDES RECAM LÀSER B",
+          "away": "CLUB PATI TORDERA",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:30",
+          "competition": "JUVENIL OR 8",
+          "home": "UEH BARBERÀ A",
+          "away": "CLUB PATÍ RODA A",
+          "leagueId": "",
+          "matchId": ""
+        }
+      ]
     }
   ],
-  "legacyActes": 5738,
-  "resultsLast7Days": 744
+  "legacyActes": 5774,
+  "resultsLast7Days": 752
 }
