@@ -433152,7 +433152,7 @@
     "4779|148201": {
       "status": "pending",
       "fingerprint": "[4,5,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148201\"]",
-      "checkedAt": "2026-11-28T17:06:12.560937+00:00",
+      "checkedAt": "2026-11-28T17:10:47.425143+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148202": {
@@ -433311,7 +433311,7 @@
     "4779|148204": {
       "status": "pending",
       "fingerprint": "[1,10,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148204\"]",
-      "checkedAt": "2026-11-28T17:06:18.544457+00:00",
+      "checkedAt": "2026-11-28T17:10:54.500533+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148383": {
@@ -445962,6 +445962,311 @@
           {
             "period": "TOTAL",
             "score": "4-1",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4781|154024": {
+      "status": "verified",
+      "fingerprint": "[12,3,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=calendar&partido=154024\"]",
+      "checkedAt": "2026-11-28T17:10:08.808230+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "12",
+            "away": "3"
+          },
+          "FALTES": {
+            "home": "5",
+            "away": "8"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 5,
+          "away": 8
+        },
+        "header": {
+          "competition": "3ª CATALANA GRUP E",
+          "season": "2026/2027",
+          "venue": "PAVELLO CP MONJOS",
+          "dateTime": "28/11/2026 - 15:45",
+          "round": "JORNADA 9",
+          "referee1": "PARELLADA PLANS, BERNAT",
+          "rinkDelegate": "ROVIRA BALTANAR, JORDI"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "VÁZQUEZ MARCHÁN, JOAQUIM"
+            },
+            {
+              "role": "2n entrenador",
+              "name": "RODERO ROIG, JOSEP MANEL"
+            },
+            {
+              "role": "Delegat",
+              "name": "MIRÓ LLURDA, TONI"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "FONTANILLES GODIA, ENRIC"
+            },
+            {
+              "role": "Delegat",
+              "name": "SOLER DOMENECH, JOAN"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "12-3",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4784|151391": {
+      "status": "verified",
+      "fingerprint": "[3,3,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151391\"]",
+      "checkedAt": "2026-11-28T17:10:15.151871+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "3",
+            "away": "3"
+          },
+          "FALTES": {
+            "home": "12",
+            "away": "12"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "3"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 12,
+          "away": 12
+        },
+        "header": {
+          "competition": "JUVENIL OR 2",
+          "season": "2026/2027",
+          "venue": "PISTA MANLLEU",
+          "dateTime": "28/11/2026 - 16:30",
+          "round": "JORNADA 10",
+          "referee1": "DE LA FUENTE NOVA, ADRIÀ",
+          "timekeeper": "RIERA VILALTA, JORDI",
+          "rinkDelegate": "RIERA VILALTA, JORDI"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Delegat",
+              "name": "GAY ESTEVEZ, MIQUEL"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "COSTA FERNÀNDEZ, ALBERT"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "MUÑOZ PEREZ, ENRIQUE"
+            },
+            {
+              "role": "Delegat",
+              "name": "GUILLEN TORRUELLA, JOAN"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "3-3",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4790|149125": {
+      "status": "verified",
+      "fingerprint": "[6,4,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=calendar&partido=149125\"]",
+      "checkedAt": "2026-11-28T17:10:27.614415+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "6",
+            "away": "4"
+          },
+          "FALTES": {
+            "home": "9",
+            "away": "8"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "1"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 9,
+          "away": 8
+        },
+        "header": {
+          "competition": "ALEVÍ PLATA 4",
+          "season": "2026/2027",
+          "venue": "PISTA UE HORTA",
+          "dateTime": "28/11/2026 - 16:15",
+          "round": "JORNADA 10",
+          "referee1": "BALLESTER TUR, DIDAC",
+          "rinkDelegate": "BARBERÀ, MARC"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "FERNANDEZ DE CUEVAS SELVA, POL"
+            },
+            {
+              "role": "Delegat",
+              "name": "JORDA SALES, RUT"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "PIBERNAT BATET, MATEO"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "PARRAMON MARÍN, SERGI"
+            },
+            {
+              "role": "Delegat",
+              "name": "NEBOT VELASCO, JOAN"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "6-4",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4790|148850": {
+      "status": "verified",
+      "fingerprint": "[2,2,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=calendar&partido=148850\"]",
+      "checkedAt": "2026-11-28T17:10:21.261215+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "2",
+            "away": "2"
+          },
+          "FALTES": {
+            "home": "7",
+            "away": "2"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 7,
+          "away": 2
+        },
+        "header": {
+          "competition": "ALEVÍ PLATA 1",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ MUNICIPAL DE TONA",
+          "dateTime": "28/11/2026 - 16:45",
+          "round": "JORNADA 10",
+          "referee1": "PASCUAL BATLLORI, BERNAT",
+          "rinkDelegate": "GARRIGA SEÑE, FERRAN"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Delegat",
+              "name": "ROGE SERRA, ORIOL"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "PAREDES GUTIERREZ, PAU"
+            }
+          ],
+          "away": [
+            {
+              "role": "Delegat",
+              "name": "DE LA FUENTE MARTINEZ, MARIA ÀNGELS"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "ROTLLANT FERRER, ÈRIC"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "2-2",
             "fouls": "0-0"
           }
         ],
