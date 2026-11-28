@@ -10,7 +10,8 @@ on:
         options:
           - fast
           - full
-        default: fast
+          - live
+        default: live
       limit:
         description: 'Nombre maxim de lligues (0 = totes, evitar en prova)'
         required: true
@@ -54,15 +55,21 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Decidir si toca importar segons l'horari Europe/Madrid
+      - name: Decidir si hi ha classificacions de finals pendents
         id: schedule_gate
-        if: ${{ github.event_name == 'schedule' }}
         env:
-          GITHUB_EVENT_SCHEDULE: ${{ github.event.schedule }}
-        run: python scripts/zonaok_schedule_gate.py --mode classificacions
+          REQUEST_SCOPE: ${{ github.event_name == 'schedule' && 'live' || inputs.scope }}
+        run: |
+          python - <<'PY'
+          import os,sys
+          sys.path.insert(0,'scripts')
+          from zonaok_live_finals import read_targets
+          run=os.environ.get('REQUEST_SCOPE')!='live' or bool(read_targets())
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:print('run='+str(run).lower(),file=f)
+          PY
 
       - name: Instal·lar navegador Chromium
-        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
+        if: ${{ steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -70,15 +77,15 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Proves de regressio de classificacions i partits
-        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
+        if: ${{ steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         run: python -m unittest discover -s tests -p 'test_*.py' -v
 
       - name: Navegar per FECAPA i capturar les classificacions (V2 rapida/completa)
-        if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
+        if: ${{ steps.schedule_gate.outputs.run == 'true' }}
         env:
           LIMIT: ${{ github.event_name == 'schedule' && '20' || inputs.limit }}
-          SCOPE: ${{ github.event_name == 'schedule' && 'fast' || inputs.scope }}
+          SCOPE: ${{ github.event_name == 'schedule' && 'live' || inputs.scope }}
           OFFSET: ${{ github.event_name == 'schedule' && '0' || inputs.offset }}
         shell: bash
         run: |
@@ -135,10 +142,11 @@ jobs:
           retention-days: 14
 
       - name: Fusionar i publicar (només amb publish=true)
-        if: ${{ ((github.event_name == 'schedule') || (inputs.publish == true)) && (github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true') }}
+        if: ${{ ((github.event_name == 'schedule') || (inputs.publish == true)) && (steps.schedule_gate.outputs.run == 'true') }}
         shell: bash
         run: |
           set -euo pipefail
+          if python -c "import json,sys; sys.exit(0 if not json.load(open('captura-classificacions.json')).get('competitions') else 1)"; then echo 'Cap grup pendent'; exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for attempt in 1 2 3 4 5; do

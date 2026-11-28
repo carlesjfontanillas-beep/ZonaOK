@@ -91,7 +91,7 @@ class WorkflowIntegrationTest(unittest.TestCase):
         for mode in ("agenda","directe","actes"):
             with self.subTest(mode=mode):
                 text=(root/".github"/"workflows"/f"zonaok-auto-{mode}.yml").read_text(encoding="utf-8")
-                check=f"python scripts/zonaok_deduplicar_partits.py {'' if mode=='actes' else '--apply '}--report diagnostic-duplicats-{mode}.json"
+                check=f"python scripts/zonaok_deduplicar_partits.py {'' if mode in ('actes','directe') else '--apply '}--report diagnostic-duplicats-{mode}.json"
                 if mode=="actes":
                     agenda=text[text.index("- name: Agenda puntual"):text.index("- name: Fase 1")]
                     self.assertIn("python scripts/zonaok_agenda_dates_review.py",agenda)
@@ -111,6 +111,7 @@ class WorkflowIntegrationTest(unittest.TestCase):
                         self.assertLess(position,next_publish)
                     self.assertNotIn("zonaok_deduplicar_partits.py --apply",acts)
                     continue
+                if mode=='directe':self.assertNotIn('zonaok_deduplicar_partits.py --apply',text)
                 self.assertIn(check,text)
                 self.assertLess(text.index("python scripts/zonaok_fecapa_unificat.py validate"),text.index(check))
                 self.assertLess(text.index(check),text.index("git add zonaok-tots-partits.json"))

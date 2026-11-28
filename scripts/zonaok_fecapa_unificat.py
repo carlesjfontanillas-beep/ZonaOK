@@ -1273,6 +1273,9 @@ def merge_unified(packet,previous,mode):
             for field in ('leagueId','matchId'):
                 if not old.get(field) and r.get(field):old[field]=r[field]
             if score_tuple(r):
+                final_rx=r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME|ACTA TANCADA|ACTA CERRADA)\b'
+                if re.search(final_rx,clean(r.get('status')),re.I) and (not old.get('finalDetectedAt') or score_tuple(old)!=score_tuple(r) or not re.search(final_rx,clean(old.get('status')),re.I)):
+                    old['finalDetectedAt']=packet['capturedAt']
                 old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
                 old['scoreSource']='En directe';old['scoreUpdatedAt']=packet['capturedAt']
             if r.get('status') and not re.search(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',clean(r['status']),re.I):old['status']=r['status']

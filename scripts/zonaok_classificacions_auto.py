@@ -469,6 +469,8 @@ async def collect(args) -> dict:
         except (ValueError,OSError,AttributeError):
             diag["warnings"].append("El JSON existent no es pot llegir com a font de IDs")
 
+    if args.scope=='live':
+        return await collect_live(args,existing_groups,diag)
     async with async_playwright() as p:
         browser=await p.chromium.launch(headless=False,args=["--no-sandbox"])
         context=await browser.new_context(locale="ca-ES",timezone_id="Europe/Madrid",
@@ -579,6 +581,38 @@ async def collect(args) -> dict:
     return {"packet":{"source":"FECAPA-SAFARI","version":3,
                       "kind":"classificacions-total","capturedAt":now,"competitions":data},
             "diagnostic":diag}
+
+
+async def collect_live(args,existing_groups,diag):
+    from playwright.async_api import async_playwright
+    from zonaok_live_finals import read_targets
+    targets=read_targets()
+    ids=sorted(targets,key=int)
+    diag['selection']={'scope':'live','selectedLeagueIds':ids}
+    data={}
+    if ids:
+        async with async_playwright() as p:
+            browser=await p.chromium.launch(headless=False,args=['--no-sandbox'])
+            context=await browser.new_context(locale='ca-ES',timezone_id='Europe/Madrid',viewport={'width':1360,'height':980})
+            try:
+                for league in ids:
+                    expected=sum(str(g.get('leagueId'))==league for g in existing_groups.values() if isinstance(g,dict))
+                    groups,errors,warnings=await read_league(context,league,expected)
+                    names=targets[league]
+                    selected=[g for g in groups if names is None or norm(g.get('name')) in names]
+                    missing=(names or set())-{norm(g.get('name')) for g in selected}
+                    if not selected or missing:
+                        diag['failed'].append({'leagueId':league,'error':'Grup pendent no verificat: '+str(sorted(missing)),'details':errors})
+                        continue
+                    for g in selected:
+                        name=clean(g['name'])
+                        data[league+':'+slug(name)]={'name':name,'category':category_name(name),'competition':competition_name(name),'leagueId':league,'url':ROOT+'?'+urlencode({'liga':league,'vista':'clasificaciones'}),'rows':g['rows']}
+                    diag['found'].append({'leagueId':league,'groups':len(selected),'teams':sum(len(g['rows']) for g in selected),'warnings':warnings})
+            finally:
+                await context.close()
+                await browser.close()
+    diag['stats']={'discoveredLeagues':len(ids),'checkedLeagues':len(ids),'validLeagues':len(diag['found']),'failedLeagues':len(diag['failed']),'groups':len(data),'teams':sum(len(g['rows']) for g in data.values())}
+    return {'packet':{'source':'FECAPA-SAFARI','version':3,'kind':'classificacions-total','capturedAt':datetime.now(timezone.utc).isoformat(),'competitions':data},'diagnostic':diag}
 
 
 def parse_time(value: object) -> datetime | None:
@@ -692,7 +726,7 @@ def main() -> int:
     sub=parser.add_subparsers(dest="cmd",required=True)
     a=sub.add_parser("collect",help="Captura DOM de classificacions amb Playwright, sense publicar")
     a.add_argument("--existing",default="zonaok-classificacions.json")
-    a.add_argument("--scope",choices=("fast","full"),default="fast")
+    a.add_argument("--scope",choices=("fast","full","live"),default="fast")
     a.add_argument("--offset",type=int,default=0,help="Només full: saltar les primeres N lligues")
     a.add_argument("--limit",type=int,default=20,help="0 per comprovar totes les lligues descobertes")
     a.add_argument("--capture",default="captura-classificacions.json")
@@ -710,7 +744,7 @@ def main() -> int:
         Path(args.report).write_text(json.dumps(result["diagnostic"],ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
         print("RESUM",json.dumps(result["diagnostic"]["stats"],ensure_ascii=False))
         # Un catàleg inaccessible s'ha de veure com a error, no com a execució satisfactòria.
-        return 0 if result["packet"]["competitions"] else 2
+        return 0 if result["packet"]["competitions"] or (args.scope=="live" and not result["diagnostic"]["selection"]["selectedLeagueIds"]) else 2
     capture=json.loads(Path(args.capture).read_text(encoding="utf-8"))
     existing_path=Path(args.existing)
     existing=json.loads(existing_path.read_text(encoding="utf-8")) if existing_path.exists() else {}
