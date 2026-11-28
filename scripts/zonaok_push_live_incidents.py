@@ -17,7 +17,7 @@ def norm(value):
     return " ".join("".join(c for c in unicodedata.normalize("NFD", str(value or "")) if unicodedata.category(c) != "Mn").upper().split())
 
 def incident_id(season, fixture, item):
-    values = [season, fixture["leagueId"], fixture["matchId"], item["event"], item["period"], item["matchClock"], item["team"], item["player"], item["score"], str(item["ordinal"])]
+    values = [season, fixture.get("internalId") or (fixture.get("leagueId") and fixture.get("matchId") and (str(fixture["leagueId"]) + "|" + str(fixture["matchId"]))) or internal_match_id(season, fixture), item["event"], item["period"], item["matchClock"], item["team"], item["player"], item["score"], str(item["ordinal"])]
     material = "|".join(norm(v).replace("|", "/") for v in values)
     return hashlib.sha256(material.encode()).hexdigest()
 
