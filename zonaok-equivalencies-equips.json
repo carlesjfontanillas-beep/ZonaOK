@@ -26618,5 +26618,585 @@
       "teamId": "12857",
       "source": "FECAPA-classificacions-id-equip"
     }
-  ]
+  ],
+  "stateAliases": [
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "BAR",
+      "team": "BARÇA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "CHC",
+      "team": "CH CALDES RECAM LÀSER",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "CPC",
+      "team": "CALAFELL LA MENORQUINA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "CPV",
+      "team": "CP VOLTREGA MOVENTO STERN",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "CPV",
+      "team": "AMETLLER ORIGEN CP VILAFRANCA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "HCL",
+      "team": "HOCKEY CLUB LICEO",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "IHC",
+      "team": "IGUALADA RIGAT HC",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "LLEI",
+      "team": "PONS LLEIDA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "LLO",
+      "team": "CH LLORET VILA ESPORTIVA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "NOIA",
+      "team": "CE NOIA FREIXENET",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "PAS",
+      "team": "AITEX PAS ALCOI",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "REUS",
+      "team": "REUS DEPORTIU BRASILIA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "RIV",
+      "team": "ADISS HOCKEY RIVAS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA MASCULINA",
+      "shortTeam": "SHUM",
+      "team": "SHUM FRIT RAVICH",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "BHC",
+      "team": "BEMBIBRE HOCKEY CLUB",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "BIR",
+      "team": "ORKLA BIGUES I RIELLS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "CCH",
+      "team": "FENIE ENERGIA CERDANYOLA CCH",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "CHM",
+      "team": "CH MATARÓ",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "CPF",
+      "team": "ESNECA FRAGA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "CPM",
+      "team": "MARTINELIA MANLLEU",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "CPV",
+      "team": "CATA CP VOLTREGA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "CPVS",
+      "team": "CP VILA-SANA COOP D'IVARS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "HCA",
+      "team": "LLEIDANET HC ALPICAT",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "HCR",
+      "team": "UNIKAL HC RAXOI",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "MH",
+      "team": "MARINEDA HOCKEY",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "PAL",
+      "team": "GENERALI HC PALAU",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "PHSC",
+      "team": "VICIO PHC SANT CUGAT",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA IBERDROLA",
+      "shortTeam": "TEL",
+      "team": "TELECABLE HOCKEY CLUB",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "ACO",
+      "team": "ACORDES",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "BAR",
+      "team": "BARÇA ATLETIC",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "CDM",
+      "team": "CDM HOCKEY PATINES",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "CHO",
+      "team": "B-SENSIBLE CH OLOT",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "CHVS",
+      "team": "CLUB HOQUEI VILA-SECA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "CON",
+      "team": "CP CONGRÉS-LA SAGRERA ES MOU",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "CPT",
+      "team": "CLUB PATI TORDERA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "DOM",
+      "team": "DOMINICOS ALLIANZ",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "GEG",
+      "team": "GEIEG",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "LUB",
+      "team": "CALVO ESCOLA LUBIÁNS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "OVR",
+      "team": "TELETOUR OVIEDO ROLLER HC",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "PHSC",
+      "team": "VICIO PHC SANT CUGAT",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "RCJ",
+      "team": "RC JOLASETA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA NORTE",
+      "shortTeam": "REUS",
+      "team": "REUS DEPORTIU BRASILIA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "CCH",
+      "team": "FENIE ENERGIA CERDANYOLA CCH",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "CEV",
+      "team": "CLUB D'ESPORTS VENDRELL",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "CHM",
+      "team": "PREVINTEGRAL CH MOLLERUSSA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "CHM",
+      "team": "CH MATARÓ",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "CHP",
+      "team": "CORREDOR MATÓ PALAFRUGELL",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "CPA",
+      "team": "CLUB PATÍN ALCOBENDAS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "CPM",
+      "team": "MARTINELIA MANLLEU",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "CPV",
+      "team": "ÁREA JURÍDICA GLOBAL CP VILANO",
+      "source": "RFEP-classificacions-captura-usuari-20261128",
+      "namePossiblyTruncated": true
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "ESP",
+      "team": "SDESPANYOL",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "HCSJ",
+      "team": "INNOAESTHETICS HC SANT JUST",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "IHC",
+      "team": "SIMAR IGUALADA HC",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "NOIA",
+      "team": "CE NOIA FREIXENET",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "SHA",
+      "team": "SPORTING HOQUEI ALCOI ERUM",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA SUR",
+      "shortTeam": "VIC",
+      "team": "AUTO VIGATANA PATÍ VIC",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "CPA",
+      "team": "CLUB PATIN ALCORCON",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "CPAH",
+      "team": "CLUB PATIN ALCALA HOCKEY",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "CPLR",
+      "team": "CLUB PATIN LAS ROZAS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "CPM",
+      "team": "ENE OPOSICIONES CPMIERES",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "CPPR",
+      "team": "CLUB PROMOCIÓN PATÍN RASPEIG",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "CRH",
+      "team": "IMÁN SERROUKH COSLADA RH",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "CVE",
+      "team": "COLEGIO VIRGEN DE EUROPA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "DPBA",
+      "team": "DP BERENGUELA AXILTEC",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "GAT",
+      "team": "GATIKAKO IUSTURI",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "HCP",
+      "team": "HOQUEI CLUB PONTEAREAS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "OVR",
+      "team": "TELETOUR OVIEDO ROLLER HC",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "SHT",
+      "team": "SANTUTXU HOCKEY TALDEA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "TCPC",
+      "team": "TRES CANTOS CASTAÑO ASOCIADOS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA PLATA FEMENINA",
+      "shortTeam": "THC",
+      "team": "TRAVIESAS HOCKEY CLUB",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "ACO",
+      "team": "ACORDES",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "CDM",
+      "team": "CDM HOCKEY PATINES",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "CDU",
+      "team": "CD URDANETA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "CHC",
+      "team": "CH COMPOSTELA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "CHO",
+      "team": "CLUB HOCKEY OLEIROS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "CPM",
+      "team": "CPMIERES",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "HCB",
+      "team": "HOCKEY CLUB BORBOLLA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "HCL",
+      "team": "HOCKEY CLUB LICEO",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "IRU",
+      "team": "IRUÑA HP",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "OBC",
+      "team": "OVIEDO BOOLING CLUB",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "PAT",
+      "team": "HARINA TRAD ZAMORANA PATINALON",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "TEL",
+      "team": "TELECABLE HOCKEY CLUB",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA NORTE",
+      "shortTeam": "THC",
+      "team": "TRAVIESAS HOCKEY CLUB",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "ALU",
+      "team": "CHP ALUCHE",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "CAOS",
+      "team": "CD ALAMEDA DE OSUNA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "CPA",
+      "team": "CLUB PATÍN ALCOBENDAS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "CPA",
+      "team": "CLUB PATIN ALCORCON",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "CPAC",
+      "team": "CLUB PATIN ALHAMBRA CAJAR",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "CPI",
+      "team": "CPI SEVILLA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "CPLR",
+      "team": "CLUB PATIN LAS ROZAS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "CPPR",
+      "team": "CLUB PROMOCIÓN PATÍN RASPEIG",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "CRH",
+      "team": "COSLADA RINK HOCKEY",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "HCC",
+      "team": "HC COCENTAINA",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "PAS",
+      "team": "PAS ALCOI",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "RIV",
+      "team": "ADISS HOCKEY RIVAS",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    },
+    {
+      "competition": "OK LIGA BRONCE MASCULINA SUR",
+      "shortTeam": "SMP",
+      "team": "CLUB DEP SANTA MARÍA DEL PILAR",
+      "source": "RFEP-classificacions-captura-usuari-20261128"
+    }
+  ],
+  "stateAliasesNote": "Equivalències llegides de les set captures de classificacions aportades per l'usuari. Àmbit: competició exacta, sense inventar leagueId, teamId ni clubId. DES / DESCANSO és jornada de descans, no equip. Les sigles repetides es mantenen."
 }

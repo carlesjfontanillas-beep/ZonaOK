@@ -1,0 +1,21 @@
+name: ZonaOK - Validar equivalències estatals
+on:
+  push:
+    branches: [main]
+    paths: ['tests/test_state_equivalencies.py']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
+          python -m unittest discover -s tests -p 'test_state_equivalencies.py' -v
+          python -m unittest discover -s tests -p 'test_equivalencies.py' -v
+          python -m unittest discover -s tests -p 'test_agenda_daily.py' -v

@@ -7,13 +7,16 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from zonaok_fecapa_unificat import (CANONICAL, SEASON, load_unified, norm, clean, score_tuple, check_iso, check_time, check_when, utc_now, write_compatibility, canonicalize, chromium_context)
 from zonaok_agenda_dates_review import capture
-from zonaok_fecapa_unificat import invalid_fixture_team
+from zonaok_fecapa_unificat import invalid_fixture_team, state_competition, state_team_key
 
 MADRID=ZoneInfo('Europe/Madrid')
 EXCLUDED=re.compile(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',re.I)
 LIVE=re.compile(r'EN JOC|EN DIRECTE|EN DIRECTO|LIVE|PLAYING|PRIMERA PART|SEGONA PART|DESCANS',re.I)
 FINAL=re.compile(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',re.I)
-def pair(r):return tuple(norm(r.get(k)) for k in ('competition','home','away'))
+def pair(r):
+    comp=state_competition(r.get('competition'))
+    if comp:return (comp,state_team_key(r.get('home'),comp),state_team_key(r.get('away'),comp))
+    return tuple(norm(r.get(k)) for k in ('competition','home','away'))
 def slot(r):return (r.get('iso'),r.get('time'))
 def key(r):return (*pair(r),*slot(r))
 def idpair(r):return tuple(clean(r.get(k)) for k in ('leagueId','matchId'))

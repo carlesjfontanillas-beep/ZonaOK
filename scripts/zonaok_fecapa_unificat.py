@@ -1108,10 +1108,41 @@ def scoped_team_equivalent(a,b,league='',pairs=None):
     return False
 
 
+def state_competition(value):
+    name=norm(value)
+    names={'OK LIGA':'OK LIGA MASCULINA','OK LIGA FEMENINA':'OK LIGA IBERDROLA',
+           'OK LIGA BRONCE NORTE':'OK LIGA BRONCE MASCULINA NORTE',
+           'OK LIGA BRONCE SUR':'OK LIGA BRONCE MASCULINA SUR'}
+    return names.get(name,name) if name.startswith('OK LIGA') else ''
+
+
+@lru_cache(maxsize=1)
+def state_alias_index():
+    result={}
+    for r in load_equivalence_catalog().get('stateAliases',[]):
+        if not isinstance(r,dict):continue
+        comp=state_competition(r.get('competition'))
+        full,short=norm(r.get('team')),norm(r.get('shortTeam'))
+        if comp and full and short and short!='DES':
+            result.setdefault(comp,{}).setdefault(short,set()).add(full)
+    return result
+
+
+def state_team_names(team,competition):
+    value=norm(team)
+    return state_alias_index().get(state_competition(competition),{}).get(value,{value}) if value else set()
+
+
+def state_team_key(team,competition):
+    names=state_team_names(team,competition)
+    return next(iter(names)) if len(names)==1 else norm(team)
+
+
 def competition_compatible(left,right):
     a,b=norm(left),norm(right)
     if not a or not b:return False
     if a==b:return True
+    if state_competition(a) or state_competition(b):return bool(state_competition(a) and state_competition(a)==state_competition(b))
     def base(s):
         return re.sub(r'\s+GRUP\s+[A-Z0-9]+$','',re.sub(r'(\s+(?:OR|PLATA|BRONZE))\s+\d+$',r'\1',s))
     return (base(a)==b or base(b)==a or (base(a)==base(b) and (a==base(a) or b==base(b))))
@@ -1149,6 +1180,21 @@ def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
               and norm(r.get('away'))==norm(incoming.get('away'))]
         if len(weak)==1:return weak[0]
         if len(weak)>1:return None
+    # State leagues have an independently sourced, competition-scoped alias
+    # table. Never use a code from a different competition or guess an ID.
+    if not candidates and state_competition(incoming.get('competition')):
+        category=state_competition(incoming.get('competition'))
+        possible=[]
+        for i,r in enumerate(rows):
+            if not compatible_id(r) or state_competition(r.get('competition'))!=category or r.get('iso')!=incoming.get('iso') or r.get('time')!=incoming.get('time'):continue
+            compatible=True
+            for side in ('home','away'):
+                a,b=official_logo_id(r.get(side+'Logo')),official_logo_id(incoming.get(side+'Logo'))
+                if a and b and a!=b:compatible=False;break
+                if not state_team_names(r.get(side),category)&state_team_names(incoming.get(side),category):
+                    compatible=False;break
+            if compatible:possible.append(i)
+        return possible[0] if len(possible)==1 else None
     if not candidates and mode in ('agenda','actes'):
         pairs=catalog_scoped_aliases() if standing_aliases is None else standing_aliases
         if pairs:
