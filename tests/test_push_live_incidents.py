@@ -37,13 +37,18 @@ FALTA UEH BARBERÀ
         self.assertTrue(all(len(x["eventId"]) == 64 for x in got))
         self.assertEqual(got, parse_incidents(text, FIXTURE, observed_at="2026-11-21T20:00:00Z"))
 
-    def test_only_live_senior_nacional_matches_are_candidates(self):
+    def test_recent_nacional_matches_are_candidates_even_if_catalog_status_lags(self):
         now = datetime(2026, 11, 21, 19, 55, tzinfo=timezone.utc)
         missing_id = dict(FIXTURE, iso="2026-11-21", home="CLUB PATÍ SENSE ID", away="VISITANT", leagueId="", matchId="", status="EN JOC")
         rows = [dict(FIXTURE, status="EN JOC"), dict(FIXTURE, matchId="2", competition="OK LIGA IBERDROLA", status="EN JOC"), dict(FIXTURE, matchId="146395", away="CP SANT CELONI", status="FINAL"), missing_id]
         doc = {"schema":"zonaok-partits-total-v1", "season":"2026/2027", "matches":rows}
         selected = candidates(doc, now=now)
         self.assertEqual([m["fixture"]["matchId"] for m in selected], ["146394", ""])
+        stale_status = dict(FIXTURE, matchId="146396", status="PRÈVIA")
+        stale_doc = {"schema":"zonaok-partits-total-v1", "season":"2026/2027", "matches":[stale_status]}
+        self.assertEqual([m["fixture"]["matchId"] for m in candidates(stale_doc, now=now)], ["146396"])
+        too_old = dict(stale_status, iso="2026-11-21", time="16:00")
+        self.assertEqual(candidates({"schema":"zonaok-partits-total-v1", "season":"2026/2027", "matches":[too_old]}, now=now), [])
         self.assertTrue(selected[1]["fixture"]["internalId"].startswith("zonaok:"))
         with self.assertRaises(ValueError): candidates({"matches":[]}, now=now)
         duplicate = dict(missing_id)
