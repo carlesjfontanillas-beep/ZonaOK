@@ -121,7 +121,7 @@ jobs:
         shell: bash
         run: |
           python - <<'PY'
-          import json
+          import hashlib, json, unicodedata
           from datetime import datetime, timedelta
           from zoneinfo import ZoneInfo
           now = datetime.now(ZoneInfo('Europe/Madrid'))
@@ -144,7 +144,15 @@ jobs:
               ('goal','P2','20:00','FC BARCELONA','4-1'),
           ]
           observed = datetime.now().astimezone().isoformat()
-          incidents = [{'event':e,'period':p,'matchClock':t,'team':team,'player':'','score':score,'ordinal':1,'observedAt':observed} for e,p,t,team,score in events]
+          def norm(value):
+              raw = ''.join(c for c in unicodedata.normalize('NFD', str(value or '')) if unicodedata.category(c) != 'Mn')
+              return ' '.join(raw.upper().split())
+          incidents = []
+          for e,p,t,team,score in events:
+              item = {'event':e,'period':p,'matchClock':t,'team':team,'player':'','score':score,'ordinal':1,'observedAt':observed}
+              material = '|'.join(norm(value).replace('|','/') for value in ('2026/2027',fixture['internalId'],e,p,t,team,'',score,'1'))
+              item['eventId'] = hashlib.sha256(material.encode()).hexdigest()
+              incidents.append(item)
           payload = {'schema':'zonaok-push-live-incidents-v1','season':'2026/2027','matches':[{'fixture':fixture,'observedAt':observed,'startedNow':False,'incidents':incidents}]}
           with open('push-live-incidents.json','w',encoding='utf-8') as f: json.dump(payload,f,ensure_ascii=False)
           print('Incidències preparades:',len(incidents))
