@@ -1,7 +1,7 @@
 {
   "new": 0,
-  "updated": 139,
-  "unmatched": 3,
+  "updated": 152,
+  "unmatched": 4,
   "ambiguousOrInvalid": 0,
   "unchanged": 0,
   "unmatchedDetails": [
@@ -340,8 +340,26 @@
           "matchId": ""
         }
       ]
+    },
+    {
+      "reason": "no_unique_fixture",
+      "fecapa": {
+        "iso": "2026-11-28",
+        "time": "16:10",
+        "competition": "OK LIGA MASCULINA",
+        "home": "LLEI",
+        "away": "NOIA",
+        "homeScore": 0,
+        "awayScore": 1,
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "status": ""
+      },
+      "sameTimeCandidates": []
     }
   ],
   "legacyActes": 5857,
-  "resultsLast7Days": 797
+  "resultsLast7Days": 802
 }
