@@ -62,6 +62,11 @@ def merge(doc,packet):
         if not (recent(a,cut) or recent(b,cut)):continue
         if a.get('lastAgendaAt') and check_when(a['lastAgendaAt'])>clock:continue
         if slot(a)!=slot(b):
+            # User selected the latest of three conflicting records. Do not silently
+            # revert that choice to the already known older source slot.
+            if pair(a)==('BCN BENJAMI PLATA 3','CH LES FRANQUESES','UNIO ESPORTIVA D HORTA B') and slot(a)==('2026-11-29','10:45') and slot(b) in (('2026-11-28','15:00'),('2026-11-28','17:00')):
+                conflicts.append({'reason':'approved_latest_date_disagrees_with_source','old':key(a),'incoming':key(b)})
+                continue
             if score_tuple(a) or a.get('actaState')=='available' or LIVE.search(clean(a.get('status'))):
                 conflicts.append({'reason':'schedule_of_started_or_scored_match','old':key(a),'incoming':key(b)})
             else:

@@ -1,0 +1,89 @@
+{
+  "schema": "zonaok-approved-schedule-repairs-v1",
+  "season": "2026/2027",
+  "sourceRun": 46126797596,
+  "capturedAt": "2026-11-28T08:40:05Z",
+  "fixtures": [
+    {
+      "competition": "FEM 11 PLATA",
+      "home": "JOIERIA MONER SANT RAMON",
+      "away": "AUTO VIGATANA PATI VIC",
+      "oldIso": "2026-11-28",
+      "oldTime": "13:00",
+      "iso": "2026-12-05",
+      "time": "17:30",
+      "approvedSlots": [
+        [
+          "2026-10-31",
+          "12:30"
+        ]
+      ],
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "competition": "BCN BENJAMI PLATA 3",
+      "home": "CH LES FRANQUESES",
+      "away": "UNIO ESPORTIVA D HORTA B",
+      "oldIso": "2026-11-28",
+      "oldTime": "15:00",
+      "iso": "2026-11-29",
+      "time": "10:45",
+      "approvedSlots": [
+        [
+          "2026-11-28",
+          "17:00"
+        ]
+      ],
+      "homeScore": null,
+      "awayScore": null,
+      "sourceDisagreement": [
+        "2026-11-28",
+        "17:00"
+      ]
+    },
+    {
+      "competition": "LCV GRUP B",
+      "home": "CP SUBUR SITGES",
+      "away": "CHP SANT FELIU",
+      "oldIso": "2026-11-27",
+      "oldTime": "21:45",
+      "iso": "2027-01-15",
+      "time": "21:45",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "reversed": [
+    {
+      "competition": "VETERANS TARRAGONA",
+      "iso": "2026-11-27",
+      "time": "21:15",
+      "home": "CLUB HOQUEI VILA-SECA",
+      "away": "TRANSLOP ALCAÑIZ CLUB PATIN",
+      "homeScore": 3,
+      "awayScore": 0,
+      "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA"
+    },
+    {
+      "competition": "VETERANS TARRAGONA",
+      "iso": "2026-11-27",
+      "time": "21:50",
+      "home": "TRANSLOP ALCAÑIZ CLUB PATIN",
+      "away": "REUS DEPORTIU",
+      "homeScore": 0,
+      "awayScore": 4,
+      "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA"
+    },
+    {
+      "competition": "VETERANS TARRAGONA",
+      "iso": "2026-11-27",
+      "time": "22:25",
+      "home": "REUS DEPORTIU",
+      "away": "CLUB HOQUEI VILA-SECA",
+      "homeScore": 3,
+      "awayScore": 1,
+      "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA"
+    }
+  ]
+}

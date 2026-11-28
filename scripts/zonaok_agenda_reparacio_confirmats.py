@@ -23,7 +23,8 @@ def repair(doc,manifest):
         entry['originalRows']=copy.deepcopy(group)
         if not group:
             entry.update(status='review',reason='not_found');results.append(entry);continue
-        if any(slot(r) not in (old,target) for r in group):
+        approved_slots={old,target}|{tuple(s) for s in spec.get('approvedSlots',[])}
+        if any(slot(r) not in approved_slots for r in group):
             entry.update(status='review',reason='another_slot_not_in_review');results.append(entry);continue
         ids=[{identity(r)[n] for r in group if identity(r)[n]} for n in (0,1)]
         values={scores(r) for r in group if scores(r) is not None}

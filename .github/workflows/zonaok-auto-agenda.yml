@@ -1,9 +1,6 @@
 name: 'ZonaOK - Agenda TOTAL AUTO (Chromium Playwright)'
 
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/zonaok-auto-agenda.yml']
   workflow_dispatch:
     inputs:
       scope:
