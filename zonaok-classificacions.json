@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T17:31:34.879489+00:00",
+  "capturedAt": "2026-11-28T17:42:13.773941+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -5776,8 +5776,8 @@
       "category": "3ª CATALANA",
       "competition": "3ª CATALANA",
       "leagueId": "4781",
-      "capturedAt": "2026-11-28T16:35:41.728603+00:00",
-      "standingsAt": "2026-11-28T16:35:41.728603+00:00",
+      "capturedAt": "2026-11-28T17:42:13.773941+00:00",
+      "standingsAt": "2026-11-28T17:42:13.773941+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=clasificaciones",
       "standings": [
         {
@@ -5809,20 +5809,20 @@
           "team": "AUTO VIGATANA PATÍ VIC B",
           "teamId": "12220",
           "teamLogo": "/fecapa/images/logos_clubes/692_2.png",
-          "played": "7",
-          "points": "15",
-          "gf": "32",
-          "ga": "17",
-          "difference": "15",
+          "played": "8",
+          "points": "18",
+          "gf": "35",
+          "ga": "18",
+          "difference": "17",
           "stats": {
-            "PTS": "15",
-            "PJ": "7",
-            "PG": "5",
+            "PTS": "18",
+            "PJ": "8",
+            "PG": "6",
             "PE": "0",
             "PP": "2",
-            "GF": "32",
-            "GC": "17",
-            "DIF": "15",
+            "GF": "35",
+            "GC": "18",
+            "DIF": "17",
             "SAN": "0"
           },
           "shortTeam": "VICB",
@@ -5878,6 +5878,30 @@
         },
         {
           "pos": "5",
+          "team": "UEH BARBERÀ",
+          "teamId": "11564",
+          "teamLogo": "/fecapa/images/logos_clubes/233.png",
+          "played": "9",
+          "points": "15",
+          "gf": "35",
+          "ga": "36",
+          "difference": "-1",
+          "stats": {
+            "PTS": "15",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "0",
+            "PP": "4",
+            "GF": "35",
+            "GC": "36",
+            "DIF": "-1",
+            "SAN": "0"
+          },
+          "shortTeam": "UEHB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "6",
           "team": "SFERIC",
           "teamId": "11351",
           "teamLogo": "/fecapa/images/logos_clubes/551.png",
@@ -5898,30 +5922,6 @@
             "SAN": "0"
           },
           "shortTeam": "SFC",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "6",
-          "team": "UEH BARBERÀ",
-          "teamId": "11564",
-          "teamLogo": "/fecapa/images/logos_clubes/233.png",
-          "played": "8",
-          "points": "15",
-          "gf": "34",
-          "ga": "33",
-          "difference": "1",
-          "stats": {
-            "PTS": "15",
-            "PJ": "8",
-            "PG": "5",
-            "PE": "0",
-            "PP": "3",
-            "GF": "34",
-            "GC": "33",
-            "DIF": "1",
-            "SAN": "0"
-          },
-          "shortTeam": "UEHB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -12776,8 +12776,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-28T14:00:17.495035+00:00",
-      "standingsAt": "2026-11-28T14:00:17.495035+00:00",
+      "capturedAt": "2026-11-28T17:42:13.773941+00:00",
+      "standingsAt": "2026-11-28T17:42:13.773941+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -12785,20 +12785,20 @@
           "team": "CLUB PATI TORDERA A",
           "teamId": "11381",
           "teamLogo": "/fecapa/images/logos_clubes/297_1.png",
-          "played": "8",
-          "points": "22",
-          "gf": "61",
+          "played": "9",
+          "points": "25",
+          "gf": "69",
           "ga": "15",
-          "difference": "46",
+          "difference": "54",
           "stats": {
-            "PTS": "22",
-            "PJ": "8",
-            "PG": "7",
+            "PTS": "25",
+            "PJ": "9",
+            "PG": "8",
             "PE": "1",
             "PP": "0",
-            "GF": "61",
+            "GF": "69",
             "GC": "15",
-            "DIF": "46"
+            "DIF": "54"
           },
           "shortTeam": "CPTA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -12900,20 +12900,20 @@
           "team": "GENERALI HC PALAU D",
           "teamId": "11326",
           "teamLogo": "/fecapa/images/logos_clubes/271_1.png",
-          "played": "7",
+          "played": "8",
           "points": "6",
           "gf": "13",
-          "ga": "31",
-          "difference": "-18",
+          "ga": "39",
+          "difference": "-26",
           "stats": {
             "PTS": "6",
-            "PJ": "7",
+            "PJ": "8",
             "PG": "2",
             "PE": "0",
-            "PP": "5",
+            "PP": "6",
             "GF": "13",
-            "GC": "31",
-            "DIF": "-18"
+            "GC": "39",
+            "DIF": "-26"
           },
           "shortTeam": "PALD",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -13259,8 +13259,8 @@
       "competition": "INFANTIL PLATA",
       "leagueId": "4787",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=clasificaciones",
-      "capturedAt": "2026-11-28T16:51:51.833395+00:00",
-      "standingsAt": "2026-11-28T16:51:51.833395+00:00",
+      "capturedAt": "2026-11-28T17:42:13.773941+00:00",
+      "standingsAt": "2026-11-28T17:42:13.773941+00:00",
       "standings": [
         {
           "pos": "1",
@@ -13356,6 +13356,29 @@
         },
         {
           "pos": "5",
+          "team": "AUTO VIGATANA PATÍ VIC B",
+          "teamId": "12230",
+          "teamLogo": "/fecapa/images/logos_clubes/692_2.png",
+          "played": "9",
+          "points": "17",
+          "gf": "46",
+          "ga": "24",
+          "difference": "22",
+          "stats": {
+            "PTS": "17",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "2",
+            "PP": "2",
+            "GF": "46",
+            "GC": "24",
+            "DIF": "22"
+          },
+          "shortTeam": "VICB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "6",
           "team": "CP RODA",
           "teamId": "12394",
           "teamLogo": "/fecapa/images/logos_clubes/280.png",
@@ -13375,29 +13398,6 @@
             "DIF": "18"
           },
           "shortTeam": "CPR",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "6",
-          "team": "AUTO VIGATANA PATÍ VIC B",
-          "teamId": "12230",
-          "teamLogo": "/fecapa/images/logos_clubes/692_2.png",
-          "played": "8",
-          "points": "14",
-          "gf": "42",
-          "ga": "23",
-          "difference": "19",
-          "stats": {
-            "PTS": "14",
-            "PJ": "8",
-            "PG": "4",
-            "PE": "2",
-            "PP": "2",
-            "GF": "42",
-            "GC": "23",
-            "DIF": "19"
-          },
-          "shortTeam": "VICB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -13451,20 +13451,20 @@
           "team": "CP FOLGUEROLES",
           "teamId": "11461",
           "teamLogo": "/fecapa/images/logos_clubes/250.png",
-          "played": "8",
+          "played": "9",
           "points": "10",
-          "gf": "45",
-          "ga": "46",
-          "difference": "-1",
+          "gf": "46",
+          "ga": "50",
+          "difference": "-4",
           "stats": {
             "PTS": "10",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "3",
             "PE": "1",
-            "PP": "4",
-            "GF": "45",
-            "GC": "46",
-            "DIF": "-1"
+            "PP": "5",
+            "GF": "46",
+            "GC": "50",
+            "DIF": "-4"
           },
           "shortTeam": "CPF",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -13494,29 +13494,6 @@
         },
         {
           "pos": "11",
-          "team": "CE ARENYS DE MUNT B",
-          "teamId": "11247",
-          "teamLogo": "/fecapa/images/logos_clubes/232_1.png",
-          "played": "10",
-          "points": "3",
-          "gf": "17",
-          "ga": "70",
-          "difference": "-53",
-          "stats": {
-            "PTS": "3",
-            "PJ": "10",
-            "PG": "1",
-            "PE": "0",
-            "PP": "9",
-            "GF": "17",
-            "GC": "70",
-            "DIF": "-53"
-          },
-          "shortTeam": "DMBB",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "12",
           "team": "CH OLOT C",
           "teamId": "11854",
           "teamLogo": "/fecapa/images/logos_clubes/315.png",
@@ -13536,6 +13513,29 @@
             "DIF": "-53"
           },
           "shortTeam": "HOCC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "12",
+          "team": "CE ARENYS DE MUNT B",
+          "teamId": "11247",
+          "teamLogo": "/fecapa/images/logos_clubes/232_1.png",
+          "played": "10",
+          "points": "3",
+          "gf": "17",
+          "ga": "70",
+          "difference": "-53",
+          "stats": {
+            "PTS": "3",
+            "PJ": "10",
+            "PG": "1",
+            "PE": "0",
+            "PP": "9",
+            "GF": "17",
+            "GC": "70",
+            "DIF": "-53"
+          },
+          "shortTeam": "DMBB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -19745,8 +19745,8 @@
       "competition": "ALEVÍ BRONZE",
       "leagueId": "4791",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4791&vista=clasificaciones",
-      "capturedAt": "2026-11-28T12:37:02.524426+00:00",
-      "standingsAt": "2026-11-28T12:37:02.524426+00:00",
+      "capturedAt": "2026-11-28T17:42:13.773941+00:00",
+      "standingsAt": "2026-11-28T17:42:13.773941+00:00",
       "standings": [
         {
           "pos": "1",
@@ -19776,20 +19776,20 @@
           "team": "CP CALDES B",
           "teamId": "11727",
           "teamLogo": "/fecapa/images/logos_clubes/308.png",
-          "played": "9",
+          "played": "10",
           "points": "16",
-          "gf": "59",
-          "ga": "53",
-          "difference": "6",
+          "gf": "62",
+          "ga": "59",
+          "difference": "3",
           "stats": {
             "PTS": "16",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "5",
             "PE": "1",
-            "PP": "3",
-            "GF": "59",
-            "GC": "53",
-            "DIF": "6"
+            "PP": "4",
+            "GF": "62",
+            "GC": "59",
+            "DIF": "3"
           },
           "shortTeam": "CPCB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -19845,20 +19845,20 @@
           "team": "CE ARENYS DE MUNT D",
           "teamId": "11245",
           "teamLogo": "/fecapa/images/logos_clubes/232_1.png",
-          "played": "9",
-          "points": "11",
-          "gf": "44",
-          "ga": "56",
-          "difference": "-12",
+          "played": "10",
+          "points": "14",
+          "gf": "50",
+          "ga": "59",
+          "difference": "-9",
           "stats": {
-            "PTS": "11",
-            "PJ": "9",
-            "PG": "3",
+            "PTS": "14",
+            "PJ": "10",
+            "PG": "4",
             "PE": "2",
             "PP": "4",
-            "GF": "44",
-            "GC": "56",
-            "DIF": "-12"
+            "GF": "50",
+            "GC": "59",
+            "DIF": "-9"
           },
           "shortTeam": "DMDD",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -37819,14 +37819,14 @@
     {
       "leagueId": "4781",
       "group": "3ª CATALANA GRUP F",
-      "team": "SFERIC",
-      "shortTeam": "SFC"
+      "team": "UEH BARBERÀ",
+      "shortTeam": "UEHB"
     },
     {
       "leagueId": "4781",
       "group": "3ª CATALANA GRUP F",
-      "team": "UEH BARBERÀ",
-      "shortTeam": "UEHB"
+      "team": "SFERIC",
+      "shortTeam": "SFC"
     },
     {
       "leagueId": "4781",
@@ -39553,14 +39553,14 @@
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 2",
-      "team": "CP RODA",
-      "shortTeam": "CPR"
+      "team": "AUTO VIGATANA PATÍ VIC B",
+      "shortTeam": "VICB"
     },
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 2",
-      "team": "AUTO VIGATANA PATÍ VIC B",
-      "shortTeam": "VICB"
+      "team": "CP RODA",
+      "shortTeam": "CPR"
     },
     {
       "leagueId": "4787",
@@ -39589,14 +39589,14 @@
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 2",
-      "team": "CE ARENYS DE MUNT B",
-      "shortTeam": "DMBB"
+      "team": "CH OLOT C",
+      "shortTeam": "HOCC"
     },
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 2",
-      "team": "CH OLOT C",
-      "shortTeam": "HOCC"
+      "team": "CE ARENYS DE MUNT B",
+      "shortTeam": "DMBB"
     },
     {
       "leagueId": "4787",
