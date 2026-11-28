@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T10:25:11.212383+00:00",
+  "capturedAt": "2026-11-28T10:36:11.941714+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -10567,53 +10567,61 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-27T01:11:38.298092+00:00",
-      "standingsAt": "2026-11-27T01:11:38.298092+00:00",
+      "capturedAt": "2026-11-28T10:36:11.941714+00:00",
+      "standingsAt": "2026-11-28T10:36:11.941714+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
           "pos": "1",
           "team": "BARÇA",
-          "played": "9",
-          "points": "27",
-          "gf": "87",
-          "ga": "3",
-          "difference": "84",
+          "teamId": "11172",
+          "teamLogo": "/fecapa/images/logos_clubes/234.png",
+          "played": "10",
+          "points": "30",
+          "gf": "90",
+          "ga": "4",
+          "difference": "86",
           "stats": {
-            "PTS": "27",
-            "PJ": "9",
-            "PG": "9",
+            "PTS": "30",
+            "PJ": "10",
+            "PG": "10",
             "PE": "0",
             "PP": "0",
-            "GF": "87",
-            "GC": "3",
-            "DIF": "84"
+            "GF": "90",
+            "GC": "4",
+            "DIF": "86"
           },
-          "shortTeam": "BARÇA",
+          "shortTeam": "BAR",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "GENERALI HC PALAU A",
-          "played": "9",
+          "teamId": "11323",
+          "teamLogo": "/fecapa/images/logos_clubes/271_1.png",
+          "played": "10",
           "points": "24",
-          "gf": "55",
-          "ga": "13",
-          "difference": "42",
+          "gf": "56",
+          "ga": "16",
+          "difference": "40",
           "stats": {
             "PTS": "24",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "8",
             "PE": "0",
-            "PP": "1",
-            "GF": "55",
-            "GC": "13",
-            "DIF": "42"
-          }
+            "PP": "2",
+            "GF": "56",
+            "GC": "16",
+            "DIF": "40"
+          },
+          "shortTeam": "PALA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
           "team": "IGUALADA HC B",
+          "teamId": "12411",
+          "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
           "played": "9",
           "points": "18",
           "gf": "29",
@@ -10629,12 +10637,14 @@
             "GC": "20",
             "DIF": "9"
           },
-          "shortTeam": "IGUALADA HC B",
+          "shortTeam": "IHCB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "IGUALADA HC C",
+          "teamId": "12412",
+          "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
           "played": "9",
           "points": "11",
           "gf": "20",
@@ -10650,12 +10660,14 @@
             "GC": "18",
             "DIF": "2"
           },
-          "shortTeam": "IGUALADA HC C",
+          "shortTeam": "IHCC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
           "team": "CH JUNEDA",
+          "teamId": "12491",
+          "teamLogo": "/fecapa/images/logos_clubes/338.png",
           "played": "9",
           "points": "10",
           "gf": "17",
@@ -10671,12 +10683,14 @@
             "GC": "49",
             "DIF": "-32"
           },
-          "shortTeam": "CH JUNEDA",
+          "shortTeam": "CHJ",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
           "team": "CH PALAFRUGELL A",
+          "teamId": "11224",
+          "teamLogo": "/fecapa/images/logos_clubes/316.png",
           "played": "9",
           "points": "9",
           "gf": "24",
@@ -10691,11 +10705,15 @@
             "GF": "24",
             "GC": "48",
             "DIF": "-24"
-          }
+          },
+          "shortTeam": "CHPA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "7",
           "team": "GENERALI HC PALAU C",
+          "teamId": "11325",
+          "teamLogo": "/fecapa/images/logos_clubes/271_1.png",
           "played": "9",
           "points": "7",
           "gf": "14",
@@ -10710,11 +10728,15 @@
             "GF": "14",
             "GC": "35",
             "DIF": "-21"
-          }
+          },
+          "shortTeam": "PALC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "8",
           "team": "CLUB HOQUEI VILA-SECA C",
+          "teamId": "11812",
+          "teamLogo": "/fecapa/images/logos_clubes/334.png",
           "played": "9",
           "points": "0",
           "gf": "15",
@@ -10729,7 +10751,9 @@
             "GF": "15",
             "GC": "75",
             "DIF": "-60"
-          }
+          },
+          "shortTeam": "HVSC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
     },
@@ -35348,6 +35372,54 @@
       "group": "JUVENIL PLATA 3",
       "team": "FUTBOL CLUB MARTINENC B B",
       "shortTeam": "CMBB"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 1",
+      "team": "BARÇA",
+      "shortTeam": "BAR"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 1",
+      "team": "GENERALI HC PALAU A",
+      "shortTeam": "PALA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 1",
+      "team": "IGUALADA HC B",
+      "shortTeam": "IHCB"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 1",
+      "team": "IGUALADA HC C",
+      "shortTeam": "IHCC"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 1",
+      "team": "CH JUNEDA",
+      "shortTeam": "CHJ"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 1",
+      "team": "CH PALAFRUGELL A",
+      "shortTeam": "CHPA"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 1",
+      "team": "GENERALI HC PALAU C",
+      "shortTeam": "PALC"
+    },
+    {
+      "leagueId": "4786",
+      "group": "INFANTIL OR 1",
+      "team": "CLUB HOQUEI VILA-SECA C",
+      "shortTeam": "HVSC"
     },
     {
       "leagueId": "4787",
