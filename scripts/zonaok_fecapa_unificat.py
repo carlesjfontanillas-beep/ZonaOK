@@ -315,7 +315,7 @@ JS_DIRECTE = r"""() => {
     const h=el.querySelector('.sidgad-local'),a=el.querySelector('.sidgad-visitante');
     const home=T(h?.querySelector('.sidgad-equipo-nombre')),away=T(a?.querySelector('.sidgad-equipo-nombre'));
     const dt=T(h?.querySelector('.sidgad-equipo-sub')).match(/^(\d{1,2})\/(\d{1,2})\s+(\d{1,2}):([0-5]\d)$/);
-    if(!home||!away||N(home)===N(away)||!dt||+dt[1]>31||+dt[2]>12||+dt[3]>23){invalid++;continue;}
+    if(!home||!away||!dt||+dt[1]>31||+dt[2]>12||+dt[3]>23){invalid++;continue;}
     const y=+dt[2]>=7?'2026':'2027',iso=`${y}-${dt[2].padStart(2,'0')}-${dt[1].padStart(2,'0')}`;
     const d=new Date(iso+'T12:00:00Z');if(Number.isNaN(+d)||d.toISOString().slice(0,10)!==iso){invalid++;continue;}
     const raw=T(el.querySelector('.sidgad-resultado-texto'));
@@ -575,7 +575,7 @@ def record_key(row):
 def validate_row(row, mode):
     if not isinstance(row,dict):return False
     if not check_iso(row.get('iso')) or not check_time(row.get('time')): return False
-    if not clean(row.get('home')) or not clean(row.get('away')) or norm(row['home'])==norm(row['away']):return False
+    if not clean(row.get('home')) or not clean(row.get('away')) or (mode!='directe' and norm(row['home'])==norm(row['away'])):return False
     for k in ('homeScore','awayScore'):
         n=row.get(k)
         if n is not None and (not isinstance(n,int) or isinstance(n,bool) or not 0<=n<=199):return False
@@ -593,6 +593,8 @@ def unique_rows(rows, mode):
     for r in rows:
         if not validate_row(r,mode):continue
         key=record_key(r)
+        if mode=='directe' and not (r.get('leagueId') and r.get('matchId')):
+            key+='|'+clean(r.get('homeLogo'))+'|'+clean(r.get('awayLogo'))
         old=out.get(key)
         if not old or (r.get('matchId') and not old.get('matchId')) or (r.get('homeScore') is not None and old.get('homeScore') is None):out[key]=r
     return sorted(out.values(),key=lambda r:(r['iso'],r['time'],norm(r.get('competition')),norm(r['home'])))
@@ -787,10 +789,11 @@ async def collect_directe(ctx,args,diagnostic):
         diagnostic['warnings'].extend(data.get('errors',[]))
         diagnostic['seasonText']=data.get('seasonText','')
         rows=unique_rows(data.get('rows',[]),'directe')
-        if args.scope=='fast':rows=[r for r in rows if in_recent_window(r)]
+        rows=[r for r in rows if direct_live_window(r)]
         diagnostic['counts']['validRows']=len(rows)
         diagnostic['sourceUrl']=page.url
-        if not rows and args.scope=='full':raise ValueError('En directe sense partits vàlids o temporada 2026/27 no seleccionada')
+        if data.get('errors') or not data.get('seasonText') or not data.get('counts'):
+            raise ValueError('Captura En directe no verificable: '+str(data.get('errors',[])))
         return rows
     finally:await page.close()
 
@@ -1088,7 +1091,13 @@ def scoped_team_equivalent(a,b,league='',pairs=None):
     return False
 
 
-def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
+def competition_compatible(left,right):
+    a,b=norm(left),norm(right)
+    if not a or not b:return False
+    if a==b:return True
+    # FECAPA Directe pot ometre el número de grup, mai inventar-lo.
+    def base(s):
+        return re.sub(r'\s+GRUP\s+[A-Z0-9]+
     lid=clean(incoming.get('leagueId'));mid=clean(incoming.get('matchId'))
     if lid and mid:
         exact=[i for i,r in enumerate(rows) if clean(r.get('leagueId'))==lid and clean(r.get('matchId'))==mid]
@@ -1144,6 +1153,544 @@ def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
                  and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
                  and team_ok(r,'home') and team_ok(r,'away')]
         if len(aliases)==1:return aliases[0]
+    return None
+
+
+def merge_unified(packet,previous,mode):
+    if packet.get('schema')!='zonaok-captura-v1' or packet.get('kind')!=mode or packet.get('season')!=SEASON:
+        raise ValueError('Captura incompatible: no publicar')
+    timestamp=check_when(packet.get('capturedAt'))
+    incoming=packet.get('rows')
+    if not isinstance(incoming,list):raise ValueError('Captura no reconeguda')
+    if mode=='agenda' and packet.get('scope')=='full' and not (
+        packet.get('counts',{}).get('genericAgendaRows',0)>0
+        or packet.get('selection',{}).get('verifiedLeagues',0)>0
+    ):
+        raise ValueError('Ni Agenda general amb partits ni calendaris de lliga verificats: publicació bloquejada')
+    if not incoming and packet.get('scope')!='fast':raise ValueError('Captura buida en mode full: no publicar')
+    if previous.get('schema')!='zonaok-partits-total-v1':raise ValueError('Esquema unificat desconegut')
+    if previous.get('season')!=SEASON:raise ValueError('Temporada inesperada al JSON')
+    if not incoming:
+        return previous,{'new':0,'updated':0,'unmatched':0,'unchanged':0,
+                         'ambiguousOrInvalid':0,'skipEmpty':True}
+    alias_table=build_club_alias_table(previous,packet)
+    alias_index=club_alias_index(alias_table)
+    standing_aliases=load_standings_aliases() if mode=='directe' else catalog_scoped_aliases()
+    rows=[canonicalize(r) for r in previous['matches']]
+    counts={'new':0,'updated':0,'unmatched':0,'ambiguousOrInvalid':0,'unchanged':0}
+    unmatched_details=[]
+    for raw in incoming:
+        if not isinstance(raw,dict):counts['ambiguousOrInvalid']+=1;continue
+        r=dict(raw)
+        if mode!='actes' and not validate_row(r,mode):counts['ambiguousOrInvalid']+=1;continue
+        # Un calendari de lliga només és font d'Agenda amb liga+IDP verificats.
+        # Les files genèriques de /ag/ no porten cap d'aquests identificadors.
+        # No tornar a introduir targetes globals amb una lliga atribuïda per la URL.
+        if mode=='agenda' and clean(r.get('leagueId')) and not clean(r.get('matchId')):
+            counts['ambiguousOrInvalid']+=1;continue
+        if mode=='actes':
+            lid=clean(r.get('leagueId'));mid=clean(r.get('matchId'))
+            if not official_match_url(r.get('actaUrl',''),lid,mid):counts['ambiguousOrInvalid']+=1;continue
+            indexes=[i for i,x in enumerate(rows) if clean(x.get('leagueId'))==lid and clean(x.get('matchId'))==mid]
+            if len(indexes)!=1:counts['unmatched']+=1;continue
+            idx=indexes[0];old=rows[idx]
+            previous_time=old.get('actaCheckedAt')
+            if previous_time and check_when(previous_time)>timestamp:counts['unchanged']+=1;continue
+            old['actaUrl']=r['actaUrl']
+            if old.get('actaState')!='available' or r.get('actaState')=='available':
+                old['actaState']='available' if r.get('actaState')=='available' else 'pending'
+            old['actaCheckedAt']=r['actaCheckedAt'];counts['updated']+=1
+            continue
+        idx=match_index(rows,r,mode,alias_index,standing_aliases)
+        if idx is None:
+            if mode!='agenda':
+                counts['unmatched']+=1
+                if mode=='directe':
+                    possible=[{k:x.get(k) for k in ('iso','time','competition','home','away','leagueId','matchId')} for x in rows if x.get('iso')==r.get('iso') and x.get('time')==r.get('time')]
+                    unmatched_details.append({'reason':'no_unique_fixture','fecapa':{k:r.get(k) for k in ('iso','time','competition','home','away','homeScore','awayScore','homeLogo','awayLogo','leagueId','matchId','status')},'sameTimeCandidates':possible[:30]})
+                continue
+            rows.append(canonicalize(r));counts['new']+=1;continue
+        old=rows[idx]
+        if archived_complete(old):
+            counts['unchanged']+=1
+            continue
+        prop='lastAgendaAt' if mode=='agenda' else 'lastDirecteAt'
+        previous_time=old.get(prop)
+        if previous_time and check_when(previous_time)>timestamp:counts['unchanged']+=1;continue
+        if mode=='agenda':
+            for field in ('iso','time','competition','home','away','venue','homeLogo','awayLogo','matchId','leagueId','round'):
+                if field=='time' and score_tuple(old) and not score_tuple(r) and old.get('iso')==r.get('iso'):
+                    continue  # conservar hora del registre amb marcador, no l'hora de la fitxa buida
+                if r.get(field) not in (None,''):old[field]=r[field]
+            if score_tuple(r) and not (old.get('lastDirecteAt') or old.get('directeUpdatedAt') or
+                                           norm(old.get('scoreSource')) in ('EN DIRECTE','DIRECTE')):
+                old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
+                old['scoreSource']='Agenda';old['scoreUpdatedAt']=packet['capturedAt']
+            if r.get('status') and not (old.get('lastDirecteAt') or old.get('directeUpdatedAt')):
+                old['status']=r['status']
+        else:
+            # Marcadors només sobre partits coneguts i amb identificació inequívoca.
+            for field in ('leagueId','matchId'):
+                if not old.get(field) and r.get(field):old[field]=r[field]
+            if score_tuple(r):
+                old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
+                old['scoreSource']='En directe';old['scoreUpdatedAt']=packet['capturedAt']
+            if r.get('status'):old['status']=r['status']
+            old['directeUpdatedAt']=packet['capturedAt']
+        old[prop]=packet['capturedAt']
+        rows[idx]=canonicalize(old);counts['updated']+=1
+    for i,row in enumerate(rows):rows[i]=canonicalize(row)
+    rows.sort(key=lambda r:(r.get('iso',''),r.get('time',''),norm(r.get('competition')),norm(r.get('home'))))
+    sources=dict(previous.get('sources',{}))
+    prev_mode=dict(sources.get(mode,{}))
+    selection=packet.get('selection',{})
+    progress={k:selection[k] for k in ('nextFullOffset','nextFullKey','nextFastOffset','fullCompleted',
+                                       'catalogueLeagues','pendingLeagueIds','verifiedLeagueIds',
+                                       'failedLeagueIds','verifiedLeagues','unverifiedLeagues')
+              if k in selection}
+    sources[mode]={**prev_mode,'capturedAt':packet['capturedAt'],'mergedAt':utc_now(),**counts,**progress}
+    # Full per lots: reiniciar només quan realment s'ha acabat el catàleg.
+    # El cursor viatja al JSON final, no a un fitxer de control extern.
+    club_logos=dict(previous.get('clubLogos') or {})
+    raw_logos=packet.get('clubLogos')
+    if isinstance(raw_logos,dict):
+        for name,url in raw_logos.items():
+            if (clean(name) and isinstance(url,str) and
+                re.fullmatch(r'https://sidgad\.cloud/fecapa/images/logos_clubes/\d+(?:_\d+)?\.(?:png|gif)',url,re.I)):
+                club_logos[clean(name)]=url
+    result={**previous,'schema':'zonaok-partits-total-v1','season':SEASON,'updatedAt':utc_now(),
+            'sources':sources,'matches':rows,'clubLogos':club_logos,'clubAliases':alias_table,'stats':{'total':len(rows),'withScores':sum(score_tuple(x) for x in rows),
+                      'withActaLinks':sum(bool(x.get('actaUrl')) for x in rows),
+                      'verifiedActes':sum(x.get('actaState')=='available' for x in rows)}}
+    if mode=='directe':counts['unmatchedDetails']=unmatched_details
+    return result,counts
+
+
+def write_compatibility(doc):
+    """Miralls temporals: l'app antiga encara llegeix JSON separats."""
+    rows=doc['matches'];now=utc_now()
+    base={'schema':'zonaok-all-v1','season':SEASON,'publishedAt':now,'source':'FECAPA-PLAYWRIGHT'}
+    agenda={**base,'kind':'agenda','rows':rows,'capturedAt':now,'clubLogos':doc.get('clubLogos',{}),'clubAliases':doc.get('clubAliases',{})}
+    Path('zonaok-tots-agenda.json').write_text(json.dumps(agenda,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    today_local=datetime.now(ZoneInfo('Europe/Madrid'))
+    cutoff=(today_local-timedelta(days=7)).strftime('%Y-%m-%d')
+    today=today_local.strftime('%Y-%m-%d')
+    done=[r for r in rows if cutoff<=r.get('iso','')<=today and score_tuple(r) and \
+          not re.search(r'EN JOC|EN DIRECTE|PLAYING|LIVE|IN PROGRESS',clean(r.get('status')),re.I)]
+    results={**base,'kind':'resultats-7dies','agendaCount':len(rows),'rows':done}
+    Path('zonaok-tots-resultats-7dies.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    # Mirall compatible amb index.html (l'aplicació admet fins a 20.000 fitxes).
+    # El JSON unificat continua sent la font completa, sense límit de 1.200.
+    fixtures=[]
+    for r in rows:
+        if not (check_iso(r.get('iso')) and check_time(r.get('time')) and r.get('home') and r.get('away')):continue
+        lid=clean(r.get('leagueId'));mid=clean(r.get('matchId'))
+        url=make_match_url(lid,mid)
+        if url:fixtures.append({'league':lid,'id':mid,'iso':r['iso'],'time':r['time'],
+                                'home':r['home'],'away':r['away'],'actaUrl':url})
+    prior=Path('zonaok-actes.json')
+    if prior.exists():
+        try:
+            old=json.loads(prior.read_text(encoding='utf-8'))
+            if old.get('version')==1 and isinstance(old.get('fixtures'),list):
+                by_id={(x['league'],x['id']):x for x in fixtures}
+                for x in old['fixtures']:
+                    if isinstance(x,dict) and x.get('league') and x.get('id') and (x['league'],x['id']) not in by_id:by_id[(x['league'],x['id'])]=x
+                fixtures=list(by_id.values())
+            else:return {'legacyActes':'Esquema antic desconegut; conservat'}
+        except (ValueError,KeyError):return {'legacyActes':'Fitxer antic malformat; conservat'}
+    if len(fixtures)>MAX_LEGACY_ACTA_FIXTURES:return {'legacyActes':f'Conservat: {len(fixtures)} supera límit de {MAX_LEGACY_ACTA_FIXTURES}'}
+    prior.write_text(json.dumps({'version':1,'generatedAt':now,'source':'FECAPA-PLAYWRIGHT',
+                                 'fixtures':fixtures},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    return {'legacyActes':len(fixtures),'resultsLast7Days':len(done)}
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    sub=parser.add_subparsers(dest='command',required=True)
+    a=sub.add_parser('collect');a.add_argument('--mode',choices=['agenda','directe','actes'],required=True)
+    a.add_argument('--scope',choices=['fast','full'],default='fast',help='fast=actualitzacio rapida; full=històric per lots')
+    a.add_argument('--offset',default='auto',help='full: desplacament de lot, o auto (cursor guardat al JSON)')
+    a.add_argument('--pages',type=int,default=10,help='Nombre maxim de pagines de /ag/')
+    a.add_argument('--limit',type=int,default=20,help='Agenda: lligues; Actes: partits; Directe: ignorat. 0=totes.')
+    a.add_argument('--capture',required=True);a.add_argument('--report',required=True)
+    v=sub.add_parser('validate',help='Verificar que no es perden partits davant del HEAD de GitHub')
+    v.add_argument('--output',default=str(CANONICAL))
+    b=sub.add_parser('merge');b.add_argument('--mode',choices=['agenda','directe','actes'],required=True)
+    b.add_argument('--capture',required=True);b.add_argument('--output',default=str(CANONICAL));b.add_argument('--report',required=True)
+    b.add_argument('--compat',action='store_true',help='Generar miralls dels JSON que encara usa l’app')
+    args=parser.parse_args()
+    if args.command=='validate':
+        new=load_unified(Path(args.output))
+        count=len(new['matches'])
+        try:
+            text=subprocess.check_output(['git','show',f'HEAD:{args.output}'],stderr=subprocess.DEVNULL)
+            old=json.loads(text)
+            if old.get('schema')!='zonaok-partits-total-v1':raise ValueError('HEAD: esquema desconegut')
+            if count<len(old.get('matches',[])):
+                raise ValueError(f'ERROR: {count} partits nous, {len(old["matches"])} antics: no publicar')
+        except subprocess.CalledProcessError:
+            pass   # Primera publicació sense JSON anterior.
+        print('Validació correcta: ',count,'partits conservats')
+        return 0
+    if args.command=='collect':
+        if args.limit<0 or args.pages<1 or args.pages>100:parser.error('limit >= 0 i pages entre 1 i 100')
+        packet,diag=asyncio.run(collect(args))
+        Path(args.capture).write_text(json.dumps(packet,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        Path(args.report).write_text(json.dumps(diag,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        print(json.dumps(diag,ensure_ascii=False,indent=2))
+        if args.mode=='agenda' and (not packet['rows'] or not diag.get('publishSafe',True)):
+            print('ERROR: Agenda no publicable; revisar registres de liga+IDP. Diagnòstic DESAT a '+args.report,file=sys.stderr)
+            return 2
+        return 0
+    packet=json.loads(Path(args.capture).read_text(encoding='utf-8'))
+    previous=load_unified(Path(args.output))
+    doc,diagnostic=merge_unified(packet,previous,args.mode)
+    if not diagnostic.get('skipEmpty'):
+        Path(args.output).write_text(json.dumps(doc,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        if args.compat:diagnostic.update(write_compatibility(doc))
+    Path(args.report).write_text(json.dumps(diagnostic,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print(json.dumps(diagnostic,ensure_ascii=False,indent=2));return 0
+
+if __name__=='__main__':
+    try:sys.exit(main())
+    except Exception as exc:sys.exit('ERROR ZonaOK AUTO (no publicat): '+str(exc))
+,'',re.sub(r'(\s+(?:OR|PLATA|BRONZE))\s+\d+
+    lid=clean(incoming.get('leagueId'));mid=clean(incoming.get('matchId'))
+    if lid and mid:
+        exact=[i for i,r in enumerate(rows) if clean(r.get('leagueId'))==lid and clean(r.get('matchId'))==mid]
+        if len(exact)==1:return exact[0]
+        if len(exact)>1:return None
+    def compatible_id(r):
+        return ((not mid or not r.get('matchId') or clean(r.get('matchId'))==mid) and
+                (not lid or not r.get('leagueId') or clean(r.get('leagueId'))==lid))
+    candidates=[i for i,r in enumerate(rows) if same_fixture(r,incoming) and compatible_id(r)]
+    if len(candidates)==1:return candidates[0]
+    if not candidates and (mid or lid):
+        # Lliga/calendari poden tenir noms diferents per a la mateixa categoria.
+        # L'única equivalència permesa sense nom de competició és un partit
+        # ÚNIC amb data/hora/equips exactament iguals i cap ID contradictori.
+        weak=[i for i,r in enumerate(rows) if compatible_id(r) and
+              r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
+              and norm(r.get('home'))==norm(incoming.get('home'))
+              and norm(r.get('away'))==norm(incoming.get('away'))]
+        if len(weak)==1:return weak[0]
+        if len(weak)>1:return None
+    if not candidates and mode in ('agenda','actes'):
+        pairs=catalog_scoped_aliases() if standing_aliases is None else standing_aliases
+        if pairs:
+            aliases=[i for i,r in enumerate(rows) if compatible_id(r)
+                     and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
+                     and norm(r.get('competition'))==norm(incoming.get('competition'))
+                     and all(scoped_team_equivalent(r.get(side),incoming.get(side),clean(r.get('leagueId')) or lid,group_alias_pairs(r.get('competition'),clean(r.get('leagueId')) or lid) or pairs) for side in ('home','away'))]
+            if len(aliases)==1:return aliases[0]
+            if len(aliases)>1:return None
+    if mode=='directe' and not candidates:
+        pairs=catalog_scoped_aliases() if standing_aliases is None else standing_aliases
+        def team_ok(r,side):
+            full,short=r.get(side),incoming.get(side)
+            a,b=norm(full),norm(short)
+            if a and a==b:return True
+            league=clean(r.get('leagueId')) or lid
+            group_pairs=group_alias_pairs(r.get('competition'),league)
+            active_pairs=group_pairs if group_pairs is not None else pairs
+            verified=active_pairs.get((a,b),set())
+            # No resoldre una sigla duplicada globalment sense lliga.
+            # Amb lliga, exigir un únic nom complet dins d'aquella lliga.
+            owners={name for (name,code),leagues in active_pairs.items()
+                    if code==b and (not league or league in leagues)}
+            if owners:
+                return owners=={a} and bool(verified) and (not league or league in verified)
+            # Un nom que ja té una sigla oficial no admet altres sigles
+            # deduïdes només per compartir escut.
+            if any(name==a and (not league or league in leagues)
+                   for (name,_),leagues in active_pairs.items()):
+                return b.replace(' ','') in catalog_manual_aliases().get(a,set())
+            return directe_team_alias(full,short,alias_index)
+        aliases=[i for i,r in enumerate(rows) if compatible_id(r)
+                 and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
+                 and team_ok(r,'home') and team_ok(r,'away')]
+        if len(aliases)==1:return aliases[0]
+    return None
+
+
+def merge_unified(packet,previous,mode):
+    if packet.get('schema')!='zonaok-captura-v1' or packet.get('kind')!=mode or packet.get('season')!=SEASON:
+        raise ValueError('Captura incompatible: no publicar')
+    timestamp=check_when(packet.get('capturedAt'))
+    incoming=packet.get('rows')
+    if not isinstance(incoming,list):raise ValueError('Captura no reconeguda')
+    if mode=='agenda' and packet.get('scope')=='full' and not (
+        packet.get('counts',{}).get('genericAgendaRows',0)>0
+        or packet.get('selection',{}).get('verifiedLeagues',0)>0
+    ):
+        raise ValueError('Ni Agenda general amb partits ni calendaris de lliga verificats: publicació bloquejada')
+    if not incoming and packet.get('scope')!='fast':raise ValueError('Captura buida en mode full: no publicar')
+    if previous.get('schema')!='zonaok-partits-total-v1':raise ValueError('Esquema unificat desconegut')
+    if previous.get('season')!=SEASON:raise ValueError('Temporada inesperada al JSON')
+    if not incoming:
+        return previous,{'new':0,'updated':0,'unmatched':0,'unchanged':0,
+                         'ambiguousOrInvalid':0,'skipEmpty':True}
+    alias_table=build_club_alias_table(previous,packet)
+    alias_index=club_alias_index(alias_table)
+    standing_aliases=load_standings_aliases() if mode=='directe' else catalog_scoped_aliases()
+    rows=[canonicalize(r) for r in previous['matches']]
+    counts={'new':0,'updated':0,'unmatched':0,'ambiguousOrInvalid':0,'unchanged':0}
+    for raw in incoming:
+        if not isinstance(raw,dict):counts['ambiguousOrInvalid']+=1;continue
+        r=dict(raw)
+        if mode!='actes' and not validate_row(r,mode):counts['ambiguousOrInvalid']+=1;continue
+        # Un calendari de lliga només és font d'Agenda amb liga+IDP verificats.
+        # Les files genèriques de /ag/ no porten cap d'aquests identificadors.
+        # No tornar a introduir targetes globals amb una lliga atribuïda per la URL.
+        if mode=='agenda' and clean(r.get('leagueId')) and not clean(r.get('matchId')):
+            counts['ambiguousOrInvalid']+=1;continue
+        if mode=='actes':
+            lid=clean(r.get('leagueId'));mid=clean(r.get('matchId'))
+            if not official_match_url(r.get('actaUrl',''),lid,mid):counts['ambiguousOrInvalid']+=1;continue
+            indexes=[i for i,x in enumerate(rows) if clean(x.get('leagueId'))==lid and clean(x.get('matchId'))==mid]
+            if len(indexes)!=1:counts['unmatched']+=1;continue
+            idx=indexes[0];old=rows[idx]
+            previous_time=old.get('actaCheckedAt')
+            if previous_time and check_when(previous_time)>timestamp:counts['unchanged']+=1;continue
+            old['actaUrl']=r['actaUrl']
+            if old.get('actaState')!='available' or r.get('actaState')=='available':
+                old['actaState']='available' if r.get('actaState')=='available' else 'pending'
+            old['actaCheckedAt']=r['actaCheckedAt'];counts['updated']+=1
+            continue
+        idx=match_index(rows,r,mode,alias_index,standing_aliases)
+        if idx is None:
+            if mode!='agenda':counts['unmatched']+=1;continue
+            rows.append(canonicalize(r));counts['new']+=1;continue
+        old=rows[idx]
+        if archived_complete(old):
+            counts['unchanged']+=1
+            continue
+        prop='lastAgendaAt' if mode=='agenda' else 'lastDirecteAt'
+        previous_time=old.get(prop)
+        if previous_time and check_when(previous_time)>timestamp:counts['unchanged']+=1;continue
+        if mode=='agenda':
+            for field in ('iso','time','competition','home','away','venue','homeLogo','awayLogo','matchId','leagueId','round'):
+                if field=='time' and score_tuple(old) and not score_tuple(r) and old.get('iso')==r.get('iso'):
+                    continue  # conservar hora del registre amb marcador, no l'hora de la fitxa buida
+                if r.get(field) not in (None,''):old[field]=r[field]
+            if score_tuple(r) and not (old.get('lastDirecteAt') or old.get('directeUpdatedAt') or
+                                           norm(old.get('scoreSource')) in ('EN DIRECTE','DIRECTE')):
+                old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
+                old['scoreSource']='Agenda';old['scoreUpdatedAt']=packet['capturedAt']
+            if r.get('status') and not (old.get('lastDirecteAt') or old.get('directeUpdatedAt')):
+                old['status']=r['status']
+        else:
+            # Marcadors només sobre partits coneguts i amb identificació inequívoca.
+            for field in ('leagueId','matchId'):
+                if not old.get(field) and r.get(field):old[field]=r[field]
+            if score_tuple(r):
+                old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
+                old['scoreSource']='En directe';old['scoreUpdatedAt']=packet['capturedAt']
+            if r.get('status'):old['status']=r['status']
+            old['directeUpdatedAt']=packet['capturedAt']
+        old[prop]=packet['capturedAt']
+        rows[idx]=canonicalize(old);counts['updated']+=1
+    for i,row in enumerate(rows):rows[i]=canonicalize(row)
+    rows.sort(key=lambda r:(r.get('iso',''),r.get('time',''),norm(r.get('competition')),norm(r.get('home'))))
+    sources=dict(previous.get('sources',{}))
+    prev_mode=dict(sources.get(mode,{}))
+    selection=packet.get('selection',{})
+    progress={k:selection[k] for k in ('nextFullOffset','nextFullKey','nextFastOffset','fullCompleted',
+                                       'catalogueLeagues','pendingLeagueIds','verifiedLeagueIds',
+                                       'failedLeagueIds','verifiedLeagues','unverifiedLeagues')
+              if k in selection}
+    sources[mode]={**prev_mode,'capturedAt':packet['capturedAt'],'mergedAt':utc_now(),**counts,**progress}
+    # Full per lots: reiniciar només quan realment s'ha acabat el catàleg.
+    # El cursor viatja al JSON final, no a un fitxer de control extern.
+    club_logos=dict(previous.get('clubLogos') or {})
+    raw_logos=packet.get('clubLogos')
+    if isinstance(raw_logos,dict):
+        for name,url in raw_logos.items():
+            if (clean(name) and isinstance(url,str) and
+                re.fullmatch(r'https://sidgad\.cloud/fecapa/images/logos_clubes/\d+(?:_\d+)?\.(?:png|gif)',url,re.I)):
+                club_logos[clean(name)]=url
+    result={**previous,'schema':'zonaok-partits-total-v1','season':SEASON,'updatedAt':utc_now(),
+            'sources':sources,'matches':rows,'clubLogos':club_logos,'clubAliases':alias_table,'stats':{'total':len(rows),'withScores':sum(score_tuple(x) for x in rows),
+                      'withActaLinks':sum(bool(x.get('actaUrl')) for x in rows),
+                      'verifiedActes':sum(x.get('actaState')=='available' for x in rows)}}
+    return result,counts
+
+
+def write_compatibility(doc):
+    """Miralls temporals: l'app antiga encara llegeix JSON separats."""
+    rows=doc['matches'];now=utc_now()
+    base={'schema':'zonaok-all-v1','season':SEASON,'publishedAt':now,'source':'FECAPA-PLAYWRIGHT'}
+    agenda={**base,'kind':'agenda','rows':rows,'capturedAt':now,'clubLogos':doc.get('clubLogos',{}),'clubAliases':doc.get('clubAliases',{})}
+    Path('zonaok-tots-agenda.json').write_text(json.dumps(agenda,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    today_local=datetime.now(ZoneInfo('Europe/Madrid'))
+    cutoff=(today_local-timedelta(days=7)).strftime('%Y-%m-%d')
+    today=today_local.strftime('%Y-%m-%d')
+    done=[r for r in rows if cutoff<=r.get('iso','')<=today and score_tuple(r) and \
+          not re.search(r'EN JOC|EN DIRECTE|PLAYING|LIVE|IN PROGRESS',clean(r.get('status')),re.I)]
+    results={**base,'kind':'resultats-7dies','agendaCount':len(rows),'rows':done}
+    Path('zonaok-tots-resultats-7dies.json').write_text(json.dumps(results,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    # Mirall compatible amb index.html (l'aplicació admet fins a 20.000 fitxes).
+    # El JSON unificat continua sent la font completa, sense límit de 1.200.
+    fixtures=[]
+    for r in rows:
+        if not (check_iso(r.get('iso')) and check_time(r.get('time')) and r.get('home') and r.get('away')):continue
+        lid=clean(r.get('leagueId'));mid=clean(r.get('matchId'))
+        url=make_match_url(lid,mid)
+        if url:fixtures.append({'league':lid,'id':mid,'iso':r['iso'],'time':r['time'],
+                                'home':r['home'],'away':r['away'],'actaUrl':url})
+    prior=Path('zonaok-actes.json')
+    if prior.exists():
+        try:
+            old=json.loads(prior.read_text(encoding='utf-8'))
+            if old.get('version')==1 and isinstance(old.get('fixtures'),list):
+                by_id={(x['league'],x['id']):x for x in fixtures}
+                for x in old['fixtures']:
+                    if isinstance(x,dict) and x.get('league') and x.get('id') and (x['league'],x['id']) not in by_id:by_id[(x['league'],x['id'])]=x
+                fixtures=list(by_id.values())
+            else:return {'legacyActes':'Esquema antic desconegut; conservat'}
+        except (ValueError,KeyError):return {'legacyActes':'Fitxer antic malformat; conservat'}
+    if len(fixtures)>MAX_LEGACY_ACTA_FIXTURES:return {'legacyActes':f'Conservat: {len(fixtures)} supera límit de {MAX_LEGACY_ACTA_FIXTURES}'}
+    prior.write_text(json.dumps({'version':1,'generatedAt':now,'source':'FECAPA-PLAYWRIGHT',
+                                 'fixtures':fixtures},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    return {'legacyActes':len(fixtures),'resultsLast7Days':len(done)}
+
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    sub=parser.add_subparsers(dest='command',required=True)
+    a=sub.add_parser('collect');a.add_argument('--mode',choices=['agenda','directe','actes'],required=True)
+    a.add_argument('--scope',choices=['fast','full'],default='fast',help='fast=actualitzacio rapida; full=històric per lots')
+    a.add_argument('--offset',default='auto',help='full: desplacament de lot, o auto (cursor guardat al JSON)')
+    a.add_argument('--pages',type=int,default=10,help='Nombre maxim de pagines de /ag/')
+    a.add_argument('--limit',type=int,default=20,help='Agenda: lligues; Actes: partits; Directe: ignorat. 0=totes.')
+    a.add_argument('--capture',required=True);a.add_argument('--report',required=True)
+    v=sub.add_parser('validate',help='Verificar que no es perden partits davant del HEAD de GitHub')
+    v.add_argument('--output',default=str(CANONICAL))
+    b=sub.add_parser('merge');b.add_argument('--mode',choices=['agenda','directe','actes'],required=True)
+    b.add_argument('--capture',required=True);b.add_argument('--output',default=str(CANONICAL));b.add_argument('--report',required=True)
+    b.add_argument('--compat',action='store_true',help='Generar miralls dels JSON que encara usa l’app')
+    args=parser.parse_args()
+    if args.command=='validate':
+        new=load_unified(Path(args.output))
+        count=len(new['matches'])
+        try:
+            text=subprocess.check_output(['git','show',f'HEAD:{args.output}'],stderr=subprocess.DEVNULL)
+            old=json.loads(text)
+            if old.get('schema')!='zonaok-partits-total-v1':raise ValueError('HEAD: esquema desconegut')
+            if count<len(old.get('matches',[])):
+                raise ValueError(f'ERROR: {count} partits nous, {len(old["matches"])} antics: no publicar')
+        except subprocess.CalledProcessError:
+            pass   # Primera publicació sense JSON anterior.
+        print('Validació correcta: ',count,'partits conservats')
+        return 0
+    if args.command=='collect':
+        if args.limit<0 or args.pages<1 or args.pages>100:parser.error('limit >= 0 i pages entre 1 i 100')
+        packet,diag=asyncio.run(collect(args))
+        Path(args.capture).write_text(json.dumps(packet,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        Path(args.report).write_text(json.dumps(diag,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        print(json.dumps(diag,ensure_ascii=False,indent=2))
+        if args.mode=='agenda' and (not packet['rows'] or not diag.get('publishSafe',True)):
+            print('ERROR: Agenda no publicable; revisar registres de liga+IDP. Diagnòstic DESAT a '+args.report,file=sys.stderr)
+            return 2
+        return 0
+    packet=json.loads(Path(args.capture).read_text(encoding='utf-8'))
+    previous=load_unified(Path(args.output))
+    doc,diagnostic=merge_unified(packet,previous,args.mode)
+    if not diagnostic.get('skipEmpty'):
+        Path(args.output).write_text(json.dumps(doc,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        if args.compat:diagnostic.update(write_compatibility(doc))
+    Path(args.report).write_text(json.dumps(diagnostic,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print(json.dumps(diagnostic,ensure_ascii=False,indent=2));return 0
+
+if __name__=='__main__':
+    try:sys.exit(main())
+    except Exception as exc:sys.exit('ERROR ZonaOK AUTO (no publicat): '+str(exc))
+,r'\1',s))
+    return (base(a)==b or base(b)==a or (base(a)==base(b) and (a==base(a) or b==base(b))))
+
+
+def direct_live_window(r,now=None):
+    now=(now or datetime.now(ZoneInfo('Europe/Madrid'))).astimezone(ZoneInfo('Europe/Madrid'))
+    try:
+        start=datetime.strptime(f"{r.get('iso','')} {r.get('time','')}",'%Y-%m-%d %H:%M').replace(tzinfo=ZoneInfo('Europe/Madrid'))
+    except (ValueError,TypeError):return False
+    if start.date()!=now.date() and not (start.date()==now.date()-timedelta(days=1) and start.hour>=20 and now.hour<4):return False
+    if re.search(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',clean(r.get('status')),re.I):return False
+    national=norm(r.get('competition')) in ('NACIONAL CATALANA MASCULINA','NACIONAL CATALANA FEMENINA')
+    return now-start>=(-timedelta(minutes=30) if national else timedelta(minutes=40))
+
+
+def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
+    lid=clean(incoming.get('leagueId'));mid=clean(incoming.get('matchId'))
+    if lid and mid:
+        exact=[i for i,r in enumerate(rows) if clean(r.get('leagueId'))==lid and clean(r.get('matchId'))==mid]
+        if len(exact)==1:return exact[0]
+        if len(exact)>1:return None
+    def compatible_id(r):
+        return ((not mid or not r.get('matchId') or clean(r.get('matchId'))==mid) and
+                (not lid or not r.get('leagueId') or clean(r.get('leagueId'))==lid))
+    candidates=[i for i,r in enumerate(rows) if same_fixture(r,incoming) and compatible_id(r)]
+    if len(candidates)==1:return candidates[0]
+    if not candidates and (mid or lid):
+        # Lliga/calendari poden tenir noms diferents per a la mateixa categoria.
+        # L'única equivalència permesa sense nom de competició és un partit
+        # ÚNIC amb data/hora/equips exactament iguals i cap ID contradictori.
+        weak=[i for i,r in enumerate(rows) if compatible_id(r) and
+              r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
+              and norm(r.get('home'))==norm(incoming.get('home'))
+              and norm(r.get('away'))==norm(incoming.get('away'))]
+        if len(weak)==1:return weak[0]
+        if len(weak)>1:return None
+    if not candidates and mode in ('agenda','actes'):
+        pairs=catalog_scoped_aliases() if standing_aliases is None else standing_aliases
+        if pairs:
+            aliases=[i for i,r in enumerate(rows) if compatible_id(r)
+                     and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
+                     and norm(r.get('competition'))==norm(incoming.get('competition'))
+                     and all(scoped_team_equivalent(r.get(side),incoming.get(side),clean(r.get('leagueId')) or lid,group_alias_pairs(r.get('competition'),clean(r.get('leagueId')) or lid) or pairs) for side in ('home','away'))]
+            if len(aliases)==1:return aliases[0]
+            if len(aliases)>1:return None
+    if mode=='directe' and not candidates:
+        pairs=catalog_scoped_aliases() if standing_aliases is None else standing_aliases
+        def evidence(r,side):
+            full,short=r.get(side),incoming.get(side)
+            a,b=norm(full),norm(short)
+            left_logo=official_logo_id(r.get(side+'Logo'))
+            right_logo=official_logo_id(incoming.get(side+'Logo'))
+            if left_logo and right_logo and left_logo!=right_logo:return -1
+            if a and a==b:return 2
+            league=clean(r.get('leagueId')) or lid
+            group_pairs=group_alias_pairs(r.get('competition'),league)
+            active_pairs=group_pairs if group_pairs is not None else pairs
+            owners={name for (name,code),leagues in active_pairs.items()
+                    if code==b and (not league or league in leagues)}
+            if owners:
+                if a in owners:return 2
+                # Codi oficial d'un altre equip: contradicció.
+                if b.replace(' ','') not in catalog_manual_aliases().get(a,set()):return -1
+            if b.replace(' ','') in catalog_manual_aliases().get(a,set()):return 2
+            if left_logo and right_logo and left_logo==right_logo:return 1
+            if directe_team_alias(full,short,alias_index):return 1
+            # Una sigla desconeguda pot quedar pendent si l'altra banda i el
+            # context identifiquen un únic partit; un nom conegut incompatible no.
+            known={name for (name,code),leagues in active_pairs.items() if not league or league in leagues}
+            if b in known:return -1
+            return 0
+        ranked=[]
+        for i,r in enumerate(rows):
+            if not compatible_id(r) or r.get('iso')!=incoming.get('iso') or r.get('time')!=incoming.get('time'):continue
+            category=competition_compatible(r.get('competition'),incoming.get('competition'))
+            e=(evidence(r,'home'),evidence(r,'away'))
+            if min(e)<0:continue
+            if min(e)>0:
+                ranked.append((i,3 if category else 2))
+            elif max(e)>=2 and category:
+                ranked.append((i,1))
+        if ranked:
+            best=max(rank for _,rank in ranked)
+            winners=[i for i,rank in ranked if rank==best]
+            if len(winners)==1:return winners[0]
     return None
 
 

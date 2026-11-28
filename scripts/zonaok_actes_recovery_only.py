@@ -132,7 +132,7 @@ async def discover(doc,state):
         if ids(r)[0] in league_ids:related.add(ids(r)[0])
         for l in related:priority[l]=priority.get(l,0)+1
     checks=state.setdefault("windowLeagueChecks",{})
-    selected=sorted(league_ids,key=lambda l:(checks.get(l,""),-priority.get(l,0),int(l)))[:8] if pending else []
+    selected=sorted(league_ids,key=lambda l:(-priority.get(l,0),checks.get(l,""),int(l)) if WINDOW_NAME=="live" else (checks.get(l,""),-priority.get(l,0),int(l)))[:(3 if WINDOW_NAME=="live" else 8)] if pending else []
     report={"legacyIDs":added,"calendarIDs":0,"checks":[],"untriedLeagues":sum(l not in checks for l in league_ids) if pending else 0}
     if not selected:return report
     async with async_playwright() as pw:
@@ -163,7 +163,6 @@ def all_candidates(doc):
     # Closed official acts can exist even if the cached fixture has no score.
     for r in doc["matches"]:
         if not requires_acta(r) or not valid(r):continue
-        if WINDOW_NAME=="live" and r.get("actaState")=="available":continue
         l,m=ids(r);key=l+"|"+m
         if key in rows:continue
         rows[key]={"leagueId":l,"matchId":m,"iso":r["iso"],"fingerprint":json.dumps([r.get("homeScore"),r.get("awayScore"),norm(r.get("status")),r.get("actaState"),r.get("actaUrl")],ensure_ascii=False,separators=(",",":"))}
@@ -219,6 +218,7 @@ async def acts(doc,root,control):
     audit_pending=[(k,r) for k,r in rows.items() if verified(k,r) and missing_before.get(k)]
     clock=datetime.now(timezone.utc)
     work=pending+audit_pending
+    if WINDOW_NAME=="live":work=[(k,r) for k,r in work if byid[k].get("actaState")!="available"]
     plan=sorted(work,key=lambda x:(attempts.get(x[0],""),-int(x[1]["iso"].replace("-","")),x[0]))[:40]
     audit_keys={k for k,_ in audit_pending}
     report={"selected":len(plan),"attempted":0,"verified":0,"pending":0,"reasons":{},"reusedVerified":promoted,"matchDiagnostics":{}}

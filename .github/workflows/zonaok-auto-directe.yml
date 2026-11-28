@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       scope:
-        description: 'fast=actualitzacio dels darrers 7 dies; full=repàs historic'
+        description: 'fast=partits del moment; full es limita també al dia'
         required: true
         type: choice
         options:
@@ -32,7 +32,6 @@ on:
         default: true
   schedule:
     - cron: '2,7,12,17,22,27,32,37,42,47,52,57 * * * *'
-    - cron: '2 6,7,18,19 * * *'
 
 permissions:
   contents: write
@@ -116,7 +115,9 @@ jobs:
             # Primer validar la fusió original, després la reducció justificada per duplicats.
             python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
             python scripts/zonaok_deduplicar_partits.py --report diagnostic-duplicats-directe.json
-            git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
+            mkdir -p imports
+            cp fusio-directe-auto.json imports/directe-incidencies.json
+            git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json imports/directe-incidencies.json
             if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
             if git diff --cached --quiet; then echo 'Sense canvis nous'; exit 0; fi
             git commit -m 'ZonaOK AUTO: directe actualitzar JSON unificat'

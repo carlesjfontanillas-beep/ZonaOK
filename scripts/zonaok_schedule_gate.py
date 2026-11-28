@@ -144,7 +144,20 @@ def should_run(mode: str, cron: str, now: datetime, matches: Path) -> tuple[bool
         return False, "invalid_cet_cest_daily_slot"
     if cron not in (LIVE_CRONS[mode], LEGACY_LIVE_CRON):
         return False, "unrecognized_schedule"
-    in_window = fixture_window_count(matches, now, lead=DIRECTE_LEAD if mode == "directe" else timedelta(0), grace=DIRECTE_GRACE if mode == "directe" else timedelta(0))
+    if mode=="directe":
+        # No lectura històrica ni repàs matí/vespre.
+        count=0
+        for row in read_matches(matches):
+            status=str(row.get('status') or '')
+            if FINAL_STATUS.search(status) and has_score(row):continue
+            if re.search(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',status,re.I):continue
+            try:start=datetime.strptime(f"{row.get('iso','')} {row.get('time','')}",'%Y-%m-%d %H:%M').replace(tzinfo=MADRID)
+            except (TypeError,ValueError):continue
+            if start.date()!=local.date() and not (start.date()==local.date()-timedelta(days=1) and start.hour>=20 and local.hour<4):continue
+            nc=str(row.get('competition','')).upper() in ('NACIONAL CATALANA MASCULINA','NACIONAL CATALANA FEMENINA')
+            if local-start>=(-DIRECTE_LEAD if nc else timedelta(minutes=40)):count+=1
+        return bool(count),f'live_day_candidates:{count}'
+    in_window = fixture_window_count(matches, now)
     if mode in ("actes", "classificacions"):
         pending = pending_acta_count(matches, now)
         if pending:
