@@ -61,7 +61,6 @@ def reconcile_duplicate_pairs(doc,incoming,cut,captured):
         if not all(no_conflict(a,b) for a in group):continue
         if any(a.get('lastAgendaAt') and check_when(a['lastAgendaAt'])>check_when(captured) for a in group):continue
         if any(slot(a)!=slot(b) and (score_tuple(a) or a.get('actaState')=='available' or FINAL.search(clean(a.get('status'))) or LIVE.search(clean(a.get('status')))) for a in group):continue
-        if k==('BCN BENJAMI PLATA 3','CH LES FRANQUESES','UNIO ESPORTIVA D HORTA B'):continue
         # No need for a pre-existing exact slot. One official ordered pair
         # in the entire season is sufficient, subject to the ID/score guards.
         # For an alert, use the most recently observed old fixture, then the
@@ -125,11 +124,7 @@ def merge(doc,packet):
         if not (recent(a,cut) or recent(b,cut)):continue
         if a.get('lastAgendaAt') and check_when(a['lastAgendaAt'])>clock:continue
         if slot(a)!=slot(b):
-            # User selected the latest of three conflicting records. Do not silently
-            # revert that choice to the already known older source slot.
-            if pair(a)==('BCN BENJAMI PLATA 3','CH LES FRANQUESES','UNIO ESPORTIVA D HORTA B') and slot(a)==('2026-11-29','10:45') and slot(b) in (('2026-11-28','15:00'),('2026-11-28','17:00')):
-                conflicts.append({'reason':'approved_latest_date_disagrees_with_source','old':key(a),'incoming':key(b)})
-                continue
+            # The current official FECAPA schedule always overrides an old unplayed slot.
             if score_tuple(a) or a.get('actaState')=='available' or LIVE.search(clean(a.get('status'))):
                 conflicts.append({'reason':'schedule_of_started_or_scored_match','old':key(a),'incoming':key(b)})
             else:

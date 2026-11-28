@@ -87,6 +87,13 @@ class DailyAgenda(unittest.TestCase):
         self.assertEqual(report['stateAcceptedCount'],3)
         self.assertEqual(sorted(r['reason'] for r in report['conflicts']),['state_ambiguous_team_code','state_missing_result'])
         self.assertFalse(any(r['reason']=='not_uniquely_found_in_agenda' for r in report['conflicts']))
+    def test_official_calendar_overrides_previous_manual_choice(self):
+        a=dict(self.row(iso='2026-11-29',home='CH LES FRANQUESES',away="UNIO ESPORTIVA D HORTA B"),competition='BCN BENJAMI PLATA 3',time='10:45')
+        b=dict(a,iso='2026-11-28',time='17:00')
+        out,report=self.run_merge([a],[b])
+        self.assertEqual(report['scheduleChangeCount'],1)
+        self.assertEqual(report['unresolvedCount'],0)
+        self.assertEqual((out['matches'][0]['iso'],out['matches'][0]['time']),('2026-11-28','17:00'))
     def test_daily_madrid_dst(self):
         for month,utc_hour in [(1,9),(7,8)]:
             now=datetime(2026,month,10,utc_hour,12,tzinfo=timezone.utc)
