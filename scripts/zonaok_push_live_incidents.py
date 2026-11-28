@@ -61,20 +61,20 @@ def internal_match_id(season, fixture):
 def candidates(catalog, *, now=None):
     now = now or datetime.now(timezone.utc)
     if catalog.get("schema") != "zonaok-partits-total-v1" or not isinstance(catalog.get("matches"), list): raise ValueError("catalog_invalid")
-    output, seen, official = [], Counter(), Counter()
+    output, seen_internal, official = [], Counter(), Counter()
     rows = [r for r in catalog["matches"] if isinstance(r, dict)]
     for row in rows:
         fixture = {k: row.get(k, "") for k in ("iso", "time", "competition", "home", "away", "leagueId", "matchId", "homeLogo", "awayLogo", "round")}
         ident = internal_match_id(catalog.get("season", ""), fixture)
-        if ident: seen[ident] += 1
         pair = (str(row.get("leagueId") or ""), str(row.get("matchId") or ""))
         if all(pair): official[pair] += 1
+        elif ident: seen_internal[ident] += 1
     for row in rows:
         if norm(row.get("competition")) not in COMPETITIONS or norm(row.get("status")) not in LIVE: continue
         fixture = {k: row.get(k, "") for k in ("iso", "time", "competition", "home", "away", "leagueId", "matchId", "homeLogo", "awayLogo", "round")}
         ident = internal_match_id(catalog.get("season", ""), fixture)
         pair = (str(row.get("leagueId") or ""), str(row.get("matchId") or ""))
-        if not ident or seen[ident] != 1 or (all(pair) and official[pair] != 1): continue
+        if not ident or (all(pair) and official[pair] != 1) or (not all(pair) and seen_internal[ident] != 1): continue
         try: kickoff = datetime.strptime(row["iso"] + " " + row["time"], "%Y-%m-%d %H:%M").replace(tzinfo=MADRID)
         except (KeyError, ValueError, TypeError): continue
         if not timedelta(0) <= now.astimezone(MADRID) - kickoff <= timedelta(minutes=165): continue
