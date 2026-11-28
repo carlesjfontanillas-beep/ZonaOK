@@ -11,7 +11,7 @@ on:
     inputs:
       scope:
         type: choice
-        options: [full, fast, review9, agenda_dates, october]
+        options: [full, fast, review9, agenda_dates, october, september]
         default: full
       limit:
         type: string
@@ -77,7 +77,7 @@ jobs:
           python - <<'PY'
           import hashlib,json,os
           from pathlib import Path
-          paths={"early":"imports/actes-recovery-20261101-12.json","recent":"imports/actes-recovery-state.json","october":"imports/actes-recovery-20261001-31.json"}
+          paths={"early":"imports/actes-recovery-20261101-12.json","recent":"imports/actes-recovery-state.json","october":"imports/actes-recovery-20261001-31.json","september":"imports/actes-recovery-20260901-30.json"}
           # Start the new interval first, then rotate oldest completed lot.
           def last_done(k):
               p=Path(paths[k])
@@ -93,8 +93,8 @@ jobs:
           if os.environ["REQUEST_SCOPE"]=="agenda_dates" or not agenda_done or not agenda_code_current:
               window="agenda_dates"
               paths[window]=str(agenda)
-          elif os.environ["REQUEST_SCOPE"]=="october":
-              window="october"
+          elif os.environ["REQUEST_SCOPE"] in ("october","september"):
+              window=os.environ["REQUEST_SCOPE"]
           else:
               coverage={}
               for k in ("early","recent"):
@@ -108,7 +108,18 @@ jobs:
                   window="review9"
                   paths[window]=str(review)
               elif october_ready:
-                  window="october"
+                  oct_state=json.loads(Path(paths["october"]).read_text()) if Path(paths["october"]).exists() else {}
+                  oct_after=oct_state.get("lastActs",{}).get("after",{})
+                  oct_total=oct_after.get("actaRequired",0)
+                  september_ready=oct_total>0 and oct_after.get("verified",0)/oct_total>0.95 and not oct_state.get("lastActs",{}).get("readyNext",0)
+                  if september_ready:
+                      sept_path=Path(paths["september"])
+                      sept=json.loads(sept_path.read_text()) if sept_path.exists() else {}
+                      a=sept.get("lastActs",{}); i=sept.get("lastIds",{})
+                      immediate=not a or a.get("readyNext",0) or (a.get("after",{}).get("missingHistoricalIDs",0) and (i.get("untriedLeagues",0) or i.get("calendarIDs",0) or i.get("legacyIDs",0)))
+                      window="september" if immediate else min(("early","recent","october","september"),key=lambda k:(last_done(k),k))
+                  else:
+                      window="october"
               else:
                   window="early" if not Path(paths["early"]).exists() else min(("early","recent"),key=lambda k:(last_done(k),k))
           with open(os.environ["GITHUB_ENV"],"a") as out:
@@ -252,7 +263,7 @@ jobs:
           import json,os,sys
           from pathlib import Path
           current_path=Path(os.environ["ACTES_STATE"])
-          paths=[current_path] if os.environ.get("ZONAOK_ACTES_WINDOW")=="october" else [Path("imports/actes-recovery-state.json"),Path("imports/actes-recovery-20261101-12.json")]
+          paths=[current_path] if os.environ.get("ZONAOK_ACTES_WINDOW") in ("october","september") else [Path("imports/actes-recovery-state.json"),Path("imports/actes-recovery-20261101-12.json")]
           current=json.loads(current_path.read_text())
           blocked=bool(current.get("lastActs",{}).get("blocked") or current.get("lastIds",{}).get("blocked"))
           def ready(p):

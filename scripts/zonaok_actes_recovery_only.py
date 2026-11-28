@@ -19,6 +19,7 @@ WINDOWS={
     "recent":("2026-11-12","2026-11-26","imports/actes-recovery-state.json"),
     "early":("2026-11-01","2026-11-12","imports/actes-recovery-20261101-12.json"),
     "october":("2026-10-01","2026-10-31","imports/actes-recovery-20261001-31.json"),
+    "september":("2026-09-01","2026-09-30","imports/actes-recovery-20260901-30.json"),
     "review9":("2026-11-12","2026-11-26","imports/actes-recovery-review9.json"),
 }
 REVIEW9=frozenset({
