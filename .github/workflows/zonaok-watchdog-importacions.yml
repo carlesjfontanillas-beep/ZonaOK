@@ -8,7 +8,6 @@ on:
     - cron: '1,6,11,16,21,26,31,36,41,46,51,56 * * * *'
   workflow_run:
     workflows:
-      - ZonaOK - Recuperacio de dades de temporada
       - ZonaOK - Agenda TOTAL AUTO (Chromium Playwright)
       - ZonaOK - En directe TOTAL AUTO (Chromium Playwright)
       - ZonaOK - Actes TOTAL AUTO (Chromium Playwright)
@@ -26,6 +25,7 @@ permissions:
 concurrency:
   group: zonaok-watchdog-importacions
   cancel-in-progress: false
+  queue: max
 jobs:
   supervisor:
     if: ${{ github.event_name != 'workflow_run' || contains(fromJSON('["failure","cancelled","timed_out","startup_failure","action_required","stale"]'), github.event.workflow_run.conclusion) }}

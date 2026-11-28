@@ -13,7 +13,6 @@ WORKFLOWS={
  'zonaok-classificacions-auto.yml':['scope=live','publish=true'],
  'jugadors-public.yml':['mode=retry'],
  'zonaok-equivalencies-fecapa.yml':[],
- 'zonaok-recuperacio-temporada.yml':[],
  'zonaok-push-events.yml':['test_scenario=scheduled_now'],
  'zonaok-push-plan-inicial.yml':[],
 }
