@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T11:42:29.119011+00:00",
+  "capturedAt": "2026-11-28T11:47:50.992034+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -13482,11 +13482,34 @@
       "competition": "INFANTIL PLATA",
       "leagueId": "4787",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=clasificaciones",
-      "capturedAt": "2026-11-28T11:32:20.948768+00:00",
-      "standingsAt": "2026-11-28T11:32:20.948768+00:00",
+      "capturedAt": "2026-11-28T11:47:50.992034+00:00",
+      "standingsAt": "2026-11-28T11:47:50.992034+00:00",
       "standings": [
         {
           "pos": "1",
+          "team": "CLUB ESPORTIU OLESA PATI A",
+          "teamId": "11542",
+          "teamLogo": "/fecapa/images/logos_clubes/270.png",
+          "played": "9",
+          "points": "24",
+          "gf": "52",
+          "ga": "16",
+          "difference": "36",
+          "stats": {
+            "PTS": "24",
+            "PJ": "9",
+            "PG": "8",
+            "PE": "0",
+            "PP": "1",
+            "GF": "52",
+            "GC": "16",
+            "DIF": "36"
+          },
+          "shortTeam": "COPA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "2",
           "team": "CHP MARTORELL",
           "teamId": "11929",
           "teamLogo": "/fecapa/images/logos_clubes/520.png",
@@ -13506,29 +13529,6 @@
             "DIF": "22"
           },
           "shortTeam": "CHPM",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "2",
-          "team": "CLUB ESPORTIU OLESA PATI A",
-          "teamId": "11542",
-          "teamLogo": "/fecapa/images/logos_clubes/270.png",
-          "played": "8",
-          "points": "21",
-          "gf": "49",
-          "ga": "14",
-          "difference": "35",
-          "stats": {
-            "PTS": "21",
-            "PJ": "8",
-            "PG": "7",
-            "PE": "0",
-            "PP": "1",
-            "GF": "49",
-            "GC": "14",
-            "DIF": "35"
-          },
-          "shortTeam": "COPA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -13582,20 +13582,20 @@
           "team": "CLUB PATI TORRELLES",
           "teamId": "12257",
           "teamLogo": "/fecapa/images/logos_clubes/392_1.png",
-          "played": "9",
+          "played": "10",
           "points": "16",
-          "gf": "49",
-          "ga": "28",
-          "difference": "21",
+          "gf": "51",
+          "ga": "31",
+          "difference": "20",
           "stats": {
             "PTS": "16",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "5",
             "PE": "1",
-            "PP": "3",
-            "GF": "49",
-            "GC": "28",
-            "DIF": "21"
+            "PP": "4",
+            "GF": "51",
+            "GC": "31",
+            "DIF": "20"
           },
           "shortTeam": "CPT",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -15953,35 +15953,39 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-27T01:11:38.298092+00:00",
-      "standingsAt": "2026-11-27T01:11:38.298092+00:00",
+      "capturedAt": "2026-11-28T11:47:50.992034+00:00",
+      "standingsAt": "2026-11-28T11:47:50.992034+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
           "pos": "1",
           "team": "IGUALADA HC A",
-          "played": "8",
-          "points": "22",
-          "gf": "75",
-          "ga": "13",
-          "difference": "62",
+          "teamId": "12416",
+          "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
+          "played": "9",
+          "points": "25",
+          "gf": "86",
+          "ga": "14",
+          "difference": "72",
           "stats": {
-            "PTS": "22",
-            "PJ": "8",
-            "PG": "7",
+            "PTS": "25",
+            "PJ": "9",
+            "PG": "8",
             "PE": "1",
             "PP": "0",
-            "GF": "75",
-            "GC": "13",
-            "DIF": "62",
+            "GF": "86",
+            "GC": "14",
+            "DIF": "72",
             "SAN": "0"
           },
-          "shortTeam": "IGUALADA HC A",
+          "shortTeam": "IHCA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "CP VILANOVA A",
+          "teamId": "11477",
+          "teamLogo": "/fecapa/images/logos_clubes/302.png",
           "played": "7",
           "points": "16",
           "gf": "62",
@@ -15998,32 +16002,38 @@
             "DIF": "39",
             "SAN": "0"
           },
-          "shortTeam": "CP VILANOVA A",
+          "shortTeam": "PVAA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
           "team": "CLUB D'ESPORTS VENDRELL",
-          "played": "8",
+          "teamId": "11552",
+          "teamLogo": "/fecapa/images/logos_clubes/332.png",
+          "played": "9",
           "points": "15",
-          "gf": "26",
-          "ga": "20",
-          "difference": "6",
+          "gf": "27",
+          "ga": "31",
+          "difference": "-4",
           "stats": {
             "PTS": "15",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "5",
             "PE": "0",
-            "PP": "3",
-            "GF": "26",
-            "GC": "20",
-            "DIF": "6",
+            "PP": "4",
+            "GF": "27",
+            "GC": "31",
+            "DIF": "-4",
             "SAN": "0"
-          }
+          },
+          "shortTeam": "CEV",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "IGUALADA HC C",
+          "teamId": "12418",
+          "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
           "played": "7",
           "points": "14",
           "gf": "41",
@@ -16040,12 +16050,14 @@
             "DIF": "27",
             "SAN": "0"
           },
-          "shortTeam": "IGUALADA HC C",
+          "shortTeam": "IHCC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
           "team": "CP CORBERA",
+          "teamId": "11282",
+          "teamLogo": "/fecapa/images/logos_clubes/575_1.png",
           "played": "8",
           "points": "6",
           "gf": "35",
@@ -16062,12 +16074,14 @@
             "DIF": "-22",
             "SAN": "0"
           },
-          "shortTeam": "CP CORBERA",
+          "shortTeam": "CHC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
           "team": "REUS DEPORTIU A A",
+          "teamId": "12345",
+          "teamLogo": "/fecapa/images/logos_clubes/328_2.png",
           "played": "8",
           "points": "6",
           "gf": "18",
@@ -16083,11 +16097,15 @@
             "GC": "56",
             "DIF": "-38",
             "SAN": "0"
-          }
+          },
+          "shortTeam": "RDA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "7",
           "team": "CLUB HOQUEI VILASSAR",
+          "teamId": "11926",
+          "teamLogo": "/fecapa/images/logos_clubes/303_1.png",
           "played": "8",
           "points": "0",
           "gf": "5",
@@ -16103,7 +16121,9 @@
             "GC": "79",
             "DIF": "-74",
             "SAN": "0"
-          }
+          },
+          "shortTeam": "CHV",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
     },
@@ -36440,14 +36460,14 @@
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 5",
-      "team": "CHP MARTORELL",
-      "shortTeam": "CHPM"
+      "team": "CLUB ESPORTIU OLESA PATI A",
+      "shortTeam": "COPA"
     },
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 5",
-      "team": "CLUB ESPORTIU OLESA PATI A",
-      "shortTeam": "COPA"
+      "team": "CHP MARTORELL",
+      "shortTeam": "CHPM"
     },
     {
       "leagueId": "4787",
@@ -36688,6 +36708,48 @@
       "group": "ALEVÍ OR 3",
       "team": "UEH BARBERÀ A",
       "shortTeam": "EHBA"
+    },
+    {
+      "leagueId": "4789",
+      "group": "ALEVÍ OR 8",
+      "team": "IGUALADA HC A",
+      "shortTeam": "IHCA"
+    },
+    {
+      "leagueId": "4789",
+      "group": "ALEVÍ OR 8",
+      "team": "CP VILANOVA A",
+      "shortTeam": "PVAA"
+    },
+    {
+      "leagueId": "4789",
+      "group": "ALEVÍ OR 8",
+      "team": "CLUB D'ESPORTS VENDRELL",
+      "shortTeam": "CEV"
+    },
+    {
+      "leagueId": "4789",
+      "group": "ALEVÍ OR 8",
+      "team": "IGUALADA HC C",
+      "shortTeam": "IHCC"
+    },
+    {
+      "leagueId": "4789",
+      "group": "ALEVÍ OR 8",
+      "team": "CP CORBERA",
+      "shortTeam": "CHC"
+    },
+    {
+      "leagueId": "4789",
+      "group": "ALEVÍ OR 8",
+      "team": "REUS DEPORTIU A A",
+      "shortTeam": "RDA"
+    },
+    {
+      "leagueId": "4789",
+      "group": "ALEVÍ OR 8",
+      "team": "CLUB HOQUEI VILASSAR",
+      "shortTeam": "CHV"
     },
     {
       "leagueId": "4790",
