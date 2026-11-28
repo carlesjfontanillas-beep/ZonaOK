@@ -27,7 +27,7 @@ REVIEW9=frozenset({
     ("4781","154014"), ("4784","151829"), ("4784","151834"),
     ("4791","159253"), ("4791","159285"), ("4814","156522"),
 })
-WINDOWS["live"]=((local_today()-timedelta(days=1)).isoformat(),local_today().isoformat(),"imports/actes-live-state.json")
+WINDOWS["live"]=((local_today()-timedelta(days=7)).isoformat(),local_today().isoformat(),"imports/actes-live-state.json")
 WINDOW_NAME=os.environ.get("ZONAOK_ACTES_WINDOW","recent")
 if WINDOW_NAME not in WINDOWS:raise ValueError("invalid_recovery_window")
 START, END, state_file=WINDOWS[WINDOW_NAME]
@@ -69,8 +69,9 @@ def state_league(r):
 def requires_acta(r):
     if not historical(r) or state_league(r):return False
     if WINDOW_NAME!='live':return True
-    if not score_tuple(r) or not re.search(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',str(r.get('status','')),re.I):return False
-    return r.get('iso')==local_today().isoformat() or (r.get('iso')==(local_today()-timedelta(days=1)).isoformat() and str(r.get('time',''))>='20:00')
+    from zonaok_live_finals import current_final
+    return current_final(r,datetime.now(timezone.utc))
+
 
 def summarize(doc):
     rows=doc["matches"]; window=[r for r in rows if historical(r)]
@@ -147,7 +148,7 @@ async def discover(doc,state):
                     await page.wait_for_selector("tr.sidgad-calendario-partido:visible",timeout=22000)
                     data=await page.evaluate(JS_CALENDAR,l)
                     accepted,meta=verified_league_rows(l,data["rows"],[])
-                    n=sum(attach(rows,r) for r in accepted if requires_acta(r))
+                    n=sum(attach(rows,r) for r in accepted if WINDOW_NAME=='live' or requires_acta(r))
                     report["calendarIDs"]+=n
                     report["checks"].append({"league":l,"ids":n,"status":meta["status"],"accepted":len(accepted)})
                 except Exception as exc:

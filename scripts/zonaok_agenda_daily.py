@@ -32,6 +32,7 @@ def merge(doc,packet):
     if not incoming or any(not safe(r) for r in incoming):raise ValueError('invalid or empty source rows')
     if len(incoming)<.8*len(old):raise ValueError('incomplete source coverage')
     if sum(recent(r,cut) for r in incoming)<.8*sum(recent(r,cut) for r in old):raise ValueError('incomplete recent/future coverage')
+    old_keys={key(a) for a in old}
     rows=copy.deepcopy(old); used_old=set();used_new=set(); links=[]
     # Stable official ID when available; the general Agenda normally has none.
     for fn,require in ((idpair,lambda k:all(k)),(key,lambda k:all(k))):
@@ -78,7 +79,7 @@ def merge(doc,packet):
     # New fixtures only if there is no unresolved old fixture with same teams/category.
     for j,b in enumerate(incoming):
         if j in used_new or not recent(b,cut):continue
-        if any(i not in used_old for i in oi.get(pair(b),[])) or any(key(a)==key(b) for a in old):
+        if any(i not in used_old for i in oi.get(pair(b),[])) or key(b) in old_keys:
             conflicts.append({'reason':'ambiguous_or_duplicate','incoming':key(b)});continue
         r=canonicalize(b);r['lastAgendaAt']=captured
         if r['iso']<today.isoformat() and score_tuple(r) and not EXCLUDED.search(clean(r.get('status'))) and not LIVE.search(clean(r.get('status'))):

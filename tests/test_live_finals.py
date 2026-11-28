@@ -11,6 +11,8 @@ class LiveFinals(unittest.TestCase):
         self.assertEqual(targets({'matches':[r]},groups,clock),{'4784':{'JUVENIL OR 6'}})
         self.assertEqual(targets({'matches':[dict(r,leagueId='')]},groups,clock),{'4784':{'JUVENIL OR 6'}})
         self.assertEqual(targets({'matches':[dict(r,status='EN JOC'),dict(r,iso='2026-11-26')]},groups,clock),{})
+        recovered=dict(r,iso='2026-11-27',agendaRecoveredAt='2026-11-28T11:00:00Z')
+        self.assertEqual(targets({'matches':[recovered]},groups,clock),{'4784':{'JUVENIL OR 6'}})
         groups['competitions']['4784:a']['standingsAt']='2026-11-28T11:10:00Z'
         self.assertEqual(targets({'matches':[r]},groups,clock),{})
 if __name__=='__main__':unittest.main()

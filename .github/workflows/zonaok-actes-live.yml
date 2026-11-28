@@ -29,12 +29,12 @@ jobs:
         id: gate
         run: |
           python - <<'PY'
-          import json,os,re
-          from datetime import datetime,timedelta
-          from zoneinfo import ZoneInfo
-          today=datetime.now(ZoneInfo('Europe/Madrid')).date()
+          import json,os,sys
+          from datetime import datetime,timezone
+          sys.path.insert(0,'scripts')
+          from zonaok_live_finals import current_final,norm
           rows=json.load(open('zonaok-tots-partits.json'))['matches']
-          pending=[r for r in rows if (r.get('iso')==today.isoformat() or (r.get('iso')==(today-timedelta(days=1)).isoformat() and str(r.get('time',''))>='20:00')) and r.get('actaState')!='available' and isinstance(r.get('homeScore'),int) and isinstance(r.get('awayScore'),int) and re.search(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',str(r.get('status','')),re.I) and not str(r.get('competition','')).upper().startswith('OK LIGA')]
+          pending=[r for r in rows if current_final(r,datetime.now(timezone.utc)) and r.get('actaState')!='available' and not norm(r.get('competition')).startswith('OK LIGA')]
           print('Finals pendents:',len(pending))
           with open(os.environ['GITHUB_OUTPUT'],'a') as f:print('run='+str(bool(pending)).lower(),file=f)
           PY

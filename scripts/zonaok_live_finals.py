@@ -18,6 +18,11 @@ def current_final(r,now):
     try:kickoff=datetime.strptime(str(r.get('iso'))+' '+str(r.get('time')),'%Y-%m-%d %H:%M').replace(tzinfo=MADRID)
     except (ValueError,TypeError):return False
     local=now.astimezone(MADRID)
+    # Recovered missing results explicitly recorded by the daily Agenda
+    # remain eligible within the seven-day recovery window.
+    recovery=stamp(r.get('agendaRecoveredAt'))
+    if recovery and recovery<=now and local.date()-timedelta(days=7)<=kickoff.date()<local.date():
+        return True
     return kickoff<=local and (kickoff.date()==local.date() or (kickoff.date()==local.date()-timedelta(days=1) and kickoff.hour>=20 and local.hour<4))
 def targets(fixtures,standings,now=None):
     now=now or datetime.now(timezone.utc)
