@@ -104,11 +104,15 @@ async def capture_selected(selected, *, season, started_ids):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         try:
-            results = []
-            for match in selected:
-                result = await capture_one(browser, match, season=season, started_ids=started_ids)
-                if result: results.append(result)
-            return results
+            sem=asyncio.Semaphore(3)
+            async def one(match):
+                async with sem:
+                    try:return await capture_one(browser,match,season=season,started_ids=started_ids)
+                    except Exception as exc:
+                        print("::warning::Incidències "+str(match.get('fixture',{}).get('matchId'))+": "+str(exc)[:160])
+                        return None
+            results=await asyncio.gather(*(one(match) for match in selected))
+            return [r for r in results if r]
         finally: await browser.close()
 
 def main():

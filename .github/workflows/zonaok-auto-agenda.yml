@@ -116,6 +116,7 @@ jobs:
             if git diff --cached --quiet; then echo 'Sense canvis nous'; exit 0; fi
             git commit -m 'ZonaOK AUTO: agenda actualitzar JSON unificat'
             if git push origin HEAD:main; then
+              gh workflow run zonaok-push-events.yml --repo carlesjfontanillas-beep/ZonaOK --ref main -f test_scenario=production -f before_sha="$(git rev-parse HEAD^)" -f after_sha="$(git rev-parse HEAD)" -f event_source=agenda || echo "::warning::No s'ha pogut activar Push; revisar aquest commit."
               python scripts/zonaok_jugadors_trigger.py --catalog zonaok-tots-partits.json --state imports/jugadors-maintenance-state.json --previous-ref HEAD^ > player-trigger.txt
               if grep -q '^run=true$' player-trigger.txt; then
                 gh workflow run jugadors-public.yml --repo carlesjfontanillas-beep/ZonaOK --ref main -f mode=flash || echo "::warning::No s'ha pogut activar Jugadors; el repàs programat recupera els partits pendents."

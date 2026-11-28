@@ -10,35 +10,34 @@ on:
         options:
           - empty
           - barca_nc
+          - production
         default: empty
-  push:
-    branches: [main]
-    paths:
-      - zonaok-tots-partits.json
-  workflow_run:
-    workflows:
-      - 'ZonaOK - En directe TOTAL AUTO (Chromium Playwright)'
-    types: [completed]
-    branches: [main]
+      before_sha:
+        type: string
+        required: false
+      after_sha:
+        type: string
+        required: false
+      event_source:
+        type: choice
+        options: [directe, agenda]
+        default: directe
+  schedule:
+    - cron: '0,5,10,15,20,25,30,35,40,45,50,55 * * * *'
 
 permissions:
   contents: read
   id-token: write
 
-concurrency:
-  group: zonaok-push-events
-  cancel-in-progress: false
-  queue: max
-
 jobs:
   avisos:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          ref: main
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -72,42 +71,40 @@ jobs:
           print('Detector produït: inici, final i canvi d’horari ficticis; tots marcats PROVA.')
           PY
       - name: Preparar lot buit sense enviar avisos
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario != 'barca_nc' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario == 'empty' }}
         run: printf '%s\n' '{"schema":"zonaok-push-event-batch-v1","season":"2026/2027","events":[]}' > push-batch.json
-      - name: Detectar només canvis nous de captura FECAPA
-        if: ${{ github.event_name != 'workflow_dispatch' }}
+      - name: Detectar canvis de la captura exacta o inicis d'Agenda
+        if: ${{ github.event_name == 'schedule' || inputs.test_scenario == 'production' }}
+        env:
+          BEFORE_SHA: ${{ inputs.before_sha }}
+          AFTER_SHA: ${{ inputs.after_sha }}
+          EVENT_SOURCE: ${{ inputs.event_source }}
         shell: bash
         run: |
           set -euo pipefail
-          if git cat-file -e "${GITHUB_SHA}^:zonaok-tots-partits.json" 2>/dev/null; then
-            git show "${GITHUB_SHA}^:zonaok-tots-partits.json" > push-before.json
-            PUSH_SINCE="$(python - <<'PY'
-          import json
-          from datetime import datetime, timezone
-          with open('push-before.json', encoding='utf-8') as handle:
-              doc = json.load(handle)
-          value = doc.get('sources', {}).get('directe', {}).get('capturedAt')
-          if not value:
-              value = datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z')
-          print(value)
-          PY
-          )"
+          if [ "$GITHUB_EVENT_NAME" = schedule ]; then
+            git fetch origin main
+            git show origin/main:zonaok-tots-partits.json > push-after.json
+            python scripts/zonaok_push_events.py --after push-after.json --scheduled > push-detection.json
           else
-            cp zonaok-tots-partits.json push-before.json
-            PUSH_SINCE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            [[ "$BEFORE_SHA" =~ ^[0-9a-f]{40}$ && "$AFTER_SHA" =~ ^[0-9a-f]{40}$ ]]
+            git fetch origin main
+            git merge-base --is-ancestor "$AFTER_SHA" origin/main
+            [ "$(git rev-parse "$AFTER_SHA^")" = "$BEFORE_SHA" ]
+            git show "$BEFORE_SHA:zonaok-tots-partits.json" > push-before.json
+            git show "$AFTER_SHA:zonaok-tots-partits.json" > push-after.json
+            PUSH_SINCE="$(python -c 'import json,sys; print(json.load(open("push-before.json")).get("sources",{}).get(sys.argv[1],{}).get("capturedAt") or "2026-07-01T00:00:00Z")' "$EVENT_SOURCE")"
+            python scripts/zonaok_push_events.py --before push-before.json --after push-after.json --since "$PUSH_SINCE" --source "$EVENT_SOURCE" > push-detection.json
           fi
-          python scripts/zonaok_push_events.py --before push-before.json --after zonaok-tots-partits.json --since "$PUSH_SINCE" > push-detection.json
           python - <<'PY'
           import json
-          with open('push-detection.json', encoding='utf-8') as handle:
-              detection = json.load(handle)
-          events = detection.get('events', [])
-          assert all(item.get('source') == 'FECAPA' and item.get('event') in ('start', 'finish', 'scheduleChange') for item in events)
-          with open('push-batch.json', 'w', encoding='utf-8') as handle:
-              json.dump({'schema':'zonaok-push-event-batch-v1', 'season':'2026/2027', 'events':events}, handle, ensure_ascii=False)
+          events=json.load(open('push-detection.json'))['events']
+          assert all(e.get('source')=='FECAPA' and e.get('event') in ('start','finish','scheduleChange') for e in events)
+          json.dump({'schema':'zonaok-push-event-batch-v1','season':'2026/2027','events':events},open('push-batch.json','w'),ensure_ascii=False)
+          print('Avisos:',len(events))
           PY
       - name: Enviar esdeveniments detectats pel canal habitual
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.test_scenario == 'barca_nc' }}
+        if: ${{ github.event_name == 'schedule' || inputs.test_scenario == 'production' || inputs.test_scenario == 'barca_nc' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -118,11 +115,11 @@ jobs:
             -H 'Content-Type: application/json' -H "Authorization: Bearer ${token}" \
             --data-binary @push-batch.json
       - name: Seleccionar partits amb preferències d’incidències actives
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.test_scenario == 'barca_nc' }}
+        if: ${{ inputs.test_scenario == 'barca_nc' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe') }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ "${GITHUB_EVENT_NAME}" = "workflow_dispatch" ]; then catalog=push-test-live.json; else catalog=zonaok-tots-partits.json; fi
+          if [ -f push-test-live.json ]; then catalog=push-test-live.json; else catalog=push-after.json; fi
           python scripts/zonaok_push_live_incidents.py candidates --input "$catalog" --output push-live-candidates.json
           request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
           token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
@@ -165,7 +162,7 @@ jobs:
           print('Incidències fictícies parsejades:', len(matches[0]['incidents']) if matches else 0)
           PY
       - name: Capturar incidències FECAPA dels partits seleccionats
-        if: ${{ github.event_name != 'workflow_dispatch' }}
+        if: ${{ inputs.test_scenario == 'production' && inputs.event_source == 'directe' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -178,7 +175,7 @@ jobs:
             python scripts/zonaok_push_live_incidents.py capture --input push-live-selection.json --started push-detection.json --output push-live-incidents.json
           fi
       - name: Enviar incidències detectades pel canal habitual
-        if: ${{ github.event_name != 'workflow_dispatch' || inputs.test_scenario == 'barca_nc' }}
+        if: ${{ inputs.test_scenario == 'barca_nc' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe') }}
         shell: bash
         run: |
           set -euo pipefail

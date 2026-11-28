@@ -39,9 +39,9 @@ def build_fixture_data(run_id, *, now=None):
         "iso": new_day, "time": "18:00", "competition": COMPETITION,
         "home": "BARÇA", "away": "ALTRE EQUIP FICTICI " + suffix,
         "leagueId": "4774", "matchId": "TEST-NC-M-SCHEDULE-" + suffix,
-        "status": "PROGRAMAT", "lastDirecteAt": before_time,
+        "status": "PROGRAMAT", "lastAgendaAt": before_time,
     }
-    schedule_after = {**schedule_before, "time": "19:00", "lastDirecteAt": live_time}
+    schedule_after = {**schedule_before, "time": "19:00", "lastAgendaAt": live_time}
 
     def catalog(matches):
         return {"schema": "zonaok-partits-total-v1", "season": SEASON,

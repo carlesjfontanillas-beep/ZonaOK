@@ -16,6 +16,8 @@ from zoneinfo import ZoneInfo
 
 MADRID = ZoneInfo("Europe/Madrid")
 WINDOW = timedelta(minutes=165)
+NC = {"NACIONAL CATALANA MASCULINA","NACIONAL CATALANA FEMENINA"}
+EXCLUDED = re.compile(r"AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL", re.I)
 LIVE = {"EN JOC", "EN DIRECTE", "EN DIRECTO", "LIVE", "PLAYING",
         "IN PROGRESS", "PRIMERA PART", "SEGONA PART", "DESCANS",
         "PRIMERA PARTE", "SEGUNDA PARTE", "DESCANSO"}
@@ -33,14 +35,39 @@ def identity(row):
 def valid_score(row):
     return all(type(row.get(k)) is int and row[k]>=0 for k in ("homeScore","awayScore"))
 
-def observed(row):
+def observed(row, source='directe'):
     try:
-        value=datetime.fromisoformat(str(row.get("lastDirecteAt") or row.get("directeUpdatedAt") or "").replace("Z","+00:00"))
+        raw=row.get('lastAgendaAt') if source=='agenda' else row.get('lastDirecteAt') or row.get('directeUpdatedAt')
+        value=datetime.fromisoformat(str(raw or '').replace('Z','+00:00'))
         return value.astimezone(timezone.utc) if value.tzinfo else None
     except (ValueError,TypeError):
         return None
 
-def detect(before, after, *, since, now):
+def fixture_payload(r):
+    return {k:r.get(k,"") for k in ("iso","time","competition","home","away","leagueId","matchId","homeLogo","awayLogo","round")}
+
+def scheduled_starts(catalog, *, now):
+    if catalog.get("schema")!="zonaok-partits-total-v1":raise ValueError("Invalid FECAPA catalog")
+    rows=[r for r in catalog.get("matches",[]) if isinstance(r,dict)]
+    counts=Counter(identity(r) for r in rows)
+    ids=Counter((str(r.get("leagueId") or ""),str(r.get("matchId") or "")) for r in rows)
+    output=[]
+    local=now.astimezone(MADRID)
+    for r in rows:
+        key=identity(r)
+        if not key or counts[key]!=1 or norm(r.get("competition")) in NC or EXCLUDED.search(norm(r.get("status"))) or norm(r.get("status")) in FINAL:continue
+        try:start=datetime.strptime(r["iso"]+" "+r["time"],"%Y-%m-%d %H:%M").replace(tzinfo=MADRID)
+        except (ValueError,TypeError,KeyError):continue
+        if start.date()!=local.date() or not timedelta(0)<=local-start<=timedelta(minutes=10):continue
+        stable=(str(r.get("leagueId") or ""),str(r.get("matchId") or ""))
+        if all(stable) and ids[stable]!=1:continue
+        event_id=hashlib.sha256(json.dumps([catalog.get("season"),stable if all(stable) else key,"scheduledStart"],ensure_ascii=False).encode()).hexdigest()
+        fixture=fixture_payload(r)
+        fixture["startSource"]="Agenda"
+        output.append({"eventId":event_id,"event":"start","source":"FECAPA","observedAt":now.isoformat(),"fixture":fixture,"startSource":"Agenda"})
+    return output
+
+def detect(before, after, *, since, now, source='both'):
     if since.tzinfo is None or now.tzinfo is None or since>now:
         raise ValueError("Invalid observation window")
     def rows(doc):
@@ -54,7 +81,7 @@ def detect(before, after, *, since, now):
     new_counts=Counter(identity(r) for r in current)
     old={identity(r):r for r in previous if identity(r) and old_counts[identity(r)]==1}
     output=[]
-    for r in current:
+    for r in current if source in ('both','directe') else []:
         key=identity(r)
         if not key or new_counts[key]!=1 or key not in old:
             continue
@@ -68,14 +95,15 @@ def detect(before, after, *, since, now):
             start=datetime.strptime(r["iso"]+" "+r["time"],"%Y-%m-%d %H:%M").replace(tzinfo=MADRID)
         except (ValueError,TypeError,KeyError):
             continue
-        if not timedelta(0)<=now-start<=WINDOW:
+        local=now.astimezone(MADRID)
+        if now<start or (start.date()!=local.date() and not (start.date()==local.date()-timedelta(days=1) and start.hour>=20 and local.hour<4)):
             continue
         previous_status,status=norm(p.get("status")),norm(r.get("status"))
         if previous_status in FINAL:
             continue
         if status in FINAL and valid_score(r):
             event="finish"
-        elif status in LIVE and previous_status not in LIVE:
+        elif norm(r.get("competition")) in NC and status in LIVE and previous_status not in LIVE:
             event="start"
         else:
             continue
@@ -95,16 +123,16 @@ def detect(before, after, *, since, now):
             if all(key) and counts[key]==1: result[key]=r
         return result
     old_ids,current_ids=ids(previous),ids(current)
-    for key,r in current_ids.items():
+    for key,r in current_ids.items() if source in ('both','agenda') else []:
         p=old_ids.get(key)
         if not p or (p.get("iso"),p.get("time"))==(r.get("iso"),r.get("time")):
             continue
         if any(norm(p.get(k))!=norm(r.get(k)) for k in ("competition","home","away")):
             continue
-        captured=observed(r)
-        if not captured or not (since<captured<=now) or (observed(p) and captured<=observed(p)):
+        captured=observed(r,'agenda')
+        if not captured or not (since<captured<=now) or (observed(p,'agenda') and captured<=observed(p,'agenda')):
             continue
-        if norm(r.get("status")) in FINAL|LIVE:
+        if norm(r.get('status')) in FINAL|LIVE or EXCLUDED.search(norm(r.get('status'))):
             continue
         try:
             start=datetime.strptime(r["iso"]+" "+r["time"],"%Y-%m-%d %H:%M").replace(tzinfo=MADRID)
@@ -121,12 +149,19 @@ def detect(before, after, *, since, now):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--before",type=Path,required=True)
+    p.add_argument("--before",type=Path)
     p.add_argument("--after",type=Path,required=True)
-    p.add_argument("--since",required=True,help="ISO timestamp after activation or last successful observation")
+    p.add_argument("--since")
+    p.add_argument("--source",choices=['both','directe','agenda'],default='both')
+    p.add_argument("--scheduled",action='store_true')
     args=p.parse_args()
-    since=datetime.fromisoformat(args.since.replace("Z","+00:00"))
-    events=detect(json.loads(args.before.read_text()),json.loads(args.after.read_text()),since=since,now=datetime.now(timezone.utc))
+    now=datetime.now(timezone.utc)
+    after=json.loads(args.after.read_text())
+    if args.scheduled:events=scheduled_starts(after,now=now)
+    else:
+        if not args.before or not args.since:p.error('--before and --since are required')
+        since=datetime.fromisoformat(args.since.replace("Z","+00:00"))
+        events=detect(json.loads(args.before.read_text()),after,since=since,now=now,source=args.source)
     print(json.dumps({"dryRun":True,"events":events},ensure_ascii=False))
 if __name__=="__main__":
     main()
