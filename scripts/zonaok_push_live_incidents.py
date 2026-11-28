@@ -52,28 +52,79 @@ def parse_incidents(text, fixture, *, season="2026/2027", observed_at=None):
         output.append(item)
     return output
 
+def internal_match_id(season, fixture):
+    identity = [season] + [norm(fixture.get(k)) for k in ("iso", "time", "competition", "home", "away")]
+    if not all(identity[1:]): return ""
+    digest = hashlib.sha256("|".join(identity).encode()).hexdigest()
+    return "zonaok:" + digest
+
 def candidates(catalog, *, now=None):
     now = now or datetime.now(timezone.utc)
     if catalog.get("schema") != "zonaok-partits-total-v1" or not isinstance(catalog.get("matches"), list): raise ValueError("catalog_invalid")
-    output, seen = [], Counter()
+    output, seen, official = [], Counter(), Counter()
     rows = [r for r in catalog["matches"] if isinstance(r, dict)]
-    for row in rows: seen[(str(row.get("leagueId") or ""), str(row.get("matchId") or ""))] += 1
     for row in rows:
-        key = (str(row.get("leagueId") or ""), str(row.get("matchId") or ""))
-        if not all(key) or seen[key] != 1 or norm(row.get("competition")) not in COMPETITIONS or norm(row.get("status")) not in LIVE: continue
+        fixture = {k: row.get(k, "") for k in ("iso", "time", "competition", "home", "away", "leagueId", "matchId", "homeLogo", "awayLogo", "round")}
+        ident = internal_match_id(catalog.get("season", ""), fixture)
+        if ident: seen[ident] += 1
+        pair = (str(row.get("leagueId") or ""), str(row.get("matchId") or ""))
+        if all(pair): official[pair] += 1
+    for row in rows:
+        if norm(row.get("competition")) not in COMPETITIONS or norm(row.get("status")) not in LIVE: continue
+        fixture = {k: row.get(k, "") for k in ("iso", "time", "competition", "home", "away", "leagueId", "matchId", "homeLogo", "awayLogo", "round")}
+        ident = internal_match_id(catalog.get("season", ""), fixture)
+        pair = (str(row.get("leagueId") or ""), str(row.get("matchId") or ""))
+        if not ident or seen[ident] != 1 or (all(pair) and official[pair] != 1): continue
         try: kickoff = datetime.strptime(row["iso"] + " " + row["time"], "%Y-%m-%d %H:%M").replace(tzinfo=MADRID)
         except (KeyError, ValueError, TypeError): continue
         if not timedelta(0) <= now.astimezone(MADRID) - kickoff <= timedelta(minutes=165): continue
-        fixture = {k: row.get(k, "") for k in ("iso", "time", "competition", "home", "away", "leagueId", "matchId", "homeLogo", "awayLogo", "round")}
-        if any(not fixture[k] for k in ("iso", "time", "competition", "home", "away", "leagueId", "matchId")): continue
+        fixture["internalId"] = ident
         output.append({"fixture": fixture, "status": row["status"]})
     return output
+
+def official_league_id(fixture):
+    if fixture.get("leagueId"): return str(fixture["leagueId"])
+    return {"NACIONAL CATALANA MASCULINA": "4774", "NACIONAL CATALANA FEMENINA": "4775"}.get(norm(fixture.get("competition")), "")
+
+async def resolve_match_url(browser, fixture):
+    league = official_league_id(fixture)
+    if not league: raise RuntimeError("fecapa_league_unresolved")
+    if fixture.get("matchId"):
+        return BASE + "?" + urlencode({"liga": league, "vista": "calendar", "partido": fixture["matchId"]})
+    page = await browser.new_page()
+    try:
+        await page.goto(BASE + "?" + urlencode({"liga": league, "vista": "calendar"}), wait_until="domcontentloaded", timeout=30000)
+        await page.wait_for_timeout(1800)
+        home, away = norm(fixture.get("home")), norm(fixture.get("away"))
+        date = datetime.strptime(fixture["iso"], "%Y-%m-%d").strftime("%d/%m/%Y")
+        matches = await page.locator("a[href*='partido=']").evaluate_all("""(anchors, wanted) => {
+          const norm = s => (s || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toUpperCase().replace(/\\s+/g,' ').trim();
+          const out = new Set();
+          for (const a of anchors) {
+            let n=a;
+            for (let i=0; i<8 && n; i++, n=n.parentElement) {
+              const t=norm(n.innerText);
+              if (t.includes(norm(wanted.date)) && t.includes(norm(wanted.home)) && t.includes(norm(wanted.away))) {
+                const u=new URL(a.href, location.href), id=u.searchParams.get('partido'), lg=u.searchParams.get('liga');
+                if (id && lg===wanted.league) out.add(lg+'|'+id);
+                break;
+              }
+            }
+          }
+          return [...out];
+        }""", {"date":date,"home":home,"away":away,"league":league})
+        if len(matches) != 1: raise RuntimeError("fecapa_fixture_lookup_" + ("missing" if not matches else "ambiguous"))
+        lg, mid = matches[0].split("|", 1)
+        fixture["leagueId"], fixture["matchId"] = lg, mid
+        return BASE + "?" + urlencode({"liga": lg, "vista": "calendar", "partido": mid})
+    finally: await page.close()
 
 async def capture_one(browser, match, *, season, started_ids):
     fixture = match["fixture"]
     page = await browser.new_page()
     try:
-        response = await page.goto(BASE + "?" + urlencode({"liga": fixture["leagueId"], "vista": "calendar", "partido": fixture["matchId"]}), wait_until="domcontentloaded", timeout=30000)
+        match_url = await resolve_match_url(browser, fixture)
+        response = await page.goto(match_url, wait_until="domcontentloaded", timeout=30000)
         if response and response.status in (403, 429, 503): raise RuntimeError("fecapa_http_" + str(response.status))
         await page.wait_for_selector(".sidgad-match-modal .sidgad-roster-table", timeout=18000)
         modal = page.locator(".sidgad-match-modal:visible")
@@ -94,7 +145,7 @@ async def capture_one(browser, match, *, season, started_ids):
             await page.wait_for_timeout(650)
         if stable < 3: raise RuntimeError("fecapa_incidents_not_stable")
         captured = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-        key = str(fixture["leagueId"]) + "|" + str(fixture["matchId"])
+        key = fixture.get("internalId") or (str(fixture.get("leagueId") or "") + "|" + str(fixture.get("matchId") or ""))
         return {"fixture": fixture, "observedAt": captured, "startedNow": key in started_ids, "incidents": parse_incidents(text, fixture, season=season, observed_at=captured)}
     finally: await page.close()
 
@@ -122,7 +173,7 @@ def main():
     if args.mode == "candidates": result = {"schema": "zonaok-push-live-candidates-v1", "season": args.season, "matches": candidates(data)}
     else:
         detection = json.loads(args.started.read_text(encoding="utf-8")) if args.started and args.started.exists() else {"events": []}
-        started = {str(e.get("fixture", {}).get("leagueId")) + "|" + str(e.get("fixture", {}).get("matchId")) for e in detection.get("events", []) if e.get("event") == "start"}
+        started = {internal_match_id(args.season, e.get("fixture", {})) or (str(e.get("fixture", {}).get("leagueId") or "") + "|" + str(e.get("fixture", {}).get("matchId") or "")) for e in detection.get("events", []) if e.get("event") == "start"}
         matches = asyncio.run(capture_selected(data.get("matches", []), season=args.season, started_ids=started))
         result = {"schema": "zonaok-push-live-incidents-v1", "season": args.season, "matches": matches}
     args.output.write_text(json.dumps(result, ensure_ascii=False) + "\n", encoding="utf-8")
