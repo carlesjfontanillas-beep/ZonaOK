@@ -1,0 +1,494 @@
+{
+  "schema": "zonaok-approved-remaining-repairs-v1",
+  "before": 12355,
+  "after": 12347,
+  "removed": 8,
+  "resolved": 6,
+  "review": 0,
+  "details": [
+    {
+      "fixture": [
+        "FEM 11 PLATA",
+        "JOIERIA MONER SANT RAMON",
+        "AUTO VIGATANA PATI VIC"
+      ],
+      "old": [
+        "2026-11-28",
+        "13:00"
+      ],
+      "official": [
+        "2026-12-05",
+        "17:30"
+      ],
+      "removed": 2,
+      "originalRows": [
+        {
+          "iso": "2026-10-31",
+          "time": "12:30",
+          "competition": "FEM 11 PLATA",
+          "home": "JOIERIA MONER SANT RAMON",
+          "away": "AUTO VIGATANA PATÍ VIC",
+          "venue": "POLIESPORTIU DE VILAFRANCA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:00",
+          "competition": "FEM 11 PLATA",
+          "home": "JOIERIA MONER SANT RAMON",
+          "away": "AUTO VIGATANA PATÍ VIC",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "POLIESPORTIU DE VILAFRANCA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        },
+        {
+          "iso": "2026-12-05",
+          "time": "17:30",
+          "competition": "FEM 11 PLATA",
+          "home": "JOIERIA MONER SANT RAMON",
+          "away": "AUTO VIGATANA PATÍ VIC",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "POLIESPORTIU DE VILAFRANCA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-12-05",
+        "time": "17:30",
+        "competition": "FEM 11 PLATA",
+        "home": "JOIERIA MONER SANT RAMON",
+        "away": "AUTO VIGATANA PATÍ VIC",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "POLIESPORTIU DE VILAFRANCA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "BCN BENJAMI PLATA 3",
+        "CH LES FRANQUESES",
+        "UNIO ESPORTIVA D HORTA B"
+      ],
+      "old": [
+        "2026-11-28",
+        "15:00"
+      ],
+      "official": [
+        "2026-11-29",
+        "10:45"
+      ],
+      "removed": 2,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "BCN BENJAMÍ PLATA 3",
+          "home": "CH LES FRANQUESES",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "LES FRANQUESES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-25T20:25:19Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "BCN BENJAMÍ PLATA 3",
+          "home": "CH LES FRANQUESES",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "LES FRANQUESES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        },
+        {
+          "iso": "2026-11-29",
+          "time": "10:45",
+          "competition": "BCN BENJAMÍ PLATA 3",
+          "home": "CH LES FRANQUESES",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "venue": "LES FRANQUESES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-29",
+        "time": "10:45",
+        "competition": "BCN BENJAMÍ PLATA 3",
+        "home": "CH LES FRANQUESES",
+        "away": "UNIÓ ESPORTIVA D'HORTA B",
+        "venue": "LES FRANQUESES",
+        "homeLogo": "",
+        "awayLogo": "",
+        "matchId": "",
+        "leagueId": "",
+        "actaUrl": "",
+        "status": "",
+        "round": "",
+        "homeScore": null,
+        "awayScore": null,
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreUpdatedAt": "",
+        "scoreSource": "",
+        "directeUpdatedAt": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z"
+      }
+    },
+    {
+      "fixture": [
+        "LCV GRUP B",
+        "CP SUBUR SITGES",
+        "CHP SANT FELIU"
+      ],
+      "old": [
+        "2026-11-27",
+        "21:45"
+      ],
+      "official": [
+        "2027-01-15",
+        "21:45"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-27",
+          "time": "21:45",
+          "competition": "LCV GRUP B",
+          "home": "CP SUBUR SITGES",
+          "away": "CHP SANT FELIU",
+          "venue": "POLIESPORTIU MUNICIPAL SITGES PINS VENS",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T20:25:19Z"
+        },
+        {
+          "iso": "2027-01-15",
+          "time": "21:45",
+          "competition": "LCV GRUP B",
+          "home": "CP SUBUR SITGES",
+          "away": "CHP SANT FELIU",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "POLIESPORTIU MUNICIPAL SITGES PINS VENS",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2027-01-15",
+        "time": "21:45",
+        "competition": "LCV GRUP B",
+        "home": "CP SUBUR SITGES",
+        "away": "CHP SANT FELIU",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "POLIESPORTIU MUNICIPAL SITGES PINS VENS",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "VETERANS TARRAGONA",
+        "CLUB HOQUEI VILA SECA",
+        "TRANSLOP ALCANIZ CLUB PATIN"
+      ],
+      "official": [
+        "2026-11-27",
+        "21:15"
+      ],
+      "originalRows": [
+        {
+          "iso": "2026-11-27",
+          "time": "21:15",
+          "competition": "VETERANS TARRAGONA",
+          "home": "CLUB HOQUEI VILA-SECA",
+          "away": "TRANSLOP ALCAÑIZ CLUB PATIN",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": ""
+        },
+        {
+          "iso": "2026-11-27",
+          "time": "21:15",
+          "competition": "VETERANS TARRAGONA",
+          "home": "TRANSLOP ALCAÑIZ CLUB PATIN",
+          "away": "CLUB HOQUEI VILA-SECA",
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T05:36:54Z"
+        }
+      ],
+      "removed": 1,
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-27",
+        "time": "21:15",
+        "competition": "VETERANS TARRAGONA",
+        "home": "CLUB HOQUEI VILA-SECA",
+        "away": "TRANSLOP ALCAÑIZ CLUB PATIN",
+        "homeScore": 3,
+        "awayScore": 0,
+        "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "FINAL",
+        "scoreSource": "Agenda",
+        "scoreUpdatedAt": "2026-11-28T08:40:05Z",
+        "finalDetectedAt": "2026-11-28T08:40:05Z",
+        "agendaRecoveredAt": "2026-11-28T08:40:05Z"
+      }
+    },
+    {
+      "fixture": [
+        "VETERANS TARRAGONA",
+        "TRANSLOP ALCANIZ CLUB PATIN",
+        "REUS DEPORTIU"
+      ],
+      "official": [
+        "2026-11-27",
+        "21:50"
+      ],
+      "originalRows": [
+        {
+          "iso": "2026-11-27",
+          "time": "21:50",
+          "competition": "VETERANS TARRAGONA",
+          "home": "REUS DEPORTIU",
+          "away": "TRANSLOP ALCAÑIZ CLUB PATIN",
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T05:36:54Z"
+        },
+        {
+          "iso": "2026-11-27",
+          "time": "21:50",
+          "competition": "VETERANS TARRAGONA",
+          "home": "TRANSLOP ALCAÑIZ CLUB PATIN",
+          "away": "REUS DEPORTIU",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": ""
+        }
+      ],
+      "removed": 1,
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-27",
+        "time": "21:50",
+        "competition": "VETERANS TARRAGONA",
+        "home": "TRANSLOP ALCAÑIZ CLUB PATIN",
+        "away": "REUS DEPORTIU",
+        "homeScore": 0,
+        "awayScore": 4,
+        "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "FINAL",
+        "scoreSource": "Agenda",
+        "scoreUpdatedAt": "2026-11-28T08:40:05Z",
+        "finalDetectedAt": "2026-11-28T08:40:05Z",
+        "agendaRecoveredAt": "2026-11-28T08:40:05Z"
+      }
+    },
+    {
+      "fixture": [
+        "VETERANS TARRAGONA",
+        "REUS DEPORTIU",
+        "CLUB HOQUEI VILA SECA"
+      ],
+      "official": [
+        "2026-11-27",
+        "22:25"
+      ],
+      "originalRows": [
+        {
+          "iso": "2026-11-27",
+          "time": "22:25",
+          "competition": "VETERANS TARRAGONA",
+          "home": "CLUB HOQUEI VILA-SECA",
+          "away": "REUS DEPORTIU",
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T05:36:54Z"
+        },
+        {
+          "iso": "2026-11-27",
+          "time": "22:25",
+          "competition": "VETERANS TARRAGONA",
+          "home": "REUS DEPORTIU",
+          "away": "CLUB HOQUEI VILA-SECA",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": ""
+        }
+      ],
+      "removed": 1,
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-27",
+        "time": "22:25",
+        "competition": "VETERANS TARRAGONA",
+        "home": "REUS DEPORTIU",
+        "away": "CLUB HOQUEI VILA-SECA",
+        "homeScore": 3,
+        "awayScore": 1,
+        "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "FINAL",
+        "scoreSource": "Agenda",
+        "scoreUpdatedAt": "2026-11-28T08:40:05Z",
+        "finalDetectedAt": "2026-11-28T08:40:05Z",
+        "agendaRecoveredAt": "2026-11-28T08:40:05Z"
+      }
+    }
+  ]
+}
