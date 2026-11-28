@@ -33,6 +33,7 @@ def collect_pairs(doc):
             item={'leagueId':str(g.get('leagueId','')),'group':g.get('name',''),
                   'category':g.get('category',''),'team':r.get('team',''),
                   'shortTeam':r.get('shortTeam',''),'source':r.get('shortTeamSource','')}
+            if r.get('teamId') and re.fullmatch(r'[1-9]\d*',str(r['teamId'])):item['teamId']=str(r['teamId'])
             if valid_pair(item):yield item
 
 def merge_catalog(catalog,standings):
@@ -41,8 +42,23 @@ def merge_catalog(catalog,standings):
     for r in list(catalog.get('teamAliases',[]))+list(collect_pairs(standings)):
         if not isinstance(r,dict) or not valid_pair(r):continue
         key=(str(r['leagueId']),norm(r['group']),norm(r['team']),norm(r['shortTeam']))
-        entries[key]=r
-    return {**catalog,'teamAliases':[entries[k] for k in sorted(entries)]}
+        # No perdre l'ID d'equip si una lectura posterior no el mostra.
+        entries[key]={**entries.get(key,{}),**r}
+    identities={}
+    for r in catalog.get('teams',[]):
+        if isinstance(r,dict) and r.get('teamId') and r.get('leagueId') and r.get('group') and r.get('team'):
+            identities[(str(r['leagueId']),norm(r['group']),str(r['teamId']),norm(r['team']))]=r
+    for g in standings.get('competitions',{}).values():
+        if not isinstance(g,dict):continue
+        for r in g.get('standings',[]):
+            if not isinstance(r,dict) or not re.fullmatch(r'[1-9]\d*',str(r.get('teamId',''))):continue
+            item={'leagueId':str(g.get('leagueId','')),'group':g.get('name',''),'category':g.get('category',''),
+                  'team':r.get('team',''),'teamId':str(r['teamId']),'source':'FECAPA-classificacions-id-equip'}
+            if item['leagueId'] and norm(item['group']) and norm(item['team']):
+                key=(item['leagueId'],norm(item['group']),item['teamId'],norm(item['team']))
+                identities[key]=item
+    return {**catalog,'teamAliases':[entries[k] for k in sorted(entries)],
+            'teams':[identities[k] for k in sorted(identities)]}
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)

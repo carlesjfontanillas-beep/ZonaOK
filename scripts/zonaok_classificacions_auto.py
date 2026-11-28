@@ -100,8 +100,26 @@ JS_EXTRACT = r"""(mobile=false) => {
       const cell=i=>i<0?'':clean(cells[i]?.innerText||cells[i]?.textContent||'');
       const pos=cell(0);
       const nameNode=tr.querySelector('.sidgad-clasif-nombre');
-      const team=mobile ? clean((nameNode?.closest('td')||cells[1])?.innerText) :
+      const teamCell=nameNode?.closest('td')||cells[1];
+      const team=mobile ? clean(teamCell?.innerText) :
         (clean(nameNode?.textContent)||cell(1));
+      // ID d'equip explícit, mai l'ID de l'escut ni un data-id genèric.
+      const ids=new Set();
+      const addId=x=>{if(/^[1-9]\d*$/.test(clean(x)))ids.add(clean(x));};
+      for(const el of [tr,teamCell,...(teamCell?.querySelectorAll('*')||[])]) {
+        if(!el)continue;
+        for(const a of el.attributes||[]) {
+          if(/^(?:data-)?(?:id[-_]?equipo|equipo[-_]?id|team[-_]?id|id[-_]?team|id[-_]?equip|equip[-_]?id)$/i.test(a.name))addId(a.value);
+        }
+        if(el.matches?.('a[href]')) {
+          try {
+            const u=new URL(el.href,location.href);
+            if(u.origin===location.origin)for(const k of ['equipo','id_equipo','idequipo','teamId','team_id','id_equip'])addId(u.searchParams.get(k));
+          }catch(_){}
+        }
+      }
+      const teamId=ids.size===1?[...ids][0]:'';
+
       if (!/^\d{1,2}$/.test(pos)||!team) continue;
       const shifts=[...new Set([cells.length-headers.length,1,0,2,3])]
         .filter(n=>n>=0&&n<=3);
@@ -119,11 +137,11 @@ JS_EXTRACT = r"""(mobile=false) => {
       const val=k=>col[k]<0?'':cell(col[k]+shift);
       const stats={};
       headers.forEach((k,i)=>{const v=cell(i+shift);if(k&&v)stats[k]=v;});
-      rows.push({pos,team,played:val('pj'),points:val('pts'),
+      rows.push({pos,team,...(teamId?{teamId}:{}),played:val('pj'),points:val('pts'),
         gf:val('gf'),ga:val('gc'),difference:val('dif'),stats});
     }
     if (!invalid&&rows.length>=2&&rows.length<=50&&
-        new Set(rows.map(r=>norm(r.team))).size===rows.length) {
+        (mobile ? new Set(rows.map(r=>r.pos)).size===rows.length : new Set(rows.map(r=>norm(r.team))).size===rows.length)) {
       result.groups.push({name,rows});
     }
   }
@@ -287,9 +305,12 @@ def pair_mobile_names(wide, mobile):
         fields=('played','points','gf','ga','difference')
         if any(str(r.get('pos')) not in short_by_pos or
                any(str(r.get(k))!=str(short_by_pos[str(r['pos'])].get(k)) for k in fields) or
-               r.get('stats')!=short_by_pos[str(r['pos'])].get('stats') for r in rows):continue
+               any(str(r.get('stats',{}).get(k))!=str(short_by_pos[str(r['pos'])].get('stats',{}).get(k)) for k in ('PTS','PJ','PG','PE','PP','GF','GC','DIF','SAN')) or
+               (r.get('teamId') and short_by_pos[str(r['pos'])].get('teamId') and r['teamId']!=short_by_pos[str(r['pos'])]['teamId']) for r in rows):continue
         for r in rows:
-            short=clean(short_by_pos[str(r['pos'])].get('team'))
+            other=short_by_pos[str(r['pos'])]
+            if not r.get('teamId') and other.get('teamId'):r['teamId']=other['teamId']
+            short=clean(other.get('team'))
             if norm(short)!=norm(r.get('team')) and re.fullmatch(r'[A-ZÀ-Ü0-9][A-ZÀ-Ü0-9 .-]{0,14}',short) and len(norm(short).replace(' ',''))>=2:
                 r['shortTeam']=short
                 r['shortTeamSource']='FECAPA-classificacions-vertical'
