@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T15:57:05.830354+00:00",
+  "capturedAt": "2026-11-28T16:02:10.087684+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -10997,8 +10997,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-28T10:36:11.941714+00:00",
-      "standingsAt": "2026-11-28T10:36:11.941714+00:00",
+      "capturedAt": "2026-11-28T16:02:10.087684+00:00",
+      "standingsAt": "2026-11-28T16:02:10.087684+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -11075,20 +11075,20 @@
           "team": "IGUALADA HC C",
           "teamId": "12412",
           "teamLogo": "/fecapa/images/logos_clubes/252_1.png",
-          "played": "9",
-          "points": "11",
-          "gf": "20",
-          "ga": "18",
-          "difference": "2",
+          "played": "10",
+          "points": "14",
+          "gf": "24",
+          "ga": "20",
+          "difference": "4",
           "stats": {
-            "PTS": "11",
-            "PJ": "9",
-            "PG": "3",
+            "PTS": "14",
+            "PJ": "10",
+            "PG": "4",
             "PE": "2",
             "PP": "4",
-            "GF": "20",
-            "GC": "18",
-            "DIF": "2"
+            "GF": "24",
+            "GC": "20",
+            "DIF": "4"
           },
           "shortTeam": "IHCC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -11144,20 +11144,20 @@
           "team": "GENERALI HC PALAU C",
           "teamId": "11325",
           "teamLogo": "/fecapa/images/logos_clubes/271_1.png",
-          "played": "9",
+          "played": "10",
           "points": "7",
-          "gf": "14",
-          "ga": "35",
-          "difference": "-21",
+          "gf": "16",
+          "ga": "39",
+          "difference": "-23",
           "stats": {
             "PTS": "7",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "2",
             "PE": "1",
-            "PP": "6",
-            "GF": "14",
-            "GC": "35",
-            "DIF": "-21"
+            "PP": "7",
+            "GF": "16",
+            "GC": "39",
+            "DIF": "-23"
           },
           "shortTeam": "PALC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -11344,8 +11344,8 @@
       "category": "INFANTIL",
       "competition": "INFANTIL OR",
       "leagueId": "4786",
-      "capturedAt": "2026-11-28T13:16:10.045798+00:00",
-      "standingsAt": "2026-11-28T13:16:10.045798+00:00",
+      "capturedAt": "2026-11-28T16:02:10.087684+00:00",
+      "standingsAt": "2026-11-28T16:02:10.087684+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=clasificaciones",
       "standings": [
         {
@@ -11396,6 +11396,29 @@
         },
         {
           "pos": "3",
+          "team": "VICIO PHC SANT CUGAT A",
+          "teamId": "12130",
+          "teamLogo": "/fecapa/images/logos_clubes/282.png",
+          "played": "10",
+          "points": "18",
+          "gf": "42",
+          "ga": "31",
+          "difference": "11",
+          "stats": {
+            "PTS": "18",
+            "PJ": "10",
+            "PG": "6",
+            "PE": "0",
+            "PP": "4",
+            "GF": "42",
+            "GC": "31",
+            "DIF": "11"
+          },
+          "shortTeam": "HSCA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "4",
           "team": "GEIEG A",
           "teamId": "11450",
           "teamLogo": "/fecapa/images/logos_clubes/311.png",
@@ -11415,29 +11438,6 @@
             "DIF": "16"
           },
           "shortTeam": "GEGA",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "4",
-          "team": "VICIO PHC SANT CUGAT A",
-          "teamId": "12130",
-          "teamLogo": "/fecapa/images/logos_clubes/282.png",
-          "played": "9",
-          "points": "15",
-          "gf": "38",
-          "ga": "30",
-          "difference": "8",
-          "stats": {
-            "PTS": "15",
-            "PJ": "9",
-            "PG": "5",
-            "PE": "0",
-            "PP": "4",
-            "GF": "38",
-            "GC": "30",
-            "DIF": "8"
-          },
-          "shortTeam": "HSCA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -11468,20 +11468,20 @@
           "team": "CLUB PATÍ VOLTREGÀ B",
           "teamId": "12490",
           "teamLogo": "/fecapa/images/logos_clubes/304.png",
-          "played": "9",
+          "played": "10",
           "points": "6",
-          "gf": "18",
-          "ga": "45",
-          "difference": "-27",
+          "gf": "19",
+          "ga": "49",
+          "difference": "-30",
           "stats": {
             "PTS": "6",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "1",
             "PE": "3",
-            "PP": "5",
-            "GF": "18",
-            "GC": "45",
-            "DIF": "-27"
+            "PP": "6",
+            "GF": "19",
+            "GC": "49",
+            "DIF": "-30"
           },
           "shortTeam": "CPVB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -12831,12 +12831,14 @@
       "competition": "INFANTIL PLATA",
       "leagueId": "4787",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=clasificaciones",
-      "capturedAt": "2026-11-27T00:33:49.977241+00:00",
-      "standingsAt": "2026-11-27T00:33:49.977241+00:00",
+      "capturedAt": "2026-11-28T16:02:10.087684+00:00",
+      "standingsAt": "2026-11-28T16:02:10.087684+00:00",
       "standings": [
         {
           "pos": "1",
           "team": "CP CALDES A",
+          "teamId": "11726",
+          "teamLogo": "/fecapa/images/logos_clubes/308.png",
           "played": "8",
           "points": "24",
           "gf": "69",
@@ -12852,12 +12854,37 @@
             "GC": "10",
             "DIF": "59"
           },
-          "shortTeam": "CP CALDES A",
+          "shortTeam": "CPCA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
+          "team": "CH OLOT B",
+          "teamId": "11853",
+          "teamLogo": "/fecapa/images/logos_clubes/315.png",
+          "played": "9",
+          "points": "20",
+          "gf": "38",
+          "ga": "23",
+          "difference": "15",
+          "stats": {
+            "PTS": "20",
+            "PJ": "9",
+            "PG": "6",
+            "PE": "2",
+            "PP": "1",
+            "GF": "38",
+            "GC": "23",
+            "DIF": "15"
+          },
+          "shortTeam": "HOBB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "3",
           "team": "OXFORD HC SALT B",
+          "teamId": "11515",
+          "teamLogo": "/fecapa/images/logos_clubes/318_1.png",
           "played": "8",
           "points": "18",
           "gf": "38",
@@ -12872,32 +12899,15 @@
             "GF": "38",
             "GC": "13",
             "DIF": "25"
-          }
-        },
-        {
-          "pos": "3",
-          "team": "CH OLOT B",
-          "played": "8",
-          "points": "17",
-          "gf": "34",
-          "ga": "22",
-          "difference": "12",
-          "stats": {
-            "PTS": "17",
-            "PJ": "8",
-            "PG": "5",
-            "PE": "2",
-            "PP": "1",
-            "GF": "34",
-            "GC": "22",
-            "DIF": "12"
           },
-          "shortTeam": "CH OLOT B",
+          "shortTeam": "HCSB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "TECMON CASSANENC A",
+          "teamId": "11405",
+          "teamLogo": "/fecapa/images/logos_clubes/309.png",
           "played": "8",
           "points": "17",
           "gf": "52",
@@ -12912,11 +12922,15 @@
             "GF": "52",
             "GC": "42",
             "DIF": "10"
-          }
+          },
+          "shortTeam": "FDCA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
           "team": "CH LLORET CAFÈS CORNELLÀ",
+          "teamId": "11196",
+          "teamLogo": "/fecapa/images/logos_clubes/313_1.png",
           "played": "9",
           "points": "17",
           "gf": "29",
@@ -12931,11 +12945,15 @@
             "GF": "29",
             "GC": "26",
             "DIF": "3"
-          }
+          },
+          "shortTeam": "LLO",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
           "team": "CH FIGUERES",
+          "teamId": "12577",
+          "teamLogo": "/fecapa/images/logos_clubes/518_1.png",
           "played": "8",
           "points": "16",
           "gf": "28",
@@ -12951,12 +12969,14 @@
             "GC": "15",
             "DIF": "13"
           },
-          "shortTeam": "CH FIGUERES",
+          "shortTeam": "INF",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "7",
           "team": "CLUB HOQUEI SANT JORDI",
+          "teamId": "12364",
+          "teamLogo": "/fecapa/images/logos_clubes/553_3.png",
           "played": "8",
           "points": "12",
           "gf": "25",
@@ -12971,11 +12991,15 @@
             "GF": "25",
             "GC": "26",
             "DIF": "-1"
-          }
+          },
+          "shortTeam": "CHSJ",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "8",
           "team": "CLUB PATI TORDERA B",
+          "teamId": "11379",
+          "teamLogo": "/fecapa/images/logos_clubes/297_1.png",
           "played": "9",
           "points": "12",
           "gf": "50",
@@ -12990,11 +13014,15 @@
             "GF": "50",
             "GC": "56",
             "DIF": "-6"
-          }
+          },
+          "shortTeam": "CPTB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "9",
           "team": "CH PALAFRUGELL B",
+          "teamId": "11225",
+          "teamLogo": "/fecapa/images/logos_clubes/316.png",
           "played": "8",
           "points": "10",
           "gf": "26",
@@ -13009,11 +13037,15 @@
             "GF": "26",
             "GC": "29",
             "DIF": "-3"
-          }
+          },
+          "shortTeam": "CHPB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "10",
           "team": "JESUS MARIA I JOSEP E",
+          "teamId": "11104",
+          "teamLogo": "/fecapa/images/logos_clubes/253.png",
           "played": "9",
           "points": "6",
           "gf": "21",
@@ -13028,11 +13060,15 @@
             "GF": "21",
             "GC": "49",
             "DIF": "-28"
-          }
+          },
+          "shortTeam": "JMJE",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "11",
           "team": "HOQUEI CLUB RIPOLL",
+          "teamId": "11590",
+          "teamLogo": "/fecapa/images/logos_clubes/319_4.png",
           "played": "8",
           "points": "5",
           "gf": "17",
@@ -13047,32 +13083,15 @@
             "GF": "17",
             "GC": "32",
             "DIF": "-15"
-          }
-        },
-        {
-          "pos": "12",
-          "team": "CP JONQUERENC",
-          "played": "9",
-          "points": "1",
-          "gf": "23",
-          "ga": "57",
-          "difference": "-34",
-          "stats": {
-            "PTS": "1",
-            "PJ": "9",
-            "PG": "0",
-            "PE": "1",
-            "PP": "8",
-            "GF": "23",
-            "GC": "57",
-            "DIF": "-34"
           },
-          "shortTeam": "CP JONQUERENC",
+          "shortTeam": "HCR",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "13",
+          "pos": "12",
           "team": "FARNERS C",
+          "teamId": "11993",
+          "teamLogo": "/fecapa/images/logos_clubes/310_5.png",
           "played": "8",
           "points": "1",
           "gf": "15",
@@ -13088,7 +13107,30 @@
             "GC": "50",
             "DIF": "-35"
           },
-          "shortTeam": "FARNERS C",
+          "shortTeam": "LUBC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "13",
+          "team": "CP JONQUERENC",
+          "teamId": "11126",
+          "teamLogo": "/fecapa/images/logos_clubes/314_1.gif",
+          "played": "10",
+          "points": "1",
+          "gf": "24",
+          "ga": "61",
+          "difference": "-37",
+          "stats": {
+            "PTS": "1",
+            "PJ": "10",
+            "PG": "0",
+            "PE": "1",
+            "PP": "9",
+            "GF": "24",
+            "GC": "61",
+            "DIF": "-37"
+          },
+          "shortTeam": "CPJ",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
@@ -38683,14 +38725,14 @@
     {
       "leagueId": "4786",
       "group": "INFANTIL OR 2",
-      "team": "GEIEG A",
-      "shortTeam": "GEGA"
+      "team": "VICIO PHC SANT CUGAT A",
+      "shortTeam": "HSCA"
     },
     {
       "leagueId": "4786",
       "group": "INFANTIL OR 2",
-      "team": "VICIO PHC SANT CUGAT A",
-      "shortTeam": "HSCA"
+      "team": "GEIEG A",
+      "shortTeam": "GEGA"
     },
     {
       "leagueId": "4786",
@@ -38991,6 +39033,84 @@
       "group": "INFANTIL OR 9",
       "team": "UNIÓ ESPORTIVA D'HORTA B",
       "shortTeam": "EHBB"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "CP CALDES A",
+      "shortTeam": "CPCA"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "CH OLOT B",
+      "shortTeam": "HOBB"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "OXFORD HC SALT B",
+      "shortTeam": "HCSB"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "TECMON CASSANENC A",
+      "shortTeam": "FDCA"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "CH LLORET CAFÈS CORNELLÀ",
+      "shortTeam": "LLO"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "CH FIGUERES",
+      "shortTeam": "INF"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "CLUB HOQUEI SANT JORDI",
+      "shortTeam": "CHSJ"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "CLUB PATI TORDERA B",
+      "shortTeam": "CPTB"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "CH PALAFRUGELL B",
+      "shortTeam": "CHPB"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "JESUS MARIA I JOSEP E",
+      "shortTeam": "JMJE"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "HOQUEI CLUB RIPOLL",
+      "shortTeam": "HCR"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "FARNERS C",
+      "shortTeam": "LUBC"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 1",
+      "team": "CP JONQUERENC",
+      "shortTeam": "CPJ"
     },
     {
       "leagueId": "4787",
