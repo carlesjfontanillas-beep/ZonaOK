@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T14:25:13.779747+00:00",
+  "capturedAt": "2026-11-28T14:28:00.911272+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -6847,32 +6847,38 @@
       "category": "JÚNIOR",
       "competition": "JÚNIOR OR",
       "leagueId": "4782",
-      "capturedAt": "2026-11-27T01:11:38.298092+00:00",
-      "standingsAt": "2026-11-27T01:11:38.298092+00:00",
+      "capturedAt": "2026-11-28T14:28:00.911272+00:00",
+      "standingsAt": "2026-11-28T14:28:00.911272+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=clasificaciones",
       "standings": [
         {
           "pos": "1",
           "team": "CLUB PATI TORDERA",
-          "played": "7",
-          "points": "21",
-          "gf": "67",
+          "teamId": "11373",
+          "teamLogo": "/fecapa/images/logos_clubes/297_1.png",
+          "played": "8",
+          "points": "24",
+          "gf": "73",
           "ga": "10",
-          "difference": "57",
+          "difference": "63",
           "stats": {
-            "PTS": "21",
-            "PJ": "7",
-            "PG": "7",
+            "PTS": "24",
+            "PJ": "8",
+            "PG": "8",
             "PE": "0",
             "PP": "0",
-            "GF": "67",
+            "GF": "73",
             "GC": "10",
-            "DIF": "57"
-          }
+            "DIF": "63"
+          },
+          "shortTeam": "CPT",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "AUTO VIGATANA PATÍ VIC B",
+          "teamId": "12222",
+          "teamLogo": "/fecapa/images/logos_clubes/692_2.png",
           "played": "6",
           "points": "11",
           "gf": "28",
@@ -6887,30 +6893,38 @@
             "GF": "28",
             "GC": "20",
             "DIF": "8"
-          }
+          },
+          "shortTeam": "VICB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
           "team": "CH CALDES RECAM LÀSER B",
-          "played": "6",
+          "teamId": "11979",
+          "teamLogo": "/fecapa/images/logos_clubes/237.png",
+          "played": "7",
           "points": "10",
           "gf": "28",
-          "ga": "17",
-          "difference": "11",
+          "ga": "23",
+          "difference": "5",
           "stats": {
             "PTS": "10",
-            "PJ": "6",
+            "PJ": "7",
             "PG": "3",
             "PE": "1",
-            "PP": "2",
+            "PP": "3",
             "GF": "28",
-            "GC": "17",
-            "DIF": "11"
-          }
+            "GC": "23",
+            "DIF": "5"
+          },
+          "shortTeam": "CHCB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "CE ARENYS DE MUNT",
+          "teamId": "11248",
+          "teamLogo": "/fecapa/images/logos_clubes/232_1.png",
           "played": "7",
           "points": "9",
           "gf": "32",
@@ -6925,11 +6939,15 @@
             "GF": "32",
             "GC": "35",
             "DIF": "-3"
-          }
+          },
+          "shortTeam": "ADM",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
           "team": "CH JUNEDA",
+          "teamId": "12485",
+          "teamLogo": "/fecapa/images/logos_clubes/338.png",
           "played": "6",
           "points": "2",
           "gf": "11",
@@ -6945,12 +6963,14 @@
             "GC": "42",
             "DIF": "-31"
           },
-          "shortTeam": "CH JUNEDA",
+          "shortTeam": "CHJ",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
           "team": "CLUB HOQUEI PRAT",
+          "teamId": "12145",
+          "teamLogo": "/fecapa/images/logos_clubes/275.png",
           "played": "6",
           "points": "1",
           "gf": "7",
@@ -6965,11 +6985,15 @@
             "GF": "7",
             "GC": "49",
             "DIF": "-42"
-          }
+          },
+          "shortTeam": "CHP",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "7",
           "team": "CP SANT CELONI B",
+          "teamId": "12587",
+          "teamLogo": "/fecapa/images/logos_clubes/281.png",
           "played": "0",
           "points": "0",
           "gf": "0",
@@ -6984,7 +7008,9 @@
             "GF": "0",
             "GC": "0",
             "DIF": "0"
-          }
+          },
+          "shortTeam": "CPSC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
     },
@@ -16218,8 +16244,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-28T13:16:10.045798+00:00",
-      "standingsAt": "2026-11-28T13:16:10.045798+00:00",
+      "capturedAt": "2026-11-28T14:28:00.911272+00:00",
+      "standingsAt": "2026-11-28T14:28:00.911272+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -16347,20 +16373,20 @@
           "team": "CE NOIA FREIXENET C",
           "teamId": "11802",
           "teamLogo": "/fecapa/images/logos_clubes/269.png",
-          "played": "9",
+          "played": "10",
           "points": "6",
-          "gf": "18",
-          "ga": "45",
-          "difference": "-27",
+          "gf": "22",
+          "ga": "52",
+          "difference": "-30",
           "stats": {
             "PTS": "6",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "2",
             "PE": "0",
-            "PP": "7",
-            "GF": "18",
-            "GC": "45",
-            "DIF": "-27",
+            "PP": "8",
+            "GF": "22",
+            "GC": "52",
+            "DIF": "-30",
             "SAN": "0"
           },
           "shortTeam": "OIAC",
@@ -16395,20 +16421,20 @@
           "team": "JESUS MARIA I JOSEP B",
           "teamId": "11105",
           "teamLogo": "/fecapa/images/logos_clubes/253.png",
-          "played": "8",
-          "points": "0",
-          "gf": "14",
-          "ga": "89",
-          "difference": "-75",
+          "played": "9",
+          "points": "3",
+          "gf": "21",
+          "ga": "93",
+          "difference": "-72",
           "stats": {
-            "PTS": "0",
-            "PJ": "8",
-            "PG": "0",
+            "PTS": "3",
+            "PJ": "9",
+            "PG": "1",
             "PE": "0",
             "PP": "8",
-            "GF": "14",
-            "GC": "89",
-            "DIF": "-75",
+            "GF": "21",
+            "GC": "93",
+            "DIF": "-72",
             "SAN": "0"
           },
           "shortTeam": "JMJB",
@@ -37372,6 +37398,48 @@
     },
     {
       "leagueId": "4782",
+      "group": "JÚNIOR OR 6",
+      "team": "CLUB PATI TORDERA",
+      "shortTeam": "CPT"
+    },
+    {
+      "leagueId": "4782",
+      "group": "JÚNIOR OR 6",
+      "team": "AUTO VIGATANA PATÍ VIC B",
+      "shortTeam": "VICB"
+    },
+    {
+      "leagueId": "4782",
+      "group": "JÚNIOR OR 6",
+      "team": "CH CALDES RECAM LÀSER B",
+      "shortTeam": "CHCB"
+    },
+    {
+      "leagueId": "4782",
+      "group": "JÚNIOR OR 6",
+      "team": "CE ARENYS DE MUNT",
+      "shortTeam": "ADM"
+    },
+    {
+      "leagueId": "4782",
+      "group": "JÚNIOR OR 6",
+      "team": "CH JUNEDA",
+      "shortTeam": "CHJ"
+    },
+    {
+      "leagueId": "4782",
+      "group": "JÚNIOR OR 6",
+      "team": "CLUB HOQUEI PRAT",
+      "shortTeam": "CHP"
+    },
+    {
+      "leagueId": "4782",
+      "group": "JÚNIOR OR 6",
+      "team": "CP SANT CELONI B",
+      "shortTeam": "CPSC"
+    },
+    {
+      "leagueId": "4782",
       "group": "JÚNIOR OR 7",
       "team": "CH CALDES RECAM LÀSER C",
       "shortTeam": "CHCC"
@@ -41265,60 +41333,6 @@
       "shortTeam": "CSJC"
     },
     {
-      "leagueId": "5082",
-      "group": "VETERANS TARRAGONA",
-      "team": "CLUB HOQUEI VILA-SECA",
-      "shortTeam": "CHVS"
-    },
-    {
-      "leagueId": "5082",
-      "group": "VETERANS TARRAGONA",
-      "team": "REUS DEPORTIU",
-      "shortTeam": "REUS"
-    },
-    {
-      "leagueId": "5082",
-      "group": "VETERANS TARRAGONA",
-      "team": "HOQUEI CASAL ESPLUGA",
-      "shortTeam": "HCE"
-    },
-    {
-      "leagueId": "5082",
-      "group": "VETERANS TARRAGONA",
-      "team": "CAMBRILS CH",
-      "shortTeam": "CCH"
-    },
-    {
-      "leagueId": "5082",
-      "group": "VETERANS TARRAGONA",
-      "team": "CLUB PATI CALAFELL",
-      "shortTeam": "CPC"
-    },
-    {
-      "leagueId": "5082",
-      "group": "VETERANS TARRAGONA",
-      "team": "CN REUS PLOMS",
-      "shortTeam": "CNRP"
-    },
-    {
-      "leagueId": "5082",
-      "group": "VETERANS TARRAGONA",
-      "team": "CHP AMPOSTA",
-      "shortTeam": "AMPV"
-    },
-    {
-      "leagueId": "5082",
-      "group": "VETERANS TARRAGONA",
-      "team": "TRANSLOP ALCAÑIZ CLUB PATIN",
-      "shortTeam": "ACP"
-    },
-    {
-      "leagueId": "5082",
-      "group": "VETERANS TARRAGONA",
-      "team": "HOQUEI CLUB VETERANS CUBELLES",
-      "shortTeam": "HCVC"
-    },
-    {
       "leagueId": "5045",
       "group": "LCV GRUP A",
       "team": "CP CONGRES A",
@@ -41479,6 +41493,60 @@
       "group": "LCV GRUP C",
       "team": "CLUB PATI SANT CELONI",
       "shortTeam": "CPSC"
+    },
+    {
+      "leagueId": "5082",
+      "group": "VETERANS TARRAGONA",
+      "team": "CLUB HOQUEI VILA-SECA",
+      "shortTeam": "CHVS"
+    },
+    {
+      "leagueId": "5082",
+      "group": "VETERANS TARRAGONA",
+      "team": "REUS DEPORTIU",
+      "shortTeam": "REUS"
+    },
+    {
+      "leagueId": "5082",
+      "group": "VETERANS TARRAGONA",
+      "team": "HOQUEI CASAL ESPLUGA",
+      "shortTeam": "HCE"
+    },
+    {
+      "leagueId": "5082",
+      "group": "VETERANS TARRAGONA",
+      "team": "CAMBRILS CH",
+      "shortTeam": "CCH"
+    },
+    {
+      "leagueId": "5082",
+      "group": "VETERANS TARRAGONA",
+      "team": "CLUB PATI CALAFELL",
+      "shortTeam": "CPC"
+    },
+    {
+      "leagueId": "5082",
+      "group": "VETERANS TARRAGONA",
+      "team": "CN REUS PLOMS",
+      "shortTeam": "CNRP"
+    },
+    {
+      "leagueId": "5082",
+      "group": "VETERANS TARRAGONA",
+      "team": "CHP AMPOSTA",
+      "shortTeam": "AMPV"
+    },
+    {
+      "leagueId": "5082",
+      "group": "VETERANS TARRAGONA",
+      "team": "TRANSLOP ALCAÑIZ CLUB PATIN",
+      "shortTeam": "ACP"
+    },
+    {
+      "leagueId": "5082",
+      "group": "VETERANS TARRAGONA",
+      "team": "HOQUEI CLUB VETERANS CUBELLES",
+      "shortTeam": "HCVC"
     }
   ]
 }
