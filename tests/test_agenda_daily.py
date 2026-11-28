@@ -75,6 +75,18 @@ class DailyAgenda(unittest.TestCase):
             validate_publication(before,dict(out,matches=out['matches'][1:]),packet,report)
         with self.assertRaises(ValueError):
             validate_publication(before,out,packet,dict(report,duplicateRepairs=[]))
+    def test_state_leagues_not_required_in_catalan_agenda(self):
+        a=dict(self.row(),competition='OK LIGA MASCULINA',home='BARÇA',away='PONS LLEIDA',homeScore=4,awayScore=2)
+        b=dict(a,iso='2026-12-01',homeScore=None,awayScore=None)
+        c=dict(a,home='CPV',away='PONS LLEIDA')
+        d=dict(a,home='SHUM FRIT RAVICH',homeScore=None,awayScore=None)
+        e=dict(d,home='CH LLORET VILA ESPORTIVA',status='AJORNAT')
+        others=[self.row(iso='2026-12-01',home='X'+str(i),away='Y'+str(i)) for i in range(25)]
+        out,report=self.run_merge([a,b,c,d,e]+others,others)
+        self.assertEqual(len(out['matches']),30)
+        self.assertEqual(report['stateAcceptedCount'],3)
+        self.assertEqual(sorted(r['reason'] for r in report['conflicts']),['state_ambiguous_team_code','state_missing_result'])
+        self.assertFalse(any(r['reason']=='not_uniquely_found_in_agenda' for r in report['conflicts']))
     def test_daily_madrid_dst(self):
         for month,utc_hour in [(1,9),(7,8)]:
             now=datetime(2026,month,10,utc_hour,12,tzinfo=timezone.utc)

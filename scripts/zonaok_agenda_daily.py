@@ -7,7 +7,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from zonaok_fecapa_unificat import (CANONICAL, SEASON, load_unified, norm, clean, score_tuple, check_iso, check_time, check_when, utc_now, write_compatibility, canonicalize, chromium_context)
 from zonaok_agenda_dates_review import capture
-from zonaok_fecapa_unificat import invalid_fixture_team, state_competition, state_team_key
+from zonaok_fecapa_unificat import invalid_fixture_team, state_competition, state_team_key, state_team_names, validate_row
 
 MADRID=ZoneInfo('Europe/Madrid')
 EXCLUDED=re.compile(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',re.I)
@@ -28,6 +28,20 @@ def index(rows,fn,indices):
     out=defaultdict(list)
     for i in indices:out[fn(rows[i])].append(i)
     return out
+def state_validation_issue(r,today):
+    """State leagues are not covered by the Catalan general Agenda.
+    Validate the existing fixture, not its presence in a different source.
+    Scores are required for past days, except explicitly postponed/cancelled fixtures.
+    """
+    if not validate_row(dict(r),'agenda') or not all(pair(r)):
+        return 'state_missing_or_invalid_fixture_data'
+    if any(len(state_team_names(r.get(side),r.get('competition')))!=1 for side in ('home','away')):
+        return 'state_ambiguous_team_code'
+    if r['iso']<today.isoformat() and not score_tuple(r) and not EXCLUDED.search(clean(r.get('status'))):
+        return 'state_missing_result'
+    return ''
+
+
 def reconcile_duplicate_pairs(doc,incoming,cut,captured):
     """Match the whole season, including official rows already used by exact matches.
     Never collapse distinct IDs, separate phases/groups, or contradictory scores.
@@ -147,11 +161,19 @@ def merge(doc,packet):
             r['homeScore']=r['awayScore']=None
         rows.append(r);new.append(key(r))
     for i,a in enumerate(old):
+        if state_competition(a.get('competition')):continue
         if i not in used_old and recent(a,cut):conflicts.append({'reason':'not_uniquely_found_in_agenda','fixture':key(a),'possible':[slot(incoming[j]) for j in all_incoming_pairs.get(pair(a),[])]})
+    state_accepted=[]
+    for r in rows:
+        if not state_competition(r.get('competition')) or not recent(r,cut):continue
+        issue=state_validation_issue(r,today)
+        item={'fixture':key(r),'home':r.get('home'),'away':r.get('away'),'homeScore':r.get('homeScore'),'awayScore':r.get('awayScore'),'status':r.get('status')}
+        if issue:conflicts.append({'reason':issue,**item})
+        else:state_accepted.append(item)
     prior_counts=Counter(key(r) for r in old);counts=Counter(key(r) for r in rows)
     if any(n>max(1,prior_counts[k]) for k,n in counts.items()):raise ValueError('new duplicate fixtures')
     rows.sort(key=lambda r:(r.get('iso',''),r.get('time',''),norm(r.get('competition')),norm(r.get('home'))))
-    report={'schema':'zonaok-agenda-daily-report-v1','capturedAt':captured,'windowFrom':cut,'sourceRows':len(incoming),'catalogBefore':original_count,'catalogAfter':len(rows),'duplicateRepairs':duplicate_repairs,'duplicateReviews':duplicate_reviews,'duplicatesRemoved':sum(r['removed'] for r in duplicate_repairs),'scheduleChanges':changes,'recoveredResults':recovered,'newFixtures':new,'conflicts':conflicts,'scheduleChangeCount':len(changes),'recoveredResultCount':len(recovered),'newFixtureCount':len(new),'unresolvedCount':len(conflicts),'yesterdayMissingResults':[key(r) for r in rows if r.get('iso')==(today-timedelta(days=1)).isoformat() and not score_tuple(r) and not EXCLUDED.search(clean(r.get('status')))]}
+    report={'schema':'zonaok-agenda-daily-report-v1','capturedAt':captured,'windowFrom':cut,'sourceRows':len(incoming),'catalogBefore':original_count,'catalogAfter':len(rows),'duplicateRepairs':duplicate_repairs,'duplicateReviews':duplicate_reviews,'duplicatesRemoved':sum(r['removed'] for r in duplicate_repairs),'scheduleChanges':changes,'recoveredResults':recovered,'newFixtures':new,'conflicts':conflicts,'scheduleChangeCount':len(changes),'recoveredResultCount':len(recovered),'newFixtureCount':len(new),'unresolvedCount':len(conflicts),'stateAcceptedCount':len(state_accepted),'stateAccepted':state_accepted,'yesterdayMissingResults':[key(r) for r in rows if r.get('iso')==(today-timedelta(days=1)).isoformat() and not score_tuple(r) and not EXCLUDED.search(clean(r.get('status')))]}
     result={**doc,'matches':rows,'updatedAt':utc_now(),'sources':{**doc.get('sources',{}),'agenda':{**doc.get('sources',{}).get('agenda',{}),'capturedAt':captured,'mergedAt':utc_now(),'scope':'daily',**{k:report[k] for k in ('scheduleChangeCount','recoveredResultCount','newFixtureCount','unresolvedCount')}}}}
     result['stats']={**doc.get('stats',{}),'total':len(rows),'withScores':sum(score_tuple(r) for r in rows),'withActaLinks':sum(bool(r.get('actaUrl')) for r in rows),'verifiedActes':sum(r.get('actaState')=='available' for r in rows)}
     return result,report
