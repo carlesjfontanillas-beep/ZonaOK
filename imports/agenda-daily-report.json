@@ -1,85 +1,30 @@
 {
   "schema": "zonaok-agenda-daily-report-v1",
-  "capturedAt": "2026-11-28T09:38:22Z",
+  "capturedAt": "2026-11-28T09:43:28Z",
   "windowFrom": "2026-11-21",
   "sourceRows": 12147,
-  "catalogBefore": 12189,
-  "catalogAfter": 12189,
+  "catalogBefore": 12186,
+  "catalogAfter": 12186,
   "duplicateRepairs": [],
   "duplicateReviews": [],
   "duplicatesRemoved": 0,
-  "scheduleChanges": [],
+  "scheduleChanges": [
+    {
+      "competition": "BCN BENJAMÍ PLATA 3",
+      "home": "CH LES FRANQUESES",
+      "away": "UNIÓ ESPORTIVA D'HORTA B",
+      "previousIso": "2026-11-29",
+      "previousTime": "10:45",
+      "iso": "2026-11-28",
+      "time": "17:00",
+      "leagueId": "",
+      "matchId": "",
+      "proof": "unique-season-pair"
+    }
+  ],
   "recoveredResults": [],
   "newFixtures": [],
   "conflicts": [
-    {
-      "reason": "approved_latest_date_disagrees_with_source",
-      "old": [
-        "BCN BENJAMI PLATA 3",
-        "CH LES FRANQUESES",
-        "UNIO ESPORTIVA D HORTA B",
-        "2026-11-29",
-        "10:45"
-      ],
-      "incoming": [
-        "BCN BENJAMI PLATA 3",
-        "CH LES FRANQUESES",
-        "UNIO ESPORTIVA D HORTA B",
-        "2026-11-28",
-        "17:00"
-      ]
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "VETERANS GIRONA",
-        "CLUB PATI MALGRAT GRUP ESCOBAR A",
-        "CH LLORET",
-        "2027-01-05",
-        "22:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "PREBENJAMI OR GIRONA",
-        "FARNERS",
-        "CH OLOT A",
-        "2027-01-10",
-        "10:00"
-      ],
-      "possible": [
-        [
-          "2027-01-10",
-          "11:00"
-        ],
-        [
-          "2027-05-15",
-          "14:30"
-        ]
-      ]
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "PREBENJAMI OR GIRONA",
-        "SHUM METALL LOGIC A",
-        "CH OLOT B",
-        "2027-01-10",
-        "11:45"
-      ],
-      "possible": [
-        [
-          "2027-01-10",
-          "11:00"
-        ],
-        [
-          "2027-05-16",
-          "11:45"
-        ]
-      ]
-    },
     {
       "reason": "state_ambiguous_team_code",
       "fixture": [
@@ -141,10 +86,10 @@
       "status": "FINAL"
     }
   ],
-  "scheduleChangeCount": 0,
+  "scheduleChangeCount": 1,
   "recoveredResultCount": 0,
   "newFixtureCount": 0,
-  "unresolvedCount": 8,
+  "unresolvedCount": 4,
   "stateAcceptedCount": 30,
   "stateAccepted": [
     {

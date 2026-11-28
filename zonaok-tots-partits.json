@@ -1,11 +1,11 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T09:41:13Z",
+  "updatedAt": "2026-11-28T09:43:37Z",
   "sources": {
     "agenda": {
-      "capturedAt": "2026-11-28T09:38:22Z",
-      "mergedAt": "2026-11-28T09:38:31Z",
+      "capturedAt": "2026-11-28T09:43:28Z",
+      "mergedAt": "2026-11-28T09:43:37Z",
       "new": 34,
       "updated": 12112,
       "unmatched": 0,
@@ -308,10 +308,10 @@
       "unverifiedLeagues": 16,
       "nextFastOffset": 128,
       "scope": "daily",
-      "scheduleChangeCount": 0,
+      "scheduleChangeCount": 1,
       "recoveredResultCount": 0,
       "newFixtureCount": 0,
-      "unresolvedCount": 8
+      "unresolvedCount": 4
     },
     "directe": {
       "capturedAt": "2026-11-27T21:28:35Z",
@@ -144403,6 +144403,34 @@
     {
       "iso": "2026-11-28",
       "time": "17:00",
+      "competition": "BCN BENJAMÍ PLATA 3",
+      "home": "CH LES FRANQUESES",
+      "away": "UNIÓ ESPORTIVA D'HORTA B",
+      "venue": "LES FRANQUESES",
+      "homeLogo": "",
+      "awayLogo": "",
+      "matchId": "",
+      "leagueId": "",
+      "actaUrl": "",
+      "status": "",
+      "round": "",
+      "homeScore": null,
+      "awayScore": null,
+      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+      "scoreUpdatedAt": "",
+      "scoreSource": "",
+      "directeUpdatedAt": "",
+      "lastAgendaAt": "2026-11-28T09:43:28Z",
+      "agendaScheduleChange": {
+        "previousIso": "2026-11-29",
+        "previousTime": "10:45",
+        "capturedAt": "2026-11-28T09:43:28Z",
+        "proof": "unique-season-pair"
+      }
+    },
+    {
+      "iso": "2026-11-28",
+      "time": "17:00",
       "competition": "BCN BENJAMÍ PLATA 5",
       "home": "HC MONTBUI",
       "away": "CLUB PATI TORRELLES",
@@ -147686,28 +147714,6 @@
       "directeUpdatedAt": "2026-11-27T00:32:25Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-27T00:32:25Z"
-    },
-    {
-      "iso": "2026-11-29",
-      "time": "10:45",
-      "competition": "BCN BENJAMÍ PLATA 3",
-      "home": "CH LES FRANQUESES",
-      "away": "UNIÓ ESPORTIVA D'HORTA B",
-      "venue": "LES FRANQUESES",
-      "homeLogo": "",
-      "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
-      "status": "",
-      "round": "",
-      "homeScore": null,
-      "awayScore": null,
-      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
-      "scoreUpdatedAt": "",
-      "scoreSource": "",
-      "directeUpdatedAt": "",
-      "lastAgendaAt": "2026-11-27T06:12:13Z"
     },
     {
       "iso": "2026-11-29",
