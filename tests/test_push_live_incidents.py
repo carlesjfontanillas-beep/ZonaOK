@@ -39,9 +39,11 @@ FALTA UEH BARBERÀ
 
     def test_only_live_senior_nacional_matches_are_candidates(self):
         now = datetime(2026, 11, 21, 19, 55, tzinfo=timezone.utc)
-        rows = [dict(FIXTURE, status="EN JOC"), dict(FIXTURE, matchId="2", competition="OK LIGA IBERDROLA", status="EN JOC"), dict(FIXTURE, matchId="3", status="FINAL")]
+        rows = [dict(FIXTURE, status="EN JOC"), dict(FIXTURE, matchId="2", competition="OK LIGA IBERDROLA", status="EN JOC"), dict(FIXTURE, matchId="146395", away="CP SANT CELONI", status="FINAL")]
         doc = {"schema":"zonaok-partits-total-v1", "matches":rows}
         self.assertEqual([m["fixture"]["matchId"] for m in candidates(doc, now=now)], ["146394"])
         with self.assertRaises(ValueError): candidates({"matches":[]}, now=now)
+        duplicate = dict(FIXTURE, matchId="146396", status="EN JOC")
+        self.assertEqual(candidates({"schema":"zonaok-partits-total-v1", "matches":[dict(FIXTURE, status="EN JOC"), duplicate]}, now=now), [])
 
 if __name__ == "__main__": unittest.main()
