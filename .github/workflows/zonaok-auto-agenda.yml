@@ -130,7 +130,8 @@ jobs:
               python scripts/zonaok_deduplicar_partits.py --report diagnostic-duplicats-agenda.json
               mkdir -p imports
               cp fusio-agenda-auto.json imports/agenda-daily-report.json
-              git add imports/agenda-daily-report.json
+              python scripts/zonaok_push_plan.py --catalog zonaok-tots-partits.json --output imports/push-plan.json
+              git add imports/agenda-daily-report.json imports/push-plan.json
             else
               python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
               python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-agenda.json

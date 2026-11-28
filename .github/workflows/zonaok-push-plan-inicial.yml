@@ -1,0 +1,43 @@
+name: ZonaOK - Preparar avisos de les 10 h
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/zonaok-push-plan-inicial.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Provar finestres i transport
+        run: python -m unittest discover -s tests -p 'test_push_*.py' -v
+      - name: Publicar planificació sense enviar anticipadament
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/zonaok_push_plan.py
+            git add imports/push-plan.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'ZonaOK: preparar avisos de les properes 24 h'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+      - name: Activar comprovació dels avisos que ja toquen
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh workflow run zonaok-push-events.yml --ref main -f test_scenario=scheduled_now

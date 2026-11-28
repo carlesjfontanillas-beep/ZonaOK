@@ -46,26 +46,36 @@ def observed(row, source='directe'):
 def fixture_payload(r):
     return {k:r.get(k,"") for k in ("iso","time","competition","home","away","leagueId","matchId","homeLogo","awayLogo","round")}
 
-def scheduled_starts(catalog, *, now):
+def scheduled_candidates(catalog):
     if catalog.get("schema")!="zonaok-partits-total-v1":raise ValueError("Invalid FECAPA catalog")
     rows=[r for r in catalog.get("matches",[]) if isinstance(r,dict)]
     counts=Counter(identity(r) for r in rows)
     ids=Counter((str(r.get("leagueId") or ""),str(r.get("matchId") or "")) for r in rows)
     output=[]
-    local=now.astimezone(MADRID)
     for r in rows:
         key=identity(r)
-        if not key or counts[key]!=1 or norm(r.get("competition")) in NC or EXCLUDED.search(norm(r.get("status"))) or norm(r.get("status")) in FINAL:continue
+        if not key or counts[key]!=1 or EXCLUDED.search(norm(r.get("status"))) or norm(r.get("status")) in FINAL:continue
         try:start=datetime.strptime(r["iso"]+" "+r["time"],"%Y-%m-%d %H:%M").replace(tzinfo=MADRID)
         except (ValueError,TypeError,KeyError):continue
-        if start.date()!=local.date() or not timedelta(0)<=local-start<=timedelta(minutes=10):continue
         stable=(str(r.get("leagueId") or ""),str(r.get("matchId") or ""))
         if all(stable) and ids[stable]!=1:continue
         event_id=hashlib.sha256(json.dumps([catalog.get("season"),stable if all(stable) else key,"scheduledStart"],ensure_ascii=False).encode()).hexdigest()
         fixture=fixture_payload(r)
+        output.append((start,event_id,fixture,norm(r.get("competition")) in NC))
+    return output
+
+def scheduled_starts(catalog, *, now, plan=None):
+    """Use the current catalogue to confirm every planned start before delivery.
+    Newly rescheduled fixtures can still be sent if absent from the morning plan.
+    """
+    local=now.astimezone(MADRID)
+    planned={x['eventId'] for x in (plan or {}).get('events',[]) if x.get('mode')=='scheduled'} if (plan or {}).get('season')==catalog.get('season') else set()
+    output=[]
+    for start,event_id,fixture,nc in scheduled_candidates(catalog):
+        if nc or start.date()!=local.date() or not timedelta(0)<=local-start<=timedelta(minutes=10):continue
         fixture["startSource"]="Agenda"
         output.append({"eventId":event_id,"event":"start","source":"FECAPA","observedAt":now.isoformat(),"fixture":fixture,"startSource":"Agenda"})
-    return output
+    return sorted(output,key=lambda e:(e['eventId'] not in planned,e['fixture']['iso'],e['fixture']['time'],e['eventId']))
 
 def detect(before, after, *, since, now, source='both'):
     if since.tzinfo is None or now.tzinfo is None or since>now:
@@ -175,16 +185,18 @@ def main():
     p.add_argument("--source",choices=['both','directe','agenda'],default='both')
     p.add_argument("--scheduled",action='store_true')
     p.add_argument("--include-scheduled",action='store_true')
+    p.add_argument("--plan",type=Path)
     args=p.parse_args()
     now=datetime.now(timezone.utc)
     after=json.loads(args.after.read_text())
-    if args.scheduled:events=scheduled_starts(after,now=now)
+    plan=json.loads(args.plan.read_text()) if args.plan and args.plan.exists() else None
+    if args.scheduled:events=scheduled_starts(after,now=now,plan=plan)
     else:
         if not args.before or not args.since:p.error('--before and --since are required')
         since=datetime.fromisoformat(args.since.replace("Z","+00:00"))
         events=detect(json.loads(args.before.read_text()),after,since=since,now=now,source=args.source)
     if args.include_scheduled and not args.scheduled:
-        events=list({e["eventId"]:e for e in events+scheduled_starts(after,now=now)}.values())
+        events=list({e["eventId"]:e for e in events+scheduled_starts(after,now=now,plan=plan)}.values())
     print(json.dumps({"dryRun":True,"events":events},ensure_ascii=False))
 if __name__=="__main__":
     main()

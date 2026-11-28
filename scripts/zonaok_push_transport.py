@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Authenticated push transport: diagnose rejected events without subscriber data."""
-import json, os, re, sys, time
+import json, os, re, sys, time, subprocess, tempfile
 from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
@@ -18,18 +18,22 @@ def safe_summary(body):
     return out
 
 def send(payload,token):
-    raw=json.dumps(payload,ensure_ascii=False).encode()
-    for attempt in range(3):
-        try:
-            with urlopen(Request(URL,data=raw,headers={'Content-Type':'application/json','Authorization':'Bearer '+token},method='POST'),timeout=30) as r:
-                return r.status,safe_summary(r.read(65536))
-        except HTTPError as e:
-            status=e.code; summary=safe_summary(e.read(65536))
-            if status!=429 and status<500:return status,summary
-        except (URLError,TimeoutError):
-            status=0;summary={'error':'network_failure'}
-        if attempt<2:time.sleep(2**attempt)
-    return status,summary
+    # Use the same curl HTTP client that previously reached the Worker.
+    # Authorization is passed on stdin and never appears in logs or arguments.
+    with tempfile.TemporaryDirectory() as tmp:
+        path=Path(tmp)/'batch.json'
+        path.write_text(json.dumps(payload,ensure_ascii=False))
+        for attempt in range(3):
+            try:
+                r=subprocess.run(['curl','--silent','--show-error','--max-time','30','--request','POST','--header','Content-Type: application/json','--header','@-','--data-binary','@'+str(path),'--write-out','\n%{http_code}',URL],input=('Authorization: Bearer '+token+'\n').encode(),capture_output=True,timeout=35)
+                body,sep,code=r.stdout.rpartition(b'\n')
+                status=int(code) if sep and code.isdigit() else 0
+                summary=safe_summary(body) if status else {'error':'network_failure'}
+                if status and status!=429 and status<500:return status,summary
+            except (OSError,subprocess.TimeoutExpired):
+                status=0;summary={'error':'network_failure'}
+            if attempt<2:time.sleep(2**attempt)
+        return status,summary
 
 def deliver(batch,token,sender=send):
     events=batch['events'];status,result=sender(batch,token)

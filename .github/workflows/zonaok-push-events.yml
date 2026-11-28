@@ -87,7 +87,7 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = schedule ] || [ "$REQUEST_SCENARIO" = scheduled_now ]; then
             git fetch origin main
             git show origin/main:zonaok-tots-partits.json > push-after.json
-            python scripts/zonaok_push_events.py --after push-after.json --scheduled > push-detection.json
+            python scripts/zonaok_push_events.py --after push-after.json --scheduled --plan imports/push-plan.json > push-detection.json
           else
             [[ "$BEFORE_SHA" =~ ^[0-9a-f]{40}$ && "$AFTER_SHA" =~ ^[0-9a-f]{40}$ ]]
             git fetch origin main
@@ -96,7 +96,7 @@ jobs:
             git show "$BEFORE_SHA:zonaok-tots-partits.json" > push-before.json
             git show "$AFTER_SHA:zonaok-tots-partits.json" > push-after.json
             PUSH_SINCE="$(python -c 'import json,sys; print(json.load(open("push-before.json")).get("sources",{}).get(sys.argv[1],{}).get("capturedAt") or "2026-07-01T00:00:00Z")' "$EVENT_SOURCE")"
-            python scripts/zonaok_push_events.py --before push-before.json --after push-after.json --since "$PUSH_SINCE" --source "$EVENT_SOURCE" --include-scheduled > push-detection.json
+            python scripts/zonaok_push_events.py --before push-before.json --after push-after.json --since "$PUSH_SINCE" --source "$EVENT_SOURCE" --include-scheduled --plan imports/push-plan.json > push-detection.json
           fi
           python - <<'PY'
           import json
