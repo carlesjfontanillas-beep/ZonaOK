@@ -433152,7 +433152,7 @@
     "4779|148201": {
       "status": "pending",
       "fingerprint": "[4,5,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148201\"]",
-      "checkedAt": "2026-11-28T17:42:55.347708+00:00",
+      "checkedAt": "2026-11-28T17:48:47.308790+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148202": {
@@ -433311,7 +433311,7 @@
     "4779|148204": {
       "status": "pending",
       "fingerprint": "[1,10,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148204\"]",
-      "checkedAt": "2026-11-28T17:43:02.157008+00:00",
+      "checkedAt": "2026-11-28T17:48:55.113615+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148383": {
@@ -447245,6 +447245,309 @@
           {
             "period": "TOTAL",
             "score": "5-2",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4802|159425": {
+      "status": "verified",
+      "fingerprint": "[1,9,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=calendar&partido=159425\"]",
+      "checkedAt": "2026-11-28T17:48:27.338604+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "1",
+            "away": "9"
+          },
+          "FALTES": {
+            "home": "3",
+            "away": "8"
+          },
+          "TARGETES BLAVES": {
+            "home": "1",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 3,
+          "away": 8
+        },
+        "header": {
+          "competition": "FEM 15 OR",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ DANI PEDROSA",
+          "dateTime": "28/11/2026 - 17:30",
+          "round": "JORNADA 10",
+          "referee1": "LACAMBRA BROSSA, CARLES",
+          "rinkDelegate": "Javier Martínez López"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "TOGORES CURTIELLAS, ORIOL"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "PALOMO GURT, ANA"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "GAY SENTIS, JAUME"
+            },
+            {
+              "role": "Delegat",
+              "name": "MONTOLIO SUCARRATS, ANNA"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "CODINACH, ORIOL"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "1-9",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4789|152679": {
+      "status": "verified",
+      "fingerprint": "[11,2,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152679\"]",
+      "checkedAt": "2026-11-28T17:48:06.907759+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "11",
+            "away": "2"
+          },
+          "FALTES": {
+            "home": "5",
+            "away": "18"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 5,
+          "away": 18
+        },
+        "header": {
+          "competition": "ALEVÍ OR 5",
+          "season": "2026/2027",
+          "venue": "PAVELLO MOLLET",
+          "dateTime": "28/11/2026 - 17:15",
+          "round": "JORNADA 10",
+          "referee1": "BLASCO PIERA, GUILLEM",
+          "rinkDelegate": "Miguel Prieto Serrano"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "PINTOR JUNYENT, DAVID"
+            },
+            {
+              "role": "Delegat",
+              "name": "MUÑOZ TABERNERO, SUSANA"
+            }
+          ],
+          "away": [
+            {
+              "role": "Delegat",
+              "name": "AGUILERA CARRILLO, LAURA"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "CARRERA PEREZ, RAUL"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "11-2",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4789|152901": {
+      "status": "verified",
+      "fingerprint": "[4,4,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152901\"]",
+      "checkedAt": "2026-11-28T17:48:13.691802+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "4",
+            "away": "4"
+          },
+          "FALTES": {
+            "home": "15",
+            "away": "14"
+          },
+          "TARGETES BLAVES": {
+            "home": "1",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 15,
+          "away": 14
+        },
+        "header": {
+          "competition": "ALEVÍ OR 9",
+          "season": "2026/2027",
+          "venue": "PISTA POLIVALENT IGUALADA",
+          "dateTime": "28/11/2026 - 17:15",
+          "round": "JORNADA 10",
+          "referee1": "ARCO GONZALEZ, ADRIA"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "BUSQUETS FORTUNY, JORDI"
+            },
+            {
+              "role": "Delegat",
+              "name": "FONT, NURIA"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "PULIDO SEVILLA, TONI"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "PANADERO ARBAT, SERGI"
+            },
+            {
+              "role": "Delegat",
+              "name": "ESPINAL NOGUERA, ROGER"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "4-4",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4794|157032": {
+      "status": "verified",
+      "fingerprint": "[2,2,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4794&vista=calendar&partido=157032\"]",
+      "checkedAt": "2026-11-28T17:48:20.519323+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "2",
+            "away": "2"
+          },
+          "FALTES": {
+            "home": "30",
+            "away": "90"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 30,
+          "away": 90
+        },
+        "header": {
+          "competition": "FEM 17 PLATA",
+          "season": "2026/2027",
+          "venue": "POLIESPORTIU MUNICIPAL STA PERPETUA",
+          "dateTime": "28/11/2026 - 17:15",
+          "round": "JORNADA 9",
+          "referee1": "GASPAR CATANIA, BORJA",
+          "rinkDelegate": "Rosa Gimenez"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "COLL ROIG, OSCAR"
+            },
+            {
+              "role": "Delegat",
+              "name": "JIMENEZ LOPEZ, GEMMA"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "MASSANA MAURICI, MIQUEL"
+            },
+            {
+              "role": "Delegat",
+              "name": "RIUS TERES, NEUS"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "2-2",
             "fouls": "0-0"
           }
         ],

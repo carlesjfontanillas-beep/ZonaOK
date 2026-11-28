@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T17:51:25Z",
+  "updatedAt": "2026-11-28T17:53:32Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T17:24:29Z",
@@ -145189,9 +145189,9 @@
       "venue": "PAVELLO MOLLET",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "152679",
+      "leagueId": "4789",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152679",
       "status": "FINAL",
       "round": "",
       "homeScore": 11,
@@ -145202,7 +145202,9 @@
       "directeUpdatedAt": "2026-11-28T17:51:22Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T17:51:22Z",
-      "finalDetectedAt": "2026-11-28T17:45:58Z"
+      "finalDetectedAt": "2026-11-28T17:45:58Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T17:48:06.907759+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -145213,9 +145215,9 @@
       "venue": "PISTA POLIVALENT IGUALADA",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "152901",
+      "leagueId": "4789",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152901",
       "status": "FINAL",
       "round": "",
       "homeScore": 4,
@@ -145226,7 +145228,9 @@
       "directeUpdatedAt": "2026-11-28T17:51:22Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T17:51:22Z",
-      "finalDetectedAt": "2026-11-28T17:29:58Z"
+      "finalDetectedAt": "2026-11-28T17:29:58Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T17:48:13.691802+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -145335,9 +145339,9 @@
       "venue": "POLIESPORTIU MUNICIPAL STA PERPETUA",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "157032",
+      "leagueId": "4794",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4794&vista=calendar&partido=157032",
       "status": "FINAL",
       "round": "",
       "homeScore": 2,
@@ -145348,7 +145352,9 @@
       "directeUpdatedAt": "2026-11-28T17:51:22Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T17:51:22Z",
-      "finalDetectedAt": "2026-11-28T17:29:58Z"
+      "finalDetectedAt": "2026-11-28T17:29:58Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T17:48:20.519323+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -145685,9 +145691,9 @@
       "venue": "PAVELLÓ DANI PEDROSA",
       "homeLogo": "",
       "awayLogo": "",
-      "leagueId": "",
-      "matchId": "",
-      "actaUrl": "",
+      "leagueId": "4802",
+      "matchId": "159425",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4802&vista=calendar&partido=159425",
       "status": "FINAL",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "directeUpdatedAt": "2026-11-28T17:51:22Z",
@@ -145695,7 +145701,9 @@
       "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
       "finalDetectedAt": "2026-11-28T17:45:58Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-28T17:51:22Z"
+      "scoreUpdatedAt": "2026-11-28T17:51:22Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T17:48:27.338604+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -280464,8 +280472,8 @@
   "stats": {
     "total": 12186,
     "withScores": 5969,
-    "withActaLinks": 5920,
-    "verifiedActes": 5836
+    "withActaLinks": 5924,
+    "verifiedActes": 5840
   },
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
