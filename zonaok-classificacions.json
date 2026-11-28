@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T17:52:47.806325+00:00",
+  "capturedAt": "2026-11-28T17:58:41.647640+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -386,13 +386,15 @@
       "category": "NACIONAL CATALANA FEMENINA",
       "competition": "NACIONAL CATALANA FEMENINA",
       "leagueId": "4775",
-      "capturedAt": "2026-11-27T01:11:38.298092+00:00",
-      "standingsAt": "2026-11-27T01:11:38.298092+00:00",
+      "capturedAt": "2026-11-28T17:58:41.647640+00:00",
+      "standingsAt": "2026-11-28T17:58:41.647640+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4775&vista=clasificaciones",
       "standings": [
         {
           "pos": "1",
           "team": "AMETLLER ORIGEN CP VILAFRANCA",
+          "teamId": "12312",
+          "teamLogo": "/fecapa/images/logos_clubes/301.png",
           "played": "9",
           "points": "24",
           "gf": "47",
@@ -407,11 +409,15 @@
             "GF": "47",
             "GC": "13",
             "DIF": "34"
-          }
+          },
+          "shortTeam": "CPV",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "PATÍ VIC",
+          "teamId": "12194",
+          "teamLogo": "/fecapa/images/logos_clubes/692_2.png",
           "played": "9",
           "points": "19",
           "gf": "26",
@@ -427,12 +433,14 @@
             "GC": "12",
             "DIF": "14"
           },
-          "shortTeam": "PATÍ VIC",
+          "shortTeam": "VIC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
           "team": "CH CALDES RECAM LÀSER",
+          "teamId": "11974",
+          "teamLogo": "/fecapa/images/logos_clubes/237.png",
           "played": "9",
           "points": "18",
           "gf": "35",
@@ -447,11 +455,15 @@
             "GF": "35",
             "GC": "29",
             "DIF": "6"
-          }
+          },
+          "shortTeam": "CHC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "CLUB PATÍ VOLTREGÀ",
+          "teamId": "12468",
+          "teamLogo": "/fecapa/images/logos_clubes/304.png",
           "played": "9",
           "points": "17",
           "gf": "35",
@@ -466,11 +478,38 @@
             "GF": "35",
             "GC": "13",
             "DIF": "22"
-          }
+          },
+          "shortTeam": "CPV",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
+          "team": "OXFORD HC SALT",
+          "teamId": "11507",
+          "teamLogo": "/fecapa/images/logos_clubes/318_1.png",
+          "played": "10",
+          "points": "17",
+          "gf": "33",
+          "ga": "29",
+          "difference": "4",
+          "stats": {
+            "PTS": "17",
+            "PJ": "10",
+            "PG": "5",
+            "PE": "2",
+            "PP": "3",
+            "GF": "33",
+            "GC": "29",
+            "DIF": "4"
+          },
+          "shortTeam": "HCS",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "6",
           "team": "MARTINELIA MANLLEU",
+          "teamId": "11291",
+          "teamLogo": "/fecapa/images/logos_clubes/259.png",
           "played": "9",
           "points": "16",
           "gf": "29",
@@ -485,11 +524,15 @@
             "GF": "29",
             "GC": "17",
             "DIF": "12"
-          }
+          },
+          "shortTeam": "CPM",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "6",
+          "pos": "7",
           "team": "FENIE ENERGIA CERDANYOLA CCH",
+          "teamId": "11938",
+          "teamLogo": "/fecapa/images/logos_clubes/244.png",
           "played": "9",
           "points": "15",
           "gf": "20",
@@ -504,32 +547,15 @@
             "GF": "20",
             "GC": "22",
             "DIF": "-2"
-          }
-        },
-        {
-          "pos": "7",
-          "team": "OXFORD HC SALT",
-          "played": "9",
-          "points": "14",
-          "gf": "30",
-          "ga": "27",
-          "difference": "3",
-          "stats": {
-            "PTS": "14",
-            "PJ": "9",
-            "PG": "4",
-            "PE": "2",
-            "PP": "3",
-            "GF": "30",
-            "GC": "27",
-            "DIF": "3"
           },
-          "shortTeam": "OXFORD HC SALT",
+          "shortTeam": "CCH",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "8",
           "team": "CH OLOT",
+          "teamId": "11845",
+          "teamLogo": "/fecapa/images/logos_clubes/315.png",
           "played": "9",
           "points": "14",
           "gf": "22",
@@ -545,12 +571,14 @@
             "GC": "30",
             "DIF": "-8"
           },
-          "shortTeam": "CH OLOT",
+          "shortTeam": "CHO",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "9",
           "team": "GENERALI HC PALAU",
+          "teamId": "11206",
+          "teamLogo": "/fecapa/images/logos_clubes/271_1.png",
           "played": "9",
           "points": "13",
           "gf": "31",
@@ -565,11 +593,15 @@
             "GF": "31",
             "GC": "25",
             "DIF": "6"
-          }
+          },
+          "shortTeam": "PAL",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "10",
           "team": "IGUALADA FEMENÍ GRUPO GUZMÁN",
+          "teamId": "11709",
+          "teamLogo": "/fecapa/images/logos_clubes/474.png",
           "played": "9",
           "points": "12",
           "gf": "21",
@@ -584,11 +616,15 @@
             "GF": "21",
             "GC": "25",
             "DIF": "-4"
-          }
+          },
+          "shortTeam": "IGDF",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "11",
           "team": "CLUB PATÍ VILA-SANA",
+          "teamId": "11605",
+          "teamLogo": "/fecapa/images/logos_clubes/341_1.png",
           "played": "9",
           "points": "10",
           "gf": "33",
@@ -603,30 +639,38 @@
             "GF": "33",
             "GC": "38",
             "DIF": "-5"
-          }
+          },
+          "shortTeam": "CPV",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "12",
           "team": "VICIO PHC SANT CUGAT",
-          "played": "9",
+          "teamId": "12571",
+          "teamLogo": "/fecapa/images/logos_clubes/282.png",
+          "played": "10",
           "points": "10",
-          "gf": "16",
-          "ga": "31",
-          "difference": "-15",
+          "gf": "18",
+          "ga": "34",
+          "difference": "-16",
           "stats": {
             "PTS": "10",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "3",
             "PE": "1",
-            "PP": "5",
-            "GF": "16",
-            "GC": "31",
-            "DIF": "-15"
-          }
+            "PP": "6",
+            "GF": "18",
+            "GC": "34",
+            "DIF": "-16"
+          },
+          "shortTeam": "PHSC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "13",
           "team": "CLUB PATI TORRELLES",
+          "teamId": "12249",
+          "teamLogo": "/fecapa/images/logos_clubes/392_1.png",
           "played": "9",
           "points": "8",
           "gf": "12",
@@ -641,11 +685,15 @@
             "GF": "12",
             "GC": "23",
             "DIF": "-11"
-          }
+          },
+          "shortTeam": "CPT",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "14",
           "team": "CP VILANOVA LA DAURADA",
+          "teamId": "11485",
+          "teamLogo": "/fecapa/images/logos_clubes/302.png",
           "played": "9",
           "points": "7",
           "gf": "21",
@@ -660,11 +708,15 @@
             "GF": "21",
             "GC": "35",
             "DIF": "-14"
-          }
+          },
+          "shortTeam": "CPV",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "15",
           "team": "ROTOTANK BIGUES I RIELLS",
+          "teamId": "11488",
+          "teamLogo": "/fecapa/images/logos_clubes/236.gif",
           "played": "9",
           "points": "6",
           "gf": "16",
@@ -679,11 +731,15 @@
             "GF": "16",
             "GC": "26",
             "DIF": "-10"
-          }
+          },
+          "shortTeam": "BIR",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "16",
           "team": "CLUB ESPORTIU OLESA PATÍ",
+          "teamId": "11534",
+          "teamLogo": "/fecapa/images/logos_clubes/270.png",
           "played": "9",
           "points": "4",
           "gf": "11",
@@ -698,7 +754,9 @@
             "GF": "11",
             "GC": "39",
             "DIF": "-28"
-          }
+          },
+          "shortTeam": "COP",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
     },
@@ -5776,8 +5834,8 @@
       "category": "3ª CATALANA",
       "competition": "3ª CATALANA",
       "leagueId": "4781",
-      "capturedAt": "2026-11-28T17:42:13.773941+00:00",
-      "standingsAt": "2026-11-28T17:42:13.773941+00:00",
+      "capturedAt": "2026-11-28T17:58:41.647640+00:00",
+      "standingsAt": "2026-11-28T17:58:41.647640+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4781&vista=clasificaciones",
       "standings": [
         {
@@ -5926,6 +5984,30 @@
         },
         {
           "pos": "7",
+          "team": "CLUB PATÍ BELL-LLOC B",
+          "teamId": "12260",
+          "teamLogo": "/fecapa/images/logos_clubes/335.gif",
+          "played": "8",
+          "points": "13",
+          "gf": "47",
+          "ga": "39",
+          "difference": "8",
+          "stats": {
+            "PTS": "13",
+            "PJ": "8",
+            "PG": "4",
+            "PE": "1",
+            "PP": "3",
+            "GF": "47",
+            "GC": "39",
+            "DIF": "8",
+            "SAN": "0"
+          },
+          "shortTeam": "CPBB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "8",
           "team": "GENERALI HC PALAU",
           "teamId": "11316",
           "teamLogo": "/fecapa/images/logos_clubes/271_1.png",
@@ -5946,30 +6028,6 @@
             "SAN": "0"
           },
           "shortTeam": "PAL",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "8",
-          "team": "CLUB PATÍ BELL-LLOC B",
-          "teamId": "12260",
-          "teamLogo": "/fecapa/images/logos_clubes/335.gif",
-          "played": "7",
-          "points": "10",
-          "gf": "42",
-          "ga": "38",
-          "difference": "4",
-          "stats": {
-            "PTS": "10",
-            "PJ": "7",
-            "PG": "3",
-            "PE": "1",
-            "PP": "3",
-            "GF": "42",
-            "GC": "38",
-            "DIF": "4",
-            "SAN": "0"
-          },
-          "shortTeam": "CPBB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -6025,20 +6083,20 @@
           "team": "JESUS MARIA I JOSEP B",
           "teamId": "11102",
           "teamLogo": "/fecapa/images/logos_clubes/253.png",
-          "played": "7",
+          "played": "8",
           "points": "6",
-          "gf": "14",
-          "ga": "18",
-          "difference": "-4",
+          "gf": "15",
+          "ga": "23",
+          "difference": "-8",
           "stats": {
             "PTS": "6",
-            "PJ": "7",
+            "PJ": "8",
             "PG": "2",
             "PE": "0",
-            "PP": "5",
-            "GF": "14",
-            "GC": "18",
-            "DIF": "-4",
+            "PP": "6",
+            "GF": "15",
+            "GC": "23",
+            "DIF": "-8",
             "SAN": "0"
           },
           "shortTeam": "JMJB",
@@ -15542,8 +15600,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-28T15:18:33.819707+00:00",
-      "standingsAt": "2026-11-28T15:18:33.819707+00:00",
+      "capturedAt": "2026-11-28T17:58:41.647640+00:00",
+      "standingsAt": "2026-11-28T17:58:41.647640+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -15551,20 +15609,20 @@
           "team": "FENIE ENERGIA CERDANYOLA CCH A",
           "teamId": "11951",
           "teamLogo": "/fecapa/images/logos_clubes/244.png",
-          "played": "7",
-          "points": "21",
-          "gf": "51",
-          "ga": "7",
-          "difference": "44",
+          "played": "8",
+          "points": "24",
+          "gf": "54",
+          "ga": "8",
+          "difference": "46",
           "stats": {
-            "PTS": "21",
-            "PJ": "7",
-            "PG": "7",
+            "PTS": "24",
+            "PJ": "8",
+            "PG": "8",
             "PE": "0",
             "PP": "0",
-            "GF": "51",
-            "GC": "7",
-            "DIF": "44",
+            "GF": "54",
+            "GC": "8",
+            "DIF": "46",
             "SAN": "0"
           },
           "shortTeam": "CCHA",
@@ -15599,20 +15657,20 @@
           "team": "CH CALDES RECAM LÀSER B",
           "teamId": "11986",
           "teamLogo": "/fecapa/images/logos_clubes/237.png",
-          "played": "8",
+          "played": "9",
           "points": "16",
-          "gf": "39",
-          "ga": "29",
-          "difference": "10",
+          "gf": "40",
+          "ga": "32",
+          "difference": "8",
           "stats": {
             "PTS": "16",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "5",
             "PE": "1",
-            "PP": "2",
-            "GF": "39",
-            "GC": "29",
-            "DIF": "10",
+            "PP": "3",
+            "GF": "40",
+            "GC": "32",
+            "DIF": "8",
             "SAN": "0"
           },
           "shortTeam": "CHCB",
@@ -18221,8 +18279,8 @@
       "competition": "ALEVÍ PLATA",
       "leagueId": "4790",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=clasificaciones",
-      "capturedAt": "2026-11-28T17:19:57.152976+00:00",
-      "standingsAt": "2026-11-28T17:19:57.152976+00:00",
+      "capturedAt": "2026-11-28T17:58:41.647640+00:00",
+      "standingsAt": "2026-11-28T17:58:41.647640+00:00",
       "standings": [
         {
           "pos": "1",
@@ -18295,6 +18353,29 @@
         },
         {
           "pos": "4",
+          "team": "SE LA SALLE BONANOVA B",
+          "teamId": "11836",
+          "teamLogo": "/fecapa/images/logos_clubes/727.png",
+          "played": "9",
+          "points": "18",
+          "gf": "68",
+          "ga": "40",
+          "difference": "28",
+          "stats": {
+            "PTS": "18",
+            "PJ": "9",
+            "PG": "6",
+            "PE": "0",
+            "PP": "3",
+            "GF": "68",
+            "GC": "40",
+            "DIF": "28"
+          },
+          "shortTeam": "LSBB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "5",
           "team": "CLUB PATI TORRELLES B",
           "teamId": "12259",
           "teamLogo": "/fecapa/images/logos_clubes/392_1.png",
@@ -18317,7 +18398,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "5",
+          "pos": "6",
           "team": "FUTBOL CLUB MARTINENC A A",
           "teamId": "11345",
           "teamLogo": "/fecapa/images/logos_clubes/261_1.png",
@@ -18340,47 +18421,24 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "6",
-          "team": "SE LA SALLE BONANOVA B",
-          "teamId": "11836",
-          "teamLogo": "/fecapa/images/logos_clubes/727.png",
-          "played": "8",
-          "points": "15",
-          "gf": "59",
-          "ga": "36",
-          "difference": "23",
-          "stats": {
-            "PTS": "15",
-            "PJ": "8",
-            "PG": "5",
-            "PE": "0",
-            "PP": "3",
-            "GF": "59",
-            "GC": "36",
-            "DIF": "23"
-          },
-          "shortTeam": "LSBB",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
           "pos": "7",
           "team": "JESUS MARIA I JOSEP E",
           "teamId": "11106",
           "teamLogo": "/fecapa/images/logos_clubes/253.png",
-          "played": "9",
+          "played": "10",
           "points": "15",
-          "gf": "60",
-          "ga": "43",
-          "difference": "17",
+          "gf": "64",
+          "ga": "52",
+          "difference": "12",
           "stats": {
             "PTS": "15",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "5",
             "PE": "0",
-            "PP": "4",
-            "GF": "60",
-            "GC": "43",
-            "DIF": "17"
+            "PP": "5",
+            "GF": "64",
+            "GC": "52",
+            "DIF": "12"
           },
           "shortTeam": "JMJE",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -36763,6 +36821,102 @@
       "shortTeam": "GCH"
     },
     {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "AMETLLER ORIGEN CP VILAFRANCA",
+      "shortTeam": "CPV"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "PATÍ VIC",
+      "shortTeam": "VIC"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "CH CALDES RECAM LÀSER",
+      "shortTeam": "CHC"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "CLUB PATÍ VOLTREGÀ",
+      "shortTeam": "CPV"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "OXFORD HC SALT",
+      "shortTeam": "HCS"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "MARTINELIA MANLLEU",
+      "shortTeam": "CPM"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "FENIE ENERGIA CERDANYOLA CCH",
+      "shortTeam": "CCH"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "CH OLOT",
+      "shortTeam": "CHO"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "GENERALI HC PALAU",
+      "shortTeam": "PAL"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "IGUALADA FEMENÍ GRUPO GUZMÁN",
+      "shortTeam": "IGDF"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "CLUB PATÍ VILA-SANA",
+      "shortTeam": "CPV"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "VICIO PHC SANT CUGAT",
+      "shortTeam": "PHSC"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "CLUB PATI TORRELLES",
+      "shortTeam": "CPT"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "CP VILANOVA LA DAURADA",
+      "shortTeam": "CPV"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "ROTOTANK BIGUES I RIELLS",
+      "shortTeam": "BIR"
+    },
+    {
+      "leagueId": "4775",
+      "group": "NACIONAL CATALANA FEMENINA",
+      "team": "CLUB ESPORTIU OLESA PATÍ",
+      "shortTeam": "COP"
+    },
+    {
       "leagueId": "4776",
       "group": "1ª CATALANA GRUP A",
       "team": "GENERALI HC PALAU",
@@ -37857,14 +38011,14 @@
     {
       "leagueId": "4781",
       "group": "3ª CATALANA GRUP F",
-      "team": "GENERALI HC PALAU",
-      "shortTeam": "PAL"
+      "team": "CLUB PATÍ BELL-LLOC B",
+      "shortTeam": "CPBB"
     },
     {
       "leagueId": "4781",
       "group": "3ª CATALANA GRUP F",
-      "team": "CLUB PATÍ BELL-LLOC B",
-      "shortTeam": "CPBB"
+      "team": "GENERALI HC PALAU",
+      "shortTeam": "PAL"
     },
     {
       "leagueId": "4781",
@@ -40785,6 +40939,12 @@
     {
       "leagueId": "4790",
       "group": "ALEVÍ PLATA 4",
+      "team": "SE LA SALLE BONANOVA B",
+      "shortTeam": "LSBB"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 4",
       "team": "CLUB PATI TORRELLES B",
       "shortTeam": "CPTB"
     },
@@ -40793,12 +40953,6 @@
       "group": "ALEVÍ PLATA 4",
       "team": "FUTBOL CLUB MARTINENC A A",
       "shortTeam": "CMAA"
-    },
-    {
-      "leagueId": "4790",
-      "group": "ALEVÍ PLATA 4",
-      "team": "SE LA SALLE BONANOVA B",
-      "shortTeam": "LSBB"
     },
     {
       "leagueId": "4790",
