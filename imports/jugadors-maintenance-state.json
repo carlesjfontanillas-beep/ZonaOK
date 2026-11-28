@@ -433152,7 +433152,7 @@
     "4779|148201": {
       "status": "pending",
       "fingerprint": "[4,5,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148201\"]",
-      "checkedAt": "2026-11-28T16:03:29.371677+00:00",
+      "checkedAt": "2026-11-28T16:09:07.969630+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148202": {
@@ -433311,7 +433311,7 @@
     "4779|148204": {
       "status": "pending",
       "fingerprint": "[1,10,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148204\"]",
-      "checkedAt": "2026-11-28T16:03:36.983327+00:00",
+      "checkedAt": "2026-11-28T16:09:14.756178+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148383": {
@@ -443094,10 +443094,385 @@
       "statsRevision": 4
     },
     "4783|150878": {
-      "status": "pending",
-      "fingerprint": "[5,7,\"final\",null,\"https://www.hoqueipatins.fecapa.cat/?liga=4783&vista=calendar&partido=150878\"]",
-      "checkedAt": "2026-11-28T16:02:49.709132+00:00",
-      "statsAttemptRevision": 4
+      "status": "verified",
+      "fingerprint": "[5,7,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4783&vista=calendar&partido=150878\"]",
+      "checkedAt": "2026-11-28T16:09:04.855449+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "5",
+            "away": "7"
+          },
+          "FALTES": {
+            "home": "12",
+            "away": "9"
+          },
+          "TARGETES BLAVES": {
+            "home": "1",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 12,
+          "away": 9
+        },
+        "header": {
+          "competition": "JÚNIOR PLATA 2",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ MUNICIPAL DE NAVARCLES",
+          "dateTime": "28/11/2026 - 15:00",
+          "round": "JORNADA 10",
+          "referee1": "ORDOÑEZ LA MATA, PAU",
+          "rinkDelegate": "ACIN DOÑATE, JOAN RAMON"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "ACÍN CIRERA, ONA"
+            },
+            {
+              "role": "Delegat",
+              "name": "BARCO CEPA, MANU"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "SOTILLO FERREIRA, RAFAEL"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "MIRO ALONSO, JAUME"
+            },
+            {
+              "role": "Delegat",
+              "name": "LARRALDE QUIROBA, CARMEN HELENA"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "5-7",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4787|149673": {
+      "status": "verified",
+      "fingerprint": "[4,1,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=149673\"]",
+      "checkedAt": "2026-11-28T16:08:51.197903+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "4",
+            "away": "1"
+          },
+          "FALTES": {
+            "home": "7",
+            "away": "11"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "2"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 7,
+          "away": 11
+        },
+        "header": {
+          "competition": "INFANTIL PLATA 1",
+          "season": "2026/2027",
+          "venue": "MUNICIPAL D ESPORTS I LLEURE D OLOT",
+          "dateTime": "28/11/2026 - 15:15",
+          "round": "JORNADA 10",
+          "referee1": "NADAL BOTET, ROGER",
+          "rinkDelegate": "PURSALS NAVARRO, XAVIER"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "PAGES JIMENEZ, JOEL"
+            },
+            {
+              "role": "Delegat",
+              "name": "RAMIREZ ROPERO, JORDI"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "ARCHE SUÑER, GEMMA"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "4-1",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4785|150435": {
+      "status": "verified",
+      "fingerprint": "[2,5,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4785&vista=calendar&partido=150435\"]",
+      "checkedAt": "2026-11-28T16:08:44.373390+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "2",
+            "away": "5"
+          },
+          "FALTES": {
+            "home": "1",
+            "away": "4"
+          },
+          "TARGETES BLAVES": {
+            "home": "1",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 1,
+          "away": 4
+        },
+        "header": {
+          "competition": "JUVENIL PLATA 2",
+          "season": "2026/2027",
+          "venue": "COL·LEGI JESÚS, MARIA, I JOSEP",
+          "dateTime": "28/11/2026 - 15:30",
+          "round": "JORNADA 10",
+          "referee1": "ROJO PEREZ, MARC",
+          "rinkDelegate": "Oriol Corominas"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "ROIG MASONS, JAN"
+            },
+            {
+              "role": "2n entrenador",
+              "name": "VAN DEN CAMP CORS, ALEX"
+            },
+            {
+              "role": "Delegat",
+              "name": "AGUILAR BARREDE, JORDI"
+            }
+          ],
+          "away": [
+            {
+              "role": "Delegat",
+              "name": "ANDRES COLL, ALBERT"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "LLORENS MANZANO, ORIOL"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "2-5",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4784|151614": {
+      "status": "verified",
+      "fingerprint": "[6,6,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151614\"]",
+      "checkedAt": "2026-11-28T16:08:37.674228+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "6",
+            "away": "6"
+          },
+          "FALTES": {
+            "home": "3",
+            "away": "5"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 3,
+          "away": 5
+        },
+        "header": {
+          "competition": "JUVENIL OR 6",
+          "season": "2026/2027",
+          "venue": "MUNICIPAL D ESPORTS SANT CELONI",
+          "dateTime": "28/11/2026 - 15:30",
+          "round": "JORNADA 10",
+          "referee1": "HORCAS GONZALEZ, ARNAU"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "UMBERT RIERA, MIQUEL"
+            },
+            {
+              "role": "Delegat",
+              "name": "CHILLON NICOLAS, JOAN LLUIS"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "OTEGI RODRIGUEZ, UXUE"
+            },
+            {
+              "role": "Delegat",
+              "name": "BACH TAÑA, JORDI"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "SAYÓS CRIADO, CARLOS"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "6-6",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4787|158016": {
+      "status": "verified",
+      "fingerprint": "[0,8,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=158016\"]",
+      "checkedAt": "2026-11-28T16:08:58.173821+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "0",
+            "away": "8"
+          },
+          "FALTES": {
+            "home": "9",
+            "away": "3"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "1"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 9,
+          "away": 3
+        },
+        "header": {
+          "competition": "INFANTIL PLATA 7",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ MUNICIPAL SALVADOR BOADA",
+          "dateTime": "28/11/2026 - 16:00",
+          "round": "JORNADA 10",
+          "referee1": "CATARINEU BERTRAN, ANIOL",
+          "rinkDelegate": "SANTIAGO CABALLERO, CARLOS"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "BONASTRE MARGARIT, ARNAU"
+            },
+            {
+              "role": "Delegat",
+              "name": "WEHRLE, BRIAN FRANCIS"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "SANCHEZ VIDAL, ORIOL"
+            },
+            {
+              "role": "Delegat",
+              "name": "GIBERT YTCHART, JAUME"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "MARTIN CORCUERA, MARTA"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "0-8",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-all-v1",
   "season": "2026/2027",
-  "publishedAt": "2026-11-28T16:06:32Z",
+  "publishedAt": "2026-11-28T16:11:11Z",
   "source": "FECAPA-PLAYWRIGHT",
   "kind": "agenda",
   "rows": [
@@ -142866,7 +142866,8 @@
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:06:28Z",
       "finalDetectedAt": "2026-11-28T15:55:20Z",
-      "actaState": "pending"
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:09:04.855449+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143025,9 +143026,9 @@
       "venue": "MUNICIPAL D ESPORTS I LLEURE D OLOT",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "149673",
+      "leagueId": "4787",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=149673",
       "status": "FINAL",
       "round": "",
       "homeScore": 4,
@@ -143038,7 +143039,9 @@
       "directeUpdatedAt": "2026-11-28T16:06:28Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:06:28Z",
-      "finalDetectedAt": "2026-11-28T16:00:54Z"
+      "finalDetectedAt": "2026-11-28T16:00:54Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:08:51.197903+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143213,9 +143216,9 @@
       "venue": "MUNICIPAL D ESPORTS SANT CELONI",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "151614",
+      "leagueId": "4784",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4784&vista=calendar&partido=151614",
       "status": "FINAL",
       "round": "",
       "homeScore": 6,
@@ -143226,7 +143229,9 @@
       "directeUpdatedAt": "2026-11-28T16:06:28Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:06:28Z",
-      "finalDetectedAt": "2026-11-28T15:55:20Z"
+      "finalDetectedAt": "2026-11-28T15:55:20Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:08:37.674228+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143237,9 +143242,9 @@
       "venue": "COL·LEGI JESÚS, MARIA, I JOSEP",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "150435",
+      "leagueId": "4785",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4785&vista=calendar&partido=150435",
       "status": "FINAL",
       "round": "",
       "homeScore": 2,
@@ -143250,7 +143255,9 @@
       "directeUpdatedAt": "2026-11-28T16:06:28Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:06:28Z",
-      "finalDetectedAt": "2026-11-28T15:55:20Z"
+      "finalDetectedAt": "2026-11-28T15:55:20Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:08:44.373390+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143658,9 +143665,9 @@
       "venue": "PAVELLÓ MUNICIPAL SALVADOR BOADA",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "158016",
+      "leagueId": "4787",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=158016",
       "status": "FINAL",
       "round": "",
       "homeScore": 0,
@@ -143671,7 +143678,9 @@
       "directeUpdatedAt": "2026-11-28T16:06:28Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:06:28Z",
-      "finalDetectedAt": "2026-11-28T16:06:28Z"
+      "finalDetectedAt": "2026-11-28T16:06:28Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:08:58.173821+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -279928,7 +279937,7 @@
       "lastAgendaAt": "2026-11-27T05:36:54Z"
     }
   ],
-  "capturedAt": "2026-11-28T16:06:32Z",
+  "capturedAt": "2026-11-28T16:11:11Z",
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
     "BARÇA": "https://sidgad.cloud/fecapa/images/logos_clubes/234.png",
