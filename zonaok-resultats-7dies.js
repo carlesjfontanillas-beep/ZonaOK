@@ -205,6 +205,22 @@
   const cancelledStatus = /AJORNAT|APLAZADO|CANCEL|SUSPES|SUSPENDIDO|ANUL/;
   const liveStatus = /EN JOC|EN DIRECTE|(?:^| )LIVE(?: |$)|IN PROGRESS|PLAYING|DESCANS|PRIMERA PART|SEGONA PART|EN JUEGO|EN CURSO|DESCANSO|PRIMER TIEMPO|SEGUNDO TIEMPO/;
   const finalStatus = /(?:^| )(?:FINAL|FINALITZAT|FINALIZADO|ACABAT|TERMINAT|TERMINADO|FINISHED|FULL TIME)(?: |$)/;
+  // Nacional Catalana publica gols i obre l'acta durant el partit.
+  const isNacional = r => /\bNACIONAL CATALANA\b/.test(norm(r.competition));
+  function confirmedFinish(r, current) {
+    const state=norm(r.status), acta=norm(r.actaState);
+    const explicitLive=liveStatus.test(state);
+    if(finalStatus.test(state) || r.finalDetectedAt || finalStatus.test(acta)) return true;
+    if(explicitLive) return false;
+    if(!isNacional(r)) return acta==='AVAILABLE' || validResult(r);
+    // Compatibilitat amb actes històriques: marcador oficial d'Agenda,
+    // acta disponible i comprovació feta en un dia posterior al partit.
+    // Una acta oberta o un marcador d'En directe no demostren el final.
+    const checked=new Date(r.actaCheckedAt || '');
+    return !state && acta==='AVAILABLE' && validResult(r) &&
+      norm(r.scoreSource)==='AGENDA' && Number.isFinite(checked.getTime()) &&
+      madridTimeKey(checked).slice(0,10)>r.iso && r.iso<current.slice(0,10);
+  }
   function rowsInPeriod(rows, period, now = new Date()) {
     const current = madridTimeKey(now);
     const civilNow = new Date(current + ':00Z');
@@ -220,8 +236,7 @@
       const dt = rowDateKey(r), state = norm(r.status);
       if (cancelledStatus.test(state)) return false;
       const explicitLive = liveStatus.test(state);
-      const finished = finalStatus.test(state) || Boolean(r.finalDetectedAt) ||
-        norm(r.actaState) === 'AVAILABLE' || (!explicitLive && validResult(r));
+      const finished = confirmedFinish(r,current);
       if (period === 'upcoming') return dt > current && dt <= futureEdge && !finished && !explicitLive;
       if (period === 'past') return dt >= recentEdge && dt <= current && finished;
       if (period !== 'live' || finished || dt > current) return false;
@@ -340,7 +355,7 @@
     const score = activePeriod !== 'upcoming' && validResult(row) ? `${Number(row.homeScore)} : ${Number(row.awayScore)}` : '– : –';
     center.append(make('strong', 'score', score));
     if(activePeriod==='live'){
-      const label=make('small','zok-recent-live',liveStatus.test(norm(row.status))?'En joc':'En joc aprox.');
+      const label=make('small','zok-recent-live',liveStatus.test(norm(row.status))?'En joc':isNacional(row)&&validResult(row)?'Provisional':'En joc aprox.');
       center.append(label);
     }
     teams.append(buildTeam(row.home, row.homeLogo, row, 'home'), center, buildTeam(row.away, row.awayLogo, row, 'away'));
