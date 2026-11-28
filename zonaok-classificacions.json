@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T12:03:53.757457+00:00",
+  "capturedAt": "2026-11-28T12:09:32.748106+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -21572,12 +21572,14 @@
       "competition": "FEM 13 PLATA",
       "leagueId": "4805",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=clasificaciones",
-      "capturedAt": "2026-11-27T01:04:31.037698+00:00",
-      "standingsAt": "2026-11-27T01:04:31.037698+00:00",
+      "capturedAt": "2026-11-28T12:09:32.748106+00:00",
+      "standingsAt": "2026-11-28T12:09:32.748106+00:00",
       "standings": [
         {
           "pos": "1",
           "team": "CP CONGRES",
+          "teamId": "12028",
+          "teamLogo": "/fecapa/images/logos_clubes/246_1.png",
           "played": "9",
           "points": "24",
           "gf": "47",
@@ -21593,12 +21595,14 @@
             "GC": "15",
             "DIF": "32"
           },
-          "shortTeam": "CP CONGRES",
+          "shortTeam": "CPC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "CLUB HOQUEI SANTA PERPÈTUA",
+          "teamId": "12372",
+          "teamLogo": "/fecapa/images/logos_clubes/291_3.png",
           "played": "9",
           "points": "24",
           "gf": "70",
@@ -21613,11 +21617,15 @@
             "GF": "70",
             "GC": "21",
             "DIF": "49"
-          }
+          },
+          "shortTeam": "CHSP",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
           "team": "HCSENTMENAT",
+          "teamId": "11704",
+          "teamLogo": "/fecapa/images/logos_clubes/292_1.png",
           "played": "8",
           "points": "21",
           "gf": "49",
@@ -21633,12 +21641,14 @@
             "GC": "7",
             "DIF": "42"
           },
-          "shortTeam": "HCSENTMENAT",
+          "shortTeam": "HCS",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "CLUB PATI VILAFRANCA AKO",
+          "teamId": "12319",
+          "teamLogo": "/fecapa/images/logos_clubes/301.png",
           "played": "7",
           "points": "21",
           "gf": "46",
@@ -21653,11 +21663,15 @@
             "GF": "46",
             "GC": "25",
             "DIF": "21"
-          }
+          },
+          "shortTeam": "CPV",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
           "team": "AUTO VIGATANA PATÍ VIC",
+          "teamId": "12234",
+          "teamLogo": "/fecapa/images/logos_clubes/692_2.png",
           "played": "9",
           "points": "18",
           "gf": "35",
@@ -21672,11 +21686,15 @@
             "GF": "35",
             "GC": "22",
             "DIF": "13"
-          }
+          },
+          "shortTeam": "VIC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
           "team": "CH MATARÓ",
+          "teamId": "11882",
+          "teamLogo": "/fecapa/images/logos_clubes/263.PNG",
           "played": "9",
           "points": "16",
           "gf": "20",
@@ -21692,12 +21710,14 @@
             "GC": "31",
             "DIF": "-11"
           },
-          "shortTeam": "CH MATARÓ",
+          "shortTeam": "CHM",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "7",
           "team": "CP RIUDOMS",
+          "teamId": "12563",
+          "teamLogo": "/fecapa/images/logos_clubes/330_4.png",
           "played": "9",
           "points": "16",
           "gf": "52",
@@ -21713,12 +21733,14 @@
             "GC": "48",
             "DIF": "4"
           },
-          "shortTeam": "CP RIUDOMS",
+          "shortTeam": "CPR",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "8",
           "team": "CLUB PATI TORRELLES",
+          "teamId": "12264",
+          "teamLogo": "/fecapa/images/logos_clubes/392_1.png",
           "played": "8",
           "points": "15",
           "gf": "49",
@@ -21733,11 +21755,15 @@
             "GF": "49",
             "GC": "25",
             "DIF": "24"
-          }
+          },
+          "shortTeam": "CPT",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "9",
           "team": "CLUB HOQUEI CASTELLET",
+          "teamId": "11341",
+          "teamLogo": "/fecapa/images/logos_clubes/242.gif",
           "played": "9",
           "points": "15",
           "gf": "45",
@@ -21752,11 +21778,15 @@
             "GF": "45",
             "GC": "41",
             "DIF": "4"
-          }
+          },
+          "shortTeam": "CHC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "10",
           "team": "RIBES CP",
+          "teamId": "12009",
+          "teamLogo": "/fecapa/images/logos_clubes/277_2.png",
           "played": "7",
           "points": "10",
           "gf": "20",
@@ -21772,12 +21802,14 @@
             "GC": "18",
             "DIF": "2"
           },
-          "shortTeam": "RIBES CP",
+          "shortTeam": "RCP",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "11",
           "team": "CLUB PATÍ RODA-FOLGUEROLES",
+          "teamId": "11650",
+          "teamLogo": "/fecapa/images/logos_clubes/280.png",
           "played": "8",
           "points": "9",
           "gf": "15",
@@ -21792,11 +21824,15 @@
             "GF": "15",
             "GC": "31",
             "DIF": "-16"
-          }
+          },
+          "shortTeam": "CPRF",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "12",
           "team": "FUTBOL CLUB MARTINENC",
+          "teamId": "11343",
+          "teamLogo": "/fecapa/images/logos_clubes/261_1.png",
           "played": "8",
           "points": "7",
           "gf": "26",
@@ -21811,11 +21847,15 @@
             "GF": "26",
             "GC": "38",
             "DIF": "-12"
-          }
+          },
+          "shortTeam": "FCM",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "13",
           "team": "CP CALDES",
+          "teamId": "11729",
+          "teamLogo": "/fecapa/images/logos_clubes/308.png",
           "played": "7",
           "points": "7",
           "gf": "23",
@@ -21831,12 +21871,14 @@
             "GC": "26",
             "DIF": "-3"
           },
-          "shortTeam": "CP CALDES",
+          "shortTeam": "CPC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "14",
           "team": "CLUB HOQUEI MOLINS DE REI",
+          "teamId": "12111",
+          "teamLogo": "/fecapa/images/logos_clubes/657.png",
           "played": "7",
           "points": "6",
           "gf": "17",
@@ -21851,11 +21893,15 @@
             "GF": "17",
             "GC": "27",
             "DIF": "-10"
-          }
+          },
+          "shortTeam": "CHM",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "15",
           "team": "CP MASQUEFA",
+          "teamId": "11263",
+          "teamLogo": "/fecapa/images/logos_clubes/262_2.png",
           "played": "7",
           "points": "4",
           "gf": "16",
@@ -21871,12 +21917,14 @@
             "GC": "30",
             "DIF": "-14"
           },
-          "shortTeam": "CP MASQUEFA",
+          "shortTeam": "CPM",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "16",
           "team": "CLUB HOQUEI MOLLERUSSA",
+          "teamId": "11677",
+          "teamLogo": "/fecapa/images/logos_clubes/340_1.png",
           "played": "9",
           "points": "3",
           "gf": "11",
@@ -21891,45 +21939,55 @@
             "GF": "11",
             "GC": "63",
             "DIF": "-52"
-          }
+          },
+          "shortTeam": "CHM",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "17",
           "team": "VICIO PHC SANT CUGAT",
-          "played": "9",
-          "points": "1",
-          "gf": "11",
-          "ga": "35",
+          "teamId": "12287",
+          "teamLogo": "/fecapa/images/logos_clubes/282.png",
+          "played": "10",
+          "points": "2",
+          "gf": "15",
+          "ga": "39",
           "difference": "-24",
           "stats": {
-            "PTS": "1",
-            "PJ": "9",
+            "PTS": "2",
+            "PJ": "10",
             "PG": "0",
-            "PE": "1",
+            "PE": "2",
             "PP": "8",
-            "GF": "11",
-            "GC": "35",
+            "GF": "15",
+            "GC": "39",
             "DIF": "-24"
-          }
+          },
+          "shortTeam": "HSCB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "18",
           "team": "FITONATUR IGUALADA FEMENÍ HCP",
-          "played": "9",
-          "points": "1",
-          "gf": "12",
-          "ga": "61",
+          "teamId": "11718",
+          "teamLogo": "/fecapa/images/logos_clubes/474.png",
+          "played": "10",
+          "points": "2",
+          "gf": "16",
+          "ga": "65",
           "difference": "-49",
           "stats": {
-            "PTS": "1",
-            "PJ": "9",
+            "PTS": "2",
+            "PJ": "10",
             "PG": "0",
-            "PE": "1",
+            "PE": "2",
             "PP": "8",
-            "GF": "12",
-            "GC": "61",
+            "GF": "16",
+            "GC": "65",
             "DIF": "-49"
-          }
+          },
+          "shortTeam": "GDFB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
     },
@@ -38108,6 +38166,114 @@
       "group": "FEM 13 OR",
       "team": "FARNERS",
       "shortTeam": "CLUB"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CP CONGRES",
+      "shortTeam": "CPC"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CLUB HOQUEI SANTA PERPÈTUA",
+      "shortTeam": "CHSP"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "HCSENTMENAT",
+      "shortTeam": "HCS"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CLUB PATI VILAFRANCA AKO",
+      "shortTeam": "CPV"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "AUTO VIGATANA PATÍ VIC",
+      "shortTeam": "VIC"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CH MATARÓ",
+      "shortTeam": "CHM"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CP RIUDOMS",
+      "shortTeam": "CPR"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CLUB PATI TORRELLES",
+      "shortTeam": "CPT"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CLUB HOQUEI CASTELLET",
+      "shortTeam": "CHC"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "RIBES CP",
+      "shortTeam": "RCP"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CLUB PATÍ RODA-FOLGUEROLES",
+      "shortTeam": "CPRF"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "FUTBOL CLUB MARTINENC",
+      "shortTeam": "FCM"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CP CALDES",
+      "shortTeam": "CPC"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CLUB HOQUEI MOLINS DE REI",
+      "shortTeam": "CHM"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CP MASQUEFA",
+      "shortTeam": "CPM"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "CLUB HOQUEI MOLLERUSSA",
+      "shortTeam": "CHM"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "VICIO PHC SANT CUGAT",
+      "shortTeam": "HSCB"
+    },
+    {
+      "leagueId": "4805",
+      "group": "FEM 13 PLATA",
+      "team": "FITONATUR IGUALADA FEMENÍ HCP",
+      "shortTeam": "GDFB"
     },
     {
       "leagueId": "4807",
