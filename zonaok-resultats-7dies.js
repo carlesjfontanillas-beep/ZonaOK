@@ -152,7 +152,7 @@
   const sameCategory = (a, b) => norm(a) === norm(b);
   const newest = (a, b) => String(b.capturedAt || b.scoreCapturedAt || '').localeCompare(String(a.capturedAt || a.scoreCapturedAt || ''));
 
-  let matches = [], periodRows = {past:[],live:[],upcoming:[]}, activePeriod = 'past', periodLoaded = false;
+  let matches = [], loadedRows = [], activePeriod = 'past', periodLoaded = false;
   let publishedAt = '', pendingLoad = null, periodTitle, periodNote, pastButton, liveButton, upcomingButton;
   let panel, navButton, clubFilter, categoryFilter, competitionFilter, content, counter, status, missingActaButton;
   let onlyMissingActa = false;
@@ -221,13 +221,14 @@
       if (cancelledStatus.test(state)) return false;
       const explicitLive = liveStatus.test(state);
       const finished = finalStatus.test(state) || Boolean(r.finalDetectedAt) ||
-        (!explicitLive && validResult(r));
+        norm(r.actaState) === 'AVAILABLE' || (!explicitLive && validResult(r));
       if (period === 'upcoming') return dt > current && dt <= futureEdge && !finished && !explicitLive;
       if (period === 'past') return dt >= recentEdge && dt <= current && finished;
       if (period !== 'live' || finished || dt > current) return false;
       const elapsed = (civilNow - new Date(dt + ':00Z')) / 60000;
-      // No deixem indefinidament en joc un estat antic que no s'ha actualitzat.
-      return elapsed >= 0 && (explicitLive ? elapsed < 150 : elapsed < LIVE_ESTIMATE_MINUTES);
+      // Límit de 90 minuts quan només coneixem l'hora d'Agenda.
+      // Si FECAPA confirma l'estat en viu, mantenim el partit fins a la fi confirmada.
+      return elapsed >= 0 && (explicitLive || elapsed < LIVE_ESTIMATE_MINUTES);
     }).sort((a,b) => (period === 'past' ? rowDateKey(b).localeCompare(rowDateKey(a)) : rowDateKey(a).localeCompare(rowDateKey(b))) ||
       norm(a.competition).localeCompare(norm(b.competition),'ca'));
   }
@@ -244,7 +245,7 @@
       'Darrers 7 dies · Partits finalitzats';
     syncMissingActa();
     if(!periodLoaded)return;
-    matches = periodRows[activePeriod];
+    matches = rowsInPeriod(loadedRows, activePeriod);
     updateClubOptions();
     updateCategoryOptions();
     updateCompetitionOptions();
@@ -432,10 +433,11 @@
     pendingLoad=(async()=>{
       try {
         const data = await loadData();
-        const now=new Date(),past=rowsInPeriod(data.rows,'past',now),live=rowsInPeriod(data.rows,'live',now),upcoming=rowsInPeriod(data.rows,'upcoming',now);
-        const combined=await enrichActes([...past,...live,...upcoming]);
-        periodRows={past:combined.slice(0,past.length),live:combined.slice(past.length,past.length+live.length),upcoming:combined.slice(past.length+live.length)};
-        setTeamAliases(combined, data.agendaRows || []);
+        // Conservem totes les files per poder canviar de període a l'hora exacta.
+        const combined=await enrichActes(data.rows);
+        loadedRows=combined;
+        const now=new Date();
+        setTeamAliases([...rowsInPeriod(combined,'past',now),...rowsInPeriod(combined,'live',now),...rowsInPeriod(combined,'upcoming',now)], data.agendaRows || []);
         periodLoaded=true;
         selectPeriod(activePeriod);
         return true;
@@ -598,6 +600,18 @@
 
     // El botó nou no té data-tab: no interfereix amb el selectSection d'app.js.
     window.ZonaOKRefreshRecent=()=>openResults(true);
+    // Reclassificació local mentre el menú és visible, sense activar importacions.
+    let lastMinute = '', lastRead = Date.now();
+    setInterval(()=>{
+      if(document.hidden || !document.body.classList.contains('zok-recent-mode') || panel.hidden)return;
+      const minute=madridTimeKey(new Date());
+      if(periodLoaded && minute!==lastMinute){
+        lastMinute=minute;
+        const next=rowsInPeriod(loadedRows,activePeriod);
+        if(next.length!==matches.length || next.some((row,i)=>row!==matches[i]))selectPeriod(activePeriod);
+      }
+      if(Date.now()-lastRead>=300000 && !pendingLoad){lastRead=Date.now();void openResults(true);}
+    },10000);
     navButton.addEventListener('click', event => {
       event.preventDefault();
       event.stopImmediatePropagation();
