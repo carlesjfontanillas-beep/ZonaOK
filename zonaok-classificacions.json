@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T12:54:48.592033+00:00",
+  "capturedAt": "2026-11-28T12:59:39.649520+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -13936,12 +13936,14 @@
       "competition": "INFANTIL PLATA",
       "leagueId": "4787",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=clasificaciones",
-      "capturedAt": "2026-11-27T00:33:49.977241+00:00",
-      "standingsAt": "2026-11-27T00:33:49.977241+00:00",
+      "capturedAt": "2026-11-28T12:59:39.649520+00:00",
+      "standingsAt": "2026-11-28T12:59:39.649520+00:00",
       "standings": [
         {
           "pos": "1",
           "team": "RIBES CP",
+          "teamId": "12011",
+          "teamLogo": "/fecapa/images/logos_clubes/277_2.png",
           "played": "9",
           "points": "27",
           "gf": "73",
@@ -13957,12 +13959,14 @@
             "GC": "9",
             "DIF": "64"
           },
-          "shortTeam": "RIBES CP",
+          "shortTeam": "RCP",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "PONS LLEIDA C",
+          "teamId": "12273",
+          "teamLogo": "/fecapa/images/logos_clubes/339.png",
           "played": "9",
           "points": "25",
           "gf": "50",
@@ -13978,12 +13982,14 @@
             "GC": "19",
             "DIF": "31"
           },
-          "shortTeam": "PONS LLEIDA C",
+          "shortTeam": "LECC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
           "team": "HOQUEI CASAL ESPLUGA",
+          "teamId": "11769",
+          "teamLogo": "/fecapa/images/logos_clubes/324.gif",
           "played": "9",
           "points": "24",
           "gf": "63",
@@ -13998,11 +14004,15 @@
             "GF": "63",
             "GC": "20",
             "DIF": "43"
-          }
+          },
+          "shortTeam": "HCE",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "HC VALLS FM LOGISTIC",
+          "teamId": "12068",
+          "teamLogo": "/fecapa/images/logos_clubes/493.png",
           "played": "9",
           "points": "19",
           "gf": "51",
@@ -14017,68 +14027,38 @@
             "GF": "51",
             "GC": "25",
             "DIF": "26"
-          }
+          },
+          "shortTeam": "HCV",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
-          "team": "CLUB PATÍ MONJOS",
-          "played": "9",
-          "points": "15",
-          "gf": "38",
-          "ga": "32",
-          "difference": "6",
+          "team": "CP SUBUR SITGES B",
+          "teamId": "12357",
+          "teamLogo": "/fecapa/images/logos_clubes/521.png",
+          "played": "10",
+          "points": "18",
+          "gf": "54",
+          "ga": "51",
+          "difference": "3",
           "stats": {
-            "PTS": "15",
-            "PJ": "9",
-            "PG": "5",
+            "PTS": "18",
+            "PJ": "10",
+            "PG": "6",
             "PE": "0",
             "PP": "4",
-            "GF": "38",
-            "GC": "32",
-            "DIF": "6"
-          }
+            "GF": "54",
+            "GC": "51",
+            "DIF": "3"
+          },
+          "shortTeam": "PSSB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
-          "team": "CP SUBUR SITGES B",
-          "played": "9",
-          "points": "15",
-          "gf": "51",
-          "ga": "49",
-          "difference": "2",
-          "stats": {
-            "PTS": "15",
-            "PJ": "9",
-            "PG": "5",
-            "PE": "0",
-            "PP": "4",
-            "GF": "51",
-            "GC": "49",
-            "DIF": "2"
-          }
-        },
-        {
-          "pos": "7",
-          "team": "CE NOIA FREIXENET C",
-          "played": "10",
-          "points": "15",
-          "gf": "49",
-          "ga": "43",
-          "difference": "6",
-          "stats": {
-            "PTS": "15",
-            "PJ": "10",
-            "PG": "5",
-            "PE": "0",
-            "PP": "5",
-            "GF": "49",
-            "GC": "43",
-            "DIF": "6"
-          }
-        },
-        {
-          "pos": "8",
           "team": "CLUB PATI CALAFELL B",
+          "teamId": "12519",
+          "teamLogo": "/fecapa/images/logos_clubes/322.png",
           "played": "9",
           "points": "15",
           "gf": "50",
@@ -14093,11 +14073,15 @@
             "GF": "50",
             "GC": "34",
             "DIF": "16"
-          }
+          },
+          "shortTeam": "CPCB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "9",
+          "pos": "7",
           "team": "CLUB HOQUEI MONTBLANC",
+          "teamId": "11905",
+          "teamLogo": "/fecapa/images/logos_clubes/325_1.png",
           "played": "10",
           "points": "15",
           "gf": "55",
@@ -14112,11 +14096,61 @@
             "GF": "55",
             "GC": "48",
             "DIF": "7"
-          }
+          },
+          "shortTeam": "CHM",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "8",
+          "team": "CLUB PATÍ MONJOS",
+          "teamId": "11366",
+          "teamLogo": "/fecapa/images/logos_clubes/267_3.png",
+          "played": "9",
+          "points": "15",
+          "gf": "38",
+          "ga": "32",
+          "difference": "6",
+          "stats": {
+            "PTS": "15",
+            "PJ": "9",
+            "PG": "5",
+            "PE": "0",
+            "PP": "4",
+            "GF": "38",
+            "GC": "32",
+            "DIF": "6"
+          },
+          "shortTeam": "CPM",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "9",
+          "team": "CE NOIA FREIXENET C",
+          "teamId": "11795",
+          "teamLogo": "/fecapa/images/logos_clubes/269.png",
+          "played": "11",
+          "points": "15",
+          "gf": "51",
+          "ga": "46",
+          "difference": "5",
+          "stats": {
+            "PTS": "15",
+            "PJ": "11",
+            "PG": "5",
+            "PE": "0",
+            "PP": "6",
+            "GF": "51",
+            "GC": "46",
+            "DIF": "5"
+          },
+          "shortTeam": "OIAC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "10",
           "team": "CLUB PATI CUBELLES B B",
+          "teamId": "12192",
+          "teamLogo": "/fecapa/images/logos_clubes/360_1.png",
           "played": "9",
           "points": "7",
           "gf": "26",
@@ -14131,11 +14165,15 @@
             "GF": "26",
             "GC": "60",
             "DIF": "-34"
-          }
+          },
+          "shortTeam": "PCBB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "11",
           "team": "CAMBRILS CH",
+          "teamId": "12307",
+          "teamLogo": "/fecapa/images/logos_clubes/323.png",
           "played": "9",
           "points": "5",
           "gf": "22",
@@ -14151,12 +14189,14 @@
             "GC": "45",
             "DIF": "-23"
           },
-          "shortTeam": "CAMBRILS CH",
+          "shortTeam": "CCH",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "12",
           "team": "CLUB HOQUEI VILA-SECA B",
+          "teamId": "11754",
+          "teamLogo": "/fecapa/images/logos_clubes/334.png",
           "played": "9",
           "points": "4",
           "gf": "30",
@@ -14171,11 +14211,15 @@
             "GF": "30",
             "GC": "66",
             "DIF": "-36"
-          }
+          },
+          "shortTeam": "HVSB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "13",
           "team": "CLUB HOQUEI MOLLERUSSA A",
+          "teamId": "11678",
+          "teamLogo": "/fecapa/images/logos_clubes/340_1.png",
           "played": "9",
           "points": "2",
           "gf": "18",
@@ -14190,11 +14234,15 @@
             "GF": "18",
             "GC": "35",
             "DIF": "-17"
-          }
+          },
+          "shortTeam": "HMAA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "14",
           "team": "HOQUEI CLUB ALPICAT D",
+          "teamId": "12053",
+          "teamLogo": "/fecapa/images/logos_clubes/333.png",
           "played": "9",
           "points": "0",
           "gf": "17",
@@ -14209,7 +14257,9 @@
             "GF": "17",
             "GC": "108",
             "DIF": "-91"
-          }
+          },
+          "shortTeam": "HCAD",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
     },
@@ -14677,8 +14727,8 @@
       "category": "ALEVÍ",
       "competition": "ALEVÍ OR",
       "leagueId": "4789",
-      "capturedAt": "2026-11-28T11:32:20.948768+00:00",
-      "standingsAt": "2026-11-28T11:32:20.948768+00:00",
+      "capturedAt": "2026-11-28T12:59:39.649520+00:00",
+      "standingsAt": "2026-11-28T12:59:39.649520+00:00",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=clasificaciones",
       "standings": [
         {
@@ -14734,20 +14784,20 @@
           "team": "INNOAESTHETICS HC SANT JUST A",
           "teamId": "12170",
           "teamLogo": "/fecapa/images/logos_clubes/288_1.png",
-          "played": "9",
-          "points": "17",
-          "gf": "34",
-          "ga": "29",
-          "difference": "5",
+          "played": "10",
+          "points": "20",
+          "gf": "43",
+          "ga": "31",
+          "difference": "12",
           "stats": {
-            "PTS": "17",
-            "PJ": "9",
-            "PG": "5",
+            "PTS": "20",
+            "PJ": "10",
+            "PG": "6",
             "PE": "2",
             "PP": "2",
-            "GF": "34",
-            "GC": "29",
-            "DIF": "5",
+            "GF": "43",
+            "GC": "31",
+            "DIF": "12",
             "SAN": "0"
           },
           "shortTeam": "CSJA",
@@ -14854,20 +14904,20 @@
           "team": "GENERALI HC PALAU B",
           "teamId": "11329",
           "teamLogo": "/fecapa/images/logos_clubes/271_1.png",
-          "played": "9",
+          "played": "10",
           "points": "3",
-          "gf": "30",
-          "ga": "75",
-          "difference": "-45",
+          "gf": "32",
+          "ga": "84",
+          "difference": "-52",
           "stats": {
             "PTS": "3",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "1",
             "PE": "0",
-            "PP": "8",
-            "GF": "30",
-            "GC": "75",
-            "DIF": "-45",
+            "PP": "9",
+            "GF": "32",
+            "GC": "84",
+            "DIF": "-52",
             "SAN": "0"
           },
           "shortTeam": "PALB",
@@ -18651,31 +18701,37 @@
       "competition": "ALEVÍ PLATA",
       "leagueId": "4790",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=clasificaciones",
-      "capturedAt": "2026-11-27T01:11:38.298092+00:00",
-      "standingsAt": "2026-11-27T01:11:38.298092+00:00",
+      "capturedAt": "2026-11-28T12:59:39.649520+00:00",
+      "standingsAt": "2026-11-28T12:59:39.649520+00:00",
       "standings": [
         {
           "pos": "1",
-          "team": "CLUB HOQUEI ARENYS DE MAR",
-          "played": "8",
-          "points": "24",
-          "gf": "62",
-          "ga": "16",
-          "difference": "46",
+          "team": "AHC ANDORRA A",
+          "teamId": "11113",
+          "teamLogo": "/fecapa/images/logos_clubes/428_1.png",
+          "played": "10",
+          "points": "27",
+          "gf": "90",
+          "ga": "24",
+          "difference": "66",
           "stats": {
-            "PTS": "24",
-            "PJ": "8",
-            "PG": "8",
+            "PTS": "27",
+            "PJ": "10",
+            "PG": "9",
             "PE": "0",
-            "PP": "0",
-            "GF": "62",
-            "GC": "16",
-            "DIF": "46"
-          }
+            "PP": "1",
+            "GF": "90",
+            "GC": "24",
+            "DIF": "66"
+          },
+          "shortTeam": "AHCA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "2",
           "team": "CH LES FRANQUESES A",
+          "teamId": "11626",
+          "teamLogo": "/fecapa/images/logos_clubes/477.png",
           "played": "8",
           "points": "24",
           "gf": "75",
@@ -18690,53 +18746,61 @@
             "GF": "75",
             "GC": "13",
             "DIF": "62"
-          }
+          },
+          "shortTeam": "LFAA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "3",
-          "team": "AHC ANDORRA A",
-          "played": "9",
+          "team": "CLUB HOQUEI ARENYS DE MAR",
+          "teamId": "12463",
+          "teamLogo": "/fecapa/images/logos_clubes/231.png",
+          "played": "8",
           "points": "24",
-          "gf": "83",
-          "ga": "23",
-          "difference": "60",
+          "gf": "62",
+          "ga": "16",
+          "difference": "46",
           "stats": {
             "PTS": "24",
-            "PJ": "9",
+            "PJ": "8",
             "PG": "8",
             "PE": "0",
-            "PP": "1",
-            "GF": "83",
-            "GC": "23",
-            "DIF": "60"
+            "PP": "0",
+            "GF": "62",
+            "GC": "16",
+            "DIF": "46"
           },
-          "shortTeam": "AHC ANDORRA A",
+          "shortTeam": "CHAM",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "4",
           "team": "CP CALDES A",
-          "played": "7",
+          "teamId": "11728",
+          "teamLogo": "/fecapa/images/logos_clubes/308.png",
+          "played": "8",
           "points": "18",
-          "gf": "36",
-          "ga": "19",
-          "difference": "17",
+          "gf": "37",
+          "ga": "26",
+          "difference": "11",
           "stats": {
             "PTS": "18",
-            "PJ": "7",
+            "PJ": "8",
             "PG": "6",
             "PE": "0",
-            "PP": "1",
-            "GF": "36",
-            "GC": "19",
-            "DIF": "17"
+            "PP": "2",
+            "GF": "37",
+            "GC": "26",
+            "DIF": "11"
           },
-          "shortTeam": "CP CALDES A",
+          "shortTeam": "CPCA",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "5",
           "team": "CH MATARÓ C",
+          "teamId": "11879",
+          "teamLogo": "/fecapa/images/logos_clubes/263.PNG",
           "played": "8",
           "points": "16",
           "gf": "33",
@@ -18752,12 +18816,14 @@
             "GC": "12",
             "DIF": "21"
           },
-          "shortTeam": "CH MATARÓ C",
+          "shortTeam": "CHMC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
           "team": "AUTO VIGATANA PATÍ VIC B",
+          "teamId": "12238",
+          "teamLogo": "/fecapa/images/logos_clubes/692_2.png",
           "played": "9",
           "points": "15",
           "gf": "37",
@@ -18772,11 +18838,15 @@
             "GF": "37",
             "GC": "29",
             "DIF": "8"
-          }
+          },
+          "shortTeam": "VICB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "7",
           "team": "HOQUEI CLUB CASTELLAR B",
+          "teamId": "12515",
+          "teamLogo": "/fecapa/images/logos_clubes/241_2.png",
           "played": "8",
           "points": "10",
           "gf": "29",
@@ -18791,11 +18861,15 @@
             "GF": "29",
             "GC": "33",
             "DIF": "-4"
-          }
+          },
+          "shortTeam": "HCCB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "8",
           "team": "GENERALI HC PALAU D",
+          "teamId": "11331",
+          "teamLogo": "/fecapa/images/logos_clubes/271_1.png",
           "played": "9",
           "points": "9",
           "gf": "28",
@@ -18810,11 +18884,15 @@
             "GF": "28",
             "GC": "42",
             "DIF": "-14"
-          }
+          },
+          "shortTeam": "PALD",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "9",
           "team": "CP MANRESA B",
+          "teamId": "11744",
+          "teamLogo": "/fecapa/images/logos_clubes/260.png",
           "played": "8",
           "points": "9",
           "gf": "26",
@@ -18830,12 +18908,14 @@
             "GC": "45",
             "DIF": "-19"
           },
-          "shortTeam": "CP MANRESA B",
+          "shortTeam": "CPMB",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "10",
           "team": "CLUB PATÍ CENTELLES",
+          "teamId": "11664",
+          "teamLogo": "/fecapa/images/logos_clubes/243.png",
           "played": "8",
           "points": "6",
           "gf": "19",
@@ -18850,11 +18930,15 @@
             "GF": "19",
             "GC": "51",
             "DIF": "-32"
-          }
+          },
+          "shortTeam": "CPC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "11",
           "team": "CH NAVARCLES",
+          "teamId": "11119",
+          "teamLogo": "/fecapa/images/logos_clubes/268_1.png",
           "played": "8",
           "points": "3",
           "gf": "20",
@@ -18870,12 +18954,14 @@
             "GC": "46",
             "DIF": "-26"
           },
-          "shortTeam": "CH NAVARCLES",
+          "shortTeam": "CHN",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "12",
           "team": "CP MASQUEFA C",
+          "teamId": "11262",
+          "teamLogo": "/fecapa/images/logos_clubes/262_2.png",
           "played": "8",
           "points": "0",
           "gf": "9",
@@ -18891,12 +18977,14 @@
             "GC": "60",
             "DIF": "-51"
           },
-          "shortTeam": "CP MASQUEFA C",
+          "shortTeam": "CPMC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "13",
           "team": "SFERIC",
+          "teamId": "11352",
+          "teamLogo": "/fecapa/images/logos_clubes/551.png",
           "played": "8",
           "points": "0",
           "gf": "4",
@@ -18912,7 +19000,7 @@
             "GC": "72",
             "DIF": "-68"
           },
-          "shortTeam": "SFERIC",
+          "shortTeam": "SFC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         }
       ]
@@ -26817,8 +26905,8 @@
       "competition": "BCN PREBENJAMI PLATA",
       "leagueId": "4814",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4814&vista=clasificaciones",
-      "capturedAt": "2026-11-28T11:32:20.948768+00:00",
-      "standingsAt": "2026-11-28T11:32:20.948768+00:00",
+      "capturedAt": "2026-11-28T12:59:39.649520+00:00",
+      "standingsAt": "2026-11-28T12:59:39.649520+00:00",
       "standings": [
         {
           "pos": "1",
@@ -26983,29 +27071,52 @@
         },
         {
           "pos": "8",
+          "team": "CLUB HOQUEI CASTELLET",
+          "teamId": "11433",
+          "teamLogo": "/fecapa/images/logos_clubes/242.gif",
+          "played": "8",
+          "points": "10",
+          "gf": "13",
+          "ga": "22",
+          "difference": "-9",
+          "stats": {
+            "PTS": "10",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "1",
+            "PP": "4",
+            "GF": "13",
+            "GC": "22",
+            "DIF": "-9"
+          },
+          "shortTeam": "CHC",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "9",
           "team": "CPI SANT IGNASI B",
           "teamId": "11695",
           "teamLogo": "/fecapa/images/logos_clubes/398.png",
-          "played": "7",
+          "played": "8",
           "points": "9",
-          "gf": "16",
-          "ga": "19",
-          "difference": "-3",
+          "gf": "18",
+          "ga": "22",
+          "difference": "-4",
           "stats": {
             "PTS": "9",
-            "PJ": "7",
+            "PJ": "8",
             "PG": "3",
             "PE": "0",
-            "PP": "4",
-            "GF": "16",
-            "GC": "19",
-            "DIF": "-3"
+            "PP": "5",
+            "GF": "18",
+            "GC": "22",
+            "DIF": "-4"
           },
           "shortTeam": "CSI",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "9",
+          "pos": "10",
           "team": "HCSENTMENAT",
           "teamId": "11700",
           "teamLogo": "/fecapa/images/logos_clubes/292_1.png",
@@ -27028,7 +27139,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "10",
+          "pos": "11",
           "team": "SE LA SALLE BONANOVA",
           "teamId": "11841",
           "teamLogo": "/fecapa/images/logos_clubes/727.png",
@@ -27048,29 +27159,6 @@
             "DIF": "-11"
           },
           "shortTeam": "LSB",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "11",
-          "team": "CLUB HOQUEI CASTELLET",
-          "teamId": "11433",
-          "teamLogo": "/fecapa/images/logos_clubes/242.gif",
-          "played": "7",
-          "points": "7",
-          "gf": "10",
-          "ga": "20",
-          "difference": "-10",
-          "stats": {
-            "PTS": "7",
-            "PJ": "7",
-            "PG": "2",
-            "PE": "1",
-            "PP": "4",
-            "GF": "10",
-            "GC": "20",
-            "DIF": "-10"
-          },
-          "shortTeam": "CHC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -37233,6 +37321,90 @@
     },
     {
       "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "RIBES CP",
+      "shortTeam": "RCP"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "PONS LLEIDA C",
+      "shortTeam": "LECC"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "HOQUEI CASAL ESPLUGA",
+      "shortTeam": "HCE"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "HC VALLS FM LOGISTIC",
+      "shortTeam": "HCV"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "CP SUBUR SITGES B",
+      "shortTeam": "PSSB"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "CLUB PATI CALAFELL B",
+      "shortTeam": "CPCB"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "CLUB HOQUEI MONTBLANC",
+      "shortTeam": "CHM"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "CLUB PATÍ MONJOS",
+      "shortTeam": "CPM"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "CE NOIA FREIXENET C",
+      "shortTeam": "OIAC"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "CLUB PATI CUBELLES B B",
+      "shortTeam": "PCBB"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "CAMBRILS CH",
+      "shortTeam": "CCH"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "CLUB HOQUEI VILA-SECA B",
+      "shortTeam": "HVSB"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "CLUB HOQUEI MOLLERUSSA A",
+      "shortTeam": "HMAA"
+    },
+    {
+      "leagueId": "4787",
+      "group": "INFANTIL PLATA 6",
+      "team": "HOQUEI CLUB ALPICAT D",
+      "shortTeam": "HCAD"
+    },
+    {
+      "leagueId": "4787",
       "group": "INFANTIL PLATA 7",
       "team": "CHP MCDONALD'S AMPOSTA",
       "shortTeam": "AMP"
@@ -38046,6 +38218,84 @@
       "group": "ALEVÍ PLATA 7",
       "team": "CH JUNEDA",
       "shortTeam": "CHJ"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "AHC ANDORRA A",
+      "shortTeam": "AHCA"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "CH LES FRANQUESES A",
+      "shortTeam": "LFAA"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "CLUB HOQUEI ARENYS DE MAR",
+      "shortTeam": "CHAM"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "CP CALDES A",
+      "shortTeam": "CPCA"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "CH MATARÓ C",
+      "shortTeam": "CHMC"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "AUTO VIGATANA PATÍ VIC B",
+      "shortTeam": "VICB"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "HOQUEI CLUB CASTELLAR B",
+      "shortTeam": "HCCB"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "GENERALI HC PALAU D",
+      "shortTeam": "PALD"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "CP MANRESA B",
+      "shortTeam": "CPMB"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "CLUB PATÍ CENTELLES",
+      "shortTeam": "CPC"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "CH NAVARCLES",
+      "shortTeam": "CHN"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "CP MASQUEFA C",
+      "shortTeam": "CPMC"
+    },
+    {
+      "leagueId": "4790",
+      "group": "ALEVÍ PLATA 8",
+      "team": "SFERIC",
+      "shortTeam": "SFC"
     },
     {
       "leagueId": "4791",
@@ -39118,6 +39368,12 @@
     {
       "leagueId": "4814",
       "group": "BCN PREBENJAMI PLATA 1",
+      "team": "CLUB HOQUEI CASTELLET",
+      "shortTeam": "CHC"
+    },
+    {
+      "leagueId": "4814",
+      "group": "BCN PREBENJAMI PLATA 1",
       "team": "CPI SANT IGNASI B",
       "shortTeam": "CSI"
     },
@@ -39132,12 +39388,6 @@
       "group": "BCN PREBENJAMI PLATA 1",
       "team": "SE LA SALLE BONANOVA",
       "shortTeam": "LSB"
-    },
-    {
-      "leagueId": "4814",
-      "group": "BCN PREBENJAMI PLATA 1",
-      "team": "CLUB HOQUEI CASTELLET",
-      "shortTeam": "CHC"
     },
     {
       "leagueId": "4814",
