@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T16:11:58Z",
+  "updatedAt": "2026-11-28T16:15:18Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T09:50:44Z",
@@ -142771,9 +142771,9 @@
       "venue": "POLIESPORTIU MUNICIPAL LA NORIA",
       "homeLogo": "",
       "awayLogo": "",
-      "leagueId": "",
-      "matchId": "",
-      "actaUrl": "",
+      "leagueId": "4778",
+      "matchId": "147565",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4778&vista=calendar&partido=147565",
       "status": "FINAL",
       "lastAgendaAt": "2026-11-28T09:35:02Z",
       "directeUpdatedAt": "2026-11-28T16:11:54Z",
@@ -142781,7 +142781,9 @@
       "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
       "finalDetectedAt": "2026-11-28T15:27:35Z",
       "scoreSource": "En directe",
-      "scoreUpdatedAt": "2026-11-28T16:11:54Z"
+      "scoreUpdatedAt": "2026-11-28T16:11:54Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:13:39.091601+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143287,9 +143289,9 @@
       "venue": "PAVELLÓ MUNICIPAL RODA DE TER",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "152621",
+      "leagueId": "4789",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152621",
       "status": "FINAL",
       "round": "",
       "homeScore": 0,
@@ -143300,7 +143302,9 @@
       "directeUpdatedAt": "2026-11-28T16:11:54Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:11:54Z",
-      "finalDetectedAt": "2026-11-28T15:27:35Z"
+      "finalDetectedAt": "2026-11-28T15:27:35Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:13:45.537272+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143413,9 +143417,9 @@
       "venue": "PISTA POLIESPORTIVA DEL VILAR",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "159225",
+      "leagueId": "4790",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=calendar&partido=159225",
       "status": "FINAL",
       "round": "",
       "homeScore": 3,
@@ -143426,7 +143430,9 @@
       "directeUpdatedAt": "2026-11-28T16:11:54Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:11:54Z",
-      "finalDetectedAt": "2026-11-28T15:55:20Z"
+      "finalDetectedAt": "2026-11-28T15:55:20Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:14:04.840009+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143769,9 +143775,9 @@
       "venue": "TORDERA",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "152900",
+      "leagueId": "4789",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152900",
       "status": "FINAL",
       "round": "",
       "homeScore": 10,
@@ -143782,7 +143788,9 @@
       "directeUpdatedAt": "2026-11-28T16:11:54Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:11:54Z",
-      "finalDetectedAt": "2026-11-28T16:11:54Z"
+      "finalDetectedAt": "2026-11-28T16:11:54Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:13:52.277219+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143793,9 +143801,9 @@
       "venue": "PAVELLO MOLLET",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "149035",
+      "leagueId": "4790",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=calendar&partido=149035",
       "status": "FINAL",
       "round": "",
       "homeScore": 10,
@@ -143806,7 +143814,9 @@
       "directeUpdatedAt": "2026-11-28T16:11:54Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:11:54Z",
-      "finalDetectedAt": "2026-11-28T16:11:54Z"
+      "finalDetectedAt": "2026-11-28T16:11:54Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:13:58.462563+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -280282,8 +280292,8 @@
   "stats": {
     "total": 12186,
     "withScores": 5911,
-    "withActaLinks": 5870,
-    "verifiedActes": 5786
+    "withActaLinks": 5875,
+    "verifiedActes": 5791
   },
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
