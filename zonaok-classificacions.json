@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T14:55:42.537722+00:00",
+  "capturedAt": "2026-11-28T15:01:07.131062+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -29079,8 +29079,8 @@
       "competition": "BCN PREBENJAMI BRONZE",
       "leagueId": "4815",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4815&vista=clasificaciones",
-      "capturedAt": "2026-11-28T11:32:20.948768+00:00",
-      "standingsAt": "2026-11-28T11:32:20.948768+00:00",
+      "capturedAt": "2026-11-28T15:01:07.131062+00:00",
+      "standingsAt": "2026-11-28T15:01:07.131062+00:00",
       "standings": [
         {
           "pos": "1",
@@ -29132,6 +29132,30 @@
         },
         {
           "pos": "3",
+          "team": "MOLLET HC B",
+          "teamId": "12189",
+          "teamLogo": "/fecapa/images/logos_clubes/266_1.png",
+          "played": "8",
+          "points": "11",
+          "gf": "20",
+          "ga": "20",
+          "difference": "0",
+          "stats": {
+            "PTS": "11",
+            "PJ": "8",
+            "PG": "3",
+            "PE": "2",
+            "PP": "3",
+            "GF": "20",
+            "GC": "20",
+            "DIF": "0",
+            "SAN": "0"
+          },
+          "shortTeam": "MHCB",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "4",
           "team": "CLUB HOQUEI SANTA PERPÈTUA",
           "teamId": "12383",
           "teamLogo": "/fecapa/images/logos_clubes/291_3.png",
@@ -29155,48 +29179,24 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "4",
-          "team": "MOLLET HC B",
-          "teamId": "12189",
-          "teamLogo": "/fecapa/images/logos_clubes/266_1.png",
-          "played": "7",
-          "points": "8",
-          "gf": "17",
-          "ga": "18",
-          "difference": "-1",
-          "stats": {
-            "PTS": "8",
-            "PJ": "7",
-            "PG": "2",
-            "PE": "2",
-            "PP": "3",
-            "GF": "17",
-            "GC": "18",
-            "DIF": "-1",
-            "SAN": "0"
-          },
-          "shortTeam": "MHCB",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
           "pos": "5",
           "team": "CLUB PATI TORRELLES",
           "teamId": "12272",
           "teamLogo": "/fecapa/images/logos_clubes/392_1.png",
-          "played": "8",
+          "played": "9",
           "points": "6",
-          "gf": "21",
-          "ga": "24",
-          "difference": "-3",
+          "gf": "23",
+          "ga": "27",
+          "difference": "-4",
           "stats": {
             "PTS": "6",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "1",
             "PE": "3",
-            "PP": "4",
-            "GF": "21",
-            "GC": "24",
-            "DIF": "-3",
+            "PP": "5",
+            "GF": "23",
+            "GC": "27",
+            "DIF": "-4",
             "SAN": "0"
           },
           "shortTeam": "CPT",
@@ -41445,14 +41445,14 @@
     {
       "leagueId": "4815",
       "group": "BCN PREBENJAMI BRONZE 4",
-      "team": "CLUB HOQUEI SANTA PERPÈTUA",
-      "shortTeam": "CHSP"
+      "team": "MOLLET HC B",
+      "shortTeam": "MHCB"
     },
     {
       "leagueId": "4815",
       "group": "BCN PREBENJAMI BRONZE 4",
-      "team": "MOLLET HC B",
-      "shortTeam": "MHCB"
+      "team": "CLUB HOQUEI SANTA PERPÈTUA",
+      "shortTeam": "CHSP"
     },
     {
       "leagueId": "4815",
