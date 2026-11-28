@@ -1,0 +1,106 @@
+{
+  "schema": "zonaok-obsolete-slot-repair-v1",
+  "sourceRun": 46131312616,
+  "removed": 2,
+  "review": 0,
+  "before": 12188,
+  "after": 12186,
+  "details": [
+    {
+      "fixture": [
+        "PREBENJAMI OR GIRONA",
+        "FARNERS",
+        "CH OLOT A"
+      ],
+      "obsolete": [
+        "2027-01-10",
+        "10:00"
+      ],
+      "official": [
+        [
+          "2027-01-10",
+          "11:00"
+        ],
+        [
+          "2027-05-15",
+          "14:30"
+        ]
+      ],
+      "removed": 1,
+      "source": "https://www.hoqueipatins.fecapa.cat/?liga=4824&vista=calendar&filtro=11987",
+      "status": "removed",
+      "originalRows": [
+        {
+          "iso": "2027-01-10",
+          "time": "10:00",
+          "competition": "PREBENJAMÍ OR GIRONA",
+          "home": "FARNERS",
+          "away": "CH OLOT A",
+          "venue": "POLIESPORTIU MUNICIPAL LA NORIA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T05:36:54Z"
+        }
+      ]
+    },
+    {
+      "fixture": [
+        "PREBENJAMI OR GIRONA",
+        "SHUM METALL LOGIC A",
+        "CH OLOT B"
+      ],
+      "obsolete": [
+        "2027-01-10",
+        "11:45"
+      ],
+      "official": [
+        [
+          "2027-01-10",
+          "11:00"
+        ],
+        [
+          "2027-05-16",
+          "11:45"
+        ]
+      ],
+      "removed": 1,
+      "source": "https://www.hoqueipatins.fecapa.cat/?liga=4824&vista=calendar&filtro=12400",
+      "status": "removed",
+      "originalRows": [
+        {
+          "iso": "2027-01-10",
+          "time": "11:45",
+          "competition": "PREBENJAMÍ OR GIRONA",
+          "home": "SHUM METALL·LÒGIC A",
+          "away": "CH OLOT B",
+          "venue": "PAVELLO SHUM",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T05:36:54Z"
+        }
+      ]
+    }
+  ]
+}
