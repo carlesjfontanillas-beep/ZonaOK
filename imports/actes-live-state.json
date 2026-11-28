@@ -8,7 +8,7 @@
     "4790": "2026-11-28T17:19:57Z",
     "4789": "2026-11-28T16:35:26Z",
     "4814": "2026-11-28T17:05:02Z",
-    "4787": "2026-11-28T16:54:24Z",
+    "4787": "2026-11-28T17:41:47Z",
     "4781": "2026-11-28T17:09:29Z",
     "4815": "2026-11-28T17:28:01Z",
     "4785": "2026-11-28T17:20:03Z",
@@ -26,8 +26,8 @@
     "4805": "2026-11-28T17:27:57Z",
     "5045": "2026-11-28T14:19:50Z",
     "4783": "2026-11-28T16:02:11Z",
-    "4778": "2026-11-28T16:13:10Z",
-    "4791": "2026-11-28T14:28:01Z",
+    "4778": "2026-11-28T17:41:40Z",
+    "4791": "2026-11-28T17:41:50Z",
     "4792": "2026-11-28T14:33:25Z",
     "4794": "2026-11-28T16:18:40Z",
     "4804": "2026-11-28T15:40:01Z",
@@ -43,17 +43,17 @@
       },
       "total": 1012,
       "catalogTotal": 12186,
-      "identified": 200,
-      "actaRequired": 204,
+      "identified": 203,
+      "actaRequired": 214,
       "nationalScoreOnly": 34,
       "nationalWithScore": 34,
       "nationalMissingScore": 0,
-      "allWindowMissingScores": 160,
-      "missingHistoricalIDs": 4,
+      "allWindowMissingScores": 150,
+      "missingHistoricalIDs": 11,
       "missingHistoricalScores": 0,
-      "historical": 204,
-      "verified": 198,
-      "historicalUnverified": 6,
+      "historical": 214,
+      "verified": 201,
+      "historicalUnverified": 13,
       "pendingWithID": 2
     },
     "after": {
@@ -63,39 +63,39 @@
       },
       "total": 1012,
       "catalogTotal": 12186,
-      "identified": 203,
-      "actaRequired": 204,
+      "identified": 208,
+      "actaRequired": 214,
       "nationalScoreOnly": 34,
       "nationalWithScore": 34,
       "nationalMissingScore": 0,
-      "allWindowMissingScores": 160,
-      "missingHistoricalIDs": 1,
+      "allWindowMissingScores": 150,
+      "missingHistoricalIDs": 6,
       "missingHistoricalScores": 0,
-      "historical": 204,
-      "verified": 198,
-      "historicalUnverified": 6,
-      "pendingWithID": 5
+      "historical": 214,
+      "verified": 201,
+      "historicalUnverified": 13,
+      "pendingWithID": 7
     },
     "legacyIDs": 0,
-    "calendarIDs": 3,
+    "calendarIDs": 5,
     "checks": [
       {
-        "league": "4805",
-        "ids": 1,
+        "league": "4778",
+        "ids": 2,
         "status": "partial-identifiers",
-        "accepted": 77
+        "accepted": 99
       },
       {
-        "league": "4815",
-        "ids": 1,
+        "league": "4787",
+        "ids": 2,
         "status": "partial-identifiers",
-        "accepted": 109
+        "accepted": 429
       },
       {
-        "league": "4793",
+        "league": "4791",
         "ids": 1,
         "status": "partial-identifiers",
-        "accepted": 86
+        "accepted": 38
       }
     ],
     "untriedLeagues": 28
@@ -122,10 +122,10 @@
     "4779|147841": "2026-11-28T12:51:36.983117+00:00",
     "4779|148019": "2026-11-28T12:51:43.690596+00:00",
     "4779|148022": "2026-11-28T12:51:50.676423+00:00",
-    "4779|148201": "2026-11-28T17:29:11.689109+00:00",
+    "4779|148201": "2026-11-28T17:42:55.347708+00:00",
     "4779|148202": "2026-11-28T12:52:01.918141+00:00",
     "4779|148203": "2026-11-28T12:52:08.927881+00:00",
-    "4779|148204": "2026-11-28T17:29:18.707981+00:00",
+    "4779|148204": "2026-11-28T17:43:02.157008+00:00",
     "4779|148383": "2026-11-28T12:52:22.989495+00:00",
     "4779|148384": "2026-11-28T12:52:29.737232+00:00",
     "4787|149856": "2026-11-28T13:03:56.698931+00:00",
@@ -304,7 +304,12 @@
     "4790|149124": "2026-11-28T17:21:12.839145+00:00",
     "4793|158294": "2026-11-28T17:28:39.173342+00:00",
     "4805|157564": "2026-11-28T17:28:45.554186+00:00",
-    "4815|156616": "2026-11-28T17:28:51.872203+00:00"
+    "4815|156616": "2026-11-28T17:28:51.872203+00:00",
+    "4778|147478": "2026-11-28T17:42:25.722480+00:00",
+    "4778|147656": "2026-11-28T17:42:32.103945+00:00",
+    "4787|149762": "2026-11-28T17:42:38.610044+00:00",
+    "4787|150037": "2026-11-28T17:42:45.164026+00:00",
+    "4791|159290": "2026-11-28T17:42:51.631176+00:00"
   },
   "matchDiagnostics": {
     "4789|152510": {
@@ -489,8 +494,8 @@
     },
     "4779|148201": {
       "status": "pending",
-      "reason": "TimeoutError",
-      "checkedAt": "2026-11-28T17:29:11.689109+00:00",
+      "reason": "closure_unverified",
+      "checkedAt": "2026-11-28T17:42:55.347708+00:00",
       "staffSides": {
         "home": 0,
         "away": 0
@@ -517,7 +522,7 @@
     "4779|148204": {
       "status": "pending",
       "reason": "incomplete_or_changed_roster",
-      "checkedAt": "2026-11-28T17:29:18.707981+00:00",
+      "checkedAt": "2026-11-28T17:43:02.157008+00:00",
       "staffSides": {
         "home": 0,
         "away": 0
@@ -2133,6 +2138,51 @@
         "home": 3,
         "away": 3
       }
+    },
+    "4778|147478": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T17:42:25.722480+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 1
+      }
+    },
+    "4778|147656": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T17:42:32.103945+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4787|149762": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T17:42:38.610044+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
+    },
+    "4787|150037": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T17:42:45.164026+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 3
+      }
+    },
+    "4791|159290": {
+      "status": "verified",
+      "reason": null,
+      "checkedAt": "2026-11-28T17:42:51.631176+00:00",
+      "staffSides": {
+        "home": 2,
+        "away": 2
+      }
     }
   },
   "lastActs": {
@@ -2144,18 +2194,18 @@
       },
       "total": 1012,
       "catalogTotal": 12186,
-      "identified": 203,
-      "actaRequired": 204,
+      "identified": 208,
+      "actaRequired": 214,
       "nationalScoreOnly": 34,
       "nationalWithScore": 34,
       "nationalMissingScore": 0,
-      "allWindowMissingScores": 160,
-      "missingHistoricalIDs": 1,
+      "allWindowMissingScores": 150,
+      "missingHistoricalIDs": 6,
       "missingHistoricalScores": 0,
-      "historical": 204,
-      "verified": 198,
-      "historicalUnverified": 6,
-      "pendingWithID": 5
+      "historical": 214,
+      "verified": 201,
+      "historicalUnverified": 13,
+      "pendingWithID": 7
     },
     "after": {
       "window": {
@@ -2164,60 +2214,78 @@
       },
       "total": 1012,
       "catalogTotal": 12186,
-      "identified": 203,
-      "actaRequired": 204,
+      "identified": 208,
+      "actaRequired": 214,
       "nationalScoreOnly": 34,
       "nationalWithScore": 34,
       "nationalMissingScore": 0,
-      "allWindowMissingScores": 160,
-      "missingHistoricalIDs": 1,
+      "allWindowMissingScores": 150,
+      "missingHistoricalIDs": 6,
       "missingHistoricalScores": 0,
-      "historical": 204,
-      "verified": 201,
-      "historicalUnverified": 3,
+      "historical": 214,
+      "verified": 206,
+      "historicalUnverified": 8,
       "pendingWithID": 2
     },
-    "selected": 5,
-    "attempted": 5,
-    "verified": 3,
+    "selected": 7,
+    "attempted": 7,
+    "verified": 5,
     "pending": 2,
     "reasons": {
-      "TimeoutError": 1,
+      "closure_unverified": 1,
       "incomplete_or_changed_roster": 1
     },
     "reusedVerified": 0,
     "matchDiagnostics": {
-      "4793|158294": {
+      "4778|147478": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-28T17:28:39.173342+00:00",
+        "checkedAt": "2026-11-28T17:42:25.722480+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 1
+        }
+      },
+      "4778|147656": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T17:42:32.103945+00:00",
         "staffSides": {
           "home": 2,
           "away": 2
         }
       },
-      "4805|157564": {
+      "4787|149762": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-28T17:28:45.554186+00:00",
+        "checkedAt": "2026-11-28T17:42:38.610044+00:00",
+        "staffSides": {
+          "home": 2,
+          "away": 2
+        }
+      },
+      "4787|150037": {
+        "status": "verified",
+        "reason": null,
+        "checkedAt": "2026-11-28T17:42:45.164026+00:00",
         "staffSides": {
           "home": 2,
           "away": 3
         }
       },
-      "4815|156616": {
+      "4791|159290": {
         "status": "verified",
         "reason": null,
-        "checkedAt": "2026-11-28T17:28:51.872203+00:00",
+        "checkedAt": "2026-11-28T17:42:51.631176+00:00",
         "staffSides": {
-          "home": 3,
-          "away": 3
+          "home": 2,
+          "away": 2
         }
       },
       "4779|148201": {
         "status": "pending",
-        "reason": "TimeoutError",
-        "checkedAt": "2026-11-28T17:29:11.689109+00:00",
+        "reason": "closure_unverified",
+        "checkedAt": "2026-11-28T17:42:55.347708+00:00",
         "staffSides": {
           "home": 0,
           "away": 0
@@ -2226,7 +2294,7 @@
       "4779|148204": {
         "status": "pending",
         "reason": "incomplete_or_changed_roster",
-        "checkedAt": "2026-11-28T17:29:18.707981+00:00",
+        "checkedAt": "2026-11-28T17:43:02.157008+00:00",
         "staffSides": {
           "home": 0,
           "away": 0
@@ -2235,59 +2303,59 @@
     },
     "remainingEligible": 2,
     "coverage": {
-      "verifiedWithAllTrackedFields": 201,
+      "verifiedWithAllTrackedFields": 206,
       "verifiedWithGaps": 0,
       "playerFields": {
         "Núm.": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "P": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "C": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "5i": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "G": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "As": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "PEN": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "FD": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "F→": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "F←": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "TA": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "TB": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         },
         "TR": {
-          "present": 3017,
+          "present": 3091,
           "missing": 0
         }
       },
@@ -2313,8 +2381,8 @@
         "missingFields": [],
         "lastAttempt": {
           "status": "pending",
-          "reason": "TimeoutError",
-          "checkedAt": "2026-11-28T17:29:11.689109+00:00",
+          "reason": "closure_unverified",
+          "checkedAt": "2026-11-28T17:42:55.347708+00:00",
           "staffSides": {
             "home": 0,
             "away": 0
@@ -2332,7 +2400,7 @@
         "lastAttempt": {
           "status": "pending",
           "reason": "incomplete_or_changed_roster",
-          "checkedAt": "2026-11-28T17:29:18.707981+00:00",
+          "checkedAt": "2026-11-28T17:43:02.157008+00:00",
           "staffSides": {
             "home": 0,
             "away": 0
@@ -2342,7 +2410,7 @@
     },
     "readyNext": 2,
     "players": 9984,
-    "appearances": 88039
+    "appearances": 88113
   },
-  "lastActsFinishedAt": "2026-11-28T17:29:49Z"
+  "lastActsFinishedAt": "2026-11-28T17:43:32Z"
 }
