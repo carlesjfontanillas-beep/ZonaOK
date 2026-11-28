@@ -1,7 +1,7 @@
 {
   "new": 0,
-  "updated": 169,
-  "unmatched": 4,
+  "updated": 176,
+  "unmatched": 6,
   "ambiguousOrInvalid": 0,
   "unchanged": 0,
   "unmatchedDetails": [
@@ -358,8 +358,208 @@
         "status": ""
       },
       "sameTimeCandidates": []
+    },
+    {
+      "reason": "no_unique_fixture",
+      "fecapa": {
+        "iso": "2026-11-28",
+        "time": "17:00",
+        "competition": "OK LIGA MASCULINA",
+        "home": "RIV",
+        "away": "CPV",
+        "homeScore": 6,
+        "awayScore": 3,
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "status": ""
+      },
+      "sameTimeCandidates": [
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "1ª CATALANA FEMENINA GRUP A",
+          "home": "CLUB HOQUEI ARENYS DE MAR",
+          "away": "SHUM SELVAFIL",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "1ª CATALANA FEMENINA GRUP B",
+          "home": "CP SANT CELONI",
+          "away": "CP VILANOVA LA DAURADA",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "3ª CATALANA GRUP F",
+          "home": "UEH BARBERÀ",
+          "away": "AUTO VIGATANA PATÍ VIC B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "ALEVÍ PLATA 4",
+          "home": "CPI SANT IGNASI C",
+          "away": "CLUB HOQUEI PRAT B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "BCN BENJAMÍ PLATA 3",
+          "home": "CH LES FRANQUESES",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "BCN BENJAMÍ PLATA 5",
+          "home": "HC MONTBUI",
+          "away": "CLUB PATI TORRELLES",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "BCN PREBENJAMI OR 1",
+          "home": "CE ARENYS DE MUNT",
+          "away": "HF SANT JOSEP SANT SADURNÍ B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "INFANTIL PLATA 5",
+          "home": "CP CORBERA A",
+          "away": "FUTBOL CLUB MARTINENC C C",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "JUVENIL OR 10",
+          "home": "GENERALI HC PALAU B",
+          "away": "CLUB PATI CALAFELL B",
+          "leagueId": "",
+          "matchId": ""
+        }
+      ]
+    },
+    {
+      "reason": "no_unique_fixture",
+      "fecapa": {
+        "iso": "2026-11-28",
+        "time": "17:00",
+        "competition": "OK LIGA PLATA SUR",
+        "home": "SHA",
+        "away": "NOIA",
+        "homeScore": 1,
+        "awayScore": 2,
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "status": ""
+      },
+      "sameTimeCandidates": [
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "1ª CATALANA FEMENINA GRUP A",
+          "home": "CLUB HOQUEI ARENYS DE MAR",
+          "away": "SHUM SELVAFIL",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "1ª CATALANA FEMENINA GRUP B",
+          "home": "CP SANT CELONI",
+          "away": "CP VILANOVA LA DAURADA",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "3ª CATALANA GRUP F",
+          "home": "UEH BARBERÀ",
+          "away": "AUTO VIGATANA PATÍ VIC B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "ALEVÍ PLATA 4",
+          "home": "CPI SANT IGNASI C",
+          "away": "CLUB HOQUEI PRAT B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "BCN BENJAMÍ PLATA 3",
+          "home": "CH LES FRANQUESES",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "BCN BENJAMÍ PLATA 5",
+          "home": "HC MONTBUI",
+          "away": "CLUB PATI TORRELLES",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "BCN PREBENJAMI OR 1",
+          "home": "CE ARENYS DE MUNT",
+          "away": "HF SANT JOSEP SANT SADURNÍ B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "INFANTIL PLATA 5",
+          "home": "CP CORBERA A",
+          "away": "FUTBOL CLUB MARTINENC C C",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "JUVENIL OR 10",
+          "home": "GENERALI HC PALAU B",
+          "away": "CLUB PATI CALAFELL B",
+          "leagueId": "",
+          "matchId": ""
+        }
+      ]
     }
   ],
   "legacyActes": 5888,
-  "resultsLast7Days": 828
+  "resultsLast7Days": 831
 }
