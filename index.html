@@ -368,13 +368,15 @@ body.zok-ui-detail[data-zok-ui-tab="classificacions"] #results-title,#zok-result
 /* Només la capçalera: conserva logotip, controls i dades originals. */
 main.app > .mast{flex-wrap:wrap;column-gap:4px;row-gap:4px}
 main.app > .mast > .zok-header-actions{gap:5px;flex:0 0 auto}
-main.app > .mast #refresh-home{
+main.app > .mast :is(#refresh-home,#refresh-public){
   flex:0 0 32px;width:32px;height:34px;min-width:32px;min-height:34px;
   padding:0;border:0;border-radius:9px;background:transparent;color:#c1daec;
   display:inline-grid;place-items:center;font-size:21px;line-height:1
 }
-main.app > .mast #refresh-home::after{content:none!important}
-main.app > .mast #refresh-home:hover{background:#214969;color:#fff}
+main.app > .mast :is(#refresh-home,#refresh-public)::after{content:none!important}
+main.app > .mast :is(#refresh-home,#refresh-public):hover{background:#214969;color:#fff}
+html.zok-admin-device #refresh-public{display:none!important}
+#refresh-public:disabled{opacity:.55;cursor:progress}
 /* Actualitzacions: mateix accés visible també a Resultats. */
 body main.app #zok-week-hero,
 body:is(.zok-ui-home,.zok-ui-detail,.zok-ui-import) main.app #zok-week-hero{
@@ -450,7 +452,7 @@ body.zok-ui-home main.app > .keyline > #data-label{display:none}
       <a class="brand zok-brand-home" href="index.html?v=20261126-logo-home1" aria-label="ZONAOK · Inici" title="Inici" style="display:block;color:inherit;text-decoration:none">ZONA<span>OK</span></a>
       <div class="strap">ELS TEUS PARTITS &#xB7; EL TEU HOQUEI</div>
     </div>
-    <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261125-cataleg1" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><a class="zok-push-top" href="notificacions.html?v=20261125-serverprefs1" aria-label="Obrir Notificacions" title="Notificacions"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button><button id="refresh-home" type="button" class="primary" title="Obrir eines d’actualització" aria-label="Obrir o tancar les eines d’actualització">&#x21BB;</button></div>
+    <div class="zok-header-actions"><a class="zok-favorites-top" href="favorits.html?v=20261125-cataleg1" aria-label="Obrir Favorits" title="Favorits"><span aria-hidden="true">☆</span><strong>Favorits</strong></a><a class="zok-push-top" href="notificacions.html?v=20261125-serverprefs1" aria-label="Obrir Notificacions" title="Notificacions"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></a><button type="button" class="zok-home-top" data-tab="home" aria-label="Inici">⌂ <span>Inici</span></button><button id="refresh-home" type="button" class="primary" title="Obrir eines d’actualització" aria-label="Obrir o tancar les eines d’actualització">&#x21BB;</button><button id="refresh-public" type="button" class="primary" title="Actualitzar dades publicades" aria-label="Rellegir les dades de GitHub">&#x21BB;</button></div>
   </header>
   <section class="zok-home-heading" aria-label="Agenda dels favorits">
     <div class="section-head">
@@ -2743,6 +2745,16 @@ window.ZonaOKRefreshMatches=window.ZonaOKRefreshSources=async function(){
        previousTab=document.body.dataset.zokUiTab||'home';
        mode('import','import');
      }
+   };
+   const publicRefresh=document.getElementById('refresh-public');
+   if(publicRefresh)publicRefresh.onclick=async()=>{
+     if(window.ZonaOKAdminDevice?.allowed()||publicRefresh.disabled)return;
+     publicRefresh.disabled=true;publicRefresh.setAttribute('aria-busy','true');
+     try{
+       if(typeof window.ZonaOKPullRefresh==='function')await window.ZonaOKPullRefresh();
+       else if(document.body.classList.contains('zok-recent-mode'))await window.ZonaOKRefreshRecent?.();
+       else await window.ZonaOKRefreshSources?.();
+     }finally{publicRefresh.disabled=false;publicRefresh.removeAttribute('aria-busy');}
    };
    document.querySelector('.zok-bottom-nav')?.addEventListener('click',event=>{
      const b=event.target.closest('.navbtn[data-tab]');
