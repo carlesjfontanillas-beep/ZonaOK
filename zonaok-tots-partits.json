@@ -1,11 +1,11 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T09:15:50Z",
+  "updatedAt": "2026-11-28T09:21:49Z",
   "sources": {
     "agenda": {
-      "capturedAt": "2026-11-28T09:15:45Z",
-      "mergedAt": "2026-11-28T09:15:50Z",
+      "capturedAt": "2026-11-28T09:21:43Z",
+      "mergedAt": "2026-11-28T09:21:49Z",
       "new": 34,
       "updated": 12112,
       "unmatched": 0,
@@ -308,10 +308,10 @@
       "unverifiedLeagues": 16,
       "nextFastOffset": 128,
       "scope": "daily",
-      "scheduleChangeCount": 46,
-      "recoveredResultCount": 28,
+      "scheduleChangeCount": 0,
+      "recoveredResultCount": 1,
       "newFixtureCount": 0,
-      "unresolvedCount": 286
+      "unresolvedCount": 196
     },
     "directe": {
       "capturedAt": "2026-11-27T21:28:35Z",
@@ -139139,16 +139139,18 @@
       "matchId": "",
       "leagueId": "",
       "actaUrl": "",
-      "status": "PRÈVIA",
+      "status": "FINAL",
       "round": "",
-      "homeScore": null,
-      "awayScore": null,
+      "homeScore": 4,
+      "awayScore": 1,
       "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
-      "scoreUpdatedAt": "",
-      "scoreSource": "",
+      "scoreUpdatedAt": "2026-11-28T09:21:43Z",
+      "scoreSource": "Agenda",
       "directeUpdatedAt": "2026-11-27T21:28:35Z",
-      "lastAgendaAt": "2026-11-27T06:12:13Z",
-      "lastDirecteAt": "2026-11-27T21:28:35Z"
+      "lastAgendaAt": "2026-11-28T09:21:43Z",
+      "lastDirecteAt": "2026-11-27T21:28:35Z",
+      "finalDetectedAt": "2026-11-28T09:21:43Z",
+      "agendaRecoveredAt": "2026-11-28T09:21:43Z"
     },
     {
       "iso": "2026-11-27",
@@ -283035,7 +283037,7 @@
   ],
   "stats": {
     "total": 12347,
-    "withScores": 5779,
+    "withScores": 5780,
     "withActaLinks": 5712,
     "verifiedActes": 5630
   },

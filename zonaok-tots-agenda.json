@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-all-v1",
   "season": "2026/2027",
-  "publishedAt": "2026-11-28T09:15:50Z",
+  "publishedAt": "2026-11-28T09:21:49Z",
   "source": "FECAPA-PLAYWRIGHT",
   "kind": "agenda",
   "rows": [
@@ -138804,16 +138804,18 @@
       "matchId": "",
       "leagueId": "",
       "actaUrl": "",
-      "status": "PRÈVIA",
+      "status": "FINAL",
       "round": "",
-      "homeScore": null,
-      "awayScore": null,
+      "homeScore": 4,
+      "awayScore": 1,
       "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
-      "scoreUpdatedAt": "",
-      "scoreSource": "",
+      "scoreUpdatedAt": "2026-11-28T09:21:43Z",
+      "scoreSource": "Agenda",
       "directeUpdatedAt": "2026-11-27T21:28:35Z",
-      "lastAgendaAt": "2026-11-27T06:12:13Z",
-      "lastDirecteAt": "2026-11-27T21:28:35Z"
+      "lastAgendaAt": "2026-11-28T09:21:43Z",
+      "lastDirecteAt": "2026-11-27T21:28:35Z",
+      "finalDetectedAt": "2026-11-28T09:21:43Z",
+      "agendaRecoveredAt": "2026-11-28T09:21:43Z"
     },
     {
       "iso": "2026-11-27",
@@ -282698,7 +282700,7 @@
       "lastAgendaAt": "2026-11-27T05:36:54Z"
     }
   ],
-  "capturedAt": "2026-11-28T09:15:50Z",
+  "capturedAt": "2026-11-28T09:21:49Z",
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
     "BARÇA": "https://sidgad.cloud/fecapa/images/logos_clubes/234.png",

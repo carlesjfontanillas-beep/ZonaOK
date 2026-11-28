@@ -1,870 +1,20 @@
 {
   "schema": "zonaok-agenda-daily-report-v1",
-  "capturedAt": "2026-11-28T09:15:45Z",
+  "capturedAt": "2026-11-28T09:21:43Z",
   "windowFrom": "2026-11-21",
-  "sourceRows": 12006,
+  "sourceRows": 12147,
   "catalogBefore": 12347,
   "catalogAfter": 12347,
-  "scheduleChanges": [
-    {
-      "competition": "LCV GRUP B",
-      "home": "HCSENTMENAT",
-      "away": "FUTBOL CLUB CUATRO VIENTOS",
-      "previousIso": "2026-11-27",
-      "previousTime": "21:30",
-      "iso": "2026-12-11",
-      "time": "21:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "JUVENIL PLATA 1",
-      "home": "CHP MCDONALD'S AMPOSTA",
-      "away": "CLUB HOQUEI MOLLERUSSA B",
-      "previousIso": "2026-11-29",
-      "previousTime": "17:15",
-      "iso": "2026-12-18",
-      "time": "00:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "INFANTIL OR 3",
-      "home": "CLUB HOQUEI SANTA PERPÈTUA A",
-      "away": "FENIE ENERGIA CERDANYOLA CCH A",
-      "previousIso": "2026-12-05",
-      "previousTime": "11:00",
-      "iso": "2026-12-05",
-      "time": "10:15",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "INFANTIL OR 7",
-      "home": "CE NOIA FREIXENET E",
-      "away": "CLUB PATÍ VILAFRANCA AKO B B",
-      "previousIso": "2026-12-05",
-      "previousTime": "13:45",
-      "iso": "2026-12-05",
-      "time": "12:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "ALEVÍ OR 6",
-      "home": "OXFORD HC SALT A",
-      "away": "CE ARENYS DE MUNT B",
-      "previousIso": "2026-12-05",
-      "previousTime": "15:15",
-      "iso": "2026-12-04",
-      "time": "19:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "ALEVÍ OR 1",
-      "home": "CH RIPOLLET A",
-      "away": "CP RIUDEBITLLES A",
-      "previousIso": "2026-12-05",
-      "previousTime": "17:30",
-      "iso": "2026-12-04",
-      "time": "20:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "FEM 15 OR",
-      "home": "OXFORD HC SALT",
-      "away": "MOLLET HC A",
-      "previousIso": "2026-12-05",
-      "previousTime": "18:30",
-      "iso": "2026-12-05",
-      "time": "12:15",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "JUVENIL PLATA 1",
-      "home": "CLUB HOQUEI MOLLERUSSA B",
-      "away": "PONS LLEIDA C",
-      "previousIso": "2026-12-05",
-      "previousTime": "18:55",
-      "iso": "2026-12-04",
-      "time": "20:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "NACIONAL CATALANA MASCULINA",
-      "home": "IGUALADA HC",
-      "away": "CE ARENYS DE MUNT SOLARTRADEX",
-      "previousIso": "2026-12-06",
-      "previousTime": "18:45",
-      "iso": "2026-12-08",
-      "time": "18:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "PREBENJAMÍ PLATA-BRONZE F1",
-      "home": "CP ESNECA FRAGA",
-      "away": "CLUB HOQUEI CADÍ B",
-      "previousIso": "2026-12-12",
-      "previousTime": "10:00",
-      "iso": "2026-12-12",
-      "time": "12:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "JÚNIOR OR 7",
-      "home": "VICIO PHC SANT CUGAT C",
-      "away": "MARTINELIA MANLLEU A",
-      "previousIso": "2026-12-12",
-      "previousTime": "12:00",
-      "iso": "2026-12-12",
-      "time": "21:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "ALEVÍ OR 9",
-      "home": "FARNERS A",
-      "away": "CLUB PATÍ VOLTREGÀ C",
-      "previousIso": "2026-12-12",
-      "previousTime": "13:15",
-      "iso": "2026-12-12",
-      "time": "13:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "INFANTIL OR 5",
-      "home": "FARNERS A",
-      "away": "IGUALADA HC A",
-      "previousIso": "2026-12-12",
-      "previousTime": "15:45",
-      "iso": "2026-12-12",
-      "time": "17:15",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "PREBENJAMÍ PLATA GIRONA",
-      "home": "CP CALDES A",
-      "away": "PÈTALS D’ART FDCASSANENC B",
-      "previousIso": "2026-12-12",
-      "previousTime": "17:15",
-      "iso": "2026-12-12",
-      "time": "17:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "INFANTIL OR 3",
-      "home": "FENIE ENERGIA CERDANYOLA CCH A",
-      "away": "CP BLANES A",
-      "previousIso": "2026-12-12",
-      "previousTime": "17:45",
-      "iso": "2026-12-12",
-      "time": "19:45",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "JUVENIL PLATA 4",
-      "home": "MARTINELIA MANLLEU B",
-      "away": "OXFORD HC SALT",
-      "previousIso": "2026-12-12",
-      "previousTime": "17:45",
-      "iso": "2026-12-12",
-      "time": "19:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "1ª CATALANA GRUP B",
-      "home": "CH LLORET FITEL NETWORK",
-      "away": "CLUB PATI VILAFRANCA AKO",
-      "previousIso": "2026-12-12",
-      "previousTime": "18:00",
-      "iso": "2026-12-11",
-      "time": "21:15",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "FEM 17 OR",
-      "home": "FARNERS",
-      "away": "CHP SANT FELIU B",
-      "previousIso": "2026-12-12",
-      "previousTime": "20:00",
-      "iso": "2026-12-11",
-      "time": "21:15",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "JUVENIL PLATA 4",
-      "home": "CP BLANES B",
-      "away": "CLUB PATÍ RODA B",
-      "previousIso": "2026-12-13",
-      "previousTime": "11:15",
-      "iso": "2026-12-13",
-      "time": "12:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "1ª CATALANA FEMENINA GRUP B",
-      "home": "ROTOTANK BIGUES I RIELLS",
-      "away": "SFERIC",
-      "previousIso": "2026-12-13",
-      "previousTime": "12:00",
-      "iso": "2026-12-13",
-      "time": "10:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "INFANTIL OR 7",
-      "home": "CE NOIA FREIXENET A",
-      "away": "REUS DEPORTIU B B",
-      "previousIso": "2026-12-19",
-      "previousTime": "10:00",
-      "iso": "2026-12-19",
-      "time": "16:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "ALEVÍ OR 6",
-      "home": "AUTO VIGATANA PATÍ VIC A",
-      "away": "CLUB HOQUEI SANTA PERPÈTUA A",
-      "previousIso": "2026-12-19",
-      "previousTime": "15:00",
-      "iso": "2026-12-20",
-      "time": "10:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "ALEVÍ PLATA 1",
-      "home": "CH OLOT B",
-      "away": "HOQUEI CLUB RIPOLL B",
-      "previousIso": "2026-12-19",
-      "previousTime": "15:00",
-      "iso": "2026-12-19",
-      "time": "15:15",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "FEM 15 PLATA",
-      "home": "CH OLOT",
-      "away": "CLUB HOQUEI SANTA PERPÈTUA",
-      "previousIso": "2026-12-19",
-      "previousTime": "16:15",
-      "iso": "2026-12-19",
-      "time": "16:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "PREBENJAMÍ OR GIRONA",
-      "home": "CH OLOT B",
-      "away": "GEIEG",
-      "previousIso": "2026-12-19",
-      "previousTime": "17:45",
-      "iso": "2026-12-19",
-      "time": "18:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "3ª CATALANA GRUP B",
-      "home": "CAMBRILS CH",
-      "away": "CP MANRESA",
-      "previousIso": "2026-12-19",
-      "previousTime": "19:00",
-      "iso": "2026-12-20",
-      "time": "11:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "NACIONAL CATALANA FEMENINA",
-      "home": "CH OLOT",
-      "away": "FENIE ENERGIA CERDANYOLA CCH",
-      "previousIso": "2026-12-19",
-      "previousTime": "19:15",
-      "iso": "2026-12-19",
-      "time": "19:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "BENJAMÍ PLATA GIRONA FASE1 GRUP B",
-      "home": "CH OLOT D",
-      "away": "CP CALDES E",
-      "previousIso": "2026-12-20",
-      "previousTime": "12:00",
-      "iso": "2026-12-19",
-      "time": "13:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "NACIONAL CATALANA MASCULINA",
-      "home": "CE ARENYS DE MUNT SOLARTRADEX",
-      "away": "LLEIDANET ALPICAT",
-      "previousIso": "2026-12-20",
-      "previousTime": "12:30",
-      "iso": "2026-12-17",
-      "time": "21:15",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "FEM 11 PLATA",
-      "home": "AUTO VIGATANA PATÍ VIC",
-      "away": "CLUB HOQUEI SANTA PERPÈTUA",
-      "previousIso": "2026-12-20",
-      "previousTime": "15:00",
-      "iso": "2026-12-20",
-      "time": "14:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "INFANTIL PLATA 3",
-      "home": "CLUB HOQUEI CASTELLET",
-      "away": "CH LES FRANQUESES",
-      "previousIso": "2027-01-09",
-      "previousTime": "10:00",
-      "iso": "2027-01-09",
-      "time": "10:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "BCN BENJAMÍ PLATA 2",
-      "home": "CLUB HOQUEI CASTELLET",
-      "away": "CH NAVARCLES",
-      "previousIso": "2027-01-09",
-      "previousTime": "15:00",
-      "iso": "2027-01-09",
-      "time": "13:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "JÚNIOR OR 5",
-      "home": "FARNERS",
-      "away": "HOQUEI CLUB ALPICAT",
-      "previousIso": "2027-01-09",
-      "previousTime": "18:00",
-      "iso": "2027-01-09",
-      "time": "18:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "2ª CATALANA GRUP C",
-      "home": "CH FIGUERES",
-      "away": "CAPELLADES",
-      "previousIso": "2027-01-09",
-      "previousTime": "19:45",
-      "iso": "2027-01-10",
-      "time": "19:45",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "BCN PREBENJAMI PLATA 2",
-      "home": "CLUB HOQUEI ARENYS DE MAR A",
-      "away": "MOLLET HC A",
-      "previousIso": "2027-01-10",
-      "previousTime": "10:00",
-      "iso": "2027-01-10",
-      "time": "09:45",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "ALEVÍ PLATA 6",
-      "home": "CH FIGUERES B",
-      "away": "CP BLANES",
-      "previousIso": "2027-01-10",
-      "previousTime": "12:00",
-      "iso": "2027-01-10",
-      "time": "11:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "FEM 17 OR",
-      "home": "FARNERS",
-      "away": "GENERALI HC PALAU A",
-      "previousIso": "2027-01-10",
-      "previousTime": "13:30",
-      "iso": "2027-01-10",
-      "time": "14:45",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "JÚNIOR PLATA 2",
-      "home": "CH FIGUERES",
-      "away": "CH NAVARCLES",
-      "previousIso": "2027-01-10",
-      "previousTime": "17:00",
-      "iso": "2027-01-10",
-      "time": "16:45",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "3ª CATALANA GRUP D",
-      "home": "CH FIGUERES",
-      "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
-      "previousIso": "2027-01-10",
-      "previousTime": "18:00",
-      "iso": "2027-01-10",
-      "time": "18:15",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "PREBENJAMÍ OR LLEIDA F1",
-      "home": "CLUB HOQUEI MOLLERUSSA A",
-      "away": "PONS LLEIDA B",
-      "previousIso": "2027-01-16",
-      "previousTime": "11:15",
-      "iso": "2027-01-17",
-      "time": "16:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "FEM 11 PLATA",
-      "home": "VICIO PHC SANT CUGAT B",
-      "away": "CLUB HOQUEI SANTA PERPÈTUA",
-      "previousIso": "2027-01-16",
-      "previousTime": "13:55",
-      "iso": "2027-01-17",
-      "time": "09:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "FEM 11 PLATA",
-      "home": "CLUB HOQUEI MOLLERUSSA",
-      "away": "HOQUEI CLARET",
-      "previousIso": "2027-01-16",
-      "previousTime": "15:00",
-      "iso": "2027-01-17",
-      "time": "11:30",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "JUVENIL PLATA 1",
-      "home": "CLUB HOQUEI MOLLERUSSA B",
-      "away": "CP SUBUR SITGES",
-      "previousIso": "2027-01-16",
-      "previousTime": "15:30",
-      "iso": "2027-01-17",
-      "time": "19:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "MINIFEM 2ª FASE",
-      "home": "CLUB HOQUEI MOLLERUSSA",
-      "away": "FISIOCLUB IGUALADA FEMENÍ HCP",
-      "previousIso": "2027-01-16",
-      "previousTime": "16:30",
-      "iso": "2027-01-17",
-      "time": "10:15",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "FEM 13 PLATA",
-      "home": "CLUB HOQUEI MOLLERUSSA",
-      "away": "FITONATUR IGUALADA FEMENÍ HCP",
-      "previousIso": "2027-01-17",
-      "previousTime": "12:30",
-      "iso": "2027-01-17",
-      "time": "12:45",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    },
-    {
-      "competition": "BENJAMÍ LLEIDA F1",
-      "home": "CLUB HOQUEI MOLLERUSSA",
-      "away": "HOQUEI CLUB ALPICAT B",
-      "previousIso": "2027-01-17",
-      "previousTime": "14:00",
-      "iso": "2027-01-17",
-      "time": "17:45",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    }
-  ],
+  "scheduleChanges": [],
   "recoveredResults": [
     {
       "iso": "2026-11-27",
-      "time": "19:00",
-      "competition": "NACIONAL CATALANA MASCULINA",
-      "home": "BARÇA",
-      "away": "CLUB PATÍ VOLTREGÀ - MASIES",
-      "homeScore": 4,
-      "awayScore": 1,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "20:00",
-      "competition": "3ª CATALANA GRUP A",
-      "home": "FARNERS",
-      "away": "CLUB PATI TORDERA",
-      "homeScore": 6,
-      "awayScore": 7,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "20:00",
-      "competition": "FEM 15 OR",
-      "home": "FENIE ENERGIA CERDANYOLA CCH A",
-      "away": "OXFORD HC SALT",
-      "homeScore": 0,
-      "awayScore": 2,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "20:00",
-      "competition": "JÚNIOR PLATA 2",
-      "home": "SE LA SALLE BONANOVA",
-      "away": "FENIE ENERGIA CERDANYOLA CCH",
-      "homeScore": 3,
-      "awayScore": 6,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "20:15",
-      "competition": "3ª CATALANA GRUP E",
-      "home": "CP VILANOVA A",
-      "away": "CLUB PATI CALAFELL",
-      "homeScore": 3,
-      "awayScore": 5,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "20:15",
-      "competition": "BCN BENJAMÍ OR 2",
-      "home": "UEH BARBERÀ A",
-      "away": "CH RIPOLLET A",
-      "homeScore": 0,
-      "awayScore": 10,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "20:30",
-      "competition": "FEM 15 OR",
-      "home": "MARTINELIA MANLLEU A",
-      "away": "ROTOTANK BIGUES I RIELLS",
-      "homeScore": 3,
-      "awayScore": 2,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:00",
-      "competition": "1ª CATALANA GRUP B",
-      "home": "CP RIUDOMS",
-      "away": "HCSENTMENAT",
-      "homeScore": 4,
-      "awayScore": 3,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:00",
-      "competition": "2ª CATALANA GRUP C",
-      "home": "CAPELLADES",
-      "away": "CP JONQUERENC",
-      "homeScore": 2,
-      "awayScore": 2,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:00",
-      "competition": "2ª CATALANA GRUP C",
-      "home": "CPI SANT IGNASI",
-      "away": "CLUB PATÍ RODA",
-      "homeScore": 4,
-      "awayScore": 5,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:00",
-      "competition": "3ª CATALANA GRUP C",
-      "home": "CLUB PATI TORRELLES B",
-      "away": "FENIE ENERGIA CERDANYOLA CCH",
-      "homeScore": 4,
-      "awayScore": 4,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:00",
-      "competition": "JÚNIOR OR 7",
-      "home": "CH PALAFRUGELL",
-      "away": "MARTINELIA MANLLEU B",
-      "homeScore": 4,
-      "awayScore": 1,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:15",
-      "competition": "2ª CATALANA GRUP A",
-      "home": "UNIÓ ESPORTIVA LA GARRIGA",
-      "away": "CEH OLÍMPIC REUS",
-      "homeScore": 9,
-      "awayScore": 1,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:15",
-      "competition": "JUVENIL PLATA 3",
-      "home": "UEH BARBERÀ B",
-      "away": "CLUB HOQUEI SANTA PERPÈTUA",
-      "homeScore": 2,
-      "awayScore": 6,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
       "time": "21:30",
-      "competition": "1ª CATALANA GRUP A",
-      "home": "FARNERS",
-      "away": "CE TORRELAVIT FONT PACKAGING",
-      "homeScore": 6,
-      "awayScore": 3,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:30",
-      "competition": "2ª CATALANA GRUP B",
-      "home": "SHUM ALEA",
-      "away": "CH MATARÓ",
-      "homeScore": 8,
-      "awayScore": 2,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:30",
-      "competition": "2ª CATALANA GRUP C",
-      "home": "SE LA SALLE BONANOVA A",
-      "away": "HCSENTMENAT",
-      "homeScore": 4,
-      "awayScore": 1,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:30",
-      "competition": "2ª CATALANA GRUP D",
-      "home": "CP TARADELL",
-      "away": "MARTINELIA MANLLEU",
-      "homeScore": 0,
-      "awayScore": 5,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:35",
-      "competition": "2ª CATALANA GRUP D",
-      "home": "IGUALADA HC",
-      "away": "CLUB PATÍ RIBES FRESER",
-      "homeScore": 7,
-      "awayScore": 1,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:40",
-      "competition": "1ª CATALANA FEMENINA GRUP A",
-      "home": "MOLLET HC",
-      "away": "CLUB PATÍ VILA-SANA",
-      "homeScore": 2,
-      "awayScore": 3,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:45",
-      "competition": "3ª CATALANA GRUP F",
-      "home": "CP VILANOVA B",
-      "away": "INNOAESTHETICS HC SANT JUST B",
-      "homeScore": 4,
-      "awayScore": 0,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:55",
-      "competition": "2ª CATALANA GRUP B",
-      "home": "LLISTA-BELL-LLOC",
-      "away": "CP VILANOVA",
-      "homeScore": 3,
-      "awayScore": 4,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:55",
-      "competition": "2ª CATALANA GRUP C",
-      "home": "CLUB PATÍ VILAFRANCA AKO",
-      "away": "CP SUBUR SITGES",
-      "homeScore": 1,
-      "awayScore": 10,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:55",
-      "competition": "3ª CATALANA GRUP B",
-      "home": "CLUB HOQUEI CASTELLET",
-      "away": "JOIERIA MONER SANT RAMON A",
-      "homeScore": 5,
-      "awayScore": 5,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:55",
-      "competition": "3ª CATALANA GRUP C",
-      "home": "CH CALDES RECAM LÀSER",
-      "away": "CHP MARTORELL",
-      "homeScore": 9,
-      "awayScore": 6,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "21:55",
-      "competition": "FEM 19",
-      "home": "GENERALI HC PALAU B",
-      "away": "MARTINELIA MANLLEU",
-      "homeScore": 3,
-      "awayScore": 1,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "22:00",
-      "competition": "2ª CATALANA GRUP A",
-      "home": "CE ARENYS DE MUNT",
-      "away": "MOLLET HC",
-      "homeScore": 4,
-      "awayScore": 3,
-      "leagueId": "",
-      "matchId": ""
-    },
-    {
-      "iso": "2026-11-27",
-      "time": "22:00",
       "competition": "LCV GRUP A",
-      "home": "CP CONGRES A",
-      "away": "CE NOIA VETERANS",
-      "homeScore": 3,
-      "awayScore": 2,
+      "home": "CLUB D'ESPORTS VENDRELL",
+      "away": "INNOAESTHETICS HC SANT JUST",
+      "homeScore": 4,
+      "awayScore": 1,
       "leagueId": "",
       "matchId": ""
     }
@@ -1143,17 +293,6 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "FEM 13 PLATA",
-        "CH MATARO",
-        "VICIO PHC SANT CUGAT",
-        "2026-11-22",
-        "11:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "OK LIGA MASCULINA",
         "IGUALADA RIGAT HC",
         "REUS DEPORTIU BRASILIA",
@@ -1165,33 +304,11 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "FEM 15 OR",
-        "CH MATARO",
-        "MOLLET HC B",
-        "2026-11-22",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "OK LIGA PLATA SUR",
         "SDESPANYOL",
         "CLUB PATIN ALCOBENDAS",
         "2026-11-22",
         "13:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "CH CALDES RECAM LASER",
-        "2026-11-22",
-        "16:45"
       ],
       "possible": []
     },
@@ -1346,50 +463,6 @@
         "HOQUEI PATINS TONA",
         "2026-11-26",
         "22:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "LCV GRUP A",
-        "CLUB D ESPORTS VENDRELL",
-        "INNOAESTHETICS HC SANT JUST",
-        "2026-11-27",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "ALEVI OR 8",
-        "CLUB D ESPORTS VENDRELL",
-        "IGUALADA HC A",
-        "2026-11-28",
-        "11:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "JUNIOR OR 4",
-        "CH MATARO",
-        "UNIO ESPORTIVA D HORTA A",
-        "2026-11-28",
-        "18:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA FEMENINA GRUP B",
-        "CH MATARO",
-        "CLUB PATI CUBELLES",
-        "2026-11-28",
-        "20:00"
       ],
       "possible": []
     },
@@ -1561,17 +634,6 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "CLUB PATI CALAFELL",
-        "2026-11-29",
-        "16:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "FEM 15 PLATA",
         "JOIERIA TRIAS IGUALADA FHCP B",
         "CP JONQUERENC",
@@ -1660,33 +722,11 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "FEM 11 OR",
-        "CH MATARO",
-        "CE ARENYS DE MUNT",
-        "2026-12-04",
-        "20:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "3 CATALANA GRUP B",
         "CAMBRILS CH",
         "CLUB HOQUEI CASTELLET",
         "2026-12-04",
         "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CLUB PATI RODA",
-        "2026-12-04",
-        "21:45"
       ],
       "possible": []
     },
@@ -1792,33 +832,11 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "FEM 13 PLATA",
-        "CH MATARO",
-        "CP CONGRES",
-        "2026-12-06",
-        "11:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "3 CATALANA GRUP A",
         "CLUB PATI TORDERA",
         "ROTOTANK BIGUES I RIELLS",
         "2026-12-06",
         "12:45"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 15 OR",
-        "CH MATARO",
-        "MARTINELIA MANLLEU B",
-        "2026-12-06",
-        "14:00"
       ],
       "possible": []
     },
@@ -1896,17 +914,6 @@
         "CH FIGUERES B",
         "2026-12-12",
         "12:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "BCN PB INICIACIO 2",
-        "CH MATARO",
-        "CLUB PATI TORDERA",
-        "2026-12-12",
-        "13:45"
       ],
       "possible": []
     },
@@ -2023,55 +1030,11 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "ALEVI OR 8",
-        "CLUB D ESPORTS VENDRELL",
-        "CLUB HOQUEI VILASSAR",
-        "2026-12-13",
-        "11:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "1 CATALANA GRUP A",
         "CLUB PATI TORDERA",
         "GENERALI HC PALAU",
         "2026-12-13",
         "13:45"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "CLUB PATI TORRELLES B",
-        "2026-12-13",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 17 OR",
-        "CH MATARO",
-        "UDL IGUALADA FEMENI HCP A",
-        "2026-12-13",
-        "15:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "OXFORD HC SALT",
-        "2026-12-13",
-        "17:00"
       ],
       "possible": []
     },
@@ -2254,44 +1217,11 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CH LLORET FITEL NETWORK",
-        "2026-12-20",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 15 OR",
-        "CH MATARO",
-        "MARTINELIA MANLLEU A",
-        "2026-12-20",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "INFANTIL PLATA 2",
         "CP FOLGUEROLES",
         "HOQUEI PATINS TONA",
         "2026-12-20",
         "15:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 11 OR",
-        "CH MATARO",
-        "CLUB PATI VILA SANA",
-        "2026-12-20",
-        "15:30"
       ],
       "possible": []
     },
@@ -2320,33 +1250,11 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "JUNIOR OR 4",
-        "CH MATARO",
-        "HOQUEI CLUB CASTELLAR",
-        "2026-12-20",
-        "17:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "ALEVI PLATA 3",
         "GENERALI HC PALAU C C",
         "UEH BARBERA B",
         "2026-12-20",
         "17:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA FEMENINA GRUP B",
-        "CH MATARO",
-        "GENERALI HC PALAU",
-        "2026-12-20",
-        "18:30"
       ],
       "possible": []
     },
@@ -2391,17 +1299,6 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "UEH BARBERA",
-        "2027-01-08",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "BCN PREBENJAMI BRONZE 3",
         "CP VILANOVA B",
         "SANT JOSEP DE BADALONA",
@@ -2440,17 +1337,6 @@
         "CLUB D ESPORTS VENDRELL",
         "2027-01-09",
         "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "BCN PB INICIACIO 2",
-        "CH MATARO",
-        "CPI SANT IGNASI B",
-        "2027-01-09",
-        "13:45"
       ],
       "possible": []
     },
@@ -2655,17 +1541,6 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "PREBENJAMI OR LLEIDA F1",
-        "ANDORRA HC",
-        "CLUB HOQUEI CADI A",
-        "2027-01-09",
-        "17:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "TARRAGONA BENJAMI",
         "CHP MCDONALDS AMPOSTA",
         "CLUB HOQUEI VILA SECA A",
@@ -2715,17 +1590,6 @@
         "CH MATARO",
         "2027-01-09",
         "20:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 17 OR",
-        "CH MATARO",
-        "ROTOTANK BIGUES I RIELLS",
-        "2027-01-10",
-        "10:00"
       ],
       "possible": []
     },
@@ -2801,17 +1665,6 @@
         "ALEVI PLATA 7",
         "CHP MCDONALD S AMPOSTA A",
         "HC VALLS FM LOGISTIC A",
-        "2027-01-10",
-        "11:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 13 PLATA",
-        "CH MATARO",
-        "CLUB HOQUEI MOLLERUSSA",
         "2027-01-10",
         "11:15"
       ],
@@ -2908,17 +1761,6 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "UNIO ESPORTIVA D HORTA",
-        "2027-01-10",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "INFANTIL PLATA 7",
         "CLUB HOQUEI MOLLERUSSA C",
         "HOQUEI CLUB ALPICAT C",
@@ -2935,17 +1777,6 @@
         "CP RIUDOMS D",
         "2027-01-10",
         "16:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "LLISTA BELL LLOC",
-        "2027-01-10",
-        "17:00"
       ],
       "possible": []
     },
@@ -3282,88 +2113,11 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CAPELLADES",
-        "2027-01-17",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "HOQUEI CLARET",
-        "2027-01-17",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 15 OR",
-        "CH MATARO",
-        "MOLLET HC A",
-        "2027-01-17",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 11 OR",
-        "CH MATARO",
-        "MOLLET HC",
-        "2027-01-17",
-        "15:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "FEM 17 OR",
         "CHP SANT FELIU A",
         "CH MATARO",
         "2027-01-17",
         "17:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "PREBENJAMI OR LLEIDA F1",
-        "ANDORRA HC",
-        "HOQUEI CLUB ALPICAT A",
-        "2027-01-17",
-        "17:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA FEMENINA GRUP B",
-        "CH MATARO",
-        "UNIO ESPORTIVA D HORTA",
-        "2027-01-17",
-        "18:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 17 OR",
-        "CH MATARO",
-        "REUS DEPORTIU",
-        "2027-01-24",
-        "10:00"
       ],
       "possible": []
     },
@@ -3381,341 +2135,11 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "1 CATALANA FEMENINA GRUP B",
-        "CH MATARO",
-        "HOQUEI CLUB ALPICAT",
-        "2027-01-24",
-        "18:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "CP TARADELL",
-        "2027-01-29",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "CHP MARTORELL",
-        "2027-01-30",
-        "16:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "PREBENJAMI OR LLEIDA F1",
-        "ANDORRA HC",
-        "TARREGA HOQUEI PATINS CLUB A",
-        "2027-01-30",
-        "17:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 15 OR",
-        "CH MATARO",
-        "GENERALI HC PALAU A",
-        "2027-01-31",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "GENERALI HC PALAU",
-        "2027-01-31",
-        "17:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "LCV GRUP A",
-        "CLUB D ESPORTS VENDRELL",
-        "HOQUEI CLUB CASTELLAR",
-        "2027-02-05",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CH PALAFRUGELL",
-        "2027-02-07",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "2 CATALANA GRUP D",
         "CP TARADELL",
         "UEH BARBERA",
         "2027-02-13",
         "19:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 17 OR",
-        "CH MATARO",
-        "OXFORD HC SALT A",
-        "2027-02-14",
-        "10:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "CLUB HOQUEI SANTA PERPETUA",
-        "2027-02-14",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "CLUB HOQUEI ARENYS DE MAR",
-        "2027-02-14",
-        "17:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA FEMENINA GRUP B",
-        "CH MATARO",
-        "CLUB PATI VOLTREGA",
-        "2027-02-14",
-        "18:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "CLUB PATI RIBES FRESER",
-        "2027-02-19",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 13 PLATA",
-        "CH MATARO",
-        "CLUB PATI TORRELLES",
-        "2027-02-21",
-        "11:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CLUB PATI VILAFRANCA AKO",
-        "2027-02-21",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 15 OR",
-        "CH MATARO",
-        "OXFORD HC SALT",
-        "2027-02-21",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "MARTINELIA MANLLEU",
-        "2027-02-26",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "LCV GRUP A",
-        "CLUB D ESPORTS VENDRELL",
-        "SFERIC VETERANS",
-        "2027-02-26",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "PREBENJAMI OR LLEIDA F1",
-        "ANDORRA HC",
-        "PONS LLEIDA B",
-        "2027-02-27",
-        "17:15"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 17 OR",
-        "CH MATARO",
-        "MARTINELIA MANLLEU",
-        "2027-02-28",
-        "10:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CP RIUDEBITLLES",
-        "2027-02-28",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "SE LA SALLE BONANOVA B",
-        "2027-02-28",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "ELECTRO AD CP MASQUEFA",
-        "2027-02-28",
-        "17:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA FEMENINA GRUP B",
-        "CH MATARO",
-        "INNOAESTHETICS HC SANT JUST",
-        "2027-02-28",
-        "18:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 15 OR",
-        "CH MATARO",
-        "CLUB PATI RODA",
-        "2027-03-07",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "HC MONTBUI",
-        "2027-03-12",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 17 OR",
-        "CH MATARO",
-        "INNOAESTHETICS HC SANT JUST",
-        "2027-03-14",
-        "10:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CH CALDES RECAM LASER",
-        "2027-03-14",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "CHP MCDONALD S AMPOSTA",
-        "2027-03-14",
-        "17:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "LCV GRUP A",
-        "CLUB D ESPORTS VENDRELL",
-        "CE NOIA VETERANS",
-        "2027-03-19",
-        "21:30"
       ],
       "possible": []
     },
@@ -3733,39 +2157,6 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "CP CONGRES A",
-        "2027-03-21",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "CH CALDES RECAM LASER",
-        "2027-03-21",
-        "17:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA FEMENINA GRUP B",
-        "CH MATARO",
-        "CP SANT CELONI",
-        "2027-03-21",
-        "18:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "VETERANS GIRONA",
         "CH LLORET",
         "CH PALAFRUGELL",
@@ -3777,143 +2168,11 @@
     {
       "reason": "not_uniquely_found_in_agenda",
       "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "CP CONGRES",
-        "2027-04-02",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "VICIO PHC SANT CUGAT",
-        "2027-04-04",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "FEM 15 OR",
-        "CH MATARO",
-        "FARNERS",
-        "2027-04-04",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
         "2 CATALANA GRUP A",
         "CLUB HOQUEI MOLLERUSSA",
         "CH PALAFRUGELL",
         "2027-04-09",
         "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "LCV GRUP A",
-        "CLUB D ESPORTS VENDRELL",
-        "VICIO PHC SANT CUGAT A",
-        "2027-04-09",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "CLUB HOQUEI PRAT",
-        "2027-04-11",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "SHUM ALEA",
-        "2027-04-11",
-        "17:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "LCV GRUP A",
-        "CLUB D ESPORTS VENDRELL",
-        "CE ARENYS DE MUNT",
-        "2027-04-16",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CLUB PATI MONJOS PANSALUD",
-        "2027-04-18",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "GEIEG",
-        "2027-04-23",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA FEMENINA GRUP B",
-        "CH MATARO",
-        "CP VILANOVA LA DAURADA",
-        "2027-04-25",
-        "18:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "CLUB PATI CENTELLES",
-        "2027-04-30",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "LCV GRUP A",
-        "CLUB D ESPORTS VENDRELL",
-        "CP CONGRES A",
-        "2027-04-30",
-        "22:00"
       ],
       "possible": []
     },
@@ -3932,118 +2191,11 @@
           "20:45"
         ]
       ]
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CP RIUDOMS",
-        "2027-05-02",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "3 CATALANA GRUP C",
-        "CH MATARO",
-        "FENIE ENERGIA CERDANYOLA CCH",
-        "2027-05-02",
-        "14:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "HOQUEI PATINS TONA",
-        "2027-05-02",
-        "17:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "LCV GRUP A",
-        "CLUB D ESPORTS VENDRELL",
-        "CP CONGRES B",
-        "2027-05-07",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CHP SANT FELIU",
-        "2027-05-16",
-        "12:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA FEMENINA GRUP B",
-        "CH MATARO",
-        "ROTOTANK BIGUES I RIELLS",
-        "2027-05-16",
-        "18:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP D",
-        "CLUB D ESPORTS VENDRELL",
-        "CLUB ESPORTIU OLESA PATI",
-        "2027-05-21",
-        "21:30"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "2 CATALANA GRUP B",
-        "CH MATARO",
-        "CP VILANOVA",
-        "2027-05-23",
-        "17:00"
-      ],
-      "possible": []
-    },
-    {
-      "reason": "not_uniquely_found_in_agenda",
-      "fixture": [
-        "1 CATALANA GRUP B",
-        "CH MATARO",
-        "CH VILA SECA CEH OLIMPIC",
-        "2027-05-30",
-        "12:30"
-      ],
-      "possible": []
     }
   ],
-  "scheduleChangeCount": 46,
-  "recoveredResultCount": 28,
+  "scheduleChangeCount": 0,
+  "recoveredResultCount": 1,
   "newFixtureCount": 0,
-  "unresolvedCount": 286,
-  "yesterdayMissingResults": [
-    [
-      "LCV GRUP A",
-      "CLUB D ESPORTS VENDRELL",
-      "INNOAESTHETICS HC SANT JUST",
-      "2026-11-27",
-      "21:30"
-    ]
-  ]
+  "unresolvedCount": 196,
+  "yesterdayMissingResults": []
 }
