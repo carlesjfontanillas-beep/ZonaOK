@@ -6,7 +6,7 @@ Versió activa al panell de Cloudflare: `4fe6527e`.
 
 - `/sports-events` accepta fixtures sense `leagueId` ni `matchId`; si manquen, treballa amb una identitat interna estable i les dades de competició, equips i horari.
 - `/sports-incidents` calcula una identitat interna deduplicable a partir del partit i de la incidència. Ja no depèn d'un IDP oficial.
-- `/sports-candidates` pot retornar fixtures sense IDP per al flux d'avisos. La captura d'una acta oficial encara pot necessitar l'IDP si l'origen només identifica l'acta amb aquest identificador.
+- `/sports-candidates` no exigeix IDP a la validació del Worker. La cerca automatitzada d'actes encara el necessita per construir l'URL oficial de FECAPA; aquest requisit queda limitat a recuperar l'acta i no bloqueja l'enviament d'avisos.
 - Es conserven OIDC, filtres de preferències, deduplicació i autenticació. No s'han canviat subscripcions ni secrets, ni s'han aturat importacions.
 
 ## Verificació
