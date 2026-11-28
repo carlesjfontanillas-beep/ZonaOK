@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T15:22:06Z",
+  "updatedAt": "2026-11-28T15:26:39Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T09:50:44Z",
@@ -142812,9 +142812,9 @@
       "venue": "PAVELLO REUS DEPORTIU",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "152958",
+      "leagueId": "4789",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152958",
       "status": "FINAL",
       "round": "",
       "homeScore": 3,
@@ -142825,7 +142825,9 @@
       "directeUpdatedAt": "2026-11-28T15:22:03Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T15:22:03Z",
-      "finalDetectedAt": "2026-11-28T15:16:44Z"
+      "finalDetectedAt": "2026-11-28T15:16:44Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T15:24:27.944976+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -142974,9 +142976,9 @@
       "venue": "PISTA TORRELLES",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "156783",
+      "leagueId": "4815",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4815&vista=calendar&partido=156783",
       "status": "FINAL",
       "round": "",
       "homeScore": 2,
@@ -142987,7 +142989,9 @@
       "directeUpdatedAt": "2026-11-28T15:22:03Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T15:22:03Z",
-      "finalDetectedAt": "2026-11-28T14:59:49Z"
+      "finalDetectedAt": "2026-11-28T14:59:49Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T15:24:34.774541+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143092,9 +143096,9 @@
       "venue": "CEM JAUME TUBAU SANT CUGAT",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "149947",
+      "leagueId": "4787",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=149947",
       "status": "FINAL",
       "round": "",
       "homeScore": 1,
@@ -280197,8 +280201,8 @@
   "stats": {
     "total": 12186,
     "withScores": 5889,
-    "withActaLinks": 5851,
-    "verifiedActes": 5767
+    "withActaLinks": 5854,
+    "verifiedActes": 5769
   },
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
