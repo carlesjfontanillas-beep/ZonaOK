@@ -433152,7 +433152,7 @@
     "4779|148201": {
       "status": "pending",
       "fingerprint": "[4,5,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148201\"]",
-      "checkedAt": "2026-11-28T14:34:49.060823+00:00",
+      "checkedAt": "2026-11-28T14:40:00.117661+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148202": {
@@ -433311,7 +433311,7 @@
     "4779|148204": {
       "status": "pending",
       "fingerprint": "[1,10,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148204\"]",
-      "checkedAt": "2026-11-28T14:34:56.706816+00:00",
+      "checkedAt": "2026-11-28T14:40:07.225372+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148383": {
@@ -440470,6 +440470,311 @@
           {
             "period": "TOTAL",
             "score": "8-2",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4804|158505": {
+      "status": "verified",
+      "fingerprint": "[0,10,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4804&vista=calendar&partido=158505\"]",
+      "checkedAt": "2026-11-28T14:39:50.251184+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "0",
+            "away": "10"
+          },
+          "FALTES": {
+            "home": "5",
+            "away": "3"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 5,
+          "away": 3
+        },
+        "header": {
+          "competition": "FEM 13 OR",
+          "season": "2026/2027",
+          "venue": "POLIESPORTIU MUNICIPAL LA NORIA",
+          "dateTime": "28/11/2026 - 10:00",
+          "round": "JORNADA 9",
+          "referee1": "GERONES SANJUAN, BIEL",
+          "rinkDelegate": "Ibañez, Jose Manuel"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "REQUENA SANZ, EVA"
+            },
+            {
+              "role": "Delegat",
+              "name": "GODAYOL GARCIA, PAU"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "JIMENO TORRES, QUIMA"
+            },
+            {
+              "role": "Delegat",
+              "name": "CHAVES CALDERERO, VANESSA"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "0-10",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4806|158707": {
+      "status": "verified",
+      "fingerprint": "[4,5,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4806&vista=calendar&partido=158707\"]",
+      "checkedAt": "2026-11-28T14:39:56.575606+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "4",
+            "away": "5"
+          },
+          "FALTES": {
+            "home": "5",
+            "away": "11"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 5,
+          "away": 11
+        },
+        "header": {
+          "competition": "FEM 11 OR",
+          "season": "2026/2027",
+          "venue": "PISTA LA BOINA CERDANYOLA",
+          "dateTime": "28/11/2026 - 13:15",
+          "round": "JORNADA 10",
+          "referee1": "GRADOS MADRID, PATXI",
+          "rinkDelegate": "VICTOR CORDERO"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Delegat",
+              "name": "MORAS PUIG, EMMA"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "CORDERO MOLINA, VICTORIA"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "MARSOL TORRAS, MARC"
+            },
+            {
+              "role": "Delegat",
+              "name": "FALCONES FERRER, NURIA"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "COMA MELLADO, RAMON"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "4-5",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4789|152844": {
+      "status": "verified",
+      "fingerprint": "[2,16,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152844\"]",
+      "checkedAt": "2026-11-28T14:39:43.463309+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "2",
+            "away": "16"
+          },
+          "FALTES": {
+            "home": "6",
+            "away": "7"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "2"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 6,
+          "away": 7
+        },
+        "header": {
+          "competition": "ALEVÍ OR 8",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ MUNICIPAL DE VILASSAR DE MAR",
+          "dateTime": "28/11/2026 - 14:15",
+          "round": "JORNADA 10",
+          "referee1": "BOSCH LLOREDA, ORIOL",
+          "rinkDelegate": "ABAD MOREJON DE GIRON, JAUME"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "HERNAEZ CERDAN, GERARD"
+            },
+            {
+              "role": "Delegat",
+              "name": "FERNANDEZ NUÑEZ, ERICA"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "BUSQUETS FORTUNY, JORDI"
+            },
+            {
+              "role": "Delegat",
+              "name": "GUERRERO MARQUES, SAMUEL"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "2-16",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4789|152620": {
+      "status": "verified",
+      "fingerprint": "[20,2,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4789&vista=calendar&partido=152620\"]",
+      "checkedAt": "2026-11-28T14:39:36.190133+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "20",
+            "away": "2"
+          },
+          "FALTES": {
+            "home": "6",
+            "away": "2"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "1"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 6,
+          "away": 2
+        },
+        "header": {
+          "competition": "ALEVÍ OR 4",
+          "season": "2026/2027",
+          "venue": "MUNICIPAL D ESPORTS SANT CELONI",
+          "dateTime": "28/11/2026 - 14:15",
+          "round": "JORNADA 10",
+          "referee1": "HORCAS GONZALEZ, ARNAU",
+          "timekeeper": "CABELLO GÓMEZ, ÁLEX",
+          "rinkDelegate": "CABELLO GÓMEZ, ÁLEX"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Delegat",
+              "name": "CROUS BOU, ANNA"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "LESMES GRANDA, MEL"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "MOLINER MOLINA, BRUNO"
+            },
+            {
+              "role": "Delegat",
+              "name": "GUTIERREZ LÓPEZ, SERGI"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "ARCHS VEHÍ, IGNASI"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "20-2",
             "fouls": "0-0"
           }
         ],
