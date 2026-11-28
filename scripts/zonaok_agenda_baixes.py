@@ -9,14 +9,15 @@ def key(r):
     return (*[norm(r.get(k)) for k in ('competition','home','away')],r.get('iso'),r.get('time'))
 def remove(doc,manifest,prior=None):
     if doc.get('season')!=manifest.get('season'):raise ValueError('season mismatch')
-    approved={tuple(k) for k in manifest['fixtures']}
+    confirmed_absent={tuple(k) for k in manifest.get("confirmedAbsentFixtures",[])}
+    approved={tuple(k) for k in manifest['fixtures']} | confirmed_absent
     kept=[];removed=[];review=[];found=set()
     for r in doc['matches']:
         k=key(r)
         if k not in approved:
             kept.append(r);continue
         found.add(k)
-        if not invalid_fixture_team(r) or any(r.get(f) is not None for f in ('homeScore','awayScore')) or r.get('actaState')=='available':
+        if (k not in confirmed_absent and not invalid_fixture_team(r)) or any(r.get(f) is not None for f in ('homeScore','awayScore')) or r.get('actaState')=='available':
             kept.append(r);review.append(r);continue
         removed.append(r)
     old_removed=(prior or {}).get('removedRows',[])

@@ -18,4 +18,16 @@ class Withdrawn(unittest.TestCase):
         self.assertFalse(invalid_fixture_team(good))
         self.assertFalse(invalid_fixture_team(dict(good,home="CLUB D'ESPORTS VENDRELL",venue='CLUB D ESPORTS VENDRELL')))
         self.assertFalse(invalid_fixture_team(dict(good,home='CH MATARÓ',venue='CH MATARÓ')))
+    def test_confirmed_absent_named_fixture(self):
+        a=dict(competition='VETERANS GIRONA',home='CLUB PATÍ MALGRAT GRUP ESCOBAR A',away='CH LLORET',iso='2027-01-05',time='22:15',homeScore=None,awayScore=None)
+        b=dict(a,iso='2027-02-02')
+        d=dict(season='2026/2027',matches=[a,b])
+        m=dict(season=d['season'],sourceRun=1,fixtures=[],confirmedAbsentFixtures=[list(key(a))])
+        out,r=remove(d,m)
+        self.assertEqual(out['matches'],[b])
+        self.assertEqual(r['removedNow'],1)
+        for protected in (dict(a,homeScore=2,awayScore=1),dict(a,actaState='available')):
+            out,r=remove(dict(d,matches=[protected,b]),m)
+            self.assertEqual(out['matches'],[protected,b])
+            self.assertEqual(len(r['review']),1)
 if __name__=='__main__':unittest.main()
