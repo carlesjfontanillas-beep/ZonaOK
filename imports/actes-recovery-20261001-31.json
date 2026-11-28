@@ -46,14 +46,14 @@
     "4820": "2026-11-28T04:40:34Z",
     "4821": "2026-11-28T04:40:38Z",
     "4822": "2026-11-28T04:40:41Z",
-    "4823": "2026-11-28T03:41:21Z",
-    "4824": "2026-11-28T03:49:33Z",
-    "4833": "2026-11-28T03:49:36Z",
-    "4834": "2026-11-28T03:49:39Z",
-    "4856": "2026-11-28T03:49:42Z",
-    "4860": "2026-11-28T03:49:45Z",
-    "5014": "2026-11-28T03:49:47Z",
-    "5015": "2026-11-28T03:49:50Z",
+    "4823": "2026-11-28T04:48:03Z",
+    "4824": "2026-11-28T04:48:06Z",
+    "4833": "2026-11-28T04:48:09Z",
+    "4834": "2026-11-28T04:48:12Z",
+    "4856": "2026-11-28T04:48:15Z",
+    "4860": "2026-11-28T04:48:18Z",
+    "5014": "2026-11-28T04:48:21Z",
+    "5015": "2026-11-28T04:48:23Z",
     "5027": "2026-11-28T03:49:53Z",
     "5045": "2026-11-28T03:57:32Z",
     "5046": "2026-11-28T03:57:35Z",
@@ -80,9 +80,9 @@
       "missingHistoricalIDs": 7,
       "missingHistoricalScores": 7,
       "historical": 2779,
-      "verified": 2444,
-      "historicalUnverified": 335,
-      "pendingWithID": 328
+      "verified": 2481,
+      "historicalUnverified": 298,
+      "pendingWithID": 291
     },
     "after": {
       "window": {
@@ -100,60 +100,60 @@
       "missingHistoricalIDs": 7,
       "missingHistoricalScores": 7,
       "historical": 2779,
-      "verified": 2444,
-      "historicalUnverified": 335,
-      "pendingWithID": 328
+      "verified": 2481,
+      "historicalUnverified": 298,
+      "pendingWithID": 291
     },
     "legacyIDs": 0,
     "calendarIDs": 0,
     "checks": [
       {
-        "league": "4813",
+        "league": "4823",
         "ids": 0,
         "status": "partial-identifiers",
-        "accepted": 81
+        "accepted": 76
       },
       {
-        "league": "4815",
+        "league": "4824",
         "ids": 0,
         "status": "partial-identifiers",
-        "accepted": 100
+        "accepted": 23
       },
       {
-        "league": "4816",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 82
-      },
-      {
-        "league": "4818",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 59
-      },
-      {
-        "league": "4819",
-        "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 18
-      },
-      {
-        "league": "4820",
+        "league": "4833",
         "ids": 0,
         "status": "partial-identifiers",
         "accepted": 20
       },
       {
-        "league": "4821",
+        "league": "4834",
         "ids": 0,
         "status": "partial-identifiers",
-        "accepted": 40
+        "accepted": 24
       },
       {
-        "league": "4822",
+        "league": "4856",
         "ids": 0,
-        "status": "partial-identifiers",
-        "accepted": 34
+        "status": "verified",
+        "accepted": 24
+      },
+      {
+        "league": "4860",
+        "ids": 0,
+        "status": "verified",
+        "accepted": 15
+      },
+      {
+        "league": "5014",
+        "ids": 0,
+        "status": "verified",
+        "accepted": 1
+      },
+      {
+        "league": "5015",
+        "ids": 0,
+        "status": "verified",
+        "accepted": 1
       }
     ],
     "untriedLeagues": 0
