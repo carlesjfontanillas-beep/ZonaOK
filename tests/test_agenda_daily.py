@@ -44,6 +44,25 @@ class DailyAgenda(unittest.TestCase):
         self.assertEqual(report['duplicatesRemoved'],0)
         self.assertEqual(len(out['matches']),7)
         self.assertEqual(report['conflicts'][0]['possible'],[('2026-11-29','10:15')])
+    def test_duplicate_pair_both_old_slots_changed(self):
+        a=dict(self.row(iso='2027-01-09'),time='13:55')
+        b=dict(a,iso='2027-01-10',time='10:15')
+        c=dict(a,iso='2027-01-11',time='19:30')
+        others=[self.row(iso='2026-12-01',home='X'+str(i),away='Y'+str(i)) for i in range(5)]
+        out,report=self.run_merge([a,b]+others,[c]+others)
+        self.assertEqual(report['duplicatesRemoved'],1)
+        self.assertEqual(report['scheduleChangeCount'],1)
+        self.assertEqual(report['unresolvedCount'],0)
+        fixed=[r for r in out['matches'] if r['home']==a['home']][0]
+        self.assertEqual((fixed['iso'],fixed['time']),(c['iso'],c['time']))
+        self.assertEqual(fixed['agendaScheduleChange']['previousIso'],b['iso'])
+        before={'schema':'zonaok-partits-total-v1','season':'2026/2027','matches':[a,b]+others}
+        self.assertEqual([e['event'] for e in detect(before,out,since=datetime(2026,11,27,9,tzinfo=timezone.utc),now=datetime(2026,11,28,9,1,tzinfo=timezone.utc),source='agenda')],['scheduleChange'])
+    def test_provisional_time_kept_until_official_change(self):
+        a=dict(self.row(iso='2027-01-09'),time='13:55')
+        out,report=self.run_merge([a],[a])
+        self.assertEqual(report['scheduleChangeCount'],0)
+        self.assertEqual(out['matches'][0]['time'],'13:55')
     def test_daily_madrid_dst(self):
         for month,utc_hour in [(1,9),(7,8)]:
             now=datetime(2026,month,10,utc_hour,12,tzinfo=timezone.utc)

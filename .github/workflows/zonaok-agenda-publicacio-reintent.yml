@@ -23,5 +23,5 @@ jobs:
           assert "if python -c" in block
           assert "python scripts/zonaok_agenda_daily.py merge" in block.split("# Primer validar")[0]
           PY
-      - name: Nova lectura i publicació real (reconciliar duplicats de la temporada)
+      - name: Nova lectura i publicació real (reprogramar duplicats sense horari coincident)
         run: gh workflow run zonaok-auto-agenda.yml --ref main -f scope=daily -f publish=true

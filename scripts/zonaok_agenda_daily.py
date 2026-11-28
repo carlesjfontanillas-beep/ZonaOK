@@ -48,18 +48,29 @@ def reconcile_duplicate_pairs(doc,incoming,cut,captured):
         if any(a.get('lastAgendaAt') and check_when(a['lastAgendaAt'])>check_when(captured) for a in group):continue
         if any(slot(a)!=slot(b) and (score_tuple(a) or a.get('actaState')=='available' or FINAL.search(clean(a.get('status'))) or LIVE.search(clean(a.get('status')))) for a in group):continue
         if k==('BCN BENJAMI PLATA 3','CH LES FRANQUESES','UNIO ESPORTIVA D HORTA B'):continue
-        # If no record already has the official slot, do not pick an arbitrary
-        # previous time for push notifications. The complete candidate set is
-        # retained for a separately confirmed repair.
-        if not any(slot(a)==slot(b) for a in group):continue
-        a=group[0]
+        # No need for a pre-existing exact slot. One official ordered pair
+        # in the entire season is sufficient, subject to the ID/score guards.
+        # For an alert, use the most recently observed old fixture, then the
+        # latest old slot as a deterministic fallback. Keep all old slots in audit.
+        a=max(group,key=lambda x:(x.get('lastAgendaAt') or '',slot(x)))
         specs.append({**{f:a[f] for f in ('competition','home','away')},
                       'oldIso':a['iso'],'oldTime':a['time'],'iso':b['iso'],'time':b['time'],
                       'approvedSlots':[list(slot(x)) for x in group],
                       'homeScore':None,'awayScore':None})
     if not specs:return doc,[],[]
     updated,audit=repair(doc,{'season':doc['season'],'sourceRun':os.environ.get('GITHUB_RUN_ID','daily'),'capturedAt':captured,'fixtures':specs})
-    return updated,[r for r in audit['details'] if r['status']=='merged'],[r for r in audit['details'] if r['status']=='review']
+    merged=[r for r in audit['details'] if r['status']=='merged']
+    by_pair={tuple(r['fixture']):r for r in merged}
+    for r in updated['matches']:
+        detail=by_pair.get(pair(r))
+        if not detail:continue
+        r['lastAgendaAt']=captured
+        if not any(slot(x)==slot(r) for x in detail['originalRows']):
+            previous=tuple(detail['old'])
+            r['agendaScheduleChange']={'previousIso':previous[0],'previousTime':previous[1],'capturedAt':captured,'proof':'unique-season-pair'}
+            detail['scheduleChanged']=True
+        detail['result']=copy.deepcopy(r)
+    return updated,merged,[r for r in audit['details'] if r['status']=='review']
 
 
 def merge(doc,packet):
@@ -94,7 +105,7 @@ def merge(doc,packet):
             i,j=os[0],ns[0];a,b=old[i],incoming[j]
             if no_conflict(a,b) and not score_tuple(a) and a.get('actaState')!='available' and not FINAL.search(clean(a.get('status'))) and not LIVE.search(clean(a.get('status'))):
                 links.append((i,j,'unique-season-pair'));used_old.add(i);used_new.add(j)
-    changes=[];recovered=[];conflicts=[];new=[]
+    changes=[{'competition':d['result']['competition'],'home':d['result']['home'],'away':d['result']['away'],'previousIso':d['old'][0],'previousTime':d['old'][1],'iso':d['result']['iso'],'time':d['result']['time'],'leagueId':d['result'].get('leagueId'),'matchId':d['result'].get('matchId'),'proof':'unique-season-pair'} for d in duplicate_repairs if d.get('scheduleChanged')];recovered=[];conflicts=[];new=[]
     for i,j,proof in links:
         a,b=old[i],incoming[j];r=rows[i]
         if not (recent(a,cut) or recent(b,cut)):continue
