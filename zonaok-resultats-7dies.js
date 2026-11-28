@@ -152,8 +152,8 @@
   const sameCategory = (a, b) => norm(a) === norm(b);
   const newest = (a, b) => String(b.capturedAt || b.scoreCapturedAt || '').localeCompare(String(a.capturedAt || a.scoreCapturedAt || ''));
 
-  let matches = [], periodRows = {past:[],upcoming:[]}, activePeriod = 'past', periodLoaded = false;
-  let publishedAt = '', pendingLoad = null, periodTitle, periodNote, pastButton, upcomingButton;
+  let matches = [], periodRows = {past:[],live:[],upcoming:[]}, activePeriod = 'past', periodLoaded = false;
+  let publishedAt = '', pendingLoad = null, periodTitle, periodNote, pastButton, liveButton, upcomingButton;
   let panel, navButton, clubFilter, categoryFilter, competitionFilter, content, counter, status, missingActaButton;
   let onlyMissingActa = false;
   const adminAllowed = () => window.ZonaOKAdminDevice?.allowed() === true;
@@ -198,33 +198,50 @@
       norm(a.competition).localeCompare(norm(b.competition), 'ca'));
   }
 
-  // Dues finestres mòbils de set dies, amb el rellotge de Madrid.
+  // Tres estats excloents. Si FECAPA no informa l'estat en viu, només
+  // inferim un partit en joc durant els primers 90 minuts des de l'hora prevista.
+  // Un partit sense resultat ni final confirmat no és automàticament acabat.
+  const LIVE_ESTIMATE_MINUTES = 90;
+  const cancelledStatus = /AJORNAT|APLAZADO|CANCEL|SUSPES|SUSPENDIDO|ANUL/;
+  const liveStatus = /EN JOC|EN DIRECTE|(?:^| )LIVE(?: |$)|IN PROGRESS|PLAYING|DESCANS|PRIMERA PART|SEGONA PART|EN JUEGO|EN CURSO|DESCANSO|PRIMER TIEMPO|SEGUNDO TIEMPO/;
+  const finalStatus = /(?:^| )(?:FINAL|FINALITZAT|FINALIZADO|ACABAT|TERMINAT|TERMINADO|FINISHED|FULL TIME)(?: |$)/;
   function rowsInPeriod(rows, period, now = new Date()) {
     const current = madridTimeKey(now);
+    const civilNow = new Date(current + ':00Z');
     const localShift = days => {
-      // Desplaçament de dates civils: manté l'hora local també en canvi CET/CEST.
-      const d = new Date(current + ':00Z');
+      const d = new Date(civilNow);
       d.setUTCDate(d.getUTCDate() + days);
       return d.toISOString().slice(0,16);
     };
-    const upcoming = period === 'upcoming', edge = localShift(upcoming ? 7 : -7);
-    return rows.filter(r => r && /^20\d\d-\d\d-\d\d$/.test(String(r.iso)) &&
-      /^\d{2}:\d{2}$/.test(String(r.time)) && r.home && r.away &&
-      (upcoming ? rowDateKey(r) > current && rowDateKey(r) <= edge &&
-        !/AJORNAT|APLAZADO|CANCEL|SUSPES|SUSPÈS|SUSPENDIDO/i.test(String(r.status || '')) :
-        rowDateKey(r) >= edge && rowDateKey(r) <= current &&
-        !/EN JOC|EN DIRECTE|LIVE|IN PROGRESS|PLAYING|DESCANS|PRIMERA PART|SEGONA PART/i.test(String(r.status || ''))))
-      .sort((a,b) => (upcoming ? rowDateKey(a).localeCompare(rowDateKey(b)) : rowDateKey(b).localeCompare(rowDateKey(a))) ||
-        norm(a.competition).localeCompare(norm(b.competition),'ca'));
+    const recentEdge = localShift(-7), futureEdge = localShift(7);
+    return rows.filter(r => {
+      if (!r || !/^20\d\d-\d\d-\d\d$/.test(String(r.iso)) ||
+          !/^\d{2}:\d{2}$/.test(String(r.time)) || !r.home || !r.away) return false;
+      const dt = rowDateKey(r), state = norm(r.status);
+      if (cancelledStatus.test(state)) return false;
+      const explicitLive = liveStatus.test(state);
+      const finished = finalStatus.test(state) || Boolean(r.finalDetectedAt) ||
+        (!explicitLive && validResult(r));
+      if (period === 'upcoming') return dt > current && dt <= futureEdge && !finished && !explicitLive;
+      if (period === 'past') return dt >= recentEdge && dt <= current && finished;
+      if (period !== 'live' || finished || dt > current) return false;
+      const elapsed = (civilNow - new Date(dt + ':00Z')) / 60000;
+      // No deixem indefinidament en joc un estat antic que no s'ha actualitzat.
+      return elapsed >= 0 && (explicitLive ? elapsed < 150 : elapsed < LIVE_ESTIMATE_MINUTES);
+    }).sort((a,b) => (period === 'past' ? rowDateKey(b).localeCompare(rowDateKey(a)) : rowDateKey(a).localeCompare(rowDateKey(b))) ||
+      norm(a.competition).localeCompare(norm(b.competition),'ca'));
   }
 
   function selectPeriod(period) {
-    activePeriod = period === 'upcoming' ? 'upcoming' : 'past';
-    const future = activePeriod === 'upcoming';
-    pastButton.setAttribute('aria-pressed',String(!future));
+    activePeriod = ['past','live','upcoming'].includes(period) ? period : 'past';
+    const future = activePeriod === 'upcoming', live = activePeriod === 'live';
+    pastButton.setAttribute('aria-pressed',String(activePeriod === 'past'));
+    liveButton.setAttribute('aria-pressed',String(live));
     upcomingButton.setAttribute('aria-pressed',String(future));
-    periodTitle.textContent = future ? 'Pròxims partits' : 'Partits recents';
-    periodNote.textContent = future ? 'Pròxims 7 dies · Més propers primer' : 'Darrers 7 dies · Més recents primer';
+    periodTitle.textContent = future ? 'Pròxims partits' : live ? 'Partits en joc' : 'Partits recents';
+    periodNote.textContent = future ? 'Pròxims 7 dies · Més propers primer' :
+      live ? 'Partits en curs · Horari estimat si no hi ha estat oficial' :
+      'Darrers 7 dies · Partits finalitzats';
     syncMissingActa();
     if(!periodLoaded)return;
     matches = periodRows[activePeriod];
@@ -321,6 +338,10 @@
     const center = make('div', 'middle');
     const score = activePeriod !== 'upcoming' && validResult(row) ? `${Number(row.homeScore)} : ${Number(row.awayScore)}` : '– : –';
     center.append(make('strong', 'score', score));
+    if(activePeriod==='live'){
+      const label=make('small','zok-recent-live',liveStatus.test(norm(row.status))?'En joc':'En joc aprox.');
+      center.append(label);
+    }
     teams.append(buildTeam(row.home, row.homeLogo, row, 'home'), center, buildTeam(row.away, row.awayLogo, row, 'away'));
     card.append(top, teams);
     return card;
@@ -384,9 +405,10 @@
     content.replaceChildren();
     if (!selected.length) {
       const period = activePeriod === 'upcoming' ? 'els pròxims 7 dies' : 'els darrers 7 dies';
-      content.append(make('div', 'empty', matches.length ?
-        'No hi ha partits amb aquests filtres durant '+period+'.' :
-        'No hi ha partits a l’Agenda durant '+period+'.'));
+      content.append(make('div', 'empty', activePeriod === 'live' ?
+        (matches.length ? 'No hi ha partits en joc amb aquests filtres.' : 'No hi ha partits en joc ara mateix.') :
+        (matches.length ? 'No hi ha partits amb aquests filtres durant '+period+'.' :
+        'No hi ha partits '+(activePeriod === 'past' ? 'finalitzats' : 'programats')+' durant '+period+'.')));
     } else for (const row of selected) content.append(buildCard(row));
     if (publishedAt) {
       try {
@@ -410,9 +432,9 @@
     pendingLoad=(async()=>{
       try {
         const data = await loadData();
-        const now=new Date(),past=rowsInPeriod(data.rows,'past',now),upcoming=rowsInPeriod(data.rows,'upcoming',now);
-        const combined=await enrichActes([...past,...upcoming]);
-        periodRows={past:combined.slice(0,past.length),upcoming:combined.slice(past.length)};
+        const now=new Date(),past=rowsInPeriod(data.rows,'past',now),live=rowsInPeriod(data.rows,'live',now),upcoming=rowsInPeriod(data.rows,'upcoming',now);
+        const combined=await enrichActes([...past,...live,...upcoming]);
+        periodRows={past:combined.slice(0,past.length),live:combined.slice(past.length,past.length+live.length),upcoming:combined.slice(past.length+live.length)};
         setTeamAliases(combined, data.agendaRows || []);
         periodLoaded=true;
         selectPeriod(activePeriod);
@@ -478,7 +500,9 @@
       #${ID} .zok-suggestions button{padding:9px 10px;border:0;border-radius:7px;background:transparent;color:#fff;text-align:left;font:inherit;font-size:12px;cursor:pointer}
       #${ID} .zok-suggestions button:hover,#${ID} .zok-suggestions button:focus{background:#2869c7;outline:0}
       #${ID} .zok-recent-period{font-size:12px;color:#b3cee1;margin:7px 0 14px}
-      #${ID} .zok-period-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0 10px}
+      #${ID} .zok-period-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:8px 0 10px}
+      body main.app #${ID} .zok-period-tabs.zok-scope-switch{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+      body main.app #${ID} .zok-period-tabs.zok-scope-switch button{font-size:clamp(10px,3.2vw,13px)!important}
       #${ID} .zok-period-tabs button{min-width:0;min-height:37px;padding:8px 4px;border:1px solid #719cba88;border-radius:11px;background:#173b55;color:#edf6ff;font:inherit;font-size:13px;font-weight:750;cursor:pointer}
       #${ID} .zok-period-tabs button[aria-pressed=true]{background:#fbc252;border-color:#fbc252;color:#10283c}
       #${ID} .zok-period-tabs button:focus-visible{outline:2px solid #fff;outline-offset:2px}
@@ -500,6 +524,7 @@
       #${ID} .zok-recent-card .crest img{width:23px;height:23px;object-fit:contain}
       #${ID} .zok-recent-card .middle{min-width:0;max-width:52px;width:52px;align-self:center;justify-items:center;gap:0}
       #${ID} .zok-recent-card .score{font-size:19px;line-height:1.1;white-space:nowrap}
+      #${ID} .zok-recent-card .zok-recent-live{font-size:8px;font-weight:800;line-height:1.1;color:#207b48;text-align:center;white-space:nowrap}
       #${ID} .zok-recent-stamp{font-size:11px;color:#b6d2e5;margin:0 0 10px;line-height:1.35}
       @media(max-width:370px){
         #${ID} .zok-recent-card{padding:4px 6px}
@@ -561,10 +586,10 @@
     content = make('div', 'cards');
     status = make('p', 'zok-recent-stamp', '');
     const tabs=make('div','zok-period-tabs zok-scope-switch');tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Període dels partits');
-    pastButton=make('button','','Darrers 7 dies');upcomingButton=make('button','','Pròximament');
-    for(const button of [pastButton,upcomingButton])button.type='button';
-    pastButton.onclick=()=>selectPeriod('past');upcomingButton.onclick=()=>selectPeriod('upcoming');
-    tabs.append(pastButton,upcomingButton);
+    pastButton=make('button','','Darrers 7 dies');liveButton=make('button','','En JOC');upcomingButton=make('button','','Pròximament');
+    for(const button of [pastButton,liveButton,upcomingButton])button.type='button';
+    pastButton.onclick=()=>selectPeriod('past');liveButton.onclick=()=>{selectPeriod('live');void openResults(true);};upcomingButton.onclick=()=>selectPeriod('upcoming');
+    tabs.append(pastButton,liveButton,upcomingButton);
     periodNote=make('p','zok-recent-period');
     panel.append(header,tabs,filterRow,periodNote,status,content);
     selectPeriod('past');
