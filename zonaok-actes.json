@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-28T16:23:06Z",
+  "generatedAt": "2026-11-28T16:27:01Z",
   "source": "FECAPA-PLAYWRIGHT",
   "fixtures": [
     {
@@ -52870,6 +52870,15 @@
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=calendar&partido=149035"
     },
     {
+      "league": "4790",
+      "id": "149305",
+      "iso": "2026-11-28",
+      "time": "16:00",
+      "home": "CH FIGUERES B",
+      "away": "GIRONA CLUB HOQUEI C",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=calendar&partido=149305"
+    },
+    {
       "league": "4814",
       "id": "156045",
       "iso": "2026-11-28",
@@ -52898,12 +52907,39 @@
     },
     {
       "league": "4787",
+      "id": "149855",
+      "iso": "2026-11-28",
+      "time": "16:00",
+      "home": "AUTO VIGATANA PATÍ VIC C",
+      "away": "ROTOTANK BIGUES I RIELLS B",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=149855"
+    },
+    {
+      "league": "4787",
       "id": "158016",
       "iso": "2026-11-28",
       "time": "16:00",
       "home": "CLUB ESPORTIU OLESA PATI B",
       "away": "AHC ANDORRA",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=158016"
+    },
+    {
+      "league": "4790",
+      "id": "149489",
+      "iso": "2026-11-28",
+      "time": "16:15",
+      "home": "HOQUEI CLUB CASTELLAR B",
+      "away": "CP MASQUEFA C",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=calendar&partido=149489"
+    },
+    {
+      "league": "4814",
+      "id": "156295",
+      "iso": "2026-11-28",
+      "time": "16:15",
+      "home": "CH MATARÓ B",
+      "away": "CLUB PATÍ VOLTREGÀ C",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4814&vista=calendar&partido=156295"
     }
   ]
 }
