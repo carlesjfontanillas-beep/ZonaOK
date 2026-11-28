@@ -1,0 +1,1750 @@
+{
+  "schema": "zonaok-approved-schedule-repair-report-v1",
+  "sourceRun": 46126797596,
+  "processed": 22,
+  "before": 12397,
+  "after": 12377,
+  "removed": 20,
+  "rescheduled": 0,
+  "merged": 20,
+  "alreadyCorrect": 0,
+  "review": 2,
+  "details": [
+    {
+      "fixture": [
+        "BCN PREBENJAMI PLATA 2",
+        "CH LES FRANQUESES B",
+        "CP FOLGUEROLES B"
+      ],
+      "old": [
+        "2026-11-28",
+        "10:00"
+      ],
+      "official": [
+        "2026-11-28",
+        "16:15"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "10:00",
+          "competition": "BCN PREBENJAMI PLATA 2",
+          "home": "CH LES FRANQUESES B",
+          "away": "CP FOLGUEROLES B",
+          "venue": "LES FRANQUESES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "16:15",
+          "competition": "BCN PREBENJAMI PLATA 2",
+          "home": "CH LES FRANQUESES B",
+          "away": "CP FOLGUEROLES B",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "LES FRANQUESES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-28",
+        "time": "16:15",
+        "competition": "BCN PREBENJAMI PLATA 2",
+        "home": "CH LES FRANQUESES B",
+        "away": "CP FOLGUEROLES B",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "LES FRANQUESES",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "JUVENIL PLATA 3",
+        "FUTBOL CLUB MARTINENC B B",
+        "FENIE ENERGIA CERDANYOLA CCH C"
+      ],
+      "old": [
+        "2026-11-28",
+        "11:15"
+      ],
+      "official": [
+        "2026-11-28",
+        "11:00"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "11:00",
+          "competition": "JUVENIL PLATA 3",
+          "home": "FUTBOL CLUB MARTINENC B B",
+          "away": "FENIE ENERGIA CERDANYOLA CCH C",
+          "venue": "PISTA LA CLOTA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "PRÈVIA",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "2026-11-27T21:28:35Z",
+          "lastAgendaAt": "2026-11-27T06:12:13Z",
+          "lastDirecteAt": "2026-11-27T21:28:35Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "11:15",
+          "competition": "JUVENIL PLATA 3",
+          "home": "FUTBOL CLUB MARTINENC B B",
+          "away": "FENIE ENERGIA CERDANYOLA CCH C",
+          "venue": "PISTA LA CLOTA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-22T21:30:02.082Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-28",
+        "time": "11:00",
+        "competition": "JUVENIL PLATA 3",
+        "home": "FUTBOL CLUB MARTINENC B B",
+        "away": "FENIE ENERGIA CERDANYOLA CCH C",
+        "venue": "PISTA LA CLOTA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "matchId": "",
+        "leagueId": "",
+        "actaUrl": "",
+        "status": "PRÈVIA",
+        "round": "",
+        "homeScore": null,
+        "awayScore": null,
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreUpdatedAt": "",
+        "scoreSource": "",
+        "directeUpdatedAt": "2026-11-27T21:28:35Z",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "lastDirecteAt": "2026-11-27T21:28:35Z"
+      }
+    },
+    {
+      "fixture": [
+        "FEM 11 PLATA",
+        "JOIERIA MONER SANT RAMON",
+        "AUTO VIGATANA PATI VIC"
+      ],
+      "old": [
+        "2026-11-28",
+        "13:00"
+      ],
+      "official": [
+        "2026-12-05",
+        "17:30"
+      ],
+      "removed": 0,
+      "originalRows": [
+        {
+          "iso": "2026-10-31",
+          "time": "12:30",
+          "competition": "FEM 11 PLATA",
+          "home": "JOIERIA MONER SANT RAMON",
+          "away": "AUTO VIGATANA PATÍ VIC",
+          "venue": "POLIESPORTIU DE VILAFRANCA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:00",
+          "competition": "FEM 11 PLATA",
+          "home": "JOIERIA MONER SANT RAMON",
+          "away": "AUTO VIGATANA PATÍ VIC",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "POLIESPORTIU DE VILAFRANCA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        },
+        {
+          "iso": "2026-12-05",
+          "time": "17:30",
+          "competition": "FEM 11 PLATA",
+          "home": "JOIERIA MONER SANT RAMON",
+          "away": "AUTO VIGATANA PATÍ VIC",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "POLIESPORTIU DE VILAFRANCA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        }
+      ],
+      "status": "review",
+      "reason": "another_slot_not_in_review"
+    },
+    {
+      "fixture": [
+        "FEM 15 PLATA",
+        "CLUB PATI VILA SANA B",
+        "AUTO VIGATANA PATI VIC"
+      ],
+      "old": [
+        "2026-11-28",
+        "13:00"
+      ],
+      "official": [
+        "2026-11-27",
+        "21:30"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-27",
+          "time": "21:30",
+          "competition": "FEM 15 PLATA",
+          "home": "CLUB PATÍ VILA-SANA B",
+          "away": "AUTO VIGATANA PATÍ VIC",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "POLIESPORTIU MUNICIPAL DE VILA-SANA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "13:00",
+          "competition": "FEM 15 PLATA",
+          "home": "CLUB PATÍ VILA-SANA B",
+          "away": "AUTO VIGATANA PATÍ VIC",
+          "venue": "POLIESPORTIU MUNICIPAL DE VILA-SANA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-27",
+        "time": "21:30",
+        "competition": "FEM 15 PLATA",
+        "home": "CLUB PATÍ VILA-SANA B",
+        "away": "AUTO VIGATANA PATÍ VIC",
+        "homeScore": 5,
+        "awayScore": 3,
+        "venue": "POLIESPORTIU MUNICIPAL DE VILA-SANA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "FINAL",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreSource": "Agenda",
+        "scoreUpdatedAt": "2026-11-28T08:40:05Z",
+        "finalDetectedAt": "2026-11-28T08:40:05Z",
+        "agendaRecoveredAt": "2026-11-28T08:40:05Z"
+      }
+    },
+    {
+      "fixture": [
+        "BCN BENJAMI PLATA 3",
+        "CH LES FRANQUESES",
+        "UNIO ESPORTIVA D HORTA B"
+      ],
+      "old": [
+        "2026-11-28",
+        "15:00"
+      ],
+      "official": [
+        "2026-11-28",
+        "17:00"
+      ],
+      "removed": 0,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "BCN BENJAMÍ PLATA 3",
+          "home": "CH LES FRANQUESES",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "LES FRANQUESES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-25T20:25:19Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "BCN BENJAMÍ PLATA 3",
+          "home": "CH LES FRANQUESES",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "LES FRANQUESES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        },
+        {
+          "iso": "2026-11-29",
+          "time": "10:45",
+          "competition": "BCN BENJAMÍ PLATA 3",
+          "home": "CH LES FRANQUESES",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "venue": "LES FRANQUESES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        }
+      ],
+      "status": "review",
+      "reason": "another_slot_not_in_review"
+    },
+    {
+      "fixture": [
+        "JUNIOR OR 5",
+        "FARNERS",
+        "CP RIUDEBITLLES"
+      ],
+      "old": [
+        "2026-11-28",
+        "15:00"
+      ],
+      "official": [
+        "2026-11-27",
+        "20:00"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-27",
+          "time": "20:00",
+          "competition": "JÚNIOR OR 5",
+          "home": "FARNERS",
+          "away": "CP RIUDEBITLLES",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLO SANT JORDI DESVALLS",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "JÚNIOR OR 5",
+          "home": "FARNERS",
+          "away": "CP RIUDEBITLLES",
+          "venue": "POLIESPORTIU MUNICIPAL LA NORIA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-27",
+        "time": "20:00",
+        "competition": "JÚNIOR OR 5",
+        "home": "FARNERS",
+        "away": "CP RIUDEBITLLES",
+        "homeScore": 3,
+        "awayScore": 6,
+        "venue": "PAVELLO SANT JORDI DESVALLS",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "FINAL",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreSource": "Agenda",
+        "scoreUpdatedAt": "2026-11-28T08:40:05Z",
+        "finalDetectedAt": "2026-11-28T08:40:05Z",
+        "agendaRecoveredAt": "2026-11-28T08:40:05Z"
+      }
+    },
+    {
+      "fixture": [
+        "JUVENIL PLATA 3",
+        "CH MATARO C",
+        "CLUB PATI CENTELLES"
+      ],
+      "old": [
+        "2026-11-28",
+        "15:15"
+      ],
+      "official": [
+        "2026-12-03",
+        "20:30"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "15:15",
+          "competition": "JUVENIL PLATA 3",
+          "home": "CH MATARÓ C",
+          "away": "CLUB PATÍ CENTELLES",
+          "venue": "CH MATARO",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        },
+        {
+          "iso": "2026-12-03",
+          "time": "20:30",
+          "competition": "JUVENIL PLATA 3",
+          "home": "CH MATARÓ C",
+          "away": "CLUB PATÍ CENTELLES",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "CH MATARO",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-12-03",
+        "time": "20:30",
+        "competition": "JUVENIL PLATA 3",
+        "home": "CH MATARÓ C",
+        "away": "CLUB PATÍ CENTELLES",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "CH MATARO",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "BCN BENJAMI BRONZE 2",
+        "CLUB HOQUEI PRAT",
+        "CLUB HOQUEI MOLINS DE REI"
+      ],
+      "old": [
+        "2026-11-28",
+        "16:00"
+      ],
+      "official": [
+        "2026-11-20",
+        "15:00"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-20",
+          "time": "15:00",
+          "competition": "BCN BENJAMÍ BRONZE 2",
+          "home": "CLUB HOQUEI PRAT",
+          "away": "CLUB HOQUEI MOLINS DE REI",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "CEM SAGNIER",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "16:00",
+          "competition": "BCN BENJAMÍ BRONZE 2",
+          "home": "CLUB HOQUEI PRAT",
+          "away": "CLUB HOQUEI MOLINS DE REI",
+          "venue": "CEM SAGNIER",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-20",
+        "time": "15:00",
+        "competition": "BCN BENJAMÍ BRONZE 2",
+        "home": "CLUB HOQUEI PRAT",
+        "away": "CLUB HOQUEI MOLINS DE REI",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "CEM SAGNIER",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "FEM 11 PLATA",
+        "CE SAGRERENC",
+        "FUTBOL CLUB MARTINENC"
+      ],
+      "old": [
+        "2026-11-28",
+        "16:30"
+      ],
+      "official": [
+        "2026-11-28",
+        "09:30"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "09:30",
+          "competition": "FEM 11 PLATA",
+          "home": "CE SAGRERENC",
+          "away": "FUTBOL CLUB MARTINENC",
+          "venue": "PISTA LA CLOTA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "PRÈVIA",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "2026-11-27T00:32:25Z",
+          "lastAgendaAt": "2026-11-27T06:12:13Z",
+          "lastDirecteAt": "2026-11-27T00:32:25Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "16:30",
+          "competition": "FEM 11 PLATA",
+          "home": "CE SAGRERENC",
+          "away": "FUTBOL CLUB MARTINENC",
+          "venue": "PEGASO PISTA COBERTA ESCOLA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-22T21:30:02.082Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-28",
+        "time": "09:30",
+        "competition": "FEM 11 PLATA",
+        "home": "CE SAGRERENC",
+        "away": "FUTBOL CLUB MARTINENC",
+        "venue": "PISTA LA CLOTA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "matchId": "",
+        "leagueId": "",
+        "actaUrl": "",
+        "status": "PRÈVIA",
+        "round": "",
+        "homeScore": null,
+        "awayScore": null,
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreUpdatedAt": "",
+        "scoreSource": "",
+        "directeUpdatedAt": "2026-11-27T00:32:25Z",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "lastDirecteAt": "2026-11-27T00:32:25Z"
+      }
+    },
+    {
+      "fixture": [
+        "FEM 15 OR",
+        "HOQUEI CLUB CASTELLAR",
+        "IGUALADA HC"
+      ],
+      "old": [
+        "2026-11-28",
+        "16:45"
+      ],
+      "official": [
+        "2026-11-28",
+        "17:30"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "16:45",
+          "competition": "FEM 15 OR",
+          "home": "HOQUEI CLUB CASTELLAR",
+          "away": "IGUALADA HC",
+          "venue": "PAVELLÓ DANI PEDROSA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:30",
+          "competition": "FEM 15 OR",
+          "home": "HOQUEI CLUB CASTELLAR",
+          "away": "IGUALADA HC",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ DANI PEDROSA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "PRÈVIA",
+          "lastAgendaAt": "2026-11-27T06:12:13Z",
+          "directeUpdatedAt": "2026-11-27T00:32:25Z",
+          "lastDirecteAt": "2026-11-27T00:32:25Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-28",
+        "time": "17:30",
+        "competition": "FEM 15 OR",
+        "home": "HOQUEI CLUB CASTELLAR",
+        "away": "IGUALADA HC",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "PAVELLÓ DANI PEDROSA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "PRÈVIA",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "directeUpdatedAt": "2026-11-27T00:32:25Z",
+        "lastDirecteAt": "2026-11-27T00:32:25Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "INFANTIL OR 2",
+        "CP RIUDEBITLLES B",
+        "GEIEG A"
+      ],
+      "old": [
+        "2026-11-28",
+        "17:00"
+      ],
+      "official": [
+        "2026-11-28",
+        "17:45"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "INFANTIL OR 2",
+          "home": "CP RIUDEBITLLES B",
+          "away": "GEIEG A",
+          "venue": "PAVELLO RIUDEBITLLES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:45",
+          "competition": "INFANTIL OR 2",
+          "home": "CP RIUDEBITLLES B",
+          "away": "GEIEG A",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLO RIUDEBITLLES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "PRÈVIA",
+          "lastAgendaAt": "2026-11-27T06:12:13Z",
+          "directeUpdatedAt": "2026-11-27T00:32:25Z",
+          "lastDirecteAt": "2026-11-27T00:32:25Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-28",
+        "time": "17:45",
+        "competition": "INFANTIL OR 2",
+        "home": "CP RIUDEBITLLES B",
+        "away": "GEIEG A",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "PAVELLO RIUDEBITLLES",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "PRÈVIA",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "directeUpdatedAt": "2026-11-27T00:32:25Z",
+        "lastDirecteAt": "2026-11-27T00:32:25Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "INFANTIL PLATA 3",
+        "CLUB HOQUEI CASTELLET",
+        "MARTINELIA MANLLEU C"
+      ],
+      "old": [
+        "2026-11-28",
+        "17:00"
+      ],
+      "official": [
+        "2026-11-28",
+        "16:00"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "16:00",
+          "competition": "INFANTIL PLATA 3",
+          "home": "CLUB HOQUEI CASTELLET",
+          "away": "MARTINELIA MANLLEU C",
+          "venue": "PAVELLÓ ESPORTIU MUNICIPAL CASTELLET",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:00",
+          "competition": "INFANTIL PLATA 3",
+          "home": "CLUB HOQUEI CASTELLET",
+          "away": "MARTINELIA MANLLEU C",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ ESPORTIU MUNICIPAL CASTELLET",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-25T20:25:19Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-28",
+        "time": "16:00",
+        "competition": "INFANTIL PLATA 3",
+        "home": "CLUB HOQUEI CASTELLET",
+        "away": "MARTINELIA MANLLEU C",
+        "venue": "PAVELLÓ ESPORTIU MUNICIPAL CASTELLET",
+        "homeLogo": "",
+        "awayLogo": "",
+        "matchId": "",
+        "leagueId": "",
+        "actaUrl": "",
+        "status": "",
+        "round": "",
+        "homeScore": null,
+        "awayScore": null,
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreUpdatedAt": "",
+        "scoreSource": "",
+        "directeUpdatedAt": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z"
+      }
+    },
+    {
+      "fixture": [
+        "TARRAGONA PREBENJAMI OR",
+        "CLUB HOQUEI VILA SECA B",
+        "REUS DEPORTIU A A"
+      ],
+      "old": [
+        "2026-11-28",
+        "17:15"
+      ],
+      "official": [
+        "2026-11-28",
+        "18:30"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "17:15",
+          "competition": "TARRAGONA PREBENJAMI OR",
+          "home": "CLUB HOQUEI VILA-SECA B",
+          "away": "REUS DEPORTIU A A",
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "18:30",
+          "competition": "TARRAGONA PREBENJAMI OR",
+          "home": "CLUB HOQUEI VILA-SECA B",
+          "away": "REUS DEPORTIU A A",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-28",
+        "time": "18:30",
+        "competition": "TARRAGONA PREBENJAMI OR",
+        "home": "CLUB HOQUEI VILA-SECA B",
+        "away": "REUS DEPORTIU A A",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE VILA-SECA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "BENJAMI PLATA GIRONA FASE1 GRUP B",
+        "CP JONQUERENC",
+        "CH LLORET CAFES CORNELLA A"
+      ],
+      "old": [
+        "2026-11-28",
+        "17:30"
+      ],
+      "official": [
+        "2026-07-31",
+        "17:30"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-07-31",
+          "time": "17:30",
+          "competition": "BENJAMÍ PLATA GIRONA FASE1 GRUP B",
+          "home": "CP JONQUERENC",
+          "away": "CH LLORET CAFÈS CORNELLÀ A",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ D ESPORTS LA JONQUERA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "17:30",
+          "competition": "BENJAMÍ PLATA GIRONA FASE1 GRUP B",
+          "home": "CP JONQUERENC",
+          "away": "CH LLORET CAFÈS CORNELLÀ A",
+          "venue": "PAVELLÓ D ESPORTS LA JONQUERA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-07-31",
+        "time": "17:30",
+        "competition": "BENJAMÍ PLATA GIRONA FASE1 GRUP B",
+        "home": "CP JONQUERENC",
+        "away": "CH LLORET CAFÈS CORNELLÀ A",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "PAVELLÓ D ESPORTS LA JONQUERA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "JUVENIL PLATA 3",
+        "GENERALI HC PALAU C",
+        "CEH SABADELL"
+      ],
+      "old": [
+        "2026-11-28",
+        "17:30"
+      ],
+      "official": [
+        "2026-11-29",
+        "12:30"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "17:30",
+          "competition": "JUVENIL PLATA 3",
+          "home": "GENERALI HC PALAU C",
+          "away": "CEH SABADELL",
+          "venue": "PISTA PALAU 2",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        },
+        {
+          "iso": "2026-11-29",
+          "time": "12:30",
+          "competition": "JUVENIL PLATA 3",
+          "home": "GENERALI HC PALAU C",
+          "away": "CEH SABADELL",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PISTA PALAU 2",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "PRÈVIA",
+          "lastAgendaAt": "2026-11-27T06:12:13Z",
+          "directeUpdatedAt": "2026-11-27T00:32:25Z",
+          "lastDirecteAt": "2026-11-27T00:32:25Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-29",
+        "time": "12:30",
+        "competition": "JUVENIL PLATA 3",
+        "home": "GENERALI HC PALAU C",
+        "away": "CEH SABADELL",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "PISTA PALAU 2",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "PRÈVIA",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "directeUpdatedAt": "2026-11-27T00:32:25Z",
+        "lastDirecteAt": "2026-11-27T00:32:25Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "ALEVI PLATA 8",
+        "HOQUEI CLUB CASTELLAR B",
+        "CP MASQUEFA C"
+      ],
+      "old": [
+        "2026-11-28",
+        "18:00"
+      ],
+      "official": [
+        "2026-11-28",
+        "16:15"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "16:15",
+          "competition": "ALEVÍ PLATA 8",
+          "home": "HOQUEI CLUB CASTELLAR B",
+          "away": "CP MASQUEFA C",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ DANI PEDROSA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "PRÈVIA",
+          "lastAgendaAt": "2026-11-27T06:12:13Z",
+          "directeUpdatedAt": "2026-11-26T21:41:20Z",
+          "lastDirecteAt": "2026-11-26T21:41:20Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "18:00",
+          "competition": "ALEVÍ PLATA 8",
+          "home": "HOQUEI CLUB CASTELLAR B",
+          "away": "CP MASQUEFA C",
+          "venue": "PAVELLÓ DANI PEDROSA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-28",
+        "time": "16:15",
+        "competition": "ALEVÍ PLATA 8",
+        "home": "HOQUEI CLUB CASTELLAR B",
+        "away": "CP MASQUEFA C",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "PAVELLÓ DANI PEDROSA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "PRÈVIA",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "directeUpdatedAt": "2026-11-26T21:41:20Z",
+        "lastDirecteAt": "2026-11-26T21:41:20Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "2 CATALANA FEMENINA GRUP A",
+        "OXFORD HC SALT",
+        "CLUB PATI MALGRAT GRUP ESCOBAR"
+      ],
+      "old": [
+        "2026-11-28",
+        "18:45"
+      ],
+      "official": [
+        "2026-12-04",
+        "21:00"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "18:45",
+          "competition": "2ª CATALANA FEMENINA GRUP A",
+          "home": "OXFORD HC SALT",
+          "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE SALT",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-22T21:30:02.082Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        },
+        {
+          "iso": "2026-12-04",
+          "time": "21:00",
+          "competition": "2ª CATALANA FEMENINA GRUP A",
+          "home": "OXFORD HC SALT",
+          "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE SALT",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-12-04",
+        "time": "21:00",
+        "competition": "2ª CATALANA FEMENINA GRUP A",
+        "home": "OXFORD HC SALT",
+        "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
+        "venue": "PAVELLÓ MUNICIPAL D ESPORTS DE SALT",
+        "homeLogo": "",
+        "awayLogo": "",
+        "matchId": "",
+        "leagueId": "",
+        "actaUrl": "",
+        "status": "",
+        "round": "",
+        "homeScore": null,
+        "awayScore": null,
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreUpdatedAt": "",
+        "scoreSource": "",
+        "directeUpdatedAt": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z"
+      }
+    },
+    {
+      "fixture": [
+        "JUVENIL OR 7",
+        "CP MASQUEFA",
+        "UNIO ESPORTIVA D HORTA B"
+      ],
+      "old": [
+        "2026-11-28",
+        "19:00"
+      ],
+      "official": [
+        "2026-11-28",
+        "17:45"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-28",
+          "time": "17:45",
+          "competition": "JUVENIL OR 7",
+          "home": "CP MASQUEFA",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "venue": "PAVELLÓ DE MASQUEFA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "19:00",
+          "competition": "JUVENIL OR 7",
+          "home": "CP MASQUEFA",
+          "away": "UNIÓ ESPORTIVA D'HORTA B",
+          "venue": "PAVELLÓ DE MASQUEFA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-21T13:05:03.840Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-28",
+        "time": "17:45",
+        "competition": "JUVENIL OR 7",
+        "home": "CP MASQUEFA",
+        "away": "UNIÓ ESPORTIVA D'HORTA B",
+        "venue": "PAVELLÓ DE MASQUEFA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "matchId": "",
+        "leagueId": "",
+        "actaUrl": "",
+        "status": "",
+        "round": "",
+        "homeScore": null,
+        "awayScore": null,
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreUpdatedAt": "",
+        "scoreSource": "",
+        "directeUpdatedAt": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z"
+      }
+    },
+    {
+      "fixture": [
+        "LCV GRUP A",
+        "SFERIC VETERANS",
+        "FCBETERANS"
+      ],
+      "old": [
+        "2026-11-27",
+        "21:50"
+      ],
+      "official": [
+        "2026-11-30",
+        "22:15"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-11-27",
+          "time": "21:50",
+          "competition": "LCV GRUP A",
+          "home": "SFERIC VETERANS",
+          "away": "FCBETERANS",
+          "venue": "POLIESPORTIU MUNICIPAL LA MAURINA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T05:36:54Z"
+        },
+        {
+          "iso": "2026-11-30",
+          "time": "22:15",
+          "competition": "LCV GRUP A",
+          "home": "SFERIC VETERANS",
+          "away": "FCBETERANS",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "POLIESPORTIU MUNICIPAL LA MAURINA",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": ""
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-11-30",
+        "time": "22:15",
+        "competition": "LCV GRUP A",
+        "home": "SFERIC VETERANS",
+        "away": "FCBETERANS",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "POLIESPORTIU MUNICIPAL LA MAURINA",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "lastAgendaAt": "2026-11-27T05:36:54Z"
+      }
+    },
+    {
+      "fixture": [
+        "INFANTIL OR 1",
+        "BARCA",
+        "CLUB HOQUEI VILA SECA C"
+      ],
+      "old": [
+        "2026-12-05",
+        "13:00"
+      ],
+      "official": [
+        "2026-12-11",
+        "19:00"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-12-05",
+          "time": "13:00",
+          "competition": "INFANTIL OR 1",
+          "home": "BARÇA",
+          "away": "CLUB HOQUEI VILA-SECA C",
+          "venue": "CAMPUS DE MUNDET UB",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T05:42:56Z"
+        },
+        {
+          "iso": "2026-12-11",
+          "time": "19:00",
+          "competition": "INFANTIL OR 1",
+          "home": "BARÇA",
+          "away": "CLUB HOQUEI VILA-SECA C",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "CAMPUS DE MUNDET UB",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-12-11",
+        "time": "19:00",
+        "competition": "INFANTIL OR 1",
+        "home": "BARÇA",
+        "away": "CLUB HOQUEI VILA-SECA C",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "CAMPUS DE MUNDET UB",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    },
+    {
+      "fixture": [
+        "JUVENIL OR 6",
+        "CAPELLADES",
+        "CP SANT CELONI B"
+      ],
+      "old": [
+        "2026-12-20",
+        "11:00"
+      ],
+      "official": [
+        "2026-12-20",
+        "10:30"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-12-20",
+          "time": "10:30",
+          "competition": "JUVENIL OR 6",
+          "home": "CAPELLADES",
+          "away": "CP SANT CELONI B",
+          "venue": "PAVELLÓ MUNICIPAL CAPELLADES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        },
+        {
+          "iso": "2026-12-20",
+          "time": "11:00",
+          "competition": "JUVENIL OR 6",
+          "home": "CAPELLADES",
+          "away": "CP SANT CELONI B",
+          "venue": "PAVELLÓ MUNICIPAL CAPELLADES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-21T13:05:03.840Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-12-20",
+        "time": "10:30",
+        "competition": "JUVENIL OR 6",
+        "home": "CAPELLADES",
+        "away": "CP SANT CELONI B",
+        "venue": "PAVELLÓ MUNICIPAL CAPELLADES",
+        "homeLogo": "",
+        "awayLogo": "",
+        "matchId": "",
+        "leagueId": "",
+        "actaUrl": "",
+        "status": "",
+        "round": "",
+        "homeScore": null,
+        "awayScore": null,
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreUpdatedAt": "",
+        "scoreSource": "",
+        "directeUpdatedAt": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z"
+      }
+    },
+    {
+      "fixture": [
+        "BCN BENJAMI OR 5",
+        "CLUB HOQUEI VILASSAR",
+        "SANT CELONI"
+      ],
+      "old": [
+        "2027-01-16",
+        "16:45"
+      ],
+      "official": [
+        "2027-01-17",
+        "11:30"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2027-01-16",
+          "time": "16:45",
+          "competition": "BCN BENJAMÍ OR 5",
+          "home": "CLUB HOQUEI VILASSAR",
+          "away": "SANT CELONI",
+          "venue": "PAVELLÓ MUNICIPAL DE VILASSAR DE MAR",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-25T20:25:19Z"
+        },
+        {
+          "iso": "2027-01-17",
+          "time": "11:30",
+          "competition": "BCN BENJAMÍ OR 5",
+          "home": "CLUB HOQUEI VILASSAR",
+          "away": "SANT CELONI",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ MUNICIPAL DE VILASSAR DE MAR",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T06:12:13Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2027-01-17",
+        "time": "11:30",
+        "competition": "BCN BENJAMÍ OR 5",
+        "home": "CLUB HOQUEI VILASSAR",
+        "away": "SANT CELONI",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "PAVELLÓ MUNICIPAL DE VILASSAR DE MAR",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "lastAgendaAt": "2026-11-27T06:12:13Z",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z"
+      }
+    }
+  ]
+}

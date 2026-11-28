@@ -1,10 +1,10 @@
 {
   "schema": "zonaok-all-v1",
   "season": "2026/2027",
-  "publishedAt": "2026-11-28T08:45:09Z",
+  "publishedAt": "2026-11-28T08:52:57Z",
   "source": "FECAPA-PLAYWRIGHT",
   "kind": "resultats-7dies",
-  "agendaCount": 12397,
+  "agendaCount": 12377,
   "rows": [
     {
       "iso": "2026-11-21",
@@ -15297,6 +15297,50 @@
       "lastDirecteAt": "2026-11-27T21:28:35Z",
       "actaState": "available",
       "actaCheckedAt": "2026-11-27T11:46:31.917921+00:00"
+    },
+    {
+      "iso": "2026-11-27",
+      "time": "20:00",
+      "competition": "JÚNIOR OR 5",
+      "home": "FARNERS",
+      "away": "CP RIUDEBITLLES",
+      "homeScore": 3,
+      "awayScore": 6,
+      "venue": "PAVELLO SANT JORDI DESVALLS",
+      "homeLogo": "",
+      "awayLogo": "",
+      "leagueId": "",
+      "matchId": "",
+      "actaUrl": "",
+      "status": "FINAL",
+      "lastAgendaAt": "2026-11-27T06:12:13Z",
+      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+      "scoreSource": "Agenda",
+      "scoreUpdatedAt": "2026-11-28T08:40:05Z",
+      "finalDetectedAt": "2026-11-28T08:40:05Z",
+      "agendaRecoveredAt": "2026-11-28T08:40:05Z"
+    },
+    {
+      "iso": "2026-11-27",
+      "time": "21:30",
+      "competition": "FEM 15 PLATA",
+      "home": "CLUB PATÍ VILA-SANA B",
+      "away": "AUTO VIGATANA PATÍ VIC",
+      "homeScore": 5,
+      "awayScore": 3,
+      "venue": "POLIESPORTIU MUNICIPAL DE VILA-SANA",
+      "homeLogo": "",
+      "awayLogo": "",
+      "leagueId": "",
+      "matchId": "",
+      "actaUrl": "",
+      "status": "FINAL",
+      "lastAgendaAt": "2026-11-27T06:12:13Z",
+      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+      "scoreSource": "Agenda",
+      "scoreUpdatedAt": "2026-11-28T08:40:05Z",
+      "finalDetectedAt": "2026-11-28T08:40:05Z",
+      "agendaRecoveredAt": "2026-11-28T08:40:05Z"
     }
   ]
 }
