@@ -1,0 +1,66 @@
+name: ZonaOK - Corregir Sitges Capellades
+on:
+  push:
+    branches: [main]
+    paths: ['imports/agenda-sitges-capellades-confirmats.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: zonaok-confirmed-schedule-repairs
+  cancel-in-progress: false
+  queue: max
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validar fusió conservadora
+        run: |
+          python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
+          python -m unittest discover -s tests -p 'test_agenda_reparacio*.py' -v
+      - name: Conservar anada i tornada sense duplicats
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4 5 6 7 8; do
+            git fetch origin main
+            git reset --hard origin/main
+            python - <<'PY'
+          import sys,json
+          from pathlib import Path
+          sys.path.insert(0,'scripts')
+          from zonaok_agenda_reparacio_confirmats import repair,write,pair,slot
+          from zonaok_fecapa_unificat import CANONICAL,load_unified,write_compatibility
+          manifest=json.loads(Path('imports/agenda-sitges-capellades-confirmats.json').read_text())
+          doc=load_unified(CANONICAL)
+          result,report=repair(doc,manifest)
+          if report['review']==0:
+              for spec in manifest['fixtures']:
+                  matches=[r for r in result['matches'] if pair(r)==pair(spec)]
+                  assert len(matches)==1 and slot(matches[0])==slot(spec)
+              if result['matches']!=doc['matches']:
+                  write(CANONICAL,result)
+                  write_compatibility(result)
+          else:
+              report['publicationBlocked']=True
+          write('imports/agenda-sitges-capellades-resultat.json',report)
+          print(json.dumps({k:v for k,v in report.items() if k!='details'},ensure_ascii=False))
+          for d in report['details']:
+              print(json.dumps({k:v for k,v in d.items() if k not in ('originalRows','result')},ensure_ascii=False))
+          PY
+            git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/agenda-sitges-capellades-resultat.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'ZonaOK: conservar anada i tornada Sitges Capellades'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1

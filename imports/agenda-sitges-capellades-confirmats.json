@@ -1,0 +1,42 @@
+{
+  "schema": "zonaok-approved-schedule-repairs-v1",
+  "season": "2026/2027",
+  "sourceRun": 46129560187,
+  "capturedAt": "2026-11-28T09:21:43Z",
+  "fixtures": [
+    {
+      "competition": "2 CATALANA GRUP C",
+      "home": "CP SUBUR SITGES",
+      "away": "CAPELLADES",
+      "oldIso": "2026-12-20",
+      "oldTime": "20:00",
+      "iso": "2026-12-18",
+      "time": "20:45",
+      "approvedSlots": [
+        [
+          "2027-05-01",
+          "20:00"
+        ]
+      ],
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "competition": "2 CATALANA GRUP C",
+      "home": "CAPELLADES",
+      "away": "CP SUBUR SITGES",
+      "oldIso": "2026-12-20",
+      "oldTime": "17:00",
+      "iso": "2027-05-01",
+      "time": "17:00",
+      "approvedSlots": [
+        [
+          "2026-12-18",
+          "21:00"
+        ]
+      ],
+      "homeScore": null,
+      "awayScore": null
+    }
+  ]
+}
