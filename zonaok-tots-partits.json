@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T15:38:46Z",
+  "updatedAt": "2026-11-28T15:43:17Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T09:50:44Z",
@@ -142841,9 +142841,9 @@
       "venue": "LA SALLE",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "149216",
+      "leagueId": "4790",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=calendar&partido=149216",
       "status": "FINAL",
       "round": "",
       "homeScore": 5,
@@ -142854,7 +142854,9 @@
       "directeUpdatedAt": "2026-11-28T15:38:43Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T15:38:43Z",
-      "finalDetectedAt": "2026-11-28T15:22:03Z"
+      "finalDetectedAt": "2026-11-28T15:22:03Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T15:41:03.199133+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143027,9 +143029,9 @@
       "venue": "PISTA UE HORTA",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "158501",
+      "leagueId": "4804",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4804&vista=calendar&partido=158501",
       "status": "FINAL",
       "round": "",
       "homeScore": 0,
@@ -143040,7 +143042,9 @@
       "directeUpdatedAt": "2026-11-28T15:38:43Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T15:38:43Z",
-      "finalDetectedAt": "2026-11-28T15:38:43Z"
+      "finalDetectedAt": "2026-11-28T15:38:43Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T15:41:09.975933+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143115,7 +143119,8 @@
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T15:38:43Z",
       "finalDetectedAt": "2026-11-28T15:22:03Z",
-      "actaState": "pending"
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T15:41:17.066627+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143154,9 +143159,9 @@
       "venue": "COL·LEGI SANT IGNASI",
       "homeLogo": "",
       "awayLogo": "",
-      "leagueId": "",
-      "matchId": "",
-      "actaUrl": "",
+      "leagueId": "4782",
+      "matchId": "151053",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151053",
       "status": "FINAL",
       "lastAgendaAt": "2026-11-28T09:35:02Z",
       "directeUpdatedAt": "2026-11-28T15:38:43Z",
@@ -280215,8 +280220,8 @@
   "stats": {
     "total": 12186,
     "withScores": 5896,
-    "withActaLinks": 5854,
-    "verifiedActes": 5769
+    "withActaLinks": 5857,
+    "verifiedActes": 5772
   },
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
