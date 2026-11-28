@@ -96,15 +96,15 @@ async def resolve_match_url(browser, fixture):
         await page.goto(BASE + "?" + urlencode({"liga": league, "vista": "calendar"}), wait_until="domcontentloaded", timeout=30000)
         await page.wait_for_timeout(1800)
         home, away = norm(fixture.get("home")), norm(fixture.get("away"))
-        date = datetime.strptime(fixture["iso"], "%Y-%m-%d").strftime("%d/%m/%Y")
+        date = datetime.strptime(fixture["iso"], "%Y-%m-%d")
         matches = await page.locator("a[href*='partido=']").evaluate_all("""(anchors, wanted) => {
           const norm = s => (s || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toUpperCase().replace(/\\s+/g,' ').trim();
-          const out = new Set();
+          const dates = [wanted.dateLong, wanted.dateShort].map(norm);\n          const out = new Set();
           for (const a of anchors) {
             let n=a;
             for (let i=0; i<8 && n; i++, n=n.parentElement) {
               const t=norm(n.innerText);
-              if (t.includes(norm(wanted.date)) && t.includes(norm(wanted.home)) && t.includes(norm(wanted.away))) {
+              if (dates.some(d => t.includes(d)) && t.includes(norm(wanted.home)) && t.includes(norm(wanted.away))) {
                 const u=new URL(a.href, location.href), id=u.searchParams.get('partido'), lg=u.searchParams.get('liga');
                 if (id && lg===wanted.league) out.add(lg+'|'+id);
                 break;
@@ -112,7 +112,7 @@ async def resolve_match_url(browser, fixture):
             }
           }
           return [...out];
-        }""", {"date":date,"home":home,"away":away,"league":league})
+        }""", {"dateLong":date.strftime("%d/%m/%Y"),"dateShort":date.strftime("%d/%m"),"home":home,"away":away,"league":league})
         if len(matches) != 1: raise RuntimeError("fecapa_fixture_lookup_" + ("missing" if not matches else "ambiguous"))
         lg, mid = matches[0].split("|", 1)
         fixture["leagueId"], fixture["matchId"] = lg, mid
