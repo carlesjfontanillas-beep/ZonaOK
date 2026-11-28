@@ -1,0 +1,184 @@
+{
+  "schema": "zonaok-approved-schedule-repair-report-v1",
+  "sourceRun": 46129560187,
+  "processed": 2,
+  "before": 12347,
+  "after": 12344,
+  "removed": 3,
+  "rescheduled": 0,
+  "merged": 2,
+  "alreadyCorrect": 0,
+  "review": 0,
+  "details": [
+    {
+      "fixture": [
+        "2 CATALANA GRUP C",
+        "CP SUBUR SITGES",
+        "CAPELLADES"
+      ],
+      "old": [
+        "2026-12-20",
+        "20:00"
+      ],
+      "official": [
+        "2026-12-18",
+        "20:45"
+      ],
+      "removed": 1,
+      "originalRows": [
+        {
+          "iso": "2026-12-20",
+          "time": "20:00",
+          "competition": "2ª CATALANA GRUP C",
+          "home": "CP SUBUR SITGES",
+          "away": "CAPELLADES",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "POLIESPORTIU MUNICIPAL SITGES PINS VENS",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": ""
+        },
+        {
+          "iso": "2027-05-01",
+          "time": "20:00",
+          "competition": "2ª CATALANA GRUP C",
+          "home": "CP SUBUR SITGES",
+          "away": "CAPELLADES",
+          "venue": "POLIESPORTIU MUNICIPAL SITGES PINS VENS",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": "",
+          "lastAgendaAt": "2026-11-27T05:36:54Z"
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2026-12-18",
+        "time": "20:45",
+        "competition": "2ª CATALANA GRUP C",
+        "home": "CP SUBUR SITGES",
+        "away": "CAPELLADES",
+        "venue": "POLIESPORTIU MUNICIPAL SITGES PINS VENS",
+        "homeLogo": "",
+        "awayLogo": "",
+        "matchId": "",
+        "leagueId": "",
+        "actaUrl": "",
+        "status": "",
+        "round": "",
+        "homeScore": null,
+        "awayScore": null,
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "scoreUpdatedAt": "",
+        "scoreSource": "",
+        "directeUpdatedAt": "",
+        "lastAgendaAt": "2026-11-27T05:36:54Z"
+      }
+    },
+    {
+      "fixture": [
+        "2 CATALANA GRUP C",
+        "CAPELLADES",
+        "CP SUBUR SITGES"
+      ],
+      "old": [
+        "2026-12-20",
+        "17:00"
+      ],
+      "official": [
+        "2027-05-01",
+        "17:00"
+      ],
+      "removed": 2,
+      "originalRows": [
+        {
+          "iso": "2026-12-18",
+          "time": "21:00",
+          "competition": "2ª CATALANA GRUP C",
+          "home": "CAPELLADES",
+          "away": "CP SUBUR SITGES",
+          "venue": "PAVELLÓ MUNICIPAL CAPELLADES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "matchId": "",
+          "leagueId": "",
+          "actaUrl": "",
+          "status": "",
+          "round": "",
+          "homeScore": null,
+          "awayScore": null,
+          "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+          "scoreUpdatedAt": "",
+          "scoreSource": "",
+          "directeUpdatedAt": ""
+        },
+        {
+          "iso": "2026-12-20",
+          "time": "17:00",
+          "competition": "2ª CATALANA GRUP C",
+          "home": "CAPELLADES",
+          "away": "CP SUBUR SITGES",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ MUNICIPAL CAPELLADES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": "",
+          "lastAgendaAt": "2026-11-27T05:36:54Z"
+        },
+        {
+          "iso": "2027-05-01",
+          "time": "17:00",
+          "competition": "2ª CATALANA GRUP C",
+          "home": "CAPELLADES",
+          "away": "CP SUBUR SITGES",
+          "homeScore": null,
+          "awayScore": null,
+          "venue": "PAVELLÓ MUNICIPAL CAPELLADES",
+          "homeLogo": "",
+          "awayLogo": "",
+          "leagueId": "",
+          "matchId": "",
+          "actaUrl": "",
+          "status": ""
+        }
+      ],
+      "status": "merged",
+      "result": {
+        "iso": "2027-05-01",
+        "time": "17:00",
+        "competition": "2ª CATALANA GRUP C",
+        "home": "CAPELLADES",
+        "away": "CP SUBUR SITGES",
+        "homeScore": null,
+        "awayScore": null,
+        "venue": "PAVELLÓ MUNICIPAL CAPELLADES",
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "actaUrl": "",
+        "status": "",
+        "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+        "lastAgendaAt": "2026-11-27T05:36:54Z"
+      }
+    }
+  ]
+}

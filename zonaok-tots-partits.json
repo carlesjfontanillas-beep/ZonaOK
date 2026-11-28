@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T09:21:49Z",
+  "updatedAt": "2026-11-28T09:22:48Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T09:21:43Z",
@@ -174940,6 +174940,28 @@
     {
       "iso": "2026-12-18",
       "time": "20:45",
+      "competition": "2ª CATALANA GRUP C",
+      "home": "CP SUBUR SITGES",
+      "away": "CAPELLADES",
+      "venue": "POLIESPORTIU MUNICIPAL SITGES PINS VENS",
+      "homeLogo": "",
+      "awayLogo": "",
+      "matchId": "",
+      "leagueId": "",
+      "actaUrl": "",
+      "status": "",
+      "round": "",
+      "homeScore": null,
+      "awayScore": null,
+      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+      "scoreUpdatedAt": "",
+      "scoreSource": "",
+      "directeUpdatedAt": "",
+      "lastAgendaAt": "2026-11-27T05:36:54Z"
+    },
+    {
+      "iso": "2026-12-18",
+      "time": "20:45",
       "competition": "3ª CATALANA GRUP E",
       "home": "HC VALLS",
       "away": "IGUALADA HC B",
@@ -174980,27 +175002,6 @@
       "scoreSource": "",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-27T06:12:13Z"
-    },
-    {
-      "iso": "2026-12-18",
-      "time": "21:00",
-      "competition": "2ª CATALANA GRUP C",
-      "home": "CAPELLADES",
-      "away": "CP SUBUR SITGES",
-      "venue": "PAVELLÓ MUNICIPAL CAPELLADES",
-      "homeLogo": "",
-      "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
-      "status": "",
-      "round": "",
-      "homeScore": null,
-      "awayScore": null,
-      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
-      "scoreUpdatedAt": "",
-      "scoreSource": "",
-      "directeUpdatedAt": ""
     },
     {
       "iso": "2026-12-18",
@@ -187861,23 +187862,6 @@
     {
       "iso": "2026-12-20",
       "time": "17:00",
-      "competition": "2ª CATALANA GRUP C",
-      "home": "CAPELLADES",
-      "away": "CP SUBUR SITGES",
-      "homeScore": null,
-      "awayScore": null,
-      "venue": "PAVELLÓ MUNICIPAL CAPELLADES",
-      "homeLogo": "",
-      "awayLogo": "",
-      "leagueId": "",
-      "matchId": "",
-      "actaUrl": "",
-      "status": "",
-      "lastAgendaAt": "2026-11-27T05:36:54Z"
-    },
-    {
-      "iso": "2026-12-20",
-      "time": "17:00",
       "competition": "ALEVÍ OR 2",
       "home": "CH FIGUERES A",
       "away": "CE NOIA FREIXENET B",
@@ -189165,22 +189149,6 @@
       "scoreSource": "",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-27T06:12:13Z"
-    },
-    {
-      "iso": "2026-12-20",
-      "time": "20:00",
-      "competition": "2ª CATALANA GRUP C",
-      "home": "CP SUBUR SITGES",
-      "away": "CAPELLADES",
-      "homeScore": null,
-      "awayScore": null,
-      "venue": "POLIESPORTIU MUNICIPAL SITGES PINS VENS",
-      "homeLogo": "",
-      "awayLogo": "",
-      "leagueId": "",
-      "matchId": "",
-      "actaUrl": "",
-      "status": ""
     },
     {
       "iso": "2026-12-20",
@@ -272626,7 +272594,9 @@
       "leagueId": "",
       "matchId": "",
       "actaUrl": "",
-      "status": ""
+      "status": "",
+      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+      "lastAgendaAt": "2026-11-27T05:36:54Z"
     },
     {
       "iso": "2027-05-01",
@@ -273309,28 +273279,6 @@
       "scoreSource": "",
       "directeUpdatedAt": "",
       "lastAgendaAt": "2026-11-27T06:12:13Z"
-    },
-    {
-      "iso": "2027-05-01",
-      "time": "20:00",
-      "competition": "2ª CATALANA GRUP C",
-      "home": "CP SUBUR SITGES",
-      "away": "CAPELLADES",
-      "venue": "POLIESPORTIU MUNICIPAL SITGES PINS VENS",
-      "homeLogo": "",
-      "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
-      "status": "",
-      "round": "",
-      "homeScore": null,
-      "awayScore": null,
-      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
-      "scoreUpdatedAt": "",
-      "scoreSource": "",
-      "directeUpdatedAt": "",
-      "lastAgendaAt": "2026-11-27T05:36:54Z"
     },
     {
       "iso": "2027-05-01",
@@ -283036,7 +282984,7 @@
     }
   ],
   "stats": {
-    "total": 12347,
+    "total": 12344,
     "withScores": 5780,
     "withActaLinks": 5712,
     "verifiedActes": 5630
