@@ -1,13 +1,13 @@
 {
   "schema": "zonaok-withdrawn-fixtures-report-v1",
   "sourceRun": 46126797596,
-  "checkedAt": "2026-11-28T08:55:29Z",
-  "approved": 22,
-  "before": 12377,
-  "after": 12355,
-  "removedNow": 22,
-  "removedTotal": 22,
-  "resolved": 22,
+  "checkedAt": "2026-11-28T09:40:16Z",
+  "approved": 23,
+  "before": 12189,
+  "after": 12188,
+  "removedNow": 1,
+  "removedTotal": 23,
+  "resolved": 23,
   "review": [],
   "notFound": [],
   "removedRows": [
@@ -472,6 +472,28 @@
       "scoreUpdatedAt": "",
       "scoreSource": "",
       "directeUpdatedAt": ""
+    },
+    {
+      "iso": "2027-01-05",
+      "time": "22:15",
+      "competition": "VETERANS GIRONA",
+      "home": "CLUB PATÍ MALGRAT GRUP ESCOBAR A",
+      "away": "CH LLORET",
+      "venue": "PAVELLÓ MUNICIPAL MALGRAT",
+      "homeLogo": "",
+      "awayLogo": "",
+      "matchId": "",
+      "leagueId": "",
+      "actaUrl": "",
+      "status": "",
+      "round": "",
+      "homeScore": null,
+      "awayScore": null,
+      "agendaUpdatedAt": "2026-11-23T16:33:40.914Z",
+      "scoreUpdatedAt": "",
+      "scoreSource": "",
+      "directeUpdatedAt": "",
+      "lastAgendaAt": "2026-11-25T20:25:19Z"
     }
   ]
 }
