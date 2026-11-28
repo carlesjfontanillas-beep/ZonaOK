@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       test_scenario:
-        description: "Prova buida o flux complet d’un partit fictici Barça NC M"
+        description: "Flux d’avisos"
         required: true
         type: choice
         options:
@@ -13,6 +13,7 @@ on:
           - barca_nc
           - production
           - scheduled_now
+          - semireal_barca_voltrega
         default: empty
       before_sha:
         type: string
@@ -115,6 +116,39 @@ jobs:
           token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
           # Pass credentials via environment, never persist or print them.
           ZONAOK_PUSH_TOKEN="$token" python scripts/zonaok_push_transport.py push-batch.json
+      - name: Preparar incidències semi reals Barça–Voltregà
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario == 'semireal_barca_voltrega' }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+          now = datetime.now(ZoneInfo('Europe/Madrid'))
+          fixture = {
+              'internalId': 'fecapa:2026-11-27:barcelona-voltrega-masies',
+              'iso': now.date().isoformat(),
+              'time': (now - timedelta(minutes=45)).strftime('%H:%M'),
+              'competition': 'NACIONAL CATALANA MASCULINA',
+              'home': 'FC BARCELONA',
+              'away': 'CLUB PATÍ VOLTREGÀ - MASIES',
+              'leagueId': '', 'matchId': ''
+          }
+          events = [
+              ('goal','P1','04:00','FC BARCELONA','1-0'),
+              ('goal','P1','12:00','CLUB PATÍ VOLTREGÀ - MASIES','1-1'),
+              ('card','P1','16:00','CLUB PATÍ VOLTREGÀ - MASIES',''),
+              ('goal','P2','08:00','FC BARCELONA','2-1'),
+              ('directFoul','P2','13:00','FC BARCELONA',''),
+              ('goal','P2','17:00','FC BARCELONA','3-1'),
+              ('goal','P2','20:00','FC BARCELONA','4-1'),
+          ]
+          observed = datetime.now().astimezone().isoformat()
+          incidents = [{'event':e,'period':p,'matchClock':t,'team':team,'player':'','score':score,'ordinal':1,'observedAt':observed} for e,p,t,team,score in events]
+          payload = {'schema':'zonaok-push-live-incidents-v1','season':'2026/2027','matches':[{'fixture':fixture,'observedAt':observed,'startedNow':False,'incidents':incidents}]}
+          with open('push-live-incidents.json','w',encoding='utf-8') as f: json.dump(payload,f,ensure_ascii=False)
+          print('Incidències preparades:',len(incidents))
+          PY
       - name: Seleccionar partits amb preferències d’incidències actives
         if: ${{ inputs.test_scenario == 'barca_nc' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe') }}
         shell: bash
@@ -176,7 +210,7 @@ jobs:
             python scripts/zonaok_push_live_incidents.py capture --input push-live-selection.json --started push-detection.json --output push-live-incidents.json
           fi
       - name: Enviar incidències detectades pel canal habitual
-        if: ${{ inputs.test_scenario == 'barca_nc' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe') }}
+        if: ${{ inputs.test_scenario == 'barca_nc' || inputs.test_scenario == 'semireal_barca_voltrega' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe') }}
         shell: bash
         run: |
           set -euo pipefail
