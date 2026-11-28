@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T15:18:33.819707+00:00",
+  "capturedAt": "2026-11-28T15:23:25.696351+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -13607,8 +13607,8 @@
       "competition": "INFANTIL PLATA",
       "leagueId": "4787",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=clasificaciones",
-      "capturedAt": "2026-11-28T14:55:42.537722+00:00",
-      "standingsAt": "2026-11-28T14:55:42.537722+00:00",
+      "capturedAt": "2026-11-28T15:23:25.696351+00:00",
+      "standingsAt": "2026-11-28T15:23:25.696351+00:00",
       "standings": [
         {
           "pos": "1",
@@ -13681,6 +13681,29 @@
         },
         {
           "pos": "4",
+          "team": "UEH BARBERÀ A",
+          "teamId": "11569",
+          "teamLogo": "/fecapa/images/logos_clubes/233.png",
+          "played": "9",
+          "points": "21",
+          "gf": "63",
+          "ga": "21",
+          "difference": "42",
+          "stats": {
+            "PTS": "21",
+            "PJ": "9",
+            "PG": "7",
+            "PE": "0",
+            "PP": "2",
+            "GF": "63",
+            "GC": "21",
+            "DIF": "42"
+          },
+          "shortTeam": "EHBA",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "5",
           "team": "INNOAESTHETICS HC SANT JUST C",
           "teamId": "12168",
           "teamLogo": "/fecapa/images/logos_clubes/288_1.png",
@@ -13703,47 +13726,24 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "5",
-          "team": "UEH BARBERÀ A",
-          "teamId": "11569",
-          "teamLogo": "/fecapa/images/logos_clubes/233.png",
-          "played": "8",
-          "points": "18",
-          "gf": "60",
-          "ga": "20",
-          "difference": "40",
-          "stats": {
-            "PTS": "18",
-            "PJ": "8",
-            "PG": "6",
-            "PE": "0",
-            "PP": "2",
-            "GF": "60",
-            "GC": "20",
-            "DIF": "40"
-          },
-          "shortTeam": "EHBA",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
           "pos": "6",
           "team": "VICIO PHC SANT CUGAT D",
           "teamId": "12133",
           "teamLogo": "/fecapa/images/logos_clubes/282.png",
-          "played": "9",
+          "played": "10",
           "points": "18",
-          "gf": "63",
-          "ga": "29",
-          "difference": "34",
+          "gf": "64",
+          "ga": "32",
+          "difference": "32",
           "stats": {
             "PTS": "18",
-            "PJ": "9",
+            "PJ": "10",
             "PG": "6",
             "PE": "0",
-            "PP": "3",
-            "GF": "63",
-            "GC": "29",
-            "DIF": "34"
+            "PP": "4",
+            "GF": "64",
+            "GC": "32",
+            "DIF": "32"
           },
           "shortTeam": "HSCD",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -18189,8 +18189,8 @@
       "competition": "ALEVÍ PLATA",
       "leagueId": "4790",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4790&vista=clasificaciones",
-      "capturedAt": "2026-11-28T15:18:33.819707+00:00",
-      "standingsAt": "2026-11-28T15:18:33.819707+00:00",
+      "capturedAt": "2026-11-28T15:23:25.696351+00:00",
+      "standingsAt": "2026-11-28T15:23:25.696351+00:00",
       "standings": [
         {
           "pos": "1",
@@ -18286,48 +18286,48 @@
         },
         {
           "pos": "5",
-          "team": "CP CONGRES D",
-          "teamId": "12027",
-          "teamLogo": "/fecapa/images/logos_clubes/246_1.png",
-          "played": "8",
+          "team": "SE LA SALLE BONANOVA C",
+          "teamId": "11837",
+          "teamLogo": "/fecapa/images/logos_clubes/727.png",
+          "played": "9",
           "points": "18",
-          "gf": "50",
-          "ga": "27",
-          "difference": "23",
+          "gf": "42",
+          "ga": "28",
+          "difference": "14",
           "stats": {
             "PTS": "18",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "6",
             "PE": "0",
-            "PP": "2",
-            "GF": "50",
-            "GC": "27",
-            "DIF": "23"
+            "PP": "3",
+            "GF": "42",
+            "GC": "28",
+            "DIF": "14"
           },
-          "shortTeam": "PCDD",
+          "shortTeam": "LSBC",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
           "pos": "6",
-          "team": "SE LA SALLE BONANOVA C",
-          "teamId": "11837",
-          "teamLogo": "/fecapa/images/logos_clubes/727.png",
-          "played": "8",
-          "points": "15",
-          "gf": "37",
-          "ga": "24",
-          "difference": "13",
+          "team": "CP CONGRES D",
+          "teamId": "12027",
+          "teamLogo": "/fecapa/images/logos_clubes/246_1.png",
+          "played": "9",
+          "points": "18",
+          "gf": "54",
+          "ga": "32",
+          "difference": "22",
           "stats": {
-            "PTS": "15",
-            "PJ": "8",
-            "PG": "5",
+            "PTS": "18",
+            "PJ": "9",
+            "PG": "6",
             "PE": "0",
             "PP": "3",
-            "GF": "37",
-            "GC": "24",
-            "DIF": "13"
+            "GF": "54",
+            "GC": "32",
+            "DIF": "22"
           },
-          "shortTeam": "LSBC",
+          "shortTeam": "PCDD",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -38889,14 +38889,14 @@
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 4",
-      "team": "INNOAESTHETICS HC SANT JUST C",
-      "shortTeam": "CSJC"
+      "team": "UEH BARBERÀ A",
+      "shortTeam": "EHBA"
     },
     {
       "leagueId": "4787",
       "group": "INFANTIL PLATA 4",
-      "team": "UEH BARBERÀ A",
-      "shortTeam": "EHBA"
+      "team": "INNOAESTHETICS HC SANT JUST C",
+      "shortTeam": "CSJC"
     },
     {
       "leagueId": "4787",
@@ -39909,14 +39909,14 @@
     {
       "leagueId": "4790",
       "group": "ALEVÍ PLATA 5",
-      "team": "CP CONGRES D",
-      "shortTeam": "PCDD"
+      "team": "SE LA SALLE BONANOVA C",
+      "shortTeam": "LSBC"
     },
     {
       "leagueId": "4790",
       "group": "ALEVÍ PLATA 5",
-      "team": "SE LA SALLE BONANOVA C",
-      "shortTeam": "LSBC"
+      "team": "CP CONGRES D",
+      "shortTeam": "PCDD"
     },
     {
       "leagueId": "4790",
