@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T15:11:05Z",
+  "updatedAt": "2026-11-28T15:15:33Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T09:50:44Z",
@@ -142667,9 +142667,9 @@
       "venue": "CEM SAGNIER",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "151220",
+      "leagueId": "4782",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151220",
       "status": "FINAL",
       "round": "",
       "homeScore": 2,
@@ -142680,7 +142680,9 @@
       "directeUpdatedAt": "2026-11-28T15:11:02Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T15:11:02Z",
-      "finalDetectedAt": "2026-11-28T15:11:02Z"
+      "finalDetectedAt": "2026-11-28T15:11:02Z",
+      "actaCheckedAt": "2026-11-28T15:13:16.983489+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -142691,9 +142693,9 @@
       "venue": "POLIESPORTIU RIPOLL",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "150942",
+      "leagueId": "4782",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=150942",
       "status": "FINAL",
       "round": "",
       "homeScore": 2,
@@ -142704,7 +142706,9 @@
       "directeUpdatedAt": "2026-11-28T15:11:02Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T15:11:02Z",
-      "finalDetectedAt": "2026-11-28T15:11:02Z"
+      "finalDetectedAt": "2026-11-28T15:11:02Z",
+      "actaCheckedAt": "2026-11-28T15:13:10.189506+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -143102,9 +143106,9 @@
       "venue": "POLIESPORTIU MUNICIPAL DE CALAFELL",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "158019",
+      "leagueId": "4787",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=158019",
       "status": "FINAL",
       "round": "",
       "homeScore": 3,
@@ -143115,7 +143119,9 @@
       "directeUpdatedAt": "2026-11-28T15:11:02Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T15:11:02Z",
-      "finalDetectedAt": "2026-11-28T15:11:02Z"
+      "finalDetectedAt": "2026-11-28T15:11:02Z",
+      "actaCheckedAt": "2026-11-28T15:13:30.649257+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -143192,9 +143198,9 @@
       "venue": "PAVELLÓ MUNICIPAL CALDES DE MALAVELLA",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "150681",
+      "leagueId": "4785",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4785&vista=calendar&partido=150681",
       "status": "FINAL",
       "round": "",
       "homeScore": 3,
@@ -143205,7 +143211,9 @@
       "directeUpdatedAt": "2026-11-28T15:11:02Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T15:11:02Z",
-      "finalDetectedAt": "2026-11-28T15:11:02Z"
+      "finalDetectedAt": "2026-11-28T15:11:02Z",
+      "actaCheckedAt": "2026-11-28T15:13:23.747873+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -280173,8 +280181,8 @@
   "stats": {
     "total": 12186,
     "withScores": 5883,
-    "withActaLinks": 5842,
-    "verifiedActes": 5758
+    "withActaLinks": 5846,
+    "verifiedActes": 5762
   },
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
