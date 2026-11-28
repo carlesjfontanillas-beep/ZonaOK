@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T16:04:00Z",
+  "updatedAt": "2026-11-28T16:05:07Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T09:50:44Z",
@@ -143187,9 +143187,9 @@
       "venue": "PAVELLÓ MUNICIPAL DE NAVARCLES",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "150878",
+      "leagueId": "4783",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4783&vista=calendar&partido=150878",
       "status": "FINAL",
       "round": "",
       "homeScore": 5,
@@ -143618,9 +143618,9 @@
       "venue": "PAVELLO PALAU PLEGAMANS",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "151893",
+      "leagueId": "4786",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151893",
       "status": "FINAL",
       "round": "",
       "homeScore": 2,
@@ -143631,7 +143631,9 @@
       "directeUpdatedAt": "2026-11-28T16:00:54Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:00:54Z",
-      "finalDetectedAt": "2026-11-28T16:00:54Z"
+      "finalDetectedAt": "2026-11-28T16:00:54Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:02:56.515512+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143642,9 +143644,9 @@
       "venue": "PAVELLÓ ESPORTIU MUNICIPAL ST CUGAT",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "151950",
+      "leagueId": "4786",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151950",
       "status": "FINAL",
       "round": "",
       "homeScore": 4,
@@ -143655,7 +143657,9 @@
       "directeUpdatedAt": "2026-11-28T16:00:54Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:00:54Z",
-      "finalDetectedAt": "2026-11-28T16:00:54Z"
+      "finalDetectedAt": "2026-11-28T16:00:54Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:03:03.337746+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -143870,9 +143874,9 @@
       "venue": "ESCOLA CLARET",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "156045",
+      "leagueId": "4814",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4814&vista=calendar&partido=156045",
       "status": "FINAL",
       "round": "",
       "homeScore": 2,
@@ -143883,7 +143887,9 @@
       "directeUpdatedAt": "2026-11-28T16:00:54Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:00:54Z",
-      "finalDetectedAt": "2026-11-28T15:55:20Z"
+      "finalDetectedAt": "2026-11-28T15:55:20Z",
+      "actaState": "available",
+      "actaCheckedAt": "2026-11-28T16:03:09.415813+00:00"
     },
     {
       "iso": "2026-11-28",
@@ -280258,8 +280264,8 @@
   "stats": {
     "total": 12186,
     "withScores": 5907,
-    "withActaLinks": 5862,
-    "verifiedActes": 5778
+    "withActaLinks": 5866,
+    "verifiedActes": 5781
   },
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",

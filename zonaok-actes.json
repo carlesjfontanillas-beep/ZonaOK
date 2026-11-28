@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-11-28T16:04:00Z",
+  "generatedAt": "2026-11-28T16:05:10Z",
   "source": "FECAPA-PLAYWRIGHT",
   "fixtures": [
     {
@@ -52708,6 +52708,15 @@
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4782&vista=calendar&partido=151053"
     },
     {
+      "league": "4783",
+      "id": "150878",
+      "iso": "2026-11-28",
+      "time": "15:00",
+      "home": "CH NAVARCLES",
+      "away": "HOQUEI CLARET",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4783&vista=calendar&partido=150878"
+    },
+    {
       "league": "4784",
       "id": "151335",
       "iso": "2026-11-28",
@@ -52760,6 +52769,33 @@
       "home": "CAMBRILS CH",
       "away": "HOQUEI CLUB ALPICAT D",
       "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4787&vista=calendar&partido=157922"
+    },
+    {
+      "league": "4786",
+      "id": "151893",
+      "iso": "2026-11-28",
+      "time": "15:45",
+      "home": "GENERALI HC PALAU C",
+      "away": "IGUALADA HC C",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151893"
+    },
+    {
+      "league": "4786",
+      "id": "151950",
+      "iso": "2026-11-28",
+      "time": "15:45",
+      "home": "VICIO PHC SANT CUGAT A",
+      "away": "CLUB PATÍ VOLTREGÀ B",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151950"
+    },
+    {
+      "league": "4814",
+      "id": "156045",
+      "iso": "2026-11-28",
+      "time": "16:00",
+      "home": "HOQUEI CLARET B",
+      "away": "CP CONGRES C",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4814&vista=calendar&partido=156045"
     }
   ]
 }

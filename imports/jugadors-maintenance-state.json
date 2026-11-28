@@ -433152,7 +433152,7 @@
     "4779|148201": {
       "status": "pending",
       "fingerprint": "[4,5,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148201\"]",
-      "checkedAt": "2026-11-28T15:53:48.002043+00:00",
+      "checkedAt": "2026-11-28T16:03:29.371677+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148202": {
@@ -433311,7 +433311,7 @@
     "4779|148204": {
       "status": "pending",
       "fingerprint": "[1,10,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148204\"]",
-      "checkedAt": "2026-11-28T15:53:54.965215+00:00",
+      "checkedAt": "2026-11-28T16:03:36.983327+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148383": {
@@ -442858,6 +442858,246 @@
         }
       },
       "statsRevision": 4
+    },
+    "4786|151950": {
+      "status": "verified",
+      "fingerprint": "[4,1,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151950\"]",
+      "checkedAt": "2026-11-28T16:03:03.337746+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "4",
+            "away": "1"
+          },
+          "FALTES": {
+            "home": "8",
+            "away": "9"
+          },
+          "TARGETES BLAVES": {
+            "home": "2",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 8,
+          "away": 9
+        },
+        "header": {
+          "competition": "INFANTIL OR 2",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ ESPORTIU MUNICIPAL ST CUGAT",
+          "dateTime": "28/11/2026 - 15:45",
+          "round": "JORNADA 10",
+          "referee1": "CLOFENT CARRIQUE, EDUARD",
+          "rinkDelegate": "Raimon Casas"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "COLAIANNI, ANDRE ESTEBAN"
+            },
+            {
+              "role": "Delegat",
+              "name": "LOPEZ NIUBO, FRANCESC XAVIER"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "TORDERA RAMIREZ, JORDI"
+            },
+            {
+              "role": "Delegat",
+              "name": "BASAGAÑA MARTIN, MARC"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "GOMEZ CAÑIZARES, MARIA DEL MAR"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "4-1",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4814|156045": {
+      "status": "verified",
+      "fingerprint": "[2,3,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4814&vista=calendar&partido=156045\"]",
+      "checkedAt": "2026-11-28T16:03:09.415813+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "2",
+            "away": "3"
+          },
+          "FALTES": {
+            "home": "2",
+            "away": "1"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 2,
+          "away": 1
+        },
+        "header": {
+          "competition": "BCN PREBENJAMI PLATA 1",
+          "season": "2026/2027",
+          "venue": "ESCOLA CLARET",
+          "dateTime": "28/11/2026 - 16:00",
+          "round": "JORNADA 10",
+          "referee1": "VENTURA SERNA, ENRIC",
+          "rinkDelegate": "Maria Teresa Palou Besora 616977"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "ALONSO GIL, VICTOR"
+            },
+            {
+              "role": "Delegat",
+              "name": "BOSCHETTO, SILVANA"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "SERRALLONGA MERCADER, SUYESH"
+            },
+            {
+              "role": "Delegat",
+              "name": "JACA VIVES, PAU"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "LARA ROLDÁN, MOISÉS"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "2-3",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4786|151893": {
+      "status": "verified",
+      "fingerprint": "[2,4,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4786&vista=calendar&partido=151893\"]",
+      "checkedAt": "2026-11-28T16:02:56.515512+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "2",
+            "away": "4"
+          },
+          "FALTES": {
+            "home": "6",
+            "away": "8"
+          },
+          "TARGETES BLAVES": {
+            "home": "1",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 6,
+          "away": 8
+        },
+        "header": {
+          "competition": "INFANTIL OR 1",
+          "season": "2026/2027",
+          "venue": "PAVELLO PALAU PLEGAMANS",
+          "dateTime": "28/11/2026 - 15:45",
+          "round": "JORNADA 10",
+          "referee1": "GARCÍA CANO, ALEX",
+          "rinkDelegate": "BOIXADERA COSTA, MIQUEL"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "CAÑADO PORTELLA, MARC"
+            },
+            {
+              "role": "Delegat",
+              "name": "APARICIO FITE, IRMA"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "CARDENAS BERENGUER, ROGER"
+            },
+            {
+              "role": "2n entrenador",
+              "name": "MOLINA SOTERAS, SERGI"
+            },
+            {
+              "role": "Delegat",
+              "name": "ORTEGA ALCALA, SONIA"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "2-4",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4783|150878": {
+      "status": "pending",
+      "fingerprint": "[5,7,\"final\",null,\"https://www.hoqueipatins.fecapa.cat/?liga=4783&vista=calendar&partido=150878\"]",
+      "checkedAt": "2026-11-28T16:02:49.709132+00:00",
+      "statsAttemptRevision": 4
     }
   }
 }
