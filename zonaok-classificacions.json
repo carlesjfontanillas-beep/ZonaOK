@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-classificacions-v2",
-  "capturedAt": "2026-11-28T17:19:57.152976+00:00",
+  "capturedAt": "2026-11-28T17:25:20.389713+00:00",
   "competitions": {
     "4774:nacional-catalana-masculina": {
       "name": "NACIONAL CATALANA MASCULINA",
@@ -22528,8 +22528,8 @@
       "competition": "FEM 13 PLATA",
       "leagueId": "4805",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4805&vista=clasificaciones",
-      "capturedAt": "2026-11-28T12:42:44.041349+00:00",
-      "standingsAt": "2026-11-28T12:42:44.041349+00:00",
+      "capturedAt": "2026-11-28T17:25:20.389713+00:00",
+      "standingsAt": "2026-11-28T17:25:20.389713+00:00",
       "standings": [
         {
           "pos": "1",
@@ -22582,20 +22582,20 @@
           "team": "HCSENTMENAT",
           "teamId": "11704",
           "teamLogo": "/fecapa/images/logos_clubes/292_1.png",
-          "played": "8",
-          "points": "21",
-          "gf": "49",
-          "ga": "7",
-          "difference": "42",
+          "played": "9",
+          "points": "24",
+          "gf": "56",
+          "ga": "11",
+          "difference": "45",
           "stats": {
-            "PTS": "21",
-            "PJ": "8",
-            "PG": "7",
+            "PTS": "24",
+            "PJ": "9",
+            "PG": "8",
             "PE": "0",
             "PP": "1",
-            "GF": "49",
-            "GC": "7",
-            "DIF": "42"
+            "GF": "56",
+            "GC": "11",
+            "DIF": "45"
           },
           "shortTeam": "HCS",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -22605,20 +22605,20 @@
           "team": "CLUB PATI VILAFRANCA AKO",
           "teamId": "12319",
           "teamLogo": "/fecapa/images/logos_clubes/301.png",
-          "played": "7",
+          "played": "8",
           "points": "21",
-          "gf": "46",
-          "ga": "25",
-          "difference": "21",
+          "gf": "50",
+          "ga": "32",
+          "difference": "18",
           "stats": {
             "PTS": "21",
-            "PJ": "7",
+            "PJ": "8",
             "PG": "7",
             "PE": "0",
-            "PP": "0",
-            "GF": "46",
-            "GC": "25",
-            "DIF": "21"
+            "PP": "1",
+            "GF": "50",
+            "GC": "32",
+            "DIF": "18"
           },
           "shortTeam": "CPV",
           "shortTeamSource": "FECAPA-classificacions-vertical"
@@ -28926,11 +28926,35 @@
       "competition": "BCN PREBENJAMI BRONZE",
       "leagueId": "4815",
       "url": "https://www.hoqueipatins.fecapa.cat/?liga=4815&vista=clasificaciones",
-      "capturedAt": "2026-11-28T12:26:14.990875+00:00",
-      "standingsAt": "2026-11-28T12:26:14.990875+00:00",
+      "capturedAt": "2026-11-28T17:25:20.389713+00:00",
+      "standingsAt": "2026-11-28T17:25:20.389713+00:00",
       "standings": [
         {
           "pos": "1",
+          "team": "CPI LA SAGRERA D",
+          "teamId": "11910",
+          "teamLogo": "/fecapa/images/logos_clubes/398.png",
+          "played": "9",
+          "points": "21",
+          "gf": "29",
+          "ga": "11",
+          "difference": "18",
+          "stats": {
+            "PTS": "21",
+            "PJ": "9",
+            "PG": "7",
+            "PE": "0",
+            "PP": "2",
+            "GF": "29",
+            "GC": "11",
+            "DIF": "18",
+            "SAN": "0"
+          },
+          "shortTeam": "CPID",
+          "shortTeamSource": "FECAPA-classificacions-vertical"
+        },
+        {
+          "pos": "2",
           "team": "HOQUEI PATINS TONA B",
           "teamId": "12390",
           "teamLogo": "/fecapa/images/logos_clubes/296.png",
@@ -28954,7 +28978,7 @@
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
-          "pos": "2",
+          "pos": "3",
           "team": "CLUB PATÍ CENTELLES",
           "teamId": "11661",
           "teamLogo": "/fecapa/images/logos_clubes/243.png",
@@ -28975,30 +28999,6 @@
             "SAN": "0"
           },
           "shortTeam": "CPC",
-          "shortTeamSource": "FECAPA-classificacions-vertical"
-        },
-        {
-          "pos": "3",
-          "team": "CPI LA SAGRERA D",
-          "teamId": "11910",
-          "teamLogo": "/fecapa/images/logos_clubes/398.png",
-          "played": "8",
-          "points": "18",
-          "gf": "25",
-          "ga": "11",
-          "difference": "14",
-          "stats": {
-            "PTS": "18",
-            "PJ": "8",
-            "PG": "6",
-            "PE": "0",
-            "PP": "2",
-            "GF": "25",
-            "GC": "11",
-            "DIF": "14",
-            "SAN": "0"
-          },
-          "shortTeam": "CPID",
           "shortTeamSource": "FECAPA-classificacions-vertical"
         },
         {
@@ -29054,20 +29054,20 @@
           "team": "CHP SANT FELIU B",
           "teamId": "11967",
           "teamLogo": "/fecapa/images/logos_clubes/283.png",
-          "played": "8",
+          "played": "9",
           "points": "3",
           "gf": "5",
-          "ga": "29",
-          "difference": "-24",
+          "ga": "33",
+          "difference": "-28",
           "stats": {
             "PTS": "3",
-            "PJ": "8",
+            "PJ": "9",
             "PG": "1",
             "PE": "0",
-            "PP": "7",
+            "PP": "8",
             "GF": "5",
-            "GC": "29",
-            "DIF": "-24",
+            "GC": "33",
+            "DIF": "-28",
             "SAN": "0"
           },
           "shortTeam": "SAFB",
@@ -42345,6 +42345,12 @@
     {
       "leagueId": "4815",
       "group": "BCN PREBENJAMI BRONZE 1",
+      "team": "CPI LA SAGRERA D",
+      "shortTeam": "CPID"
+    },
+    {
+      "leagueId": "4815",
+      "group": "BCN PREBENJAMI BRONZE 1",
       "team": "HOQUEI PATINS TONA B",
       "shortTeam": "HPTB"
     },
@@ -42353,12 +42359,6 @@
       "group": "BCN PREBENJAMI BRONZE 1",
       "team": "CLUB PATÍ CENTELLES",
       "shortTeam": "CPC"
-    },
-    {
-      "leagueId": "4815",
-      "group": "BCN PREBENJAMI BRONZE 1",
-      "team": "CPI LA SAGRERA D",
-      "shortTeam": "CPID"
     },
     {
       "leagueId": "4815",
