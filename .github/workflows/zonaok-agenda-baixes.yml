@@ -1,0 +1,53 @@
+name: ZonaOK - Eliminar partits inexistents per baixa d'equip
+on:
+  push:
+    branches: [main]
+    paths: ['imports/agenda-baixes-20261128-confirmades.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: zonaok-agenda-baixes
+  cancel-in-progress: false
+  queue: max
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Proves de baixa i de conservació de dades
+        run: |
+          python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
+          python -m playwright install chromium
+          python -m unittest discover -s tests -p 'test_agenda_baixes.py' -v
+          python -m unittest discover -s tests -p 'test_agenda_dom_v5.py' -v
+      - name: Retirar només els registres confirmats, amb còpia d'auditoria
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4 5 6 7 8; do
+            git fetch origin main
+            git reset --hard origin/main
+            python scripts/zonaok_agenda_baixes.py
+            git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/agenda-baixes-20261128-resultat.json
+            if git diff --cached --quiet; then exit 0; fi
+            git commit -m 'ZonaOK: retirar partits inexistents amb pista com a equip'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+      - name: Informe d'auditoria
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zonaok-agenda-baixes
+          path: imports/agenda-baixes-20261128-resultat.json
+          if-no-files-found: warn

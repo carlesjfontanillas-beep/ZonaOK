@@ -259,7 +259,9 @@ JS_AGENDA = r"""() => {
       const cells=rowColumns(tr);if(!cells.length)continue;
       examined++;
       const homeName=choose(cells,home),awayName=choose(cells,away);
-      if(!homeName||!awayName||N(homeName)===N(awayName)){invalid++;invalidTeams++;continue;}
+      const venueName=choose(cells,venue);
+      const invalidTeam=name=>!N(name)||/^(?:PAVELLO|PABELLON|POLIESPORTIU|POLIDEPORTIVO|PISTA|MUNICIPAL D ESPORTS)(?: |$)/.test(N(name))||/^(?:DESCANSA|DESCANS|VACANT|VACANTE|BAIXA|RETIRAT|RETIRADO)$/.test(N(name))||(N(venueName)&&N(name)===N(venueName));
+      if(invalidTeam(homeName)||invalidTeam(awayName)||N(homeName)===N(awayName)){invalid++;invalidTeams++;continue;}
       const iso=isoDate(choose(cells,date)),start=time(choose(cells,hour));
       if(!iso||!start){invalid++;invalidDate++;continue;}
       const s=score(choose(cells,result));
@@ -572,8 +574,23 @@ def record_key(row):
     return '|'.join([row.get('iso',''),row.get('time',''),norm(row.get('competition')),norm(row.get('home')),norm(row.get('away'))])
 
 
+def invalid_fixture_team(row):
+    """A blank/withdrawn side is not a match; a sports venue is not a team."""
+    venue=norm(row.get('venue'))
+    for side in ('home','away'):
+        name=norm(row.get(side))
+        if not name or re.fullmatch(r'DESCANSA|DESCANS|VACANT|VACANTE|BAIXA|RETIRAT|RETIRADO',name):
+            return True
+        if re.match(r'^(?:PAVELLO|PABELLON|POLIESPORTIU|POLIDEPORTIVO|PISTA|MUNICIPAL D ESPORTS)(?: |$)',name):
+            return True
+        if venue and name==venue:
+            return True
+    return False
+
+
 def validate_row(row, mode):
     if not isinstance(row,dict):return False
+    if invalid_fixture_team(row):return False
     if not check_iso(row.get('iso')) or not check_time(row.get('time')): return False
     if not clean(row.get('home')) or not clean(row.get('away')) or (mode!='directe' and norm(row['home'])==norm(row['away'])):return False
     for k in ('homeScore','awayScore'):

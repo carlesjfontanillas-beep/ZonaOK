@@ -55,6 +55,16 @@ class TestAgendaV5DOM(unittest.TestCase):
         self.assertEqual(a['matchId'],'')
         self.assertEqual(a['leagueId'],'')
         self.assertEqual(result['counts']['sampleValidAttributes'][0]['param_game'],'1_-1_328_323_5043')
+    def test_withdrawn_team_is_never_replaced_by_venue(self):
+        page=self.browser.new_page()
+        page.set_content("""<table><tr><th>Competició</th><th>Data</th><th>Hora</th><th colspan="2">Local</th><th colspan="2">Visitant</th><th>Result.</th><th>Pista</th></tr>
+        <tr><td>PREBENJAMI PLATA GIRONA</td><td>29/11/2026</td><td>10:00</td><td></td><td>CP CALDES C</td><td></td><td></td><td></td><td>PAVELLÓ MUNICIPAL CALDES DE MALAVELLA</td></tr>
+        <tr><td>PREBENJAMI PLATA GIRONA</td><td>29/11/2026</td><td>10:00</td><td></td><td>CP CALDES C</td><td></td><td>PAVELLÓ MUNICIPAL CALDES DE MALAVELLA</td><td></td><td></td></tr>
+        <tr><td>PREBENJAMI PLATA GIRONA</td><td>29/11/2026</td><td>10:00</td><td></td><td>CP CALDES C</td><td></td><td>CH FIGUERES</td><td></td><td>PAVELLÓ MUNICIPAL CALDES DE MALAVELLA</td></tr></table>""")
+        result=page.evaluate(m.JS_AGENDA);page.close()
+        self.assertEqual(len(result['rows']),1)
+        self.assertEqual(result['rows'][0]['away'],'CH FIGUERES')
+        self.assertEqual(result['counts']['invalidTeams'],2)
     def test_agenda_ignores_even_official_match_links(self):
         page=self.browser.new_page()
         page.set_content(PAGE)

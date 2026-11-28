@@ -7,6 +7,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from zonaok_fecapa_unificat import (CANONICAL, SEASON, load_unified, norm, clean, score_tuple, check_iso, check_time, check_when, utc_now, write_compatibility, canonicalize, chromium_context)
 from zonaok_agenda_dates_review import capture
+from zonaok_fecapa_unificat import invalid_fixture_team
 
 MADRID=ZoneInfo('Europe/Madrid')
 EXCLUDED=re.compile(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',re.I)
@@ -16,7 +17,7 @@ def pair(r):return tuple(norm(r.get(k)) for k in ('competition','home','away'))
 def slot(r):return (r.get('iso'),r.get('time'))
 def key(r):return (*pair(r),*slot(r))
 def idpair(r):return tuple(clean(r.get(k)) for k in ('leagueId','matchId'))
-def safe(r):return all(pair(r)) and check_iso(r.get('iso')) and check_time(r.get('time')) and (not score_tuple(r) or all(0<=r[k]<=199 for k in ('homeScore','awayScore')))
+def safe(r):return not invalid_fixture_team(r) and all(pair(r)) and check_iso(r.get('iso')) and check_time(r.get('time')) and (not score_tuple(r) or all(0<=r[k]<=199 for k in ('homeScore','awayScore')))
 def no_conflict(a,b):
     return not any(x and y and x!=y for x,y in zip(idpair(a),idpair(b)))
 def recent(r,cut):return clean(r.get('iso'))>=cut
