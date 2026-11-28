@@ -1,7 +1,7 @@
 {
   "new": 0,
-  "updated": 99,
-  "unmatched": 2,
+  "updated": 114,
+  "unmatched": 3,
   "ambiguousOrInvalid": 0,
   "unchanged": 0,
   "unmatchedDetails": [
@@ -132,8 +132,216 @@
           "matchId": "151725"
         }
       ]
+    },
+    {
+      "reason": "no_unique_fixture",
+      "fecapa": {
+        "iso": "2026-11-28",
+        "time": "15:00",
+        "competition": "OK LIGA PLATA NORTE",
+        "home": "CHVS",
+        "away": "CDM",
+        "homeScore": 0,
+        "awayScore": 0,
+        "homeLogo": "",
+        "awayLogo": "",
+        "leagueId": "",
+        "matchId": "",
+        "status": ""
+      },
+      "sameTimeCandidates": [
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "1ª CATALANA FEMENINA GRUP A",
+          "home": "FARNERS",
+          "away": "CGM IGUALADA FEMENÍ HCP",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "3ª CATALANA GRUP C",
+          "home": "FENIE ENERGIA CERDANYOLA CCH",
+          "away": "UNIÓ ESPORTIVA D'HORTA",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "ALEVÍ OR 10",
+          "home": "REUS DEPORTIU C C",
+          "away": "CHP SANT FELIU",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "ALEVÍ PLATA 5",
+          "home": "SE LA SALLE BONANOVA C",
+          "away": "CP CONGRES D",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "ALEVÍ PLATA 8",
+          "home": "GENERALI HC PALAU D",
+          "away": "CP MANRESA B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "BCN BENJAMÍ OR 4",
+          "home": "CH CALDES RECAM LÀSER C",
+          "away": "CPI SANT IGNASI A",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "BCN BENJAMÍ PLATA 3",
+          "home": "CH MATARÓ B",
+          "away": "CLUB PATÍ MALGRAT GRUP ESCOBAR",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "BCN BENJAMÍ PLATA 4",
+          "home": "CP FOLGUEROLES A",
+          "away": "CPI LA SAGRERA E",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "BCN PB-INICIACIO 3",
+          "home": "UEH BARBERÀ",
+          "away": "HF SANT JOSEP SANT SADURNÍ B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "BCN PREBENJAMI BRONZE 4",
+          "home": "CLUB PATI TORRELLES",
+          "away": "MOLLET HC B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "BENJAMÍ PLATA GIRONA FASE1 GRUP B",
+          "home": "CH PALAFRUGELL D",
+          "away": "CH OLOT D",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "FEM 13 OR",
+          "home": "UNIÓ ESPORTIVA D'HORTA B",
+          "away": "FENIE ENERGIA CERDANYOLA CCH B",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "FEM 17 OR",
+          "home": "FENIE ENERGIA CERDANYOLA CCH A",
+          "away": "MOLLET HC A",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "INFANTIL OR 6",
+          "home": "CP CONGRÉS C",
+          "away": "REUS DEPORTIU A A",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "INFANTIL PLATA 4",
+          "home": "VICIO PHC SANT CUGAT D",
+          "away": "UEH BARBERÀ A",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "INFANTIL PLATA 7",
+          "home": "CLUB PATI CALAFELL C",
+          "away": "HOQUEI CLUB ALPICAT C",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "JÚNIOR OR 3",
+          "home": "CPI ESPANYOL",
+          "away": "REUS DEPORTIU A A",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "JÚNIOR PLATA 2",
+          "home": "CH NAVARCLES",
+          "away": "HOQUEI CLARET",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "JUVENIL OR 1",
+          "home": "IGUALADA HC B",
+          "away": "HOQUEI CASAL ESPLUGA",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "JUVENIL PLATA 4",
+          "home": "CP CALDES A",
+          "away": "CH LLORET CAFÈS CORNELLÀ",
+          "leagueId": "",
+          "matchId": ""
+        },
+        {
+          "iso": "2026-11-28",
+          "time": "15:00",
+          "competition": "PREBENJAMÍ PLATA-BRONZE F1",
+          "home": "CLUB HOQUEI CADÍ B",
+          "away": "PONS LLEIDA D",
+          "leagueId": "",
+          "matchId": ""
+        }
+      ]
     }
   ],
-  "legacyActes": 5831,
+  "legacyActes": 5835,
   "resultsLast7Days": 773
 }
