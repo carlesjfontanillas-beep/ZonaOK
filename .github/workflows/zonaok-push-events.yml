@@ -169,6 +169,7 @@ jobs:
           set -euo pipefail
           if [ -f push-test-live.json ]; then catalog=push-test-live.json; else catalog=push-after.json; fi
           python scripts/zonaok_push_live_incidents.py candidates --input "$catalog" --output push-live-candidates.json
+          python -c 'import json; print("Candidats d’incidències:", len(json.load(open("push-live-candidates.json"))["matches"]))'
           request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
           token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
           curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
