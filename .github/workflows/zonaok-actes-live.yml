@@ -52,29 +52,43 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          # Reload both the fixture catalog and the player master on every retry.
-          # Never overwrite concurrent Agenda, En directe or historical imports.
-          trap 'rm -rf data' EXIT
+          # Capture once. Preserve that snapshot outside the git working tree.
+          python -m unittest discover -s tests -p 'test_actes_live_publish.py' -v
+          work="$RUNNER_TEMP/actes-live-publish"
+          mkdir -p "$work/base/imports" "$work/captured/imports"
+          trap 'rm -rf data "$work"' EXIT
+          git fetch origin main
+          git reset --hard origin/main
+          for p in zonaok-tots-partits.json imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json imports/actes-live-state.json; do
+            if [ -f "$p" ]; then cp "$p" "$work/base/$p"; fi
+          done
+          rm -rf data
+          mkdir -m 700 data
+          gzip -dc imports/jugadors-master.json.gz > data/jugadors-master.json
+          cp imports/jugadors-maintenance-state.json data/jugadors-maintenance-state.json
+          xvfb-run -a python scripts/zonaok_actes_recovery_only.py ids
+          xvfb-run -a python scripts/zonaok_actes_recovery_only.py acts "$PWD/data"
+          python scripts/verify_public_master.py data/jugadors-master.json
+          python scripts/zonaok_fecapa_unificat.py validate
+          gzip -n -c data/jugadors-master.json > imports/jugadors-master.json.gz
+          cp data/jugadors-maintenance-state.json imports/jugadors-maintenance-state.json
+          for p in zonaok-tots-partits.json imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json imports/actes-live-state.json; do
+            cp "$p" "$work/captured/$p"
+          done
           published=false
-          for attempt in 1 2 3; do
+          for attempt in 1 2 3 4 5 6 7 8; do
             git fetch origin main
             git reset --hard origin/main
-            rm -rf data
-            mkdir -m 700 data
+            python scripts/zonaok_actes_live_publish.py "$work/base" "$work/captured" "$PWD"
             gzip -dc imports/jugadors-master.json.gz > data/jugadors-master.json
-            cp imports/jugadors-maintenance-state.json data/jugadors-maintenance-state.json
-            xvfb-run -a python scripts/zonaok_actes_recovery_only.py ids
-            xvfb-run -a python scripts/zonaok_actes_recovery_only.py acts "$PWD/data"
             python scripts/verify_public_master.py data/jugadors-master.json
             python scripts/zonaok_fecapa_unificat.py validate
-            gzip -n -c data/jugadors-master.json > imports/jugadors-master.json.gz
-            cp data/jugadors-maintenance-state.json imports/jugadors-maintenance-state.json
             git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-live-state.json imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
             if git diff --cached --quiet; then exit 0; fi
             git commit -m 'ZonaOK: actes finals i jugadors del moment'
             if git push origin HEAD:main; then published=true; break; fi
-            echo "Canvi concurrent a main, reintent amb catàleg i jugadors actualitzats: $attempt"
-            sleep 3
+            echo "Canvi concurrent a main, reintent només de la fusió: $attempt"
+            sleep 2
           done
           if [ "$published" != true ]; then exit 1; fi
           # Si s'acaba de recuperar l'IDP, Classificacions ja pot resoldre el grup.

@@ -802,16 +802,33 @@ async def collect_directe(ctx,args,diagnostic):
                 if await found.count():
                     try:await found.first.click(timeout=2400);break
                     except Exception:pass
-        season=page.locator('#sidgad-season-selector')
-        if await season.count():
-            options=await season.locator('option').all()
-            for o in options:
-                t=clean(await o.inner_text())
-                if re.search(r'2026\s*[/-]\s*2027',t):
-                    value=await o.get_attribute('value');await season.select_option(value=value)
-                    await page.wait_for_timeout(2000);break
-        await page_ready(page,'#sidgad-seccion-partidos .sidgad-partido-fila',22000)
-        data=await page.evaluate(JS_DIRECTE)
+        # The season control can appear after the match list. Retry a
+        # verified read, never accept an empty or wrong season.
+        data={}
+        for attempt in range(3):
+            season=page.locator('#sidgad-season-selector')
+            try:
+                await season.wait_for(state='attached',timeout=12000)
+                await page.wait_for_function(
+                    """() => [...(document.querySelector('#sidgad-season-selector')?.options||[])].some(o=>/2026\\s*[/-]\\s*2027/.test(o.textContent||''))""",
+                    timeout=12000)
+                for o in await season.locator('option').all():
+                    if re.search(r'2026\s*[/-]\s*2027',clean(await o.inner_text())):
+                        value=await o.get_attribute('value')
+                        if await season.input_value()!=value:
+                            await season.select_option(value=value)
+                        break
+                await page_ready(page,'#sidgad-seccion-partidos .sidgad-partido-fila',12000)
+                data=await page.evaluate(JS_DIRECTE)
+                if not data.get('errors') and data.get('seasonText') and data.get('counts'):
+                    break
+            except Exception as exc:
+                diagnostic['warnings'].append(f'Temporada, intent {attempt+1}: {type(exc).__name__}')
+            if attempt<2:
+                await page.reload(wait_until='domcontentloaded',timeout=35000)
+                await page.wait_for_timeout(1500)
+        if not data:
+            data={'errors':['Temporada no verificada després de tres intents']}
         diagnostic['counts']=data.get('counts',{})
         diagnostic['warnings'].extend(data.get('errors',[]))
         diagnostic['seasonText']=data.get('seasonText','')
