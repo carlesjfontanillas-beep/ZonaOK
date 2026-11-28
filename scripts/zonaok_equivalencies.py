@@ -9,6 +9,7 @@ from pathlib import Path
 CATALOG = Path(__file__).resolve().parents[1] / 'zonaok-equivalencies-equips.json'
 SCHEMA = 'zonaok-equivalencies-equips-v1'
 SOURCE = 'FECAPA-classificacions-vertical'
+SOURCES = {SOURCE,'FECAPA-classificacions-capcalera'}
 
 def norm(s):
     return re.sub(r'[^A-Z0-9]+',' ',''.join(c for c in unicodedata.normalize('NFD',str(s or '')) if unicodedata.category(c)!='Mn').upper()).strip()
@@ -21,7 +22,7 @@ def load_catalog(path=CATALOG):
 
 def valid_pair(r):
     a,b=norm(r.get('team')),norm(r.get('shortTeam'))
-    return (r.get('source')==SOURCE and bool(a and b and a!=b)
+    return (r.get('source') in SOURCES and bool(a and b and a!=b)
             and bool(re.fullmatch(r'\d{4,6}',str(r.get('leagueId',''))))
             and bool(norm(r.get('group'))))
 
@@ -34,6 +35,10 @@ def collect_pairs(doc):
                   'category':g.get('category',''),'team':r.get('team',''),
                   'shortTeam':r.get('shortTeam',''),'source':r.get('shortTeamSource','')}
             if r.get('teamId') and re.fullmatch(r'[1-9]\d*',str(r['teamId'])):item['teamId']=str(r['teamId'])
+            logo=re.fullmatch(r'/fecapa/images/logos_clubes/([1-9]\d*)(?:_\d+)?\.(?:png|gif)',str(r.get('teamLogo','')),re.I)
+            if logo:
+                item['clubId']=logo[1]
+                item['logoPath']=logo[0]
             if valid_pair(item):yield item
 
 def merge_catalog(catalog,standings):

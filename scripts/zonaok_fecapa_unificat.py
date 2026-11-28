@@ -1027,15 +1027,21 @@ def directe_team_alias(full, short, index=None):
     return len(aa)==len(bb)==1 and aa==bb
 
 
-def load_standings_aliases(path=Path('zonaok-classificacions.json')):
-    """Equivalències directes verificades entre les dues vistes de FECAPA."""
+@lru_cache(maxsize=1)
+def catalog_scoped_aliases():
+    """Correspondències oficials del catàleg compartit."""
     pairs={}
     for r in load_equivalence_catalog().get('teamAliases',[]):
-        if not isinstance(r,dict) or r.get('source')!='FECAPA-classificacions-vertical':continue
+        if not isinstance(r,dict) or r.get('source') not in ('FECAPA-classificacions-vertical','FECAPA-classificacions-capcalera'):continue
         a,b=norm(r.get('team')),norm(r.get('shortTeam'))
         lid=clean(r.get('leagueId'))
         if a and b and a!=b and re.fullmatch(r'\d{4,6}',lid):
             pairs.setdefault((a,b),set()).add(lid)
+    return pairs
+
+
+def load_standings_aliases(path=Path('zonaok-classificacions.json')):
+    pairs={k:set(v) for k,v in catalog_scoped_aliases().items()}
     try:
         doc=json.loads(path.read_text(encoding='utf-8'))
     except (OSError,ValueError):return pairs
@@ -1044,10 +1050,22 @@ def load_standings_aliases(path=Path('zonaok-classificacions.json')):
         lid=clean(g.get('leagueId'))
         if not re.fullmatch(r'\d{4,6}',lid):continue
         for r in g.get('standings',[]):
-            if not isinstance(r,dict) or r.get('shortTeamSource')!='FECAPA-classificacions-vertical':continue
+            if not isinstance(r,dict) or r.get('shortTeamSource') not in ('FECAPA-classificacions-vertical','FECAPA-classificacions-capcalera'):continue
             a,b=norm(r.get('team')),norm(r.get('shortTeam'))
             if a and b and a!=b:pairs.setdefault((a,b),set()).add(lid)
     return pairs
+
+
+def scoped_team_equivalent(a,b,league='',pairs=None):
+    """Symmetric name/code equivalence only when the code has a single owner."""
+    a,b=norm(a),norm(b)
+    if a and a==b:return True
+    pairs=catalog_scoped_aliases() if pairs is None else pairs
+    for full,short in ((a,b),(b,a)):
+        owners={name for (name,code),leagues in pairs.items()
+                if code==short and (not league or league in leagues)}
+        if owners=={full}:return True
+    return False
 
 
 def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
@@ -1071,8 +1089,17 @@ def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
               and norm(r.get('away'))==norm(incoming.get('away'))]
         if len(weak)==1:return weak[0]
         if len(weak)>1:return None
+    if not candidates and mode in ('agenda','actes'):
+        pairs=catalog_scoped_aliases() if standing_aliases is None else standing_aliases
+        if pairs:
+            aliases=[i for i,r in enumerate(rows) if compatible_id(r)
+                     and r.get('iso')==incoming.get('iso') and r.get('time')==incoming.get('time')
+                     and norm(r.get('competition'))==norm(incoming.get('competition'))
+                     and all(scoped_team_equivalent(r.get(side),incoming.get(side),clean(r.get('leagueId')) or lid,pairs) for side in ('home','away'))]
+            if len(aliases)==1:return aliases[0]
+            if len(aliases)>1:return None
     if mode=='directe' and not candidates:
-        pairs=standing_aliases or {}
+        pairs=catalog_scoped_aliases() if standing_aliases is None else standing_aliases
         def team_ok(r,side):
             full,short=r.get(side),incoming.get(side)
             a,b=norm(full),norm(short)
@@ -1116,7 +1143,7 @@ def merge_unified(packet,previous,mode):
                          'ambiguousOrInvalid':0,'skipEmpty':True}
     alias_table=build_club_alias_table(previous,packet)
     alias_index=club_alias_index(alias_table)
-    standing_aliases=load_standings_aliases() if mode=='directe' else {}
+    standing_aliases=load_standings_aliases() if mode=='directe' else catalog_scoped_aliases()
     rows=[canonicalize(r) for r in previous['matches']]
     counts={'new':0,'updated':0,'unmatched':0,'ambiguousOrInvalid':0,'unchanged':0}
     for raw in incoming:

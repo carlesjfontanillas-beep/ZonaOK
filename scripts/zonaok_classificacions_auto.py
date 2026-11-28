@@ -72,7 +72,29 @@ JS_EXTRACT = r"""(mobile=false) => {
   const norm = x => clean(x).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .toUpperCase().replace(/[^A-Z0-9]+/g, ' ').trim();
   const number = x => /^-?\d+$/.test(clean(x));
-  const result = {groups: [], errors: []};
+  const result = {groups: [], errors: [], headerTeams: []};
+  const logo = img => {
+    try {
+      const u=new URL(img?.getAttribute('src')||'',location.href);
+      return u.hostname==='sidgad.cloud' && /^\/fecapa\/images\/logos_clubes\/[1-9]\d*(?:_\d+)?\.(?:png|gif)$/i.test(u.pathname) ? u.pathname : '';
+    } catch(_) { return ''; }
+  };
+  const code = s => /^[A-ZÀ-Ü0-9][A-ZÀ-Ü0-9 .-]{0,14}$/.test(s) && norm(s).replace(/ /g,'').length>=2;
+  const firstTable=document.querySelector('table.sidgad-clasif-tabla');
+  for(const img of document.querySelectorAll('img[src]')) {
+    const key=logo(img);
+    if(!key || img.closest('table') || !img.getClientRects().length)continue;
+    if(firstTable && !(img.compareDocumentPosition(firstTable)&Node.DOCUMENT_POSITION_FOLLOWING))continue;
+    let node=img.parentElement;
+    for(let i=0;i<4 && node;i++,node=node.parentElement) {
+      if([...node.querySelectorAll('img[src]')].filter(x=>logo(x)).length!==1)break;
+      const short=clean(node.innerText);
+      if(code(short)) {
+        result.headerTeams.push({logo:key,shortTeam:short,fullHint:clean(img.getAttribute('title')||img.getAttribute('alt'))});
+        break;
+      }
+    }
+  }
   for (const h of document.querySelectorAll('h1,h2,h3,h4')) {
     const name = clean(h.innerText || h.textContent);
     if (!name || name.length > 100 || name.includes('|') ||
@@ -119,6 +141,7 @@ JS_EXTRACT = r"""(mobile=false) => {
         }
       }
       const teamId=ids.size===1?[...ids][0]:'';
+      const teamLogo=logo(teamCell?.querySelector('img[src]'));
 
       if (!/^\d{1,2}$/.test(pos)||!team) continue;
       const shifts=[...new Set([cells.length-headers.length,1,0,2,3])]
@@ -137,7 +160,7 @@ JS_EXTRACT = r"""(mobile=false) => {
       const val=k=>col[k]<0?'':cell(col[k]+shift);
       const stats={};
       headers.forEach((k,i)=>{const v=cell(i+shift);if(k&&v)stats[k]=v;});
-      rows.push({pos,team,...(teamId?{teamId}:{}),played:val('pj'),points:val('pts'),
+      rows.push({pos,team,...(teamId?{teamId}:{}),...(teamLogo?{teamLogo}:{}),played:val('pj'),points:val('pts'),
         gf:val('gf'),ga:val('gc'),difference:val('dif'),stats});
     }
     if (!invalid&&rows.length>=2&&rows.length<=50&&
@@ -318,10 +341,43 @@ def pair_mobile_names(wide, mobile):
     return pairs
 
 
+def pair_header_names(groups, header):
+    """Use exact official logo path; shared logos require an explicit full-name hint."""
+    rows=[r for g in groups for r in g.get('rows',[])]
+    count=0
+    for r in rows:
+        key=r.get('teamLogo')
+        if not key:continue
+        same_rows=[x for x in rows if x.get('teamLogo')==key]
+        candidates=[x for x in header if x.get('logo')==key]
+        # A header title/alt that explicitly names the team can disambiguate.
+        named=[x for x in candidates if norm(x.get('fullHint'))==norm(r.get('team'))]
+        if len(same_rows)>1:
+            if len([x for x in same_rows if norm(x.get('team'))==norm(r.get('team'))])!=1:continue
+            candidates=named
+        elif named:
+            candidates=named
+        codes={norm(x.get('shortTeam')):clean(x.get('shortTeam')) for x in candidates
+               if norm(x.get('shortTeam')) and norm(x.get('shortTeam'))!=norm(r.get('team'))}
+        if len(codes)!=1:continue
+        short=next(iter(codes.values()))
+        if r.get('shortTeam') and norm(r['shortTeam'])!=norm(short):
+            r.pop('shortTeam',None)
+            r.pop('shortTeamSource',None)
+            continue
+        if not r.get('shortTeam'):
+            r['shortTeam']=short
+            r['shortTeamSource']='FECAPA-classificacions-capcalera'
+            count+=1
+    return count
+
+
 async def read_mobile_names(page,groups,warnings):
     """Reutilitza la mateixa pàgina; no altera les classificacions si falla."""
     previous=page.viewport_size
+    header=[]
     try:
+        header=(await page.evaluate(JS_EXTRACT)).get('headerTeams',[])
         await page.set_viewport_size({'width':390,'height':844})
         for _ in range(3):
             await page.wait_for_timeout(500)
@@ -335,6 +391,8 @@ async def read_mobile_names(page,groups,warnings):
         warnings.append('Lectura vertical no disponible: '+str(exc)[:120])
     finally:
         if previous:await page.set_viewport_size(previous)
+        count=pair_header_names(groups,header)
+        if count:warnings.append(f'Sigles comprovades per capçalera i escut: {count}')
 
 
 async def read_league(context, league: str, expected_groups: int, max_tries: int = 3) -> tuple[list, list, list]:
@@ -596,7 +654,7 @@ def merge_packet(capture: dict, existing: dict) -> tuple[dict,dict]:
         prior_teams={norm(r.get('team')):r for r in (prior.get('standings',[]) if isinstance(prior,dict) else []) if isinstance(r,dict)}
         for r in rows:
             old_team=prior_teams.get(norm(r.get('team')),{})
-            if not r.get('shortTeam') and old_team.get('shortTeamSource')=='FECAPA-classificacions-vertical' and norm(old_team.get('shortTeam'))!=norm(old_team.get('team')):
+            if not r.get('shortTeam') and old_team.get('shortTeamSource') in ('FECAPA-classificacions-vertical','FECAPA-classificacions-capcalera') and norm(old_team.get('shortTeam'))!=norm(old_team.get('team')):
                 r['shortTeam']=old_team['shortTeam']
                 r['shortTeamSource']=old_team['shortTeamSource']
         sorted_rows=sorted(rows,key=lambda r:int(r['pos']))
@@ -620,7 +678,7 @@ def merge_packet(capture: dict, existing: dict) -> tuple[dict,dict]:
         {'leagueId':str(g.get('leagueId','')),'group':g.get('name',''),'team':r['team'],'shortTeam':r['shortTeam']}
         for g in output.values() if isinstance(g,dict)
         for r in g.get('standings',[]) if isinstance(r,dict)
-        and r.get('shortTeam') and norm(r.get('shortTeam'))!=norm(r.get('team')) and r.get('shortTeamSource')=='FECAPA-classificacions-vertical'
+        and r.get('shortTeam') and norm(r.get('shortTeam'))!=norm(r.get('team')) and r.get('shortTeamSource') in ('FECAPA-classificacions-vertical','FECAPA-classificacions-capcalera')
     ]
     stats={"updatedGroups":updated,"preservedNewer":preserved,
            "preservedByKey":len(old.keys()-incoming.keys()),"totalGroups":len(output),

@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/zonaok-equivalencies-fecapa.yml'
+      - 'scripts/zonaok_capture_equivalencies.py'
   workflow_dispatch:
 permissions:
   contents: write

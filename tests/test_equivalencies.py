@@ -21,4 +21,11 @@ class TestEquivalencies(unittest.TestCase):
         self.assertEqual({x['leagueId'] for x in got['teamAliases']},{'4789','4786'})
         self.assertEqual(m.merge_catalog(got,{'competitions':{}}),got)
 
+    def test_header_source_and_conflicts(self):
+        def group(lid,team,short):
+            return {'leagueId':lid,'name':'GRUP '+lid,'standings':[{'team':team,'shortTeam':short,'shortTeamSource':'FECAPA-classificacions-capcalera','teamLogo':'/fecapa/images/logos_clubes/234.png'}]}
+        got=m.merge_catalog({'teamAliases':[]},{'competitions':{'a':group('4789','NOM COMPLET A','ABC')}})
+        self.assertEqual(got['teamAliases'][0]['clubId'],'234')
+        self.assertNotIn('teamId',got['teamAliases'][0])
+
 if __name__=='__main__':unittest.main()
