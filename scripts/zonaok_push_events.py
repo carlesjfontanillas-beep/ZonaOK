@@ -174,6 +174,7 @@ def main():
     p.add_argument("--since")
     p.add_argument("--source",choices=['both','directe','agenda'],default='both')
     p.add_argument("--scheduled",action='store_true')
+    p.add_argument("--include-scheduled",action='store_true')
     args=p.parse_args()
     now=datetime.now(timezone.utc)
     after=json.loads(args.after.read_text())
@@ -182,6 +183,8 @@ def main():
         if not args.before or not args.since:p.error('--before and --since are required')
         since=datetime.fromisoformat(args.since.replace("Z","+00:00"))
         events=detect(json.loads(args.before.read_text()),after,since=since,now=now,source=args.source)
+    if args.include_scheduled and not args.scheduled:
+        events=list({e["eventId"]:e for e in events+scheduled_starts(after,now=now)}.values())
     print(json.dumps({"dryRun":True,"events":events},ensure_ascii=False))
 if __name__=="__main__":
     main()

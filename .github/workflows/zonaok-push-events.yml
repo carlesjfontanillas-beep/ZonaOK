@@ -11,6 +11,7 @@ on:
           - empty
           - barca_nc
           - production
+          - scheduled_now
         default: empty
       before_sha:
         type: string
@@ -74,15 +75,16 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_scenario == 'empty' }}
         run: printf '%s\n' '{"schema":"zonaok-push-event-batch-v1","season":"2026/2027","events":[]}' > push-batch.json
       - name: Detectar canvis de la captura exacta o inicis d'Agenda
-        if: ${{ github.event_name == 'schedule' || inputs.test_scenario == 'production' }}
+        if: ${{ github.event_name == 'schedule' || inputs.test_scenario == 'production' || inputs.test_scenario == 'scheduled_now' }}
         env:
           BEFORE_SHA: ${{ inputs.before_sha }}
           AFTER_SHA: ${{ inputs.after_sha }}
           EVENT_SOURCE: ${{ inputs.event_source }}
+          REQUEST_SCENARIO: ${{ inputs.test_scenario }}
         shell: bash
         run: |
           set -euo pipefail
-          if [ "$GITHUB_EVENT_NAME" = schedule ]; then
+          if [ "$GITHUB_EVENT_NAME" = schedule ] || [ "$REQUEST_SCENARIO" = scheduled_now ]; then
             git fetch origin main
             git show origin/main:zonaok-tots-partits.json > push-after.json
             python scripts/zonaok_push_events.py --after push-after.json --scheduled > push-detection.json
@@ -94,7 +96,7 @@ jobs:
             git show "$BEFORE_SHA:zonaok-tots-partits.json" > push-before.json
             git show "$AFTER_SHA:zonaok-tots-partits.json" > push-after.json
             PUSH_SINCE="$(python -c 'import json,sys; print(json.load(open("push-before.json")).get("sources",{}).get(sys.argv[1],{}).get("capturedAt") or "2026-07-01T00:00:00Z")' "$EVENT_SOURCE")"
-            python scripts/zonaok_push_events.py --before push-before.json --after push-after.json --since "$PUSH_SINCE" --source "$EVENT_SOURCE" > push-detection.json
+            python scripts/zonaok_push_events.py --before push-before.json --after push-after.json --since "$PUSH_SINCE" --source "$EVENT_SOURCE" --include-scheduled > push-detection.json
           fi
           python - <<'PY'
           import json
@@ -104,16 +106,14 @@ jobs:
           print('Avisos:',len(events))
           PY
       - name: Enviar esdeveniments detectats pel canal habitual
-        if: ${{ github.event_name == 'schedule' || inputs.test_scenario == 'production' || inputs.test_scenario == 'barca_nc' }}
+        if: ${{ github.event_name == 'schedule' || inputs.test_scenario == 'production' || inputs.test_scenario == 'barca_nc' || inputs.test_scenario == 'scheduled_now' }}
         shell: bash
         run: |
           set -euo pipefail
           request_url="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=zonaok-push"
           token="$(curl --fail --silent --show-error -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$request_url" | python -c 'import json,sys; print(json.load(sys.stdin)["value"])')"
-          curl --fail --silent --show-error --retry 3 --retry-all-errors --retry-delay 2 \
-            -X POST 'https://zonaok-push.carles-j-fontanillas.workers.dev/sports-events' \
-            -H 'Content-Type: application/json' -H "Authorization: Bearer ${token}" \
-            --data-binary @push-batch.json
+          # Pass credentials via environment, never persist or print them.
+          ZONAOK_PUSH_TOKEN="$token" python scripts/zonaok_push_transport.py push-batch.json
       - name: Seleccionar partits amb preferències d’incidències actives
         if: ${{ inputs.test_scenario == 'barca_nc' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe') }}
         shell: bash
@@ -185,3 +185,11 @@ jobs:
             -X POST 'https://zonaok-push.carles-j-fontanillas.workers.dev/sports-incidents' \
             -H 'Content-Type: application/json' -H "Authorization: Bearer ${token}" \
             --data-binary @push-live-incidents.json
+
+      - name: Desar diagnòstic d'enviament sense dades de subscriptors
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zonaok-push-diagnostic
+          if-no-files-found: ignore
+          path: push-transport-report.json

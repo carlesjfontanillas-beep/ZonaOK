@@ -124,7 +124,7 @@
               <button class="secondary" type="button" data-push-test hidden>Notificació de prova</button>
               <button class="secondary" type="button" data-push-disable hidden>Desactivar aquest dispositiu</button>
             </div>
-            <p role="status" aria-live="polite" data-push-status>Activa-les només en aquest dispositiu; el permís es demana quan prems el botó. Només s’envia una prova, no avisos esportius generals.</p>
+            <p role="status" aria-live="polite" data-push-status>Activa-les només en aquest dispositiu; el permís es demana quan prems el botó. La notificació de prova verifica aquest dispositiu, independentment dels avisos esportius.</p>
           </div>
         </section>
       </div>
@@ -156,7 +156,7 @@
     const state = pushStatus();
     if (message) status.textContent = message;
     else if (!state.supported) status.textContent = 'Aquest navegador no admet Web Push. A l’iPhone/iPad, instal·la ZonaOK a la pantalla d’inici i obre-la des d’allà.';
-    else if (state.configuredDevice) status.textContent = 'Aquest dispositiu està registrat. La prova s’enviarà només aquí; els avisos esportius generals estan desactivats.';
+    else if (state.configuredDevice) status.textContent = 'Aquest dispositiu està registrat. La prova s’enviarà només aquí. Els avisos esportius depenen de les preferències seleccionades.';
     else if (state.permission === 'denied') status.textContent = 'El permís està bloquejat als ajustos del navegador.';
     else status.textContent = 'Encara no està activat. En prémer “Activar notificacions”, el navegador et demanarà permís.';
     enable.hidden = !state.supported || state.configuredDevice || state.permission === 'denied';
@@ -169,7 +169,7 @@
     catch (error) { render(error?.message || 'No s’ha pogut completar l’acció.'); }
     finally { button.disabled = false; }
   }
-  enable.addEventListener('click', () => run(enable, () => enablePush(config, preferences()), 'Dispositiu activat per a la prova.'));
+  enable.addEventListener('click', () => run(enable, () => enablePush(config, preferences()), 'Dispositiu activat. Comprova la recepció amb la notificació de prova.'));
   test.addEventListener('click', () => run(test, () => testPush(config), 'Petició de prova acceptada. Comprova el centre de notificacions d’aquest dispositiu.'));
   disable.addEventListener('click', () => run(disable, () => disablePush(config), 'Notificacions desactivades en aquest dispositiu.'));
   let preferencesChangedBeforeRestore = false;

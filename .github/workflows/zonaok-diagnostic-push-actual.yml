@@ -1,0 +1,20 @@
+name: ZonaOK - Diagnòstic push actual
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/zonaok-diagnostic-push-actual.yml']
+  workflow_dispatch:
+permissions:
+  actions: write
+  contents: read
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comprovar els avisos reals del moment i activar En directe
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh workflow run zonaok-push-events.yml --ref main -f test_scenario=scheduled_now
+          gh workflow run zonaok-auto-directe.yml --ref main -f scope=fast -f publish=true
