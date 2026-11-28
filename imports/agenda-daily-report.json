@@ -1,6 +1,6 @@
 {
   "schema": "zonaok-agenda-daily-report-v1",
-  "capturedAt": "2026-11-28T09:43:28Z",
+  "capturedAt": "2026-11-28T09:50:44Z",
   "windowFrom": "2026-11-21",
   "sourceRows": 12147,
   "catalogBefore": 12186,
@@ -8,89 +8,15 @@
   "duplicateRepairs": [],
   "duplicateReviews": [],
   "duplicatesRemoved": 0,
-  "scheduleChanges": [
-    {
-      "competition": "BCN BENJAMÍ PLATA 3",
-      "home": "CH LES FRANQUESES",
-      "away": "UNIÓ ESPORTIVA D'HORTA B",
-      "previousIso": "2026-11-29",
-      "previousTime": "10:45",
-      "iso": "2026-11-28",
-      "time": "17:00",
-      "leagueId": "",
-      "matchId": "",
-      "proof": "unique-season-pair"
-    }
-  ],
+  "scheduleChanges": [],
   "recoveredResults": [],
   "newFixtures": [],
-  "conflicts": [
-    {
-      "reason": "state_ambiguous_team_code",
-      "fixture": [
-        "OK LIGA PLATA SUR",
-        "CHM",
-        "SPORTING HOQUEI ALCOI ERUM",
-        "2026-11-21",
-        "17:00"
-      ],
-      "home": "CHM",
-      "away": "SHA",
-      "homeScore": 3,
-      "awayScore": 6,
-      "status": "FINAL"
-    },
-    {
-      "reason": "state_ambiguous_team_code",
-      "fixture": [
-        "OK LIGA MASCULINA",
-        "CE NOIA FREIXENET",
-        "CPV",
-        "2026-11-21",
-        "19:30"
-      ],
-      "home": "NOIA",
-      "away": "CPV",
-      "homeScore": 4,
-      "awayScore": 1,
-      "status": "FINAL"
-    },
-    {
-      "reason": "state_ambiguous_team_code",
-      "fixture": [
-        "OK LIGA PLATA SUR",
-        "CHM",
-        "CORREDOR MATO PALAFRUGELL",
-        "2026-11-21",
-        "19:30"
-      ],
-      "home": "CHM",
-      "away": "CHP",
-      "homeScore": 5,
-      "awayScore": 2,
-      "status": "FINAL"
-    },
-    {
-      "reason": "state_ambiguous_team_code",
-      "fixture": [
-        "OK LIGA MASCULINA",
-        "CPV",
-        "SHUM FRIT RAVICH",
-        "2026-11-21",
-        "20:00"
-      ],
-      "home": "CPV",
-      "away": "SHUM",
-      "homeScore": 0,
-      "awayScore": 3,
-      "status": "FINAL"
-    }
-  ],
-  "scheduleChangeCount": 1,
+  "conflicts": [],
+  "scheduleChangeCount": 0,
   "recoveredResultCount": 0,
   "newFixtureCount": 0,
-  "unresolvedCount": 4,
-  "stateAcceptedCount": 30,
+  "unresolvedCount": 0,
+  "stateAcceptedCount": 34,
   "stateAccepted": [
     {
       "fixture": [
@@ -132,6 +58,20 @@
       "away": "CPVS",
       "homeScore": 2,
       "awayScore": 1,
+      "status": "FINAL"
+    },
+    {
+      "fixture": [
+        "OK LIGA PLATA SUR",
+        "CHM",
+        "SPORTING HOQUEI ALCOI ERUM",
+        "2026-11-21",
+        "17:00"
+      ],
+      "home": "CHM",
+      "away": "SHA",
+      "homeScore": 3,
+      "awayScore": 6,
       "status": "FINAL"
     },
     {
@@ -207,6 +147,20 @@
     {
       "fixture": [
         "OK LIGA MASCULINA",
+        "CE NOIA FREIXENET",
+        "CPV",
+        "2026-11-21",
+        "19:30"
+      ],
+      "home": "NOIA",
+      "away": "CPV",
+      "homeScore": 4,
+      "awayScore": 1,
+      "status": "FINAL"
+    },
+    {
+      "fixture": [
+        "OK LIGA MASCULINA",
         "AITEX PAS ALCOI",
         "BARCA",
         "2026-11-21",
@@ -235,6 +189,20 @@
     {
       "fixture": [
         "OK LIGA PLATA SUR",
+        "CHM",
+        "CORREDOR MATO PALAFRUGELL",
+        "2026-11-21",
+        "19:30"
+      ],
+      "home": "CHM",
+      "away": "CHP",
+      "homeScore": 5,
+      "awayScore": 2,
+      "status": "FINAL"
+    },
+    {
+      "fixture": [
+        "OK LIGA PLATA SUR",
         "AUTO VIGATANA PATI VIC",
         "FENIE ENERGIA CERDANYOLA CCH",
         "2026-11-21",
@@ -244,6 +212,20 @@
       "away": "CCH",
       "homeScore": 3,
       "awayScore": 2,
+      "status": "FINAL"
+    },
+    {
+      "fixture": [
+        "OK LIGA MASCULINA",
+        "CPV",
+        "SHUM FRIT RAVICH",
+        "2026-11-21",
+        "20:00"
+      ],
+      "home": "CPV",
+      "away": "SHUM",
+      "homeScore": 0,
+      "awayScore": 3,
       "status": "FINAL"
     },
     {
@@ -511,6 +493,53 @@
       "homeScore": 1,
       "awayScore": 2,
       "status": "FINAL"
+    }
+  ],
+  "stateLogoResolutions": [],
+  "stateLogoFallbacks": [
+    {
+      "iso": "2026-11-21",
+      "time": "17:00",
+      "competition": "OK LIGA PLATA SUR",
+      "home": "CHM",
+      "away": "SHA",
+      "side": "home",
+      "shortTeam": "CHM",
+      "logo": "",
+      "reason": "logo_not_uniquely_identified"
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "19:30",
+      "competition": "OK LIGA MASCULINA",
+      "home": "NOIA",
+      "away": "CPV",
+      "side": "away",
+      "shortTeam": "CPV",
+      "logo": "",
+      "reason": "logo_not_uniquely_identified"
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "19:30",
+      "competition": "OK LIGA PLATA SUR",
+      "home": "CHM",
+      "away": "CHP",
+      "side": "home",
+      "shortTeam": "CHM",
+      "logo": "",
+      "reason": "logo_not_uniquely_identified"
+    },
+    {
+      "iso": "2026-11-21",
+      "time": "20:00",
+      "competition": "OK LIGA MASCULINA",
+      "home": "CPV",
+      "away": "SHUM",
+      "side": "home",
+      "shortTeam": "CPV",
+      "logo": "",
+      "reason": "logo_not_uniquely_identified"
     }
   ],
   "yesterdayMissingResults": []
