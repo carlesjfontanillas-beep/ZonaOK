@@ -7,7 +7,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from zonaok_fecapa_unificat import (CANONICAL, SEASON, load_unified, norm, clean, score_tuple, check_iso, check_time, check_when, utc_now, write_compatibility, canonicalize, chromium_context)
 from zonaok_agenda_dates_review import capture
-from zonaok_fecapa_unificat import invalid_fixture_team, state_competition, state_team_key, state_team_names, validate_row
+from zonaok_fecapa_unificat import invalid_fixture_team, state_competition, state_team_key, state_team_names, validate_row, official_logo_id, build_club_alias_table, load_equivalence_catalog
 
 MADRID=ZoneInfo('Europe/Madrid')
 EXCLUDED=re.compile(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',re.I)
@@ -28,6 +28,42 @@ def index(rows,fn,indices):
     out=defaultdict(list)
     for i in indices:out[fn(rows[i])].append(i)
     return out
+# Distinctive club-name words of the explicitly known collisions. Match them
+# only against labels already attached to the exact official logo identifier.
+STATE_CLUB_WORDS={'MATARO','MOLLERUSSA','VOLTREGA','VILAFRANCA','ALCOBENDAS','ALCORCON'}
+
+def resolve_state_logo(r,side,club_table):
+    comp=r.get('competition'); original=r.get(side)
+    candidates=state_team_names(original,comp)
+    if len(candidates)<2:return None
+    logo=official_logo_id(r.get(side+'Logo'))
+    if not logo:return None
+    labels={norm(x) for x in club_table.get(logo,[])}
+    words={word for label in labels for word in label.split()} & STATE_CLUB_WORDS
+    matches={c for c in candidates if c in labels or (set(c.split()) & STATE_CLUB_WORDS & words)}
+    if len(matches)!=1:return None
+    target=next(iter(matches))
+    # Never choose a different club when the logo catalogue contradicts itself.
+    if len(words)>1:return None
+    names=[a['team'] for a in load_equivalence_catalog().get('stateAliases',[]) if state_competition(a.get('competition'))==state_competition(comp) and norm(a.get('team'))==target]
+    if not names:return None
+    return {'side':side,'shortTeam':original,'team':names[0],'logoId':logo,'logo':r.get(side+'Logo'),'labels':sorted(labels)}
+
+def resolve_state_rows(rows,club_table):
+    resolved=[];fallback=[]
+    for r in rows:
+        if not state_competition(r.get('competition')):continue
+        for side in ('home','away'):
+            if len(state_team_names(r.get(side),r.get('competition')))<2:continue
+            evidence=resolve_state_logo(r,side,club_table)
+            info={'iso':r.get('iso'),'time':r.get('time'),'competition':r.get('competition'),'home':r.get('home'),'away':r.get('away')}
+            if evidence:
+                resolved.append({**info,**evidence})
+                r[side]=evidence['team']
+            else:
+                fallback.append({**info,'side':side,'shortTeam':r.get(side),'logo':r.get(side+'Logo',''),'reason':'logo_not_uniquely_identified'})
+    return resolved,fallback
+
 def state_validation_issue(r,today):
     """State leagues are not covered by the Catalan general Agenda.
     Validate the existing fixture, not its presence in a different source.
@@ -35,8 +71,6 @@ def state_validation_issue(r,today):
     """
     if not validate_row(dict(r),'agenda') or not all(pair(r)):
         return 'state_missing_or_invalid_fixture_data'
-    if any(len(state_team_names(r.get(side),r.get('competition')))!=1 for side in ('home','away')):
-        return 'state_ambiguous_team_code'
     if r['iso']<today.isoformat() and not score_tuple(r) and not EXCLUDED.search(clean(r.get('status'))):
         return 'state_missing_result'
     return ''
@@ -158,6 +192,7 @@ def merge(doc,packet):
     for i,a in enumerate(old):
         if state_competition(a.get('competition')):continue
         if i not in used_old and recent(a,cut):conflicts.append({'reason':'not_uniquely_found_in_agenda','fixture':key(a),'possible':[slot(incoming[j]) for j in all_incoming_pairs.get(pair(a),[])]})
+    logo_resolutions,logo_fallbacks=resolve_state_rows(rows,build_club_alias_table(doc,packet))
     state_accepted=[]
     for r in rows:
         if not state_competition(r.get('competition')) or not recent(r,cut):continue
@@ -168,7 +203,7 @@ def merge(doc,packet):
     prior_counts=Counter(key(r) for r in old);counts=Counter(key(r) for r in rows)
     if any(n>max(1,prior_counts[k]) for k,n in counts.items()):raise ValueError('new duplicate fixtures')
     rows.sort(key=lambda r:(r.get('iso',''),r.get('time',''),norm(r.get('competition')),norm(r.get('home'))))
-    report={'schema':'zonaok-agenda-daily-report-v1','capturedAt':captured,'windowFrom':cut,'sourceRows':len(incoming),'catalogBefore':original_count,'catalogAfter':len(rows),'duplicateRepairs':duplicate_repairs,'duplicateReviews':duplicate_reviews,'duplicatesRemoved':sum(r['removed'] for r in duplicate_repairs),'scheduleChanges':changes,'recoveredResults':recovered,'newFixtures':new,'conflicts':conflicts,'scheduleChangeCount':len(changes),'recoveredResultCount':len(recovered),'newFixtureCount':len(new),'unresolvedCount':len(conflicts),'stateAcceptedCount':len(state_accepted),'stateAccepted':state_accepted,'yesterdayMissingResults':[key(r) for r in rows if r.get('iso')==(today-timedelta(days=1)).isoformat() and not score_tuple(r) and not EXCLUDED.search(clean(r.get('status')))]}
+    report={'schema':'zonaok-agenda-daily-report-v1','capturedAt':captured,'windowFrom':cut,'sourceRows':len(incoming),'catalogBefore':original_count,'catalogAfter':len(rows),'duplicateRepairs':duplicate_repairs,'duplicateReviews':duplicate_reviews,'duplicatesRemoved':sum(r['removed'] for r in duplicate_repairs),'scheduleChanges':changes,'recoveredResults':recovered,'newFixtures':new,'conflicts':conflicts,'scheduleChangeCount':len(changes),'recoveredResultCount':len(recovered),'newFixtureCount':len(new),'unresolvedCount':len(conflicts),'stateAcceptedCount':len(state_accepted),'stateAccepted':state_accepted,'stateLogoResolutions':logo_resolutions,'stateLogoFallbacks':logo_fallbacks,'yesterdayMissingResults':[key(r) for r in rows if r.get('iso')==(today-timedelta(days=1)).isoformat() and not score_tuple(r) and not EXCLUDED.search(clean(r.get('status')))]}
     result={**doc,'matches':rows,'updatedAt':utc_now(),'sources':{**doc.get('sources',{}),'agenda':{**doc.get('sources',{}).get('agenda',{}),'capturedAt':captured,'mergedAt':utc_now(),'scope':'daily',**{k:report[k] for k in ('scheduleChangeCount','recoveredResultCount','newFixtureCount','unresolvedCount')}}}}
     result['stats']={**doc.get('stats',{}),'total':len(rows),'withScores':sum(score_tuple(r) for r in rows),'withActaLinks':sum(bool(r.get('actaUrl')) for r in rows),'verifiedActes':sum(r.get('actaState')=='available' for r in rows)}
     return result,report
@@ -197,7 +232,9 @@ def validate_publication(before,after,packet,report):
     if not {idpair(r) for r in old if all(idpair(r))}<={idpair(r) for r in new if all(idpair(r))}:
         raise ValueError('lost official identity')
     scores=lambda rows:{(pair(r),r['homeScore'],r['awayScore']) for r in rows if score_tuple(r)}
-    if not scores(old)<=scores(new):raise ValueError('lost existing result')
+    normalized_old=copy.deepcopy(old)
+    resolve_state_rows(normalized_old,build_club_alias_table(before,packet))
+    if not scores(normalized_old)<=scores(new):raise ValueError('lost existing result')
     # Independently reapply the capture on HEAD. Compare fixture rows, not generated metadata.
     expected,expected_report=merge(before,packet)
     if expected['matches']!=new or expected_report['duplicatesRemoved']!=removed:

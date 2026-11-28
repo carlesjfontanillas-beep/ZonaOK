@@ -2,7 +2,7 @@ import sys,unittest
 from datetime import datetime,timezone
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
-from zonaok_agenda_daily import merge,validate_publication
+from zonaok_agenda_daily import merge,validate_publication,resolve_state_logo
 from zonaok_push_events import detect
 from zonaok_schedule_gate import should_run
 class DailyAgenda(unittest.TestCase):
@@ -84,8 +84,9 @@ class DailyAgenda(unittest.TestCase):
         others=[self.row(iso='2026-12-01',home='X'+str(i),away='Y'+str(i)) for i in range(25)]
         out,report=self.run_merge([a,b,c,d,e]+others,others)
         self.assertEqual(len(out['matches']),30)
-        self.assertEqual(report['stateAcceptedCount'],3)
-        self.assertEqual(sorted(r['reason'] for r in report['conflicts']),['state_ambiguous_team_code','state_missing_result'])
+        self.assertEqual(report['stateAcceptedCount'],4)
+        self.assertEqual(sorted(r['reason'] for r in report['conflicts']),['state_missing_result'])
+        self.assertEqual(report['stateLogoFallbacks'][0]['shortTeam'],'CPV')
         self.assertFalse(any(r['reason']=='not_uniquely_found_in_agenda' for r in report['conflicts']))
     def test_official_calendar_overrides_previous_manual_choice(self):
         a=dict(self.row(iso='2026-11-29',home='CH LES FRANQUESES',away="UNIO ESPORTIVA D HORTA B"),competition='BCN BENJAMI PLATA 3',time='10:45')
@@ -94,6 +95,22 @@ class DailyAgenda(unittest.TestCase):
         self.assertEqual(report['scheduleChangeCount'],1)
         self.assertEqual(report['unresolvedCount'],0)
         self.assertEqual((out['matches'][0]['iso'],out['matches'][0]['time']),('2026-11-28','17:00'))
+    def test_state_logo_collision_and_safe_fallback(self):
+        a=dict(self.row(),competition='OK LIGA PLATA SUR',home='CHM',away='SHA',homeScore=3,awayScore=6,homeLogo='https://sidgad.cloud/fecapa/images/logos_clubes/9999.png')
+        e=resolve_state_logo(a,'home',{'9999':['CH MATARÓ A','CHM']})
+        self.assertEqual(e['team'],'CH MATARÓ')
+        self.assertIsNone(resolve_state_logo(a,'home',{'9999':['CH MATARÓ','CH MOLLERUSSA']}))
+        self.assertIsNone(resolve_state_logo(a,'home',{}))
+        b=dict(a,competition='OK LIGA MASCULINA',home='CPV',away='SHUM')
+        e=resolve_state_logo(b,'home',{'9999':['CLUB PATÍ VILAFRANCA AKO']})
+        self.assertEqual(e['team'],'AMETLLER ORIGEN CP VILAFRANCA')
+        others=[self.row(iso='2026-12-01',home='X'+str(i),away='Y'+str(i)) for i in range(5)]
+        doc={'schema':'zonaok-partits-total-v1','season':'2026/2027','matches':[a]+others,'clubAliases':{'9999':['CH MATARÓ A']}}
+        packet={'kind':'agenda-daily','season':'2026/2027','capturedAt':'2026-11-28T09:00:00Z','rows':others}
+        out,report=merge(doc,packet)
+        self.assertEqual(report['stateLogoResolutions'][0]['team'],'CH MATARÓ')
+        self.assertEqual(report['unresolvedCount'],0)
+        self.assertEqual(validate_publication(doc,out,packet,report),0)
     def test_daily_madrid_dst(self):
         for month,utc_hour in [(1,9),(7,8)]:
             now=datetime(2026,month,10,utc_hour,12,tzinfo=timezone.utc)
