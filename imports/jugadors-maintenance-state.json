@@ -433152,7 +433152,7 @@
     "4779|148201": {
       "status": "pending",
       "fingerprint": "[4,5,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148201\"]",
-      "checkedAt": "2026-11-28T16:14:08.101028+00:00",
+      "checkedAt": "2026-11-28T16:20:00.708968+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148202": {
@@ -433311,7 +433311,7 @@
     "4779|148204": {
       "status": "pending",
       "fingerprint": "[1,10,\"final\",\"pending\",\"https://www.hoqueipatins.fecapa.cat/?liga=4779&vista=calendar&partido=148204\"]",
-      "checkedAt": "2026-11-28T16:14:14.722892+00:00",
+      "checkedAt": "2026-11-28T16:20:07.867710+00:00",
       "statsAttemptRevision": 4
     },
     "4779|148383": {
@@ -443846,6 +443846,232 @@
           {
             "period": "TOTAL",
             "score": "10-0",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4794|157031": {
+      "status": "verified",
+      "fingerprint": "[4,1,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4794&vista=calendar&partido=157031\"]",
+      "checkedAt": "2026-11-28T16:19:34.445465+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "4",
+            "away": "1"
+          },
+          "FALTES": {
+            "home": "6",
+            "away": "6"
+          },
+          "TARGETES BLAVES": {
+            "home": "1",
+            "away": "1"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 6,
+          "away": 6
+        },
+        "header": {
+          "competition": "FEM 17 PLATA",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ MUNICIPAL D ESPORTS LLORET",
+          "dateTime": "28/11/2026 - 15:15",
+          "round": "JORNADA 9",
+          "referee1": "MARTI I FERNANDEZ, ORIOL",
+          "rinkDelegate": "THOS VALLS, CRISTINA"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "BOU CASTILLO, ALBERT"
+            },
+            {
+              "role": "Delegat",
+              "name": "CATALAN ESCRIBANO, PERE"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "CASTRO PASCUAL, JOSE"
+            },
+            {
+              "role": "Delegat",
+              "name": "CONEJOS ARENAS, MÍRIAM"
+            },
+            {
+              "role": "Auxiliar",
+              "name": "PLANAS OLIVERAS, ABRIL"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "4-1",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4814|156046": {
+      "status": "verified",
+      "fingerprint": "[0,4,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4814&vista=calendar&partido=156046\"]",
+      "checkedAt": "2026-11-28T16:19:40.900361+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "0",
+            "away": "4"
+          },
+          "FALTES": {
+            "home": "3",
+            "away": "3"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "0"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 3,
+          "away": 3
+        },
+        "header": {
+          "competition": "BCN PREBENJAMI PLATA 1",
+          "season": "2026/2027",
+          "venue": "ZONA ESPORTIVA MUNICIPAL MARIA REVERTER",
+          "dateTime": "28/11/2026 - 16:00",
+          "round": "JORNADA 10",
+          "referee1": "GRASES BUNDÓ, RAIMON",
+          "rinkDelegate": "SEGURA PEREZ, JOSÉ ANTONIO"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "NICOLAS VERASTEGUI, KEHISA"
+            },
+            {
+              "role": "Delegat",
+              "name": "JIMENEZ COROMINAS, SERGIO"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "LLOPART ESTRADA, PERE"
+            },
+            {
+              "role": "Delegat",
+              "name": "VALLVERDÚ SANTÓ, JORDI"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "0-4",
+            "fouls": "0-0"
+          }
+        ],
+        "officialFouls": {
+          "home": 0,
+          "away": 0
+        }
+      },
+      "statsRevision": 4
+    },
+    "4793|158295": {
+      "status": "verified",
+      "fingerprint": "[2,4,\"final\",\"available\",\"https://www.hoqueipatins.fecapa.cat/?liga=4793&vista=calendar&partido=158295\"]",
+      "checkedAt": "2026-11-28T16:19:27.942205+00:00",
+      "statsAttemptRevision": 4,
+      "details": {
+        "source": "FECAPA",
+        "teamStats": {
+          "GOLS": {
+            "home": "2",
+            "away": "4"
+          },
+          "FALTES": {
+            "home": "6",
+            "away": "10"
+          },
+          "TARGETES BLAVES": {
+            "home": "0",
+            "away": "1"
+          },
+          "FALTES DIRECTES": {
+            "home": "0",
+            "away": "0"
+          }
+        },
+        "fouls": {
+          "home": 6,
+          "away": 10
+        },
+        "header": {
+          "competition": "FEM 17 OR",
+          "season": "2026/2027",
+          "venue": "PAVELLÓ FRANCESC CASSART",
+          "dateTime": "28/11/2026 - 16:00",
+          "round": "JORNADA 9",
+          "referee1": "MUÑOZ CAMPS, DIDAC",
+          "rinkDelegate": "Pages, Antoni"
+        },
+        "staff": {
+          "home": [
+            {
+              "role": "Entrenador",
+              "name": "CONSCIENCIA AFONSO, BRUNO FILIPE"
+            },
+            {
+              "role": "Delegat",
+              "name": "GUARDEÑO SALA, JORDI"
+            }
+          ],
+          "away": [
+            {
+              "role": "Entrenador",
+              "name": "GALEANO NADAL, BERNAT"
+            },
+            {
+              "role": "Delegat",
+              "name": "GARCIA HIJOS, ALBERT"
+            }
+          ]
+        },
+        "periods": [
+          {
+            "period": "TOTAL",
+            "score": "2-4",
             "fouls": "0-0"
           }
         ],

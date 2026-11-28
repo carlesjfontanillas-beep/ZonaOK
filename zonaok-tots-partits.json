@@ -1,7 +1,7 @@
 {
   "schema": "zonaok-partits-total-v1",
   "season": "2026/2027",
-  "updatedAt": "2026-11-28T16:17:32Z",
+  "updatedAt": "2026-11-28T16:21:58Z",
   "sources": {
     "agenda": {
       "capturedAt": "2026-11-28T09:50:44Z",
@@ -143341,9 +143341,9 @@
       "venue": "PAVELLÓ MUNICIPAL D ESPORTS LLORET",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "157031",
+      "leagueId": "4794",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4794&vista=calendar&partido=157031",
       "status": "FINAL",
       "round": "",
       "homeScore": 4,
@@ -143354,7 +143354,9 @@
       "directeUpdatedAt": "2026-11-28T16:17:28Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:17:28Z",
-      "finalDetectedAt": "2026-11-28T15:27:35Z"
+      "finalDetectedAt": "2026-11-28T15:27:35Z",
+      "actaCheckedAt": "2026-11-28T16:19:34.445465+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -143920,9 +143922,9 @@
       "venue": "ZONA ESPORTIVA MUNICIPAL MARIA REVERTER",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "156046",
+      "leagueId": "4814",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4814&vista=calendar&partido=156046",
       "status": "FINAL",
       "round": "",
       "homeScore": 0,
@@ -143933,7 +143935,9 @@
       "directeUpdatedAt": "2026-11-28T16:17:28Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:17:28Z",
-      "finalDetectedAt": "2026-11-28T16:11:54Z"
+      "finalDetectedAt": "2026-11-28T16:11:54Z",
+      "actaCheckedAt": "2026-11-28T16:19:40.900361+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -143944,9 +143948,9 @@
       "venue": "PAVELLÓ FRANCESC CASSART",
       "homeLogo": "",
       "awayLogo": "",
-      "matchId": "",
-      "leagueId": "",
-      "actaUrl": "",
+      "matchId": "158295",
+      "leagueId": "4793",
+      "actaUrl": "https://www.hoqueipatins.fecapa.cat/?liga=4793&vista=calendar&partido=158295",
       "status": "FINAL",
       "round": "",
       "homeScore": 2,
@@ -143957,7 +143961,9 @@
       "directeUpdatedAt": "2026-11-28T16:17:28Z",
       "lastAgendaAt": "2026-11-27T06:12:13Z",
       "lastDirecteAt": "2026-11-28T16:17:28Z",
-      "finalDetectedAt": "2026-11-28T16:17:28Z"
+      "finalDetectedAt": "2026-11-28T16:17:28Z",
+      "actaCheckedAt": "2026-11-28T16:19:27.942205+00:00",
+      "actaState": "available"
     },
     {
       "iso": "2026-11-28",
@@ -280294,8 +280300,8 @@
   "stats": {
     "total": 12186,
     "withScores": 5913,
-    "withActaLinks": 5875,
-    "verifiedActes": 5791
+    "withActaLinks": 5878,
+    "verifiedActes": 5794
   },
   "clubLogos": {
     "CE ARENYS DE MUNT SOLARTRADEX": "https://sidgad.cloud/fecapa/images/logos_clubes/232_1.png",
