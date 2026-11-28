@@ -259,8 +259,10 @@ JS_AGENDA = r"""() => {
       const cells=rowColumns(tr);if(!cells.length)continue;
       examined++;
       const homeName=choose(cells,home),awayName=choose(cells,away);
-      const venueName=choose(cells,venue);
-      const invalidTeam=name=>!N(name)||/^(?:PAVELLO|PABELLON|POLIESPORTIU|POLIDEPORTIVO|PISTA|MUNICIPAL D ESPORTS)(?: |$)/.test(N(name))||/^(?:DESCANSA|DESCANS|VACANT|VACANTE|BAIXA|RETIRAT|RETIRADO)$/.test(N(name))||(N(venueName)&&N(name)===N(venueName));
+      // A club may share its name with the venue (e.g. Vendrell).
+      // A structurally incomplete row must never shift the venue into a team column.
+      if(cells.length<h[h.length-1].end){invalid++;invalidTeams++;continue;}
+      const invalidTeam=name=>!N(name)||/^(?:PAVELLO|PABELLON|POLIESPORTIU|POLIDEPORTIVO|PISTA|MUNICIPAL D ESPORTS)(?: |$)/.test(N(name))||/^(?:DESCANSA|DESCANS|VACANT|VACANTE|BAIXA|RETIRAT|RETIRADO)$/.test(N(name));
       if(invalidTeam(homeName)||invalidTeam(awayName)||N(homeName)===N(awayName)){invalid++;invalidTeams++;continue;}
       const iso=isoDate(choose(cells,date)),start=time(choose(cells,hour));
       if(!iso||!start){invalid++;invalidDate++;continue;}
@@ -576,14 +578,12 @@ def record_key(row):
 
 def invalid_fixture_team(row):
     """A blank/withdrawn side is not a match; a sports venue is not a team."""
-    venue=norm(row.get('venue'))
+    # A legitimate club may have the same normalized name as its rink.
     for side in ('home','away'):
         name=norm(row.get(side))
         if not name or re.fullmatch(r'DESCANSA|DESCANS|VACANT|VACANTE|BAIXA|RETIRAT|RETIRADO',name):
             return True
         if re.match(r'^(?:PAVELLO|PABELLON|POLIESPORTIU|POLIDEPORTIVO|PISTA|MUNICIPAL D ESPORTS)(?: |$)',name):
-            return True
-        if venue and name==venue:
             return True
     return False
 

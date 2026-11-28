@@ -65,6 +65,19 @@ class TestAgendaV5DOM(unittest.TestCase):
         self.assertEqual(len(result['rows']),1)
         self.assertEqual(result['rows'][0]['away'],'CH FIGUERES')
         self.assertEqual(result['counts']['invalidTeams'],2)
+    def test_club_name_equal_to_venue_is_valid(self):
+        page=self.browser.new_page()
+        page.set_content("""<table><tr><th>Competició</th><th>Data</th><th>Hora</th><th colspan="2">Local</th><th colspan="2">Visitant</th><th>Result.</th><th>Pista</th></tr>
+        <tr><td>LCV GRUP A</td><td>27/11/2026</td><td>21:30</td><td></td><td>CLUB D'ESPORTS VENDRELL</td><td></td><td>INNOAESTHETICS HC SANT JUST</td><td>4 - 1</td><td>CLUB D ESPORTS VENDRELL</td></tr>
+        <tr><td>ALEVÍ OR 8</td><td>28/11/2026</td><td>11:30</td><td></td><td>CLUB D'ESPORTS VENDRELL</td><td></td><td>IGUALADA HC A</td><td></td><td>CLUB D ESPORTS VENDRELL</td></tr>
+        <tr><td>TARRAGONA PREBENJAMI PLATA</td><td>28/11/2026</td><td>10:45</td><td></td><td></td><td></td><td>CLUB D'ESPORTS VENDRELL B</td><td></td><td></td></tr>
+        <tr><td>FEM 13 PLATA</td><td>29/11/2026</td><td>10:00</td><td></td><td>CH MATARÓ</td><td></td><td>CP CALDES</td><td></td><td>CH MATARÓ</td></tr>
+        </table>""")
+        result=page.evaluate(m.JS_AGENDA);page.close()
+        self.assertEqual(len(result['rows']),3)
+        self.assertEqual((result['rows'][0]['homeScore'],result['rows'][0]['awayScore']),(4,1))
+        self.assertEqual(result['counts']['invalidTeams'],1)
+        self.assertTrue(all(m.validate_row(r,'agenda') for r in result['rows']))
     def test_agenda_ignores_even_official_match_links(self):
         page=self.browser.new_page()
         page.set_content(PAGE)

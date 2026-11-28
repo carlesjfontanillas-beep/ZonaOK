@@ -16,4 +16,6 @@ class Withdrawn(unittest.TestCase):
         self.assertTrue(invalid_fixture_team(dict(bad,away='')))
         self.assertTrue(invalid_fixture_team(dict(bad,away='Municipal d’Esports i Lleure d’Olot')))
         self.assertFalse(invalid_fixture_team(good))
+        self.assertFalse(invalid_fixture_team(dict(good,home="CLUB D'ESPORTS VENDRELL",venue='CLUB D ESPORTS VENDRELL')))
+        self.assertFalse(invalid_fixture_team(dict(good,home='CH MATARÓ',venue='CH MATARÓ')))
 if __name__=='__main__':unittest.main()
