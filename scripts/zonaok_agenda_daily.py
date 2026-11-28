@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""Daily FECAPA Agenda: capture once, reapply on latest main, preserve existing scores."""
+import argparse, asyncio, copy, json, os, re
+from collections import defaultdict, Counter
+from datetime import datetime,timedelta
+from pathlib import Path
+from zoneinfo import ZoneInfo
+from zonaok_fecapa_unificat import (CANONICAL, SEASON, load_unified, norm, clean, score_tuple, check_iso, check_time, check_when, utc_now, write_compatibility, canonicalize, chromium_context)
+from zonaok_agenda_dates_review import capture
+
+MADRID=ZoneInfo('Europe/Madrid')
+EXCLUDED=re.compile(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',re.I)
+LIVE=re.compile(r'EN JOC|EN DIRECTE|EN DIRECTO|LIVE|PLAYING|PRIMERA PART|SEGONA PART|DESCANS',re.I)
+FINAL=re.compile(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',re.I)
+def pair(r):return tuple(norm(r.get(k)) for k in ('competition','home','away'))
+def slot(r):return (r.get('iso'),r.get('time'))
+def key(r):return (*pair(r),*slot(r))
+def idpair(r):return tuple(clean(r.get(k)) for k in ('leagueId','matchId'))
+def safe(r):return all(pair(r)) and check_iso(r.get('iso')) and check_time(r.get('time')) and (not score_tuple(r) or all(0<=r[k]<=199 for k in ('homeScore','awayScore')))
+def no_conflict(a,b):
+    return not any(x and y and x!=y for x,y in zip(idpair(a),idpair(b)))
+def recent(r,cut):return clean(r.get('iso'))>=cut
+def index(rows,fn,indices):
+    out=defaultdict(list)
+    for i in indices:out[fn(rows[i])].append(i)
+    return out
+def merge(doc,packet):
+    if packet.get('season')!=SEASON or packet.get('kind')!='agenda-daily':raise ValueError('invalid daily packet')
+    captured=packet['capturedAt']; clock=check_when(captured);today=clock.astimezone(MADRID).date()
+    cut=(today-timedelta(days=7)).isoformat()
+    old=doc['matches']; incoming=packet['rows']
+    if not incoming or any(not safe(r) for r in incoming):raise ValueError('invalid or empty source rows')
+    if len(incoming)<.8*len(old):raise ValueError('incomplete source coverage')
+    if sum(recent(r,cut) for r in incoming)<.8*sum(recent(r,cut) for r in old):raise ValueError('incomplete recent/future coverage')
+    rows=copy.deepcopy(old); used_old=set();used_new=set(); links=[]
+    # Stable official ID when available; the general Agenda normally has none.
+    for fn,require in ((idpair,lambda k:all(k)),(key,lambda k:all(k))):
+        oi=index(old,fn,(i for i in range(len(old)) if i not in used_old))
+        ni=index(incoming,fn,(j for j in range(len(incoming)) if j not in used_new))
+        for k,os in oi.items():
+            ns=ni.get(k,[])
+            if require(k) and len(os)==len(ns)==1 and no_conflict(old[os[0]],incoming[ns[0]]):
+                i,j=os[0],ns[0];links.append((i,j,'exact'));used_old.add(i);used_new.add(j)
+    # Match the entire season before deciding which changed fixtures are in scope.
+    # An ordered pair must be unique in both directions after exact matches.
+    oi=index(old,pair,(i for i in range(len(old)) if i not in used_old))
+    ni=index(incoming,pair,(j for j in range(len(incoming)) if j not in used_new))
+    for k,os in oi.items():
+        ns=ni.get(k,[])
+        if len(os)==len(ns)==1:
+            i,j=os[0],ns[0];a,b=old[i],incoming[j]
+            if no_conflict(a,b) and not score_tuple(a) and a.get('actaState')!='available' and not FINAL.search(clean(a.get('status'))) and not LIVE.search(clean(a.get('status'))):
+                links.append((i,j,'unique-season-pair'));used_old.add(i);used_new.add(j)
+    changes=[];recovered=[];conflicts=[];new=[]
+    for i,j,proof in links:
+        a,b=old[i],incoming[j];r=rows[i]
+        if not (recent(a,cut) or recent(b,cut)):continue
+        if a.get('lastAgendaAt') and check_when(a['lastAgendaAt'])>clock:continue
+        if slot(a)!=slot(b):
+            if score_tuple(a) or a.get('actaState')=='available' or LIVE.search(clean(a.get('status'))):
+                conflicts.append({'reason':'schedule_of_started_or_scored_match','old':key(a),'incoming':key(b)})
+            else:
+                r['iso'],r['time']=slot(b)
+                r['agendaScheduleChange']={'previousIso':a['iso'],'previousTime':a['time'],'capturedAt':captured,'proof':proof}
+                changes.append({'competition':r['competition'],'home':r['home'],'away':r['away'],'previousIso':a['iso'],'previousTime':a['time'],'iso':r['iso'],'time':r['time'],'leagueId':r.get('leagueId'),'matchId':r.get('matchId'),'proof':proof})
+        if clean(b.get('venue')) and clean(b.get('venue'))!=clean(a.get('venue')) and not score_tuple(a):r['venue']=b['venue']
+        status=clean(b.get('status'))
+        if status and EXCLUDED.search(status) and not score_tuple(a) and not LIVE.search(clean(a.get('status'))):r['status']=status
+        elif status and EXCLUDED.search(clean(a.get('status'))) and not EXCLUDED.search(status):r['status']=status
+        # The day after, a numeric official Agenda score is final evidence.
+        if r['iso']<today.isoformat() and score_tuple(b) and not EXCLUDED.search(status or clean(r.get('status'))) and not LIVE.search(status):
+            if not score_tuple(a):
+                r.update(homeScore=b['homeScore'],awayScore=b['awayScore'],status='FINAL',scoreSource='Agenda',scoreUpdatedAt=captured,finalDetectedAt=captured,agendaRecoveredAt=captured)
+                recovered.append({'iso':r['iso'],'time':r['time'],'competition':r['competition'],'home':r['home'],'away':r['away'],'homeScore':r['homeScore'],'awayScore':r['awayScore'],'leagueId':r.get('leagueId'),'matchId':r.get('matchId')})
+            elif (a['homeScore'],a['awayScore'])!=(b['homeScore'],b['awayScore']):
+                conflicts.append({'reason':'existing_score_differs','fixture':key(a),'existing':[a['homeScore'],a['awayScore']],'agenda':[b['homeScore'],b['awayScore']]})
+        if r!=a:r['lastAgendaAt']=captured
+    # New fixtures only if there is no unresolved old fixture with same teams/category.
+    for j,b in enumerate(incoming):
+        if j in used_new or not recent(b,cut):continue
+        if any(i not in used_old for i in oi.get(pair(b),[])) or any(key(a)==key(b) for a in old):
+            conflicts.append({'reason':'ambiguous_or_duplicate','incoming':key(b)});continue
+        r=canonicalize(b);r['lastAgendaAt']=captured
+        if r['iso']<today.isoformat() and score_tuple(r) and not EXCLUDED.search(clean(r.get('status'))) and not LIVE.search(clean(r.get('status'))):
+            r.update(status='FINAL',scoreSource='Agenda',scoreUpdatedAt=captured,finalDetectedAt=captured,agendaRecoveredAt=captured)
+        elif r['iso']>=today.isoformat() and score_tuple(r):
+            # Never accept a speculative future score.
+            r['homeScore']=r['awayScore']=None
+        rows.append(r);new.append(key(r))
+    for i,a in enumerate(old):
+        if i not in used_old and recent(a,cut):conflicts.append({'reason':'not_uniquely_found_in_agenda','fixture':key(a),'possible':[slot(incoming[j]) for j in ni.get(pair(a),[]) if j not in used_new]})
+    prior_counts=Counter(key(r) for r in old);counts=Counter(key(r) for r in rows)
+    if any(n>max(1,prior_counts[k]) for k,n in counts.items()):raise ValueError('new duplicate fixtures')
+    rows.sort(key=lambda r:(r.get('iso',''),r.get('time',''),norm(r.get('competition')),norm(r.get('home'))))
+    report={'schema':'zonaok-agenda-daily-report-v1','capturedAt':captured,'windowFrom':cut,'sourceRows':len(incoming),'catalogBefore':len(old),'catalogAfter':len(rows),'scheduleChanges':changes,'recoveredResults':recovered,'newFixtures':new,'conflicts':conflicts,'scheduleChangeCount':len(changes),'recoveredResultCount':len(recovered),'newFixtureCount':len(new),'unresolvedCount':len(conflicts),'yesterdayMissingResults':[key(r) for r in rows if r.get('iso')==(today-timedelta(days=1)).isoformat() and not score_tuple(r) and not EXCLUDED.search(clean(r.get('status')))]}
+    result={**doc,'matches':rows,'updatedAt':utc_now(),'sources':{**doc.get('sources',{}),'agenda':{**doc.get('sources',{}).get('agenda',{}),'capturedAt':captured,'mergedAt':utc_now(),'scope':'daily',**{k:report[k] for k in ('scheduleChangeCount','recoveredResultCount','newFixtureCount','unresolvedCount')}}}}
+    result['stats']={**doc.get('stats',{}),'total':len(rows),'withScores':sum(score_tuple(r) for r in rows),'withActaLinks':sum(bool(r.get('actaUrl')) for r in rows),'verifiedActes':sum(r.get('actaState')=='available' for r in rows)}
+    return result,report
+def write(p,d):Path(p).write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+async def collect():
+    from playwright.async_api import async_playwright
+    doc=load_unified(CANONICAL); report={}
+    async with async_playwright() as pw:
+        browser,ctx=await chromium_context(pw)
+        try:rows=await capture(ctx,report,doc['matches'])
+        finally:await ctx.close();await browser.close()
+    packet={'kind':'agenda-daily','season':SEASON,'capturedAt':utc_now(),'rows':[r for r in rows if safe(r)],'captureReport':report}
+    write('captura-agenda-auto.json',packet);write('diagnostic-agenda-auto.json',report)
+def main():
+    parser=argparse.ArgumentParser();parser.add_argument('command',choices=['collect','merge']);args=parser.parse_args()
+    if args.command=='collect':asyncio.run(collect());return
+    doc,report=merge(load_unified(CANONICAL),json.loads(Path('captura-agenda-auto.json').read_text()))
+    write(CANONICAL,doc);write_compatibility(doc);write('fusio-agenda-auto.json',report)
+    print(json.dumps({k:v for k,v in report.items() if not isinstance(v,list)},ensure_ascii=False))
+if __name__=='__main__':main()

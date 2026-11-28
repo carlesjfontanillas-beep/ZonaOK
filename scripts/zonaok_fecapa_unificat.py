@@ -251,7 +251,7 @@ JS_AGENDA = r"""() => {
     const home=find(/(^| )(EQUIP LOCAL|EQUIPO LOCAL|LOCAL|CASA|HOME)( |$)/);
     const away=find(/VISITANT|VISITANTE|VISITOR|AWAY/);
     const comp=find(/COMPET|CATEG|LLIGA|LIGA/),result=find(/RESULT|MARCADOR|SCORE/);
-    const venue=find(/PISTA|PAVELL|INSTAL|LLOC|SEU|PABELL/);
+    const venue=find(/PISTA|PAVELL|INSTAL|LLOC|SEU|PABELL/),status=find(/ESTAT|ESTADO|STATUS/);
     if(!home||!away||!date||!hour)continue;
     recognized++;
     const group=txt(table.closest('.sidgad-liga-grupo,section')?.querySelector('h2,h3,.sidgad-liga-header-separador')||table.caption);
@@ -274,7 +274,7 @@ JS_AGENDA = r"""() => {
       rows.push({iso,time:start,competition:choose(cells,comp)||group,
         home:homeName,away:awayName,homeScore:s[0],awayScore:s[1],
         venue:choose(cells,venue),homeLogo,awayLogo,
-        leagueId:'',matchId:'',actaUrl:'',status:''});
+        leagueId:'',matchId:'',actaUrl:'',status:choose(cells,status)||(/AJORN|APLAZ|SUSP|CANCEL|ANUL/i.test(choose(cells,result))?choose(cells,result):'')});
     }
   }
   return {rows,clubLogos,counts:{tables:document.querySelectorAll('table').length,

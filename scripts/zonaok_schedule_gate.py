@@ -19,7 +19,7 @@ from zoneinfo import ZoneInfo
 
 MADRID = ZoneInfo("Europe/Madrid")
 DAILY_CRON = "2 6,7,18,19 * * *"
-AGENDA_CRONS = {"0 12 * * *", "0 13 * * *"}
+AGENDA_CRONS = {"0 8 * * *", "0 9 * * *"}
 LIVE_CRONS = {
     "agenda": "1,6,11,16,21,26,31,36,41,46,51,56 * * * *",
     "directe": "2,7,12,17,22,27,32,37,42,47,52,57 * * * *",
@@ -38,7 +38,7 @@ def scheduled_local_hour(cron: str, now: datetime) -> int | None:
     """Map one UTC cron slot to its Madrid wall-clock hour, validating DST."""
     if cron not in AGENDA_CRONS and cron != DAILY_CRON:
         return None
-    utc_hour = {"0 12 * * *": 12, "0 13 * * *": 13}.get(cron)
+    utc_hour = {"0 8 * * *": 8, "0 9 * * *": 9}.get(cron)
     if cron == DAILY_CRON:
         utc_hour = now.astimezone(ZoneInfo("UTC")).hour
         if utc_hour not in (6, 7, 18, 19):
@@ -57,7 +57,7 @@ def expected_local_hours(cron: str, now: datetime) -> set[int]:
     if hour is None:
         return set()
     if cron in AGENDA_CRONS:
-        return {14} if hour == 14 else set()
+        return {10} if hour == 10 else set()
     return {8, 20} if hour in (8, 20) else set()
 
 
@@ -128,13 +128,9 @@ def fixture_window_count(path: Path, now: datetime, *, lead: timedelta = timedel
 def should_run(mode: str, cron: str, now: datetime, matches: Path) -> tuple[bool, str]:
     local = now.astimezone(MADRID)
     if mode == "agenda":
-        if cron in (LIVE_CRONS["agenda"], LEGACY_LIVE_CRON):
-            count = pending_idp_count(matches, now)
-            return (True, f"finished_without_idp:{count}") if count else (False, "no_finished_fixture_without_idp")
         expected = expected_local_hours(cron, now)
-        if local.hour == 14 and 14 in expected:
-            return True, "daily_agenda_14_madrid"
-        return False, "not_the_14_madrid_slot"
+        # Match the intended slot, not the actual minute: delayed jobs still run.
+        return (True,"daily_agenda_10_madrid") if 10 in expected else (False,"not_the_10_madrid_slot")
     if cron == DAILY_CRON:
         if mode != "directe":
             return False, "daily_rest_check_only_for_directe"

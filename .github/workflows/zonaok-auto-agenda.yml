@@ -1,6 +1,9 @@
 name: 'ZonaOK - Agenda TOTAL AUTO (Chromium Playwright)'
 
 on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/zonaok-auto-agenda.yml']
   workflow_dispatch:
     inputs:
       scope:
@@ -8,9 +11,10 @@ on:
         required: true
         type: choice
         options:
+          - daily
           - fast
           - full
-        default: fast
+        default: daily
       limit:
         description: 'Maxim lligues (Agenda) o actes; 0=totes (evitar en primera prova)'
         required: true
@@ -27,9 +31,8 @@ on:
         type: boolean
         default: true
   schedule:
-    - cron: '1,6,11,16,21,26,31,36,41,46,51,56 * * * *'
-    - cron: '0 12 * * *'
-    - cron: '0 13 * * *'
+    - cron: '0 8 * * *'
+    - cron: '0 9 * * *'
 
 permissions:
   contents: write
@@ -76,22 +79,34 @@ jobs:
         if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         env:
-          LIMIT: ${{ github.event_name == 'schedule' && github.event.schedule == '1,6,11,16,21,26,31,36,41,46,51,56 * * * *' && '20' || (github.event_name == 'schedule' && '0' || inputs.limit) }}
-          SCOPE: ${{ github.event_name == 'schedule' && github.event.schedule == '1,6,11,16,21,26,31,36,41,46,51,56 * * * *' && 'fast' || (github.event_name == 'schedule' && 'full' || inputs.scope) }}
-          OFFSET: ${{ github.event_name == 'schedule' && github.event.schedule == '1,6,11,16,21,26,31,36,41,46,51,56 * * * *' && 'auto' || (github.event_name == 'schedule' && '0' || inputs.offset) }}
+          LIMIT: ${{ inputs.limit || '20' }}
+          SCOPE: ${{ inputs.scope || 'daily' }}
+          OFFSET: ${{ inputs.offset || 'auto' }}
         run: |
           set -euo pipefail
-          xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \
-            --mode agenda --scope "${SCOPE:-fast}" --offset "${OFFSET:-auto}" --limit "${LIMIT:-20}" \
-            --capture captura-agenda-auto.json --report diagnostic-agenda-auto.json
+          if [ "$SCOPE" = daily ]; then
+            xvfb-run -a python scripts/zonaok_agenda_daily.py collect
+          else
+            xvfb-run -a python scripts/zonaok_fecapa_unificat.py collect \
+              --mode agenda --scope "$SCOPE" --offset "$OFFSET" --limit "$LIMIT" \
+              --capture captura-agenda-auto.json --report diagnostic-agenda-auto.json
+          fi
       - name: Fusionar JSON únic i generar fitxers compatibles
         if: ${{ github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/zonaok_fecapa_unificat.py merge \
-            --mode agenda --capture captura-agenda-auto.json \
-            --output zonaok-tots-partits.json --compat --report fusio-agenda-auto.json
+          if python -c "import json,sys;sys.exit(0 if json.load(open('captura-agenda-auto.json')).get('kind')=='agenda-daily' else 1)"; then
+            python scripts/zonaok_agenda_daily.py merge
+          else
+            if python -c "import json,sys;sys.exit(0 if json.load(open('captura-agenda-auto.json')).get('kind')=='agenda-daily' else 1)"; then
+              python scripts/zonaok_agenda_daily.py merge
+            else
+              python scripts/zonaok_fecapa_unificat.py merge \
+                --mode agenda --capture captura-agenda-auto.json \
+                --output zonaok-tots-partits.json --compat --report fusio-agenda-auto.json
+            fi
+          fi
       - name: Publicar només si l'usuari ho activa
         if: ${{ (inputs.publish == true || github.event_name == 'schedule') && (github.event_name != 'schedule' || steps.schedule_gate.outputs.run == 'true') }}
         shell: bash
@@ -110,7 +125,14 @@ jobs:
               --output zonaok-tots-partits.json --compat --report fusio-agenda-auto.json
             # Primer validar la fusió original, després la reducció justificada per duplicats.
             python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
-            python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-agenda.json
+            if python -c "import json,sys;sys.exit(0 if json.load(open('captura-agenda-auto.json')).get('kind')=='agenda-daily' else 1)"; then
+              python scripts/zonaok_deduplicar_partits.py --report diagnostic-duplicats-agenda.json
+              mkdir -p imports
+              cp fusio-agenda-auto.json imports/agenda-daily-report.json
+              git add imports/agenda-daily-report.json
+            else
+              python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-agenda.json
+            fi
             git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
             if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
             if git diff --cached --quiet; then echo 'Sense canvis nous'; exit 0; fi

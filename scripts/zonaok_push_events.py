@@ -145,6 +145,26 @@ def detect(before, after, *, since, now, source='both'):
               "fixture":{k:r.get(k,"") for k in ("iso","time","competition","home","away","leagueId","matchId","homeLogo","awayLogo","round")}}
         item["fixture"].update(previousIso=p.get("iso"),previousTime=p.get("time"))
         output.append(item)
+    # General Agenda has no IDP. The daily merge records a mutually unique
+    # season-wide pairing. Verify the prior exact fixture before notifying.
+    if source in ('both','agenda'):
+        for r in current:
+            if all(str(r.get(k) or '') for k in ('leagueId','matchId')):continue
+            meta=r.get('agendaScheduleChange') or {}
+            captured=observed(r,'agenda')
+            if not captured or not (since<captured<=now) or meta.get('capturedAt')!=r.get('lastAgendaAt') or meta.get('proof') not in ('exact','unique-season-pair'):continue
+            if norm(r.get('status')) in FINAL|LIVE or EXCLUDED.search(norm(r.get('status'))):continue
+            old_key=tuple(norm(v) for v in (meta.get('previousIso'),meta.get('previousTime'),r.get('competition'),r.get('home'),r.get('away')))
+            prior=old.get(old_key)
+            if not prior or new_counts[identity(r)]!=1 or old_counts[old_key]!=1:continue
+            if (prior.get('iso'),prior.get('time'))==(r.get('iso'),r.get('time')):continue
+            try:
+                kickoff=datetime.strptime(r['iso']+' '+r['time'],'%Y-%m-%d %H:%M').replace(tzinfo=MADRID)
+            except (KeyError,ValueError,TypeError):continue
+            if kickoff<=now.astimezone(MADRID):continue
+            eid=hashlib.sha256(json.dumps([after.get('season'),old_key,identity(r),'scheduleChange'],ensure_ascii=False).encode()).hexdigest()
+            fixture=fixture_payload(r);fixture.update(previousIso=prior['iso'],previousTime=prior['time'])
+            output.append({'eventId':eid,'event':'scheduleChange','source':'FECAPA','observedAt':captured.isoformat(),'fixture':fixture})
     return output
 
 def main():

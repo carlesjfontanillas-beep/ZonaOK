@@ -73,10 +73,7 @@ jobs:
           if not pending:
               print('Cobertura historica comprovada al cataleg conegut.',file=sys.stderr)
               sys.exit(0)
-          if agenda_pending:
-              emit('zonaok-auto-agenda.yml','scope=full','limit=20','offset=auto','publish=true')
-          elif missing_ids or missing_scores:
-              emit('zonaok-auto-agenda.yml','scope=fast','limit=20','offset=auto','publish=true')
+          # Agenda operativa: una sola execució diària a les 10 h. La recuperació d'IDs correspon a Actes.
           eligible=[r for r in rows if score_tuple(r) and eligible_acta(r,'full')]
           last=tuple(actes.get('nextFullKey') or [])
           key=lambda r:(r.get('iso') or '',str(r.get('leagueId')),str(r.get('matchId')))
