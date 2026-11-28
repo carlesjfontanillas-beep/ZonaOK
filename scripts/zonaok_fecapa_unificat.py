@@ -1135,7 +1135,10 @@ def competition_compatible(left,right):
             if a and a==b:return True
             league=clean(r.get('leagueId')) or lid
             group_pairs=group_alias_pairs(r.get('competition'),league)
-            active_pairs=group_pairs if group_pairs is not None else pairs
+            # El grup només és autoritatiu per noms presents al seu catàleg.
+            # Permet dades de prova i equips amb noms històrics alternatius.
+            group_known=group_pairs is not None and any(name==a for name,_ in group_pairs)
+            active_pairs=group_pairs if group_known else pairs
             verified=active_pairs.get((a,b),set())
             # No resoldre una sigla duplicada globalment sense lliga.
             # Amb lliga, exigir un únic nom complet dins d'aquella lliga.
@@ -1226,16 +1229,29 @@ def merge_unified(packet,previous,mode):
                                            norm(old.get('scoreSource')) in ('EN DIRECTE','DIRECTE')):
                 old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
                 old['scoreSource']='Agenda';old['scoreUpdatedAt']=packet['capturedAt']
-            if r.get('status') and not (old.get('lastDirecteAt') or old.get('directeUpdatedAt')):
+            # Agenda és autoritat per ajornaments/cancel·lacions i reprogramacions.
+            excluded=lambda x:bool(re.search(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',clean(x),re.I))
+            old_final=bool(re.search(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',clean(old.get('status')),re.I)) and score_tuple(old)
+            if r.get('status') and not old_final and (excluded(r['status']) or excluded(old.get('status')) or not (old.get('lastDirecteAt') or old.get('directeUpdatedAt'))):
                 old['status']=r['status']
         else:
             # Marcadors només sobre partits coneguts i amb identificació inequívoca.
+            if re.search(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',clean(old.get('status')),re.I):
+                counts['unchanged']+=1;continue
+            if re.search(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',clean(old.get('status')),re.I) and score_tuple(old) and not re.search(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',clean(r.get('status')),re.I):
+                counts['unchanged']+=1;continue
             for field in ('leagueId','matchId'):
                 if not old.get(field) and r.get(field):old[field]=r[field]
             if score_tuple(r):
                 old['homeScore']=r['homeScore'];old['awayScore']=r['awayScore']
                 old['scoreSource']='En directe';old['scoreUpdatedAt']=packet['capturedAt']
-            if r.get('status'):old['status']=r['status']
+            if r.get('status') and not re.search(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',clean(r['status']),re.I):
+                # No esborrem un ajornament de l'Agenda ni reobrim un final
+                # amb un estat provisional d'una captura endarrerida.
+                old_status=clean(old.get('status'))
+                final_rx=r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b'
+                if not re.search(r'AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL',old_status,re.I) and (not re.search(final_rx,old_status,re.I) or re.search(final_rx,clean(r['status']),re.I)):
+                    old['status']=r['status']
             old['directeUpdatedAt']=packet['capturedAt']
         old[prop]=packet['capturedAt']
         rows[idx]=canonicalize(old);counts['updated']+=1
@@ -1666,7 +1682,11 @@ def match_index(rows,incoming,mode,alias_index=None,standing_aliases=None):
             owners={name for (name,code),leagues in active_pairs.items()
                     if code==b and (not league or league in leagues)}
             if owners:
-                if a in owners:return 2
+                if a in owners:
+                    if len(owners)==1:return 2
+                    if left_logo and right_logo and left_logo==right_logo:return 2
+                    if group_known:return 1
+                    return -1
                 # Codi oficial d'un altre equip: contradicció.
                 if b.replace(' ','') not in catalog_manual_aliases().get(a,set()):return -1
             if b.replace(' ','') in catalog_manual_aliases().get(a,set()):return 2

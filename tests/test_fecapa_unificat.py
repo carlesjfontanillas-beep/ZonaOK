@@ -127,4 +127,14 @@ class TestUnified(unittest.TestCase):
             self.assertIsNone(m.match_index([a,b],{**incoming,'away':'UNKNOWN'},'directe',standing_aliases=pairs))
             self.assertEqual(m.match_index([a,b],{**incoming,'competition':'JUVENIL OR 6'},'agenda',standing_aliases=pairs),1)
 
+    def test_one_side_unknown_requires_unique_fixture_and_category(self):
+        from unittest.mock import patch
+        a={**row(mid='',league='4784',home='CLUB EXEMPLE A',away='RIVAL A'),'competition':'JUVENIL OR 6'}
+        incoming={**a,'leagueId':'','competition':'JUVENIL OR','home':'CEX','away':'NOVASIGLA'}
+        pairs={('CLUB EXEMPLE A','CEX'):{'4784'}}
+        with patch.object(m,'catalog_group_aliases',return_value={}):
+            self.assertEqual(m.match_index([a],incoming,'directe',standing_aliases=pairs),0)
+            self.assertIsNone(m.match_index([a,{**a,'away':'RIVAL B'}],incoming,'directe',standing_aliases=pairs))
+            self.assertIsNone(m.match_index([a],{**incoming,'competition':'INFANTIL OR'},'directe',standing_aliases=pairs))
+
 if __name__=='__main__':unittest.main()
