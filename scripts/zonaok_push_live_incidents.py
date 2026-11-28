@@ -70,14 +70,18 @@ def candidates(catalog, *, now=None):
         if all(pair): official[pair] += 1
         elif ident: seen_internal[ident] += 1
     for row in rows:
-        if norm(row.get("competition")) not in COMPETITIONS or norm(row.get("status")) not in LIVE: continue
+        status = norm(row.get("status"))
+        if norm(row.get("competition")) not in COMPETITIONS or status in {"FINAL", "FINALITZAT", "FINALIZADO", "ACABAT", "ACABADO", "FINISHED", "FULL TIME"} or re.search(r"AJORN|APLAZ|SUSP[EÈ]|SUSPEND|CANCEL|ANUL", status): continue
         fixture = {k: row.get(k, "") for k in ("iso", "time", "competition", "home", "away", "leagueId", "matchId", "homeLogo", "awayLogo", "round")}
         ident = internal_match_id(catalog.get("season", ""), fixture)
         pair = (str(row.get("leagueId") or ""), str(row.get("matchId") or ""))
         if not ident or (all(pair) and official[pair] != 1) or (not all(pair) and seen_internal[ident] != 1): continue
         try: kickoff = datetime.strptime(row["iso"] + " " + row["time"], "%Y-%m-%d %H:%M").replace(tzinfo=MADRID)
         except (KeyError, ValueError, TypeError): continue
-        if not timedelta(0) <= now.astimezone(MADRID) - kickoff <= timedelta(minutes=165): continue
+        elapsed = now.astimezone(MADRID) - kickoff
+        # Poll from the scheduled kickoff even if the catalog's status is stale;
+        # capture_one independently verifies that FECAPA itself is live.
+        if not timedelta(0) <= elapsed <= timedelta(minutes=165): continue
         fixture["internalId"] = ident
         output.append({"fixture": fixture, "status": row["status"]})
     return output
