@@ -11,6 +11,7 @@ permissions:
 concurrency:
   group: zonaok-equivalencies-fecapa
   cancel-in-progress: false
+  queue: max
 jobs:
   capturar:
     runs-on: ubuntu-latest

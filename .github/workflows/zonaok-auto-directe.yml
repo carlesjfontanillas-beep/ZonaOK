@@ -42,6 +42,7 @@ permissions:
 concurrency:
   group: zonaok-import-directe
   cancel-in-progress: false
+  queue: max
 
 jobs:
   importar:
@@ -114,7 +115,7 @@ jobs:
               --output zonaok-tots-partits.json --compat --report fusio-directe-auto.json
             # Primer validar la fusió original, després la reducció justificada per duplicats.
             python scripts/zonaok_fecapa_unificat.py validate --output zonaok-tots-partits.json
-            python scripts/zonaok_deduplicar_partits.py --apply --report diagnostic-duplicats-directe.json
+            python scripts/zonaok_deduplicar_partits.py --report diagnostic-duplicats-directe.json
             git add zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json
             if [ -f zonaok-actes.json ]; then git add zonaok-actes.json; fi
             if git diff --cached --quiet; then echo 'Sense canvis nous'; exit 0; fi
@@ -122,7 +123,7 @@ jobs:
             if git push origin HEAD:main; then
               python scripts/zonaok_jugadors_trigger.py --catalog zonaok-tots-partits.json --state imports/jugadors-maintenance-state.json --previous-ref HEAD^ > player-trigger.txt
               if grep -q '^run=true$' player-trigger.txt; then
-                gh workflow run jugadors-public.yml --repo carlesjfontanillas-beep/ZonaOK --ref main -f mode=flash || echo "::warning::No s'ha pogut activar Jugadors; el repàs programat recupera els partits pendents."
+                gh workflow run zonaok-actes-live.yml --repo carlesjfontanillas-beep/ZonaOK --ref main || echo "::warning::No s'ha pogut activar Jugadors; el repàs programat recupera els partits pendents."
               fi
               exit 0
             fi

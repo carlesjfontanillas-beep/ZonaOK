@@ -1,0 +1,64 @@
+name: ZonaOK - Actes i jugadors EN DIRECTE
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '4,9,14,19,24,29,34,39,44,49,54,59 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: zonaok-actes-live
+  cancel-in-progress: false
+  queue: max
+jobs:
+  recent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      ZONAOK_ACTES_WINDOW: live
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Seleccionar només finals pendents d'avui
+        id: gate
+        run: |
+          python - <<'PY'
+          import json,os,re
+          from datetime import datetime,timedelta
+          from zoneinfo import ZoneInfo
+          today=datetime.now(ZoneInfo('Europe/Madrid')).date()
+          rows=json.load(open('zonaok-tots-partits.json'))['matches']
+          pending=[r for r in rows if (r.get('iso')==today.isoformat() or (r.get('iso')==(today-timedelta(days=1)).isoformat() and str(r.get('time',''))>='20:00')) and r.get('actaState')!='available' and isinstance(r.get('homeScore'),int) and isinstance(r.get('awayScore'),int) and re.search(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',str(r.get('status','')),re.I) and not str(r.get('competition','')).upper().startswith('OK LIGA')]
+          print('Finals pendents:',len(pending))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:print('run='+str(bool(pending)).lower(),file=f)
+          PY
+      - name: Instal·lar lector d'actes
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          python -m pip install 'playwright>=1.55,<2' 'jsonschema>=4.23,<5'
+          python -m playwright install --with-deps chromium
+      - name: Recuperar acta final i estadístiques dels mateixos partits
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --ff-only origin main
+          mkdir -m 700 data
+          trap 'rm -rf data' EXIT
+          gzip -dc imports/jugadors-master.json.gz > data/jugadors-master.json
+          cp imports/jugadors-maintenance-state.json data/jugadors-maintenance-state.json
+          xvfb-run -a python scripts/zonaok_actes_recovery_only.py ids
+          xvfb-run -a python scripts/zonaok_actes_recovery_only.py acts "$PWD/data"
+          python scripts/verify_public_master.py data/jugadors-master.json
+          python scripts/zonaok_fecapa_unificat.py validate
+          gzip -n -c data/jugadors-master.json > imports/jugadors-master.json.gz
+          cp data/jugadors-maintenance-state.json imports/jugadors-maintenance-state.json
+          git add -- zonaok-tots-partits.json zonaok-tots-agenda.json zonaok-tots-resultats-7dies.json zonaok-actes.json imports/actes-live-state.json imports/jugadors-master.json.gz imports/jugadors-maintenance-state.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'ZonaOK: actes finals i jugadors del moment'
+          git push origin HEAD:main

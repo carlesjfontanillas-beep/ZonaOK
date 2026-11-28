@@ -53,6 +53,7 @@ jobs:
     concurrency:
       group: zonaok-public-jugadors
       cancel-in-progress: false
+      queue: max
     env:
       MODE: ${{ inputs.mode || (github.event_name == 'schedule' && github.event.schedule == '17 2,14 * * *' && 'auto' || 'stats') }}
     steps:

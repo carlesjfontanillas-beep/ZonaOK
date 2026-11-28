@@ -27,6 +27,7 @@ REVIEW9=frozenset({
     ("4781","154014"), ("4784","151829"), ("4784","151834"),
     ("4791","159253"), ("4791","159285"), ("4814","156522"),
 })
+WINDOWS["live"]=((local_today()-timedelta(days=1)).isoformat(),local_today().isoformat(),"imports/actes-live-state.json")
 WINDOW_NAME=os.environ.get("ZONAOK_ACTES_WINDOW","recent")
 if WINDOW_NAME not in WINDOWS:raise ValueError("invalid_recovery_window")
 START, END, state_file=WINDOWS[WINDOW_NAME]
@@ -66,7 +67,10 @@ def state_league(r):
     return name in {"ok liga","ok liga masculina","ok liga plata norte","ok liga plata sur","ok liga iberdrola","ok liga femenina"}
 
 def requires_acta(r):
-    return historical(r) and not state_league(r)
+    if not historical(r) or state_league(r):return False
+    if WINDOW_NAME!='live':return True
+    if not score_tuple(r) or not re.search(r'\b(FINAL|FINALITZAT|FINALIZADO|ACABAT|ACABADO|FINISHED|FULL TIME)\b',str(r.get('status','')),re.I):return False
+    return r.get('iso')==local_today().isoformat() or (r.get('iso')==(local_today()-timedelta(days=1)).isoformat() and str(r.get('time',''))>='20:00')
 
 def summarize(doc):
     rows=doc["matches"]; window=[r for r in rows if historical(r)]
@@ -159,6 +163,7 @@ def all_candidates(doc):
     # Closed official acts can exist even if the cached fixture has no score.
     for r in doc["matches"]:
         if not requires_acta(r) or not valid(r):continue
+        if WINDOW_NAME=="live" and r.get("actaState")=="available":continue
         l,m=ids(r);key=l+"|"+m
         if key in rows:continue
         rows[key]={"leagueId":l,"matchId":m,"iso":r["iso"],"fingerprint":json.dumps([r.get("homeScore"),r.get("awayScore"),norm(r.get("status")),r.get("actaState"),r.get("actaUrl")],ensure_ascii=False,separators=(",",":"))}
@@ -218,7 +223,7 @@ async def acts(doc,root,control):
     audit_keys={k for k,_ in audit_pending}
     report={"selected":len(plan),"attempted":0,"verified":0,"pending":0,"reasons":{},"reusedVerified":promoted,"matchDiagnostics":{}}
     previous_audits={k:copy.deepcopy(matches[k]) for k,_ in plan if k in audit_keys and k in matches}
-    await run_matches(master,matches,plan,time.monotonic()+15*60,report)
+    await run_matches(master,matches,plan,time.monotonic()+(4 if WINDOW_NAME=="live" else 15)*60,report)
     control.setdefault("matchDiagnostics",{}).update(report["matchDiagnostics"])
     for k,r in plan:
         if k in matches and str(matches[k].get("checkedAt",""))>=clock.isoformat()[:19]:

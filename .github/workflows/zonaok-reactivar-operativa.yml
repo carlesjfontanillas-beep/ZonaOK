@@ -1,0 +1,22 @@
+name: ZonaOK - Reactivar operativa sense cancel·lacions
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: write
+jobs:
+  reactivar:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Habilitar només fluxos operatius vigents
+        shell: bash
+        run: |
+          set -euo pipefail
+          for w in zonaok-auto-agenda.yml zonaok-auto-directe.yml zonaok-auto-actes.yml zonaok-actes-live.yml zonaok-classificacions-auto.yml jugadors-public.yml zonaok-push-events.yml zonaok-equivalencies-fecapa.yml; do
+            gh workflow enable "$w" --repo "$GH_REPO"
+            echo "Habilitat: $w"
+          done
+          gh workflow run zonaok-auto-directe.yml --repo "$GH_REPO" --ref main -f scope=fast -f publish=true

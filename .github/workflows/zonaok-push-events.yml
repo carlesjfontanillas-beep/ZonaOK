@@ -28,6 +28,7 @@ permissions:
 concurrency:
   group: zonaok-push-events
   cancel-in-progress: false
+  queue: max
 
 jobs:
   avisos:

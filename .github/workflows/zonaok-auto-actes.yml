@@ -6,7 +6,6 @@ on:
       - '.github/workflows/zonaok-auto-actes.yml'
       - 'scripts/zonaok_actes_recovery_only.py'
       - 'scripts/zonaok_agenda_dates_review.py'
-      - 'scripts/zonaok_fecapa_unificat.py'
   workflow_dispatch:
     inputs:
       scope:
@@ -33,6 +32,7 @@ permissions:
 concurrency:
   group: zonaok-import-actes
   cancel-in-progress: false
+  queue: max
 jobs:
   importar:
     runs-on: ubuntu-latest
@@ -41,27 +41,6 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
     steps:
-      - name: Pausar tots els altres workflows i cancel·lar imports en curs
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh api --paginate "repos/$GH_REPO/actions/workflows?per_page=100" --jq '.workflows[] | select(.path | startswith(".github/workflows/")) | select(.path != ".github/workflows/zonaok-auto-actes.yml") | select(.path != ".github/workflows/zonaok-push-events.yml") | select(.state == "active") | [.id,.path] | @tsv' > "$RUNNER_TEMP/workflows-to-pause"
-          while IFS=$'\t' read -r id path; do
-            [ -n "$id" ] || continue
-            gh api -X PUT "repos/$GH_REPO/actions/workflows/$id/disable"
-            echo "PAUSAT: $path"
-          done < "$RUNNER_TEMP/workflows-to-pause"
-          for attempt in 1 2 3 4 5 6; do
-            gh api "repos/$GH_REPO/actions/runs?per_page=100" --jq '.workflow_runs[] | select(.path | startswith(".github/workflows/")) | select(.path != ".github/workflows/zonaok-auto-actes.yml") | select(.path != ".github/workflows/zonaok-push-events.yml") | select(.status != "completed") | .id' > "$RUNNER_TEMP/other-runs"
-            if [ ! -s "$RUNNER_TEMP/other-runs" ]; then break; fi
-            while read -r id; do
-              gh run cancel "$id" --repo "$GH_REPO" || true
-            done < "$RUNNER_TEMP/other-runs"
-            sleep 10
-          done
-          gh api "repos/$GH_REPO/actions/runs?per_page=100" --jq '.workflow_runs[] | select(.path | startswith(".github/workflows/")) | select(.path != ".github/workflows/zonaok-auto-actes.yml") | select(.path != ".github/workflows/zonaok-push-events.yml") | select(.status != "completed") | .id' > "$RUNNER_TEMP/other-runs"
-          test ! -s "$RUNNER_TEMP/other-runs"
-          echo "Només Actes i avisos push queden habilitats; els altres workflows i imports s’han pausat."
       - uses: actions/checkout@v4
         with:
           ref: main
@@ -69,7 +48,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Seleccionar finestra de recuperació sense escriptors simultanis
+      - name: Seleccionar finestra de recuperació històrica
         shell: bash
         env:
           REQUEST_SCOPE: ${{ inputs.scope || 'full' }}
@@ -241,7 +220,7 @@ jobs:
               echo "::notice::Queden $unresolved_no_result partits sense resultat pendents de verificar amb Agenda; Actes no s'encadena."
               exit 0
             fi
-            echo "Agenda puntual publicada i validada; Actes i la resta d'accions continuen pausats per instrucció de l'usuari."
+            echo "Agenda puntual publicada i validada; La recuperació històrica continua en la seva cua independent."
             exit 0
           fi
           if [ "${ZONAOK_ACTES_WINDOW:-}" = review9 ]; then

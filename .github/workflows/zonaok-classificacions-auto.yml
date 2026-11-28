@@ -35,6 +35,7 @@ permissions:
 concurrency:
   group: zonaok-import-classificacions
   cancel-in-progress: false
+  queue: max
 
 jobs:
   importar:

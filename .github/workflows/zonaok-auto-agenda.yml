@@ -39,6 +39,7 @@ permissions:
 concurrency:
   group: zonaok-import-agenda
   cancel-in-progress: false
+  queue: max
 
 jobs:
   importar:
