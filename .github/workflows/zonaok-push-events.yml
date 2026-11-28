@@ -88,8 +88,13 @@ jobs:
           set -euo pipefail
           if [ "$GITHUB_EVENT_NAME" = schedule ] || [ "$REQUEST_SCENARIO" = scheduled_now ]; then
             git fetch origin main
-            git show origin/main:zonaok-tots-partits.json > push-after.json
-            python scripts/zonaok_push_events.py --after push-after.json --scheduled --plan imports/push-plan.json > push-detection.json
+            after_sha="$(git rev-list -n 1 origin/main -- zonaok-tots-partits.json)"
+            before_sha="$(git rev-list -n 2 origin/main -- zonaok-tots-partits.json | sed -n '2p')"
+            [ -n "$after_sha" ]
+            git show "$after_sha:zonaok-tots-partits.json" > push-after.json
+            if [ -n "$before_sha" ]; then git show "$before_sha:zonaok-tots-partits.json" > push-before.json; else cp push-after.json push-before.json; fi
+            PUSH_SINCE="$(python -c 'import json; print(json.load(open("push-before.json")).get("sources",{}).get("directe",{}).get("capturedAt") or "2026-07-01T00:00:00Z")')"
+            python scripts/zonaok_push_events.py --before push-before.json --after push-after.json --since "$PUSH_SINCE" --source directe --include-scheduled --plan imports/push-plan.json > push-detection.json
           else
             [[ "$BEFORE_SHA" =~ ^[0-9a-f]{40}$ && "$AFTER_SHA" =~ ^[0-9a-f]{40}$ ]]
             git fetch origin main
@@ -108,6 +113,7 @@ jobs:
           print('Avisos:',len(events))
           PY
       - name: Enviar esdeveniments detectats pel canal habitual
+        id: send_sports_events
         if: ${{ github.event_name == 'schedule' || inputs.test_scenario == 'production' || inputs.test_scenario == 'barca_nc' || inputs.test_scenario == 'scheduled_now' }}
         shell: bash
         run: |
@@ -157,7 +163,7 @@ jobs:
           print('Incidències preparades:',len(incidents))
           PY
       - name: Seleccionar partits amb preferències d’incidències actives
-        if: ${{ inputs.test_scenario == 'barca_nc' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe') }}
+        if: ${{ (success() || steps.send_sports_events.outcome == 'failure') && (github.event_name == 'schedule' || inputs.test_scenario == 'barca_nc' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe')) }}
         shell: bash
         run: |
           set -euo pipefail
@@ -204,7 +210,7 @@ jobs:
           print('Incidències fictícies parsejades:', len(matches[0]['incidents']) if matches else 0)
           PY
       - name: Capturar incidències FECAPA dels partits seleccionats
-        if: ${{ inputs.test_scenario == 'production' && inputs.event_source == 'directe' }}
+        if: ${{ (success() || steps.send_sports_events.outcome == 'failure') && (github.event_name == 'schedule' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe')) }}
         shell: bash
         run: |
           set -euo pipefail
@@ -217,7 +223,7 @@ jobs:
             python scripts/zonaok_push_live_incidents.py capture --input push-live-selection.json --started push-detection.json --output push-live-incidents.json
           fi
       - name: Enviar incidències detectades pel canal habitual
-        if: ${{ inputs.test_scenario == 'barca_nc' || inputs.test_scenario == 'semireal_barca_voltrega' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe') }}
+        if: ${{ (success() || steps.send_sports_events.outcome == 'failure') && (github.event_name == 'schedule' || inputs.test_scenario == 'barca_nc' || inputs.test_scenario == 'semireal_barca_voltrega' || (inputs.test_scenario == 'production' && inputs.event_source == 'directe')) }}
         shell: bash
         run: |
           set -euo pipefail
